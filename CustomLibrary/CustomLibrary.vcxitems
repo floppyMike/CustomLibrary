@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -12,5 +12,47 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\CollisionBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Widget.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp" />
   </ItemGroup>
 </Project>

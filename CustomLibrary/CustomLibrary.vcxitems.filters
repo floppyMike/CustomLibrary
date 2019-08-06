@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="CustomLibrary">
+      <UniqueIdentifier>{edba3bbf-8764-4721-8da7-dfdc654d84ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomLibrary\SDL">
+      <UniqueIdentifier>{0d0518c7-e308-46ce-b577-ef33baa9e147}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
+      <Filter>CustomLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\CollisionBase.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventManager.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Widget.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
+      <Filter>CustomLibrary\SDL</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
