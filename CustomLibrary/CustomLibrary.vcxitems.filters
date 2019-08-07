@@ -7,65 +7,14 @@
     <Filter Include="CustomLibrary\SDL">
       <UniqueIdentifier>{0d0518c7-e308-46ce-b577-ef33baa9e147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Source">
+      <UniqueIdentifier>{34e9eea0-cc3f-47e8-b1ba-8fbc244cbfb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomLibrary\Include">
+      <UniqueIdentifier>{3b35daea-722d-4969-86f6-fb1490fdf9a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
-      <Filter>CustomLibrary</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
       <Filter>CustomLibrary\SDL</Filter>
     </ClInclude>
@@ -116,6 +65,66 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
       <Filter>CustomLibrary\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
+      <Filter>CustomLibrary\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CString.h">
+      <Filter>CustomLibrary\Include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

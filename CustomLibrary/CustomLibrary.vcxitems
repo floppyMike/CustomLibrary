@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h" />
