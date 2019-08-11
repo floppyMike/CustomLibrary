@@ -4,89 +4,159 @@
 #include <exception>
 #include <string_view>
 #include <fstream>
-#include <queue>
 #include <iostream>
-#include <assert.h>
-#include <mutex>
+#include <queue>
 
 namespace ctl
 {
 #ifndef NDEBUG
+
+/**
+* @summary assert the condition
+* @param "left" left value of condition
+* @param "operator" operator of condition
+* @param "right" right value of condition
+* @param "note" note that will be executed and printed
+* @remarks "left" and "right" will get executed once
+*/
+#define ASSERT_N(left, operator, right, note) \
+{ \
+	const auto res1 = (left); \
+	const auto res2 = (right); \
+	if(!(res1 operator res2)) \
+	{ \
+		std::cerr << "ASSERT FAILED: " \
+			<< #left << ' ' << #operator << ' ' << #right \
+			<< " @ " << __FILE__ << ':' << __func__ << " (" << __LINE__ << "). " \
+			<< #left << " = " << res1 << "; " << #right << " = " << res2 \
+			<< "\nERR_NOTE: " << (note) << '\n'; std::abort(); \
+	} \
+}
+
+/**
+* @summary assert the condition
+* @param "left" left value of condition
+* @param "operator" operator of condition
+* @param "right" right value of condition
+* @remarks "left" and "right" will get executed once
+*/
+#define ASSERT(left, operator, right) \
+{ \
+	const auto res1 = (left); \
+	const auto res2 = (right); \
+	if(!(res1 operator res2)) \
+	{ \
+		std::cerr << "ASSERT FAILED: " \
+			<< #left << ' ' << #operator << ' ' << #right \
+			<< " @ " << __FILE__ << ':' << __func__ << " (" << __LINE__ << "). " \
+			<< #left << " = " << res1 << "; " << #right << " = " << res2 << '\n'; std::abort(); \
+	} \
+}
+
 	constexpr bool LOG = true;
+
 #else
+
+/**
+* @summary assert the condition
+*
+* @param "left" left value of condition
+* @param "operator" operator of condition
+* @param "right" right value of condition
+* @param "note" note that will be executed and printed
+*
+* @remarks "left" and "right" will get executed once
+* @remarks "note" won't be executed
+*
+*/
+#define ASSERT_N(left, operator, right, note) (left); (right);
+
+/**
+* @summary assert the condition
+*
+* @param "left" left value of condition
+* @param "operator" operator of condition
+* @param "right" right value of condition
+*
+* @remarks "left" and "right" will get executed once
+*
+*/
+#define ASSERT(left, operator, right) (left); (right);
+
 	constexpr bool LOG = false;
-#endif // LOGGING
+
+#endif // NDEBUG
 
 	class Log : public std::exception
 	{
 	public:
-		enum class Sev { NOTE, WARNING, ERR0R };
+		enum class Sev { NOTE, WARNING, ERR };
 
-		Log(const std::string_view&, const Sev&) noexcept;
+		/**
+		* @summary construct Log object
+		* @param "msg" message to store
+		*/
+		Log(const std::string& msg)
+			: m_msg(msg.c_str())
+		{
+		}
+		Log(const char* msg)
+			: m_msg(msg)
+		{
+		}
 
+		/**
+		* @summary converts log into text
+		* @param "msg" message of log
+		* @returns text string
+		*/
+		static void streamLog(std::ostream&, const std::string_view&, const Sev&);
+
+		/**
+		* @summary stores a log
+		* @param "msg" message to log
+		* @param "sev" severity of message
+		* @remarks 
+		*/
 		static void log(const std::string_view&, const Sev&) noexcept;
-		static void note(const std::string_view&, const Sev&) noexcept;
 
-		static void flushToFile(const std::string&) noexcept;
+		/**
+		* @summary stores and writes a log
+		* @param "msg" message to log
+		* @param "sev" severity of message
+		*/
+		static void logWrite(const std::string_view&, const Sev&) noexcept;
+
+		/**
+		* @summary forces log to be written
+		* @param "msg" message to log
+		* @param "sev" severity of message
+		*/
+		static void forceLogWrite(const std::string_view&, const Sev&) noexcept;
+
+		/**
+		* @summary flushes buffer to file
+		* @param "path" path to file output
+		*/
+		static void flush(const char*) noexcept;
+
+		/**
+		* @summary overrides "what" virtual
+		* @returns c-string of message
+		*/
+		const char* what() const noexcept override { return m_msg.data(); }
 
 	private:
-		static std::string_view _typToString_(const Sev& typ) noexcept;
-
-		inline static std::queue<std::string_view> m_buf;
-		inline static std::mutex m_mutex;
+		std::string_view m_msg;
+		static std::deque<std::pair<std::string_view, Sev>> m_buf;
 	};
 
-	Log::Log(const std::string_view& msg, const Sev& typ = Sev::ERR0R) noexcept
-		: exception(std::string(_typToString_(typ)).append(msg).c_str())
-	{
-		//Lock to avoid data races
-		std::scoped_lock(m_mutex);
-
-		//Emplace to queue and check if limit is reached
-		m_buf.emplace(what());
-		if (m_buf.size() > 50) //50 is the message limit
-			m_buf.pop();
-	}
-
-	void Log::log(const std::string_view& msg, const Sev& typ = Sev::NOTE) noexcept
-	{
-		//Lock to avoid data races
-		std::scoped_lock(m_mutex);
-
-		//Emplace to queue, log it and check if limit is reached
-		m_buf.emplace(std::string(_typToString_(typ)).append(msg));
-		std::clog << _typToString_(typ) << msg << '\n';
-		if (m_buf.size() > 50) //50 is the message limit
-			m_buf.pop();
-	}
-
-	void Log::note(const std::string_view& msg, const Sev& typ = Sev::NOTE) noexcept
-	{
-		if constexpr (LOG)
-			log(msg, typ);
-	}
-
-	void Log::flushToFile(const std::string& fileName) noexcept
-	{
-		std::ofstream errorFile("Logs-" + fileName + ".txt", std::ios::out);
-		while (!m_buf.empty())
-		{
-			errorFile << m_buf.front() << '\n';
-			m_buf.pop();
-		}
-	}
-
-	std::string_view Log::_typToString_(const Sev& typ) noexcept
-	{
-		switch (typ)
-		{
-		case Log::Sev::NOTE:	 return "NOTE: ";
-		case Log::Sev::ERR0R:	 return "ERROR: ";
-		case Log::Sev::WARNING:  return "WARNING: ";
-		default:				 return "UNKNOWN: ";
-		}
-	}
-
+	/**
+	* @summary get message from errno code
+	* @param "code" errno code
+	* @returns c-string of 256 bytes
+	*/
+	const char* errnoMessage(const int&);
 }
 
 #endif // !MYERROR

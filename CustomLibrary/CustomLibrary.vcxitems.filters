@@ -123,7 +123,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
       <Filter>CustomLibrary\Include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CString.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\CString.h">
       <Filter>CustomLibrary\Include</Filter>
     </ClInclude>
   </ItemGroup>
@@ -133,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
       <Filter>CustomLibrary\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.cpp">
+      <Filter>CustomLibrary\Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

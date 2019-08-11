@@ -14,12 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\CString.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h" />
@@ -53,6 +53,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp" />
   </ItemGroup>
