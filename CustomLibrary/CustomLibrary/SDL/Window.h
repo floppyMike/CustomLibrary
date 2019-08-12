@@ -8,10 +8,31 @@
 
 namespace ctl
 {
-	class SDLPoint : public SDL_Point
+	template<typename T, typename = typename std::enable_if_t<std::is_arithmetic_v<T>>>
+	class _SDLParam_
 	{
 	public:
-		using SDL_Point::SDL_Point;
+		using value_type = T;
+
+		_SDLParam_() = delete;
+	};
+
+
+	template<typename T>
+	class SDLPoint : public _SDLParam_<T>
+	{
+	public:
+		constexpr SDLPoint() = default;
+		constexpr SDLPoint(const SDLPoint&) = default;
+		constexpr SDLPoint(SDLPoint&&) = default;
+
+		constexpr SDLPoint& operator=(const SDLPoint&) = default;
+		constexpr SDLPoint& operator=(SDLPoint&&) = default;
+
+		constexpr SDLPoint(const T& x, const T& y)
+			: x(x), y(y)
+		{
+		}
 
 		constexpr auto& operator+=(const SDLPoint& p) noexcept
 		{
@@ -36,13 +57,14 @@ namespace ctl
 		{
 			return SDLPoint(x - p.x, y - p.y);
 		}
+
+		T x = 0, y = 0;
 	};
 
+	template<typename T>
 	class SDLDim
 	{
 	public:
-		int w = 0, h = 0;
-
 		constexpr SDLDim() = default;
 		constexpr SDLDim(const SDLDim&) = default;
 		constexpr SDLDim(SDLDim&&) = default;
@@ -50,51 +72,57 @@ namespace ctl
 		constexpr SDLDim& operator=(const SDLDim&) = default;
 		constexpr SDLDim& operator=(SDLDim&&) = default;
 
-		constexpr SDLDim(const int& pw, const int& ph)
-			: w(pw)
-			, h(ph)
+		constexpr SDLDim(const T& pw, const T& ph)
+			: w(pw), h(ph)
 		{
 		}
+
+		T w = 0, h = 0;
 	};
 
-	class SDLRect : public SDL_Rect
+	template<typename T>
+	class SDLRect : public _SDLParam_<T>
 	{
 	public:
-		SDLRect() = default;
-		SDLRect(const SDLRect&) = default;
-		SDLRect(SDLRect&&) = default;
+		constexpr SDLRect() = default;
+		constexpr SDLRect(const SDLRect&) = default;
+		constexpr SDLRect(SDLRect&&) = default;
 
 		constexpr SDLRect& operator=(const SDLRect&) = default;
 		constexpr SDLRect& operator=(SDLRect&&) = default;
 
-		using SDL_Rect::SDL_Rect;
-
-		constexpr SDLRect(const SDLPoint& p, const SDLDim& d)
-			: SDL_Rect(p.x, p.y, d.w, d.h)
+		constexpr SDLRect(const T& x, const T& y, const T& w, const T& h) noexcept
+			: x(x), y(y), w(w), h(h)
 		{
 		}
+
+		constexpr SDLRect(const SDLPoint<T>& p, const SDLDim<T>& d) noexcept
+			: SDLRect(p.x, p.y, d.w, d.h)
+		{
+		}
+
+		T x = 0, y = 0, w = 0, h = 0;
 	};
 
-	class SDLCircle
+	template <typename T>
+	class SDLCircle : public _SDLParam_<T>
 	{
 	public:
-		int x = 0, y = 0, r = 0;
+		T x = 0, y = 0, r = 0;
 
 		constexpr SDLCircle() = default;
-		SDLCircle(const SDLCircle&) = default;
-		SDLCircle(SDLCircle&&) = default;
+		constexpr SDLCircle(const SDLCircle&) = default;
+		constexpr SDLCircle(SDLCircle&&) = default;
 
 		constexpr SDLCircle& operator=(const SDLCircle&) = default;
 		constexpr SDLCircle& operator=(SDLCircle&&) = default;
 
-		constexpr SDLCircle(const int& px, const int& py, const int& pr)
-			: x(px)
-			, y(py)
-			, r(pr)
+		constexpr SDLCircle(const T& px, const T& py, const T& pr)
+			: x(px), y(py), r(pr)
 		{
 		}
 
-		constexpr SDLCircle(const SDLPoint& p, const int& r)
+		constexpr SDLCircle(const SDLPoint<T>& p, const T& r)
 			: SDLCircle(p.x, p.y, r)
 		{
 		}
@@ -105,7 +133,7 @@ namespace ctl
 	public:
 		//For windowFlags check https://wiki.libsdl.org/SDL_WindowFlags#Values
 		WindowBase(const std::string &name,
-			const SDLDim &dim,
+			const SDLDim<Uint32> &dim,
 			const Uint32 &windowFlags = SDL_WINDOW_SHOWN)
 			: m_dim(dim)
 			, m_focus(0b010011)
@@ -213,7 +241,7 @@ namespace ctl
 		SDL_Window *m_window = nullptr;
 		Uint32 m_id;
 
-		SDLDim m_dim;
+		SDLDim<Uint32> m_dim;
 		std::bitset<6> m_focus;
 
 		std::unique_ptr<StateBase> m_state;

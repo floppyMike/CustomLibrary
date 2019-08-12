@@ -17,6 +17,15 @@ void ctl::Log::log(const std::string_view& msg, const Sev& sev = Sev::NOTE) noex
 		m_buf.pop_front();
 }
 
+//ctl::Log::OutStream ctl::Log::log(const Sev& sev) noexcept
+//{
+//	m_buf.emplace_back("", sev);
+//	if (m_buf.size() > 50)
+//		m_buf.pop_front();
+//
+//	return OutStream(sev);
+//}
+
 void ctl::Log::logWrite(const std::string_view& msg, const Sev& sev = Sev::NOTE) noexcept
 {
 	log(msg, sev);

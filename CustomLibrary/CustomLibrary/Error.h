@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <queue>
+#include <sstream>
 
 namespace ctl
 {
@@ -92,6 +93,49 @@ namespace ctl
 	public:
 		enum class Sev { NOTE, WARNING, ERR };
 
+		///**
+		//* @summary ostream-like output class
+		//*/
+		//class OutStream
+		//{
+		//public:
+		//	/**
+		//	* @summary set colour of last log
+		//	* @param "sev" severity of log
+		//	*/
+		//	OutStream()
+		//	{
+		//		switch (m_buf.back().second)
+		//		{
+		//		case Sev::NOTE:	   m_buf.back().first += "\x1B[37mNOTE: "; break;
+		//		case Sev::ERR:	   m_buf.back().first += "\x1B[91mERROR: "; break;
+		//		case Sev::WARNING: m_buf.back().first += "\x1B[93mWARNING: "; break;
+		//		}
+		//	}
+
+		//	/**
+		//	* @summary at end of stream set ANSI colour back to white and copy buffer to string variable
+		//	*/
+		//	~OutStream()
+		//	{
+		//		m_buf.back().first = m_stream.str() + "\033[0m";
+		//	}
+
+		//	/**
+		//	* @summary ostream-like << operator
+		//	* @param "val" value to write
+		//	*/
+		//	template<typename T>
+		//	auto& operator<<(const T& val)
+		//	{
+		//		m_stream << val;
+		//		return *this;
+		//	}
+
+		//private:
+		//	std::stringstream m_stream;
+		//};
+
 		/**
 		* @summary construct Log object
 		* @param "msg" message to store
@@ -119,6 +163,7 @@ namespace ctl
 		* @remarks 
 		*/
 		static void log(const std::string_view&, const Sev&) noexcept;
+		//static OutStream log(const Sev&) noexcept;
 
 		/**
 		* @summary stores and writes a log
@@ -144,10 +189,10 @@ namespace ctl
 		* @summary overrides "what" virtual
 		* @returns c-string of message
 		*/
-		const char* what() const noexcept override { return m_msg.data(); }
+		const char* what() const noexcept override { return m_msg.c_str(); }
 
 	private:
-		std::string_view m_msg;
+		std::string m_msg;
 		static std::deque<std::pair<std::string_view, Sev>> m_buf;
 	};
 

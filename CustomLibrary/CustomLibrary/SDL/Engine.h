@@ -14,44 +14,91 @@
 
 namespace ctl
 {
+	class UserEvent
+	{
+	public:
+		UserEvent()
+		{
+			SDL_zero(m_event);
+
+			m_event.type = SDL_RegisterEvents(1);
+			if (m_event.type == std::numeric_limits<Uint32>::max())
+				throw Log("UserEvent: event not registered.");
+		}
+
+		void pushEvent() noexcept
+		{
+			if (SDL_PushEvent(&m_event) < 0)
+				Log::logWrite(SDL_GetError(), Log::Sev::WARNING);
+		}
+
+		constexpr const auto& type() const noexcept { return m_event.type; }
+
+		constexpr const auto& code() const noexcept { return m_event.user.code; }
+		constexpr auto& code(const Sint32& code) noexcept 
+		{ 
+			m_event.user.code = code; 
+			return *this; 
+		}
+
+		constexpr const auto& data() const noexcept { return std::make_pair(m_event.user.data1, m_event.user.data2); }
+		constexpr auto& data(void* data1, void* data2) noexcept 
+		{ 
+			m_event.user.data1 = data1;
+			m_event.user.data2 = data2;
+			return *this; 
+		}
+
+	private:
+		SDL_Event m_event;
+	};
+
 	class SDL
 	{
 	public:
+		/**
+		* @summary initialize SDL and construct the engine
+		* @param "fps" global application frames / second
+		* @param "SDLFlags" flags for SDL creation
+		* @exception "Log" if initialization fails
+		* @remarks Flags: https://wiki.libsdl.org/SDL_Init#Remarks
+		*/
+		SDL(const size_t& fps, const Uint32& SDLFlags = SDL_INIT_VIDEO);
 
-		//--------------------------------------------------
-		//-------------Constructors & Destructor------------
-		//--------------------------------------------------
+		/**
+		* @summary frees the subsystems
+		*/
+		virtual ~SDL();
 
-		//Flags: https://wiki.libsdl.org/SDL_Init#Remarks
-		SDL(const size_t &fps, const Uint32& SDL_Flags = SDL_INIT_VIDEO)
-			: m_fpsWant(fps)
+		/**
+		* @summary wraps resource creation
+		* @tparam "Result" expected result type
+		* @param "c" resource creation function
+		* @param "args" arguments for resource creator
+		* @exception "Log" if resource creation fails
+		* @remarks function result must be convertible to "Result"
+		* @returns Result
+		*/
+		template<typename Result, typename Creator, typename... Arguments>
+		static auto makeResource(Creator c, Arguments&& ... args)
 		{
-			if (SDL_Init(SDL_Flags) < 0)
+			auto r = c(std::forward<Arguments>(args)...);
+
+			if (!r) 
 				throw Log(SDL_GetError());
-		}
 
-		virtual ~SDL()
-		{
-			//Quit SDL subsystems
-#ifdef SDL_MIXER_H_
-			Mix_Quit();
-#endif //SDL_MIXER_H_
-
-#ifdef SDL_TTF_H_
-			TTF_Quit();
-#endif //_SDL_TTF_H
-
-#ifdef SDL_IMAGE_H_
-			IMG_Quit();
-#endif //SDL_IMAGE_H_
-
-			SDL_Quit();
+			return Result(r);
 		}
 
 #ifdef SDL_IMAGE_H_
+		/**
+		* @summary init SDL_image
+		* @param "flags" flags for initializer
+		* @exception "Log" if initialization fails
+		*/
 		auto& initIMG(const int& flags = IMG_INIT_PNG)
 		{
-			if ((IMG_Init(flags) & (flags)) != (flags))
+			if ((IMG_Init(flags) & flags) != flags)
 				throw Log(SDL_GetError());
 
 			return *this;
@@ -59,6 +106,14 @@ namespace ctl
 #endif //SDL_IMAGE_H_
 
 #ifdef SDL_MIXER_H_
+		/**
+		* @summary init SDL_mixer
+		* @param "feq" frequency
+		* @param "format" format
+		* @param "channels" channels
+		* @param "chunksize" chunksize
+		* @exception "Log" if initialization fails
+		*/
 		auto& initMix(const int& feq = 44100, const Uint16& format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
@@ -69,39 +124,35 @@ namespace ctl
 #endif //SDL_MIXER_H_
 
 #ifdef SDL_TTF_H_
+		/**
+		* @summary init SDL_ttf
+		* @exception "Log" if initialization fails
+		*/
 		auto& initTTF()
 		{
 			if (TTF_Init() == -1)
-				throw Log(TTF_GetError());
+				throw Log(SDL_GetError());
 
 			return *this;
 		}
 #endif //SDL_TTF_H_
 
-		auto& setHint(const std::string_view& name, const std::string_view& value)
+		/**
+		* @summary sets a hint
+		* @param "name" name of hint
+		* @param "value" value to set the hint at
+		*/
+		static void setHint(const char* name, const char* value) noexcept
 		{
-			if (!SDL_SetHint(name.data(), value.data()))
-				Log::note("SDL: setHint: " + std::string(name) + " failed with value " + std::string(value));
-
-			return *this;
+			if (!SDL_SetHint(name, value))
+				Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
 		}
 
-		auto& setEventState(const Uint32& type, const char& state)
-		{
-			SDL_EventState(type, state);
-
-			return *this;
-		}
-
-		//--------------------------------------------------
-		//--------------------Methods-----------------------
-		//--------------------------------------------------
-
-		//Required in main()
+		/**
+		* @summary run the engine
+		*/
 		void run()
 		{
-			const auto &frameTime = std::chrono::milliseconds(1000 / m_fpsWant);
-
 			Timer timer;
 			timer.start();
 			std::chrono::duration<double> lastTime(0);
@@ -111,15 +162,15 @@ namespace ctl
 
 			for (bool quit = false; !quit; ++frames)
 			{
-				const auto& time = timer.ticks<std::chrono::duration<double>>();
-				const auto& elapsed = time - lastTime;
+				const auto time = timer.ticks<std::chrono::duration<double>>();
+				const auto elapsed = time - lastTime;
 				lastTime = time;
 				lag += elapsed;
 
 				if (time >= std::chrono::seconds(1))
 					m_fps = frames / time.count();
 
-				const auto& endTime = std::chrono::steady_clock::now() + frameTime;
+				const auto endTime = std::chrono::steady_clock::now() + m_frameTime;
 
 				static SDL_Event e;
 				while (SDL_PollEvent(&e) != 0)
@@ -133,9 +184,10 @@ namespace ctl
 				m_delta = elapsed.count();
 				for (auto& i : m_windows)
 					i->_invoke_(&StateBase::update);
-				while (lag >= frameTime)
+
+				while (lag >= m_frameTime)
 				{
-					lag -= frameTime;
+					lag -= m_frameTime;
 					for (auto& i : m_windows)
 						i->_invoke_(&StateBase::fixedUpdate);
 				}
@@ -147,53 +199,54 @@ namespace ctl
 			}
 		}
 
-		auto& addWin(WindowBase *w)
+		/**
+		* @summary construct a window
+		* @tparam "WindowType" window type to construct
+		* @param "argv" parameters of specified window constructor
+		*/
+		template<typename WindowType, typename... Args>
+		auto& addWin(Args&&... argv)
 		{
-			m_windows.emplace_back(w);
-			m_event.attach(w);
+			m_windows.emplace_back(std::make_unique<WindowType>(std::forward<Args>(argv)...));
+			m_event.attach(m_windows.back().get());
 
 			return *this;
 		}
-			
-		//void detachWin(WindowBase *w)
-		//{
-		//	m_windows.erase(std::find(m_windows.rbegin(), m_windows.rend(), w).base());
-		//	m_event.detach(w);
-		//}
-
-		static void pushEvent(SDL_Event* e) noexcept
+		
+		/**
+		* @summary destroy a window
+		* @param "winID" window id to destroy
+		*/
+		auto& detachWin(const Uint32& winID)
 		{
-			if (SDL_PushEvent(e) < 0)
-				Log::note(SDL_GetError(), Log::Sev::WARNING);
+			const auto winPtr = std::find_if(m_windows.begin(), m_windows.end(),
+				[&winID](std::unique_ptr<WindowBase>& ptr) { return ptr->ID() == winID; });
+
+			m_windows.erase(winPtr);
+			m_event.detach(winPtr->get());
+
+			return *this;
 		}
 
-		static void pushFlag(const Uint32& type, const Uint32& winID, void* data1 = nullptr, void* data2 = nullptr) noexcept
-		{
-			SDL_Event temp;
-			SDL_zero(temp);
-			temp.user.type = type;
-			temp.window.windowID = winID;
-			temp.user.data1 = data1;
-			temp.user.data2 = data2;
+		/**
+		* @summary access const delta
+		* @returns delta const reference
+		*/
+		constexpr const auto& delta() const noexcept { return m_delta; }
 
-			if (SDL_PushEvent(&temp) < 0)
-				Log::note(SDL_GetError(), Log::Sev::WARNING);
-		}
-
-		//----------------------------------------------------
-		//--------------------Operators-----------------------
-		//----------------------------------------------------
-
-		constexpr const auto& delta() const { return m_delta; }
-		constexpr const auto& FPS() const { return m_fps; }
+		/**
+		* @summary access const frames / second
+		* @returns fps const reference
+		*/
+		constexpr const auto& FPS() const noexcept { return m_fps; }
 
 	private:
 		ObSu<SDL_Event>::Subject m_event;
-		std::vector<WindowBase*> m_windows;
+		std::vector<std::unique_ptr<WindowBase>> m_windows;
 
 		double m_fps = 0.;
 		double m_delta = 0.;
 
-		size_t m_fpsWant;
+		std::chrono::milliseconds m_frameTime;
 	};
 }

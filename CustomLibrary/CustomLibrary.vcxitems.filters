@@ -4,67 +4,70 @@
     <Filter Include="CustomLibrary">
       <UniqueIdentifier>{edba3bbf-8764-4721-8da7-dfdc654d84ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CustomLibrary\SDL">
-      <UniqueIdentifier>{0d0518c7-e308-46ce-b577-ef33baa9e147}</UniqueIdentifier>
-    </Filter>
     <Filter Include="CustomLibrary\Source">
       <UniqueIdentifier>{34e9eea0-cc3f-47e8-b1ba-8fbc244cbfb4}</UniqueIdentifier>
     </Filter>
     <Filter Include="CustomLibrary\Include">
       <UniqueIdentifier>{3b35daea-722d-4969-86f6-fb1490fdf9a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Source\SDL">
+      <UniqueIdentifier>{a79f0ebf-ab10-474a-8f8a-291d5d94605e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomLibrary\Include\SDL">
+      <UniqueIdentifier>{0d0518c7-e308-46ce-b577-ef33baa9e147}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\CollisionBase.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventManager.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Widget.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h">
       <Filter>CustomLibrary\Include</Filter>
@@ -129,12 +132,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
-      <Filter>CustomLibrary\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.cpp">
+      <Filter>CustomLibrary\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Engine.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.cpp">
       <Filter>CustomLibrary\Source</Filter>
     </ClCompile>
   </ItemGroup>

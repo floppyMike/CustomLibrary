@@ -75,7 +75,17 @@ namespace ctl
 	struct _build_indices_<0, Is...> : _indices_<Is...> {};
 
 	template<typename T, typename U, size_t i, size_t... Is>
-	constexpr std::array<T, i> _array_cast_helper_(const std::array<U, i>& a, _indices_<Is...>) { return { static_cast<T>(std::get<Is>(a))... }; }
+	constexpr std::array<T, i> _array_cast_helper_(const std::array<U, i>& a, _indices_<Is...>) 
+	{ 
+		return { static_cast<T>(std::get<Is>(a))... }; 
+	}
+
+	//Constexpr array-wide cast
+	template<typename T, typename U, size_t i>
+	constexpr std::array<T, i> arrayCast(const std::array<U, i>& a) 
+	{ 
+		return _array_cast_helper_<T>(a, _build_indices_<i>()); 
+	}
 
 	//Dereference ptr even if already dereferenced
 	template<typename T>
@@ -83,10 +93,6 @@ namespace ctl
 	//Dereference ptr even if already dereferenced
 	template<typename T>
 	constexpr T& deref_ptr(T& ptr) { return ptr; }
-
-	//Constexpr array-wide cast
-	template<typename T, typename U, size_t i>
-	constexpr std::array<T, i> arrayCast(const std::array<U, i>& a) { return _array_cast_helper_<T>(a, _build_indices_<i>()); }
 
 	using char8_t = unsigned char;
 	using u8string = std::basic_string<char8_t>;
@@ -130,31 +136,5 @@ namespace ctl
 		return content;
 	}
 
-	std::string toHexadecimal(int val)
-	{
-		static constexpr std::string& (*hex)(int&, std::string&) = 
-			[](int& val, std::string& str) constexpr -> std::string&
-		{
-			if (val == 0)
-				return str;
-
-			const char& rem = val % 16;
-			val /= 16;
-
-			hex(val, str);
-
-			if (rem > 9)
-				str.push_back(rem - 10 + 'a');
-			else
-				str.push_back(rem + '0');
-
-			return str;
-		};
-
-		if (val == 0)
-			return std::string(1, '0');
-
-		std::string buf;
-		return hex(val, buf);
-	}
+	std::string toHexadecimal(int val);
 }
