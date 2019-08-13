@@ -30,7 +30,7 @@ namespace ctl
 		{
 		}
 
-		auto& input(const SDL_Event &e)
+		auto& event(const SDL_Event &e)
 		{
 			switch (e.type)
 			{

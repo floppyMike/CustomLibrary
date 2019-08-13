@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 
-#include <array>
 #include <type_traits>
 #include <string>
 #include <thread>
@@ -10,49 +9,11 @@
 #include <CustomLibrary/Timer.h>
 #include <CustomLibrary/Error.h>
 
+#include "Event.h"
 #include "Window.h"
 
 namespace ctl
 {
-	class UserEvent
-	{
-	public:
-		UserEvent()
-		{
-			SDL_zero(m_event);
-
-			m_event.type = SDL_RegisterEvents(1);
-			if (m_event.type == std::numeric_limits<Uint32>::max())
-				throw Log("UserEvent: event not registered.");
-		}
-
-		void pushEvent() noexcept
-		{
-			if (SDL_PushEvent(&m_event) < 0)
-				Log::logWrite(SDL_GetError(), Log::Sev::WARNING);
-		}
-
-		constexpr const auto& type() const noexcept { return m_event.type; }
-
-		constexpr const auto& code() const noexcept { return m_event.user.code; }
-		constexpr auto& code(const Sint32& code) noexcept 
-		{ 
-			m_event.user.code = code; 
-			return *this; 
-		}
-
-		constexpr const auto& data() const noexcept { return std::make_pair(m_event.user.data1, m_event.user.data2); }
-		constexpr auto& data(void* data1, void* data2) noexcept 
-		{ 
-			m_event.user.data1 = data1;
-			m_event.user.data2 = data2;
-			return *this; 
-		}
-
-	private:
-		SDL_Event m_event;
-	};
-
 	class SDL
 	{
 	public:
@@ -68,7 +29,22 @@ namespace ctl
 		/**
 		* @summary frees the subsystems
 		*/
-		virtual ~SDL();
+		virtual ~SDL()
+		{
+#ifdef SDL_MIXER_H_
+			Mix_Quit();
+#endif //SDL_MIXER_H_
+
+#ifdef SDL_TTF_H_
+			TTF_Quit();
+#endif //_SDL_TTF_H
+
+#ifdef SDL_IMAGE_H_
+			IMG_Quit();
+#endif //SDL_IMAGE_H_
+
+			SDL_Quit();
+		}
 
 		/**
 		* @summary wraps resource creation
@@ -114,7 +90,7 @@ namespace ctl
 		* @param "chunksize" chunksize
 		* @exception "Log" if initialization fails
 		*/
-		auto& initMix(const int& feq = 44100, const Uint16& format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
+		auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
 				throw Log(SDL_GetError());
@@ -142,62 +118,12 @@ namespace ctl
 		* @param "name" name of hint
 		* @param "value" value to set the hint at
 		*/
-		static void setHint(const char* name, const char* value) noexcept
-		{
-			if (!SDL_SetHint(name, value))
-				Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
-		}
+		static void setHint(const char* name, const char* value) noexcept;
 
 		/**
 		* @summary run the engine
 		*/
-		void run()
-		{
-			Timer timer;
-			timer.start();
-			std::chrono::duration<double> lastTime(0);
-			std::chrono::duration<double> lag(0);
-
-			unsigned long long frames = 0;
-
-			for (bool quit = false; !quit; ++frames)
-			{
-				const auto time = timer.ticks<std::chrono::duration<double>>();
-				const auto elapsed = time - lastTime;
-				lastTime = time;
-				lag += elapsed;
-
-				if (time >= std::chrono::seconds(1))
-					m_fps = frames / time.count();
-
-				const auto endTime = std::chrono::steady_clock::now() + m_frameTime;
-
-				static SDL_Event e;
-				while (SDL_PollEvent(&e) != 0)
-				{
-					m_event.notify(e);
-
-					if (e.type == SDL_QUIT)
-						quit = true;
-				}
-
-				m_delta = elapsed.count();
-				for (auto& i : m_windows)
-					i->_invoke_(&StateBase::update);
-
-				while (lag >= m_frameTime)
-				{
-					lag -= m_frameTime;
-					for (auto& i : m_windows)
-						i->_invoke_(&StateBase::fixedUpdate);
-				}
-
-				for (auto& i : m_windows)
-					i->_render_();
-
-				std::this_thread::sleep_until(endTime);
-			}
-		}
+		void run();
 
 		/**
 		* @summary construct a window
@@ -217,16 +143,7 @@ namespace ctl
 		* @summary destroy a window
 		* @param "winID" window id to destroy
 		*/
-		auto& detachWin(const Uint32& winID)
-		{
-			const auto winPtr = std::find_if(m_windows.begin(), m_windows.end(),
-				[&winID](std::unique_ptr<WindowBase>& ptr) { return ptr->ID() == winID; });
-
-			m_windows.erase(winPtr);
-			m_event.detach(winPtr->get());
-
-			return *this;
-		}
+		auto& detachWin(const Uint32& winID);
 
 		/**
 		* @summary access const delta
