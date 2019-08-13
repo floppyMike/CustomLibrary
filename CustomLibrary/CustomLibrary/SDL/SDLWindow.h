@@ -12,54 +12,67 @@ namespace ctl
 	class Camera2D
 	{
 	public:
-		Camera2D(const SDLDim &screen)
+		Camera2D(const SDLDim<Uint32>& screen)
 			: m_col(&m_camLoc.x, &m_camLoc.y, &screen.w, &screen.h)
 		{
 		}
 
-		auto screenToWorld(SDLPoint loc) const noexcept
+		template<typename T>
+		SDLPoint<T> screenToWorld(SDLPoint<T> loc) const noexcept
 		{
-			loc += m_camLoc;
-			return loc;
+			return loc += m_camLoc;
 		}
 
-		auto worldToScreen(SDLPoint loc) const noexcept
+		template<typename T>
+		SDLPoint<T> worldToScreen(SDLPoint<T> loc) const noexcept
 		{
-			loc -= m_camLoc;
-			return loc;
+			return loc -= m_camLoc;
 		}
 
-		constexpr auto& translate(const NumVec<int, 2> &val) noexcept
+		constexpr Camera2D& translate(const float& deltaX, const float& deltaY) noexcept
 		{
-			m_camLoc.x += val[0];
-			m_camLoc.y += val[1];
+			m_camLoc.x += deltaX;
+			m_camLoc.y += deltaY;
 
 			return *this;
 		}
 
 		constexpr const auto& loc() const noexcept { return m_camLoc; }
-		constexpr auto& loc(const SDLPoint& loc) noexcept { m_camLoc = loc; return *this; }
+		constexpr auto& loc(const SDLPoint<float>& loc) noexcept 
+		{ 
+			m_camLoc = loc; 
+			return *this; 
+		}
 
 		constexpr const auto& col() const noexcept { return m_col; }
 
 	private:
-		SDLPoint m_camLoc = { 0, 0 };
+		SDLPoint<float> m_camLoc = { 0.f, 0.f };
 		ctl::BoxCol m_col;
 	};
 
 	class SDLWindow : public WindowBase
 	{
 	public:
-		//For rendererFlags check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
+		/**
+		* @summary construct window and SDL renderer
+		* @param "name" name of window
+		* @param "dim" size of window
+		* @param "windowFlags" window creation flags
+		* @param "rendererFlags" SDL renderer creation flags
+		* @exception "Log" if renderer creation fails
+		* @remarks "windowFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
+		* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
+		*/
 		SDLWindow(const std::string& name,
-			const SDLDim& dim,
+			const SDLDim<Uint32>& dim,
 			const Uint32& windowFlags = SDL_WINDOW_SHOWN, 
 			const Uint32 &rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 			: WindowBase(name, dim, windowFlags)
 			, cam(m_dim)
 		{
 			if ((m_renderer = SDL_CreateRenderer(m_window, -1, rendererFlags)) == nullptr)
-				throw ctl::Log(SDL_GetError(), ctl::Log::Sev::ERR0R);
+				throw ctl::Log(SDL_GetError());
 
 			SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		}
@@ -73,15 +86,16 @@ namespace ctl
 		{
 			if (m_renderer != nullptr)
 				SDL_DestroyRenderer(m_renderer);
+
 			WindowBase::destroy();
 		}
 
-		inline void clear()
+		void clear()
 		{
 			SDL_SetRenderDrawColor(m_renderer, bg.r, bg.g, bg.b, bg.a);
 			SDL_RenderClear(m_renderer);
 		}
-		inline void render()
+		void render()
 		{
 			SDL_RenderPresent(m_renderer);
 		}
@@ -93,14 +107,14 @@ namespace ctl
 			return *this;
 		}
 
-		void _render_() override
+		void _render_() override final
 		{
 			clear();
 			_invoke_(&StateBase::render);
 			render();
 		}
 
-		constexpr inline auto* renderer() { return m_renderer; }
+		constexpr auto* renderer() { return m_renderer; }
 
 		//Public variable for changing the background of the renderer
 		SDL_Colour bg = { 0xFF, 0xFF, 0xFF, 0xFF };

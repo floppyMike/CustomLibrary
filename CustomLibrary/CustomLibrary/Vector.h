@@ -24,13 +24,6 @@ namespace ctl
 
 		constexpr const auto& data() const noexcept { return m_m; }
 
-#ifdef SDL_h_
-		//WARNING: This method doesn't check if NumVec has 4 elements
-		constexpr SDL_Rect to_SDL_Rect() const noexcept { return SDL_Rect{ m_m[0], m_m[1], m_m[2], m_m[3] }; }
-		//WARNING: This method doesn't check if NumVec has 2 elements
-		constexpr SDL_Point to_SDL_Point() const noexcept { return SDL_Point{ m_m[0], m_m[1] }; }
-#endif // SDL_h_
-
 		constexpr auto& operator[](const size_t &x) { return m_m.at(x); }
 		constexpr const auto& operator[](const size_t &x) const { return m_m.at(x); }
 
@@ -38,19 +31,16 @@ namespace ctl
 		{
 			auto a = v.m_m.begin();
 			for (auto& i : m_m)
-			{
 				i += *(a++);
-				//++a;
-			}
+
 			return *this;
 		}
 		constexpr auto& operator-=(const NumVec<TypeNum, sizeArray>& v) noexcept
 		{
 			auto a = v.m_m.begin();
 			for (auto& i : m_m)
-			{
 				i -= *(a++);
-			}
+
 			return *this;
 		}
 

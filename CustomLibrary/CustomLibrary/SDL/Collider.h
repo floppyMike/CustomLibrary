@@ -95,8 +95,6 @@ namespace ctl
 		std::array<const int* const, size> m_dim;
 	};
 
-	using Coll = CollisionBase<1>;
-
 	class DotCol : public CollisionBase<2>
 	{
 		using CollisionBase<2>::dotRect;

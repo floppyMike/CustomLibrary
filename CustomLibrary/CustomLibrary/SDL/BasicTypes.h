@@ -4,22 +4,15 @@
 
 namespace ctl
 {
-	template<typename T, 
-		typename = typename std::enable_if_t<std::is_arithmetic_v<T>>>
-	class _SDLParam_
+	template<typename Check>
+	using _IsArithmitic_ = std::enable_if_t<std::is_arithmetic_v<Check>>;
+
+	template<typename T>
+	class SDLPoint
 	{
 	public:
 		using value_type = T;
 
-	protected:
-		_SDLParam_() = default;
-	};
-
-
-	template<typename T>
-	class SDLPoint : public _SDLParam_<T>
-	{
-	public:
 		/**
 		* @summary all constructors and assignments are default
 		*/
@@ -63,9 +56,11 @@ namespace ctl
 	};
 
 	template<typename T>
-	class SDLDim : public _SDLParam_<T>
+	class SDLDim
 	{
 	public:
+		using value_type = T;
+
 		/**
 		* @summary all constructors and assignments are default
 		*/
@@ -87,10 +82,13 @@ namespace ctl
 		T w = 0, h = 0;
 	};
 
-	template<typename T>
-	class SDLRect : public _SDLParam_<T>
+	template<typename Point_T, typename Dim_T>
+	class SDLRect
 	{
 	public:
+		using value_type_point = Point_T;
+		using value_type_dim = Dim_T;
+
 		/**
 		* @summary all constructors and assignments are default
 		*/
@@ -113,26 +111,34 @@ namespace ctl
 		/**
 		* @summary construct from x, y, width and height
 		*/
-		constexpr SDLRect(const T& x, const T& y, const T& w, const T& h) noexcept
-			: x(x), y(y), w(w), h(h)
+		constexpr SDLRect(const Point_T& x, const Point_T& y, const Dim_T& w, const Dim_T& h) noexcept
+			: m_point(x, y), m_dim(w, h)
 		{
 		}
 
 		/**
 		* @summary construct from point and dimension
 		*/
-		constexpr SDLRect(const SDLPoint<T>& p, const SDLDim<T>& d) noexcept
-			: SDLRect(p.x, p.y, d.w, d.h)
+		constexpr SDLRect(const SDLPoint<Point_T>& p, const SDLDim<Dim_T>& d) noexcept
+			: m_point(p), m_dim(d)
 		{
 		}
 
-		T x = 0, y = 0, w = 0, h = 0;
+	private: //These need to be in front because of quick SDL_Rect conversion
+		SDLPoint<Point_T> m_point;
+		SDLDim<Dim_T> m_dim;
+
+	public:
+		Point_T& x = m_point.x, y = m_point.y;
+		Dim_T& w = m_dim.w, h = m_dim.h;
 	};
 
 	template <typename T>
-	class SDLCircle : public _SDLParam_<T>
+	class SDLCircle
 	{
 	public:
+		using value_type = T;
+
 		/**
 		* @summary all constructors and assignments are default
 		*/
@@ -169,7 +175,7 @@ namespace ctl
 	}
 
 	template<>
-	inline SDLRect<int>::operator SDL_Rect() const noexcept
+	inline SDLRect<int, int>::operator SDL_Rect() const noexcept
 	{
 		return *reinterpret_cast<const SDL_Rect* const>(this);
 	}
