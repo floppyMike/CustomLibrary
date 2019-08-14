@@ -52,7 +52,12 @@ namespace ctl
 		constexpr auto operator+(const SDLPoint& p) const noexcept;
 		constexpr auto operator-(const SDLPoint& p) const noexcept;
 
-		T x = 0, y = 0;
+		/**
+		* @summary relational operators
+		*/
+		constexpr auto operator==(const SDLPoint& p) const noexcept;
+
+		T x = static_cast<T>(0), y = static_cast<T>(0);
 	};
 
 	template<typename T>
@@ -79,7 +84,7 @@ namespace ctl
 		{
 		}
 
-		T w = 0, h = 0;
+		T w = static_cast<T>(0), h = static_cast<T>(0);
 	};
 
 	template<typename Point_T, typename Dim_T>
@@ -133,11 +138,12 @@ namespace ctl
 		Dim_T& w = m_dim.w, h = m_dim.h;
 	};
 
-	template <typename T>
+	template <typename Point_T, typename Rad_T>
 	class SDLCircle
 	{
 	public:
-		using value_type = T;
+		using value_type_point = Point_T;
+		using value_type_radius = Rad_T;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -165,7 +171,11 @@ namespace ctl
 		{
 		}
 
-		T x = 0, y = 0, r = 0;
+		Point_T& x = m_point.x, y = m_point.y;
+		Rad_T r = static_cast<Rad_T>(0);
+
+	private:
+		SDLPoint<Point_T> m_point;
 	};
 
 	template<>
@@ -208,6 +218,12 @@ namespace ctl
 	inline constexpr auto SDLPoint<T>::operator-(const SDLPoint& p) const noexcept
 	{
 		return SDLPoint(x - p.x, y - p.y);
+	}
+
+	template<typename T>
+	inline constexpr auto SDLPoint<T>::operator==(const SDLPoint& p) const noexcept
+	{
+		return x == p.x && y == p.y;
 	}
 
 }

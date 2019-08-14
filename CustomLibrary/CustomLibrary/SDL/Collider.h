@@ -5,145 +5,176 @@
 
 #include <CustomLibrary/utility.h>
 
+#include "BasicTypes.h"
+
 namespace ctl
 {
-	template<size_t size>
-	class CollisionBase
+	template<typename Point_T, typename Rect_T1, typename Rect_T2>
+	constexpr auto pointRect(const SDLPoint<Point_T>* const d,
+		const SDLRect<Rect_T1, Rect_T2>* const r) noexcept
 	{
+		return !(d->x < r->x ||
+			d->x > r->x + r->w ||
+			d->y < r->y ||
+			d->y > r->y + r->h);
+	}
+
+	template<typename Rect_T1, typename Rect_T2, typename Cir_T1, typename Cir_T2>
+	constexpr bool rectCir(const SDLRect<Rect_T1, Rect_T2>* const r,
+		const SDLCircle<Cir_T1, Cir_T2>* const c)
+	{
+		const auto halfRad = c->r >> 1;
+
+		//Find closest x offset
+		const auto xEdge = c->x + halfRad;
+		const auto cX = xEdge < r->x ? r->x :
+			xEdge > r->x + r->w ? r->x + r->w :
+			xEdge;
+
+		//Find closest y offset
+		const auto yEdge = c->y + halfRad;
+		const auto cY = yEdge < r->y ? r->y :
+			yEdge > r->y + r->h ? r->y + r->h :
+			yEdge;
+
+		//If the closest point is inside the circle
+		return power2(cX - c->x - halfRad) + power2(cY - c->y - halfRad) < power2(c->r) >> 2;
+	}
+
+	template<typename Rect1_T1, typename Rect1_T2, typename Rect2_T1, typename Rect2_T2>
+	constexpr bool rectRect(const SDLRect<Rect1_T1, Rect1_T2>* const r1,
+		const SDLRect<Rect2_T1, Rect2_T2>* const r2) noexcept
+	{
+		return !(r1->y + r1->h <= r2->y ||
+			r1->y >= r2->y + r2->h ||
+			r1->x + r1->w <= r2->x ||
+			r1->x >= r2->x + r2->w);
+	}
+
+	template<typename Cir1_T1, typename Cir1_T2, typename Cir2_T1, typename Cir2_T2>
+	constexpr bool cirCir(const SDLCircle<Cir1_T1, Cir1_T2>* const c1,
+		const SDLCircle<Cir2_T1, Cir2_T2>* const c2) noexcept
+	{
+		//If the distance between the centres of the circles is less than the sum of their rad
+		//return power2(*c1[0] + (*c1[2] >> 1) - *c2[0] - (*c2[2] >> 1)) + power2(*c1[1] + (*c1[2] >> 1) - *c2[1] - (*c2[2] >> 1)) < power2(*c1[2] + *c2[2]) >> 2;
+
+		return power2(c1->x - c2->x) + power2(c1->y - c2->y) < power2(c1->r + c2->r);
+	}
+
+	template<typename Point1_T, typename Point2_T>
+	constexpr bool pointPoint(const SDLPoint<Point1_T>* const d1, const SDLPoint<Point2_T>* const d2) noexcept
+	{
+		return d1 == d2;
+	}
+
+	template<typename Point_T, typename Cir_T1, typename Cir_T2>
+	constexpr bool pointCir(const SDLPoint<Point_T>* const d, const SDLCircle<Cir_T1, Cir_T2>* const c) noexcept
+	{
+		const auto dx = std::abs(d->x - c->x);
+		const auto dy = std::abs(d->y - c->y);
+
+		if (dx > c->r || dy > c->r)
+			return false;
+
+		else if (dx + dy <= c->r || power2(dx) + power2(dy) <= power2(c->r))
+			return true;
+
+		else
+			return false;
+	}
+
+	template<typename T, typename Derived>
+	class _BasicCollision_
+	{
+		/**
+		* @summary converts this to derived type
+		* @returns derived this ptr
+		*/
+		constexpr const auto* dThis() const noexcept { return static_cast<const Derived* const>(this); }
+		constexpr auto* dThis() noexcept { return static_cast<Derived* const>(this); }
+
 	public:
-		CollisionBase() = default;
-
-		template<typename ...T, typename = typename std::enable_if_t<std::conjunction_v<std::is_pointer<T>...>>>
-		constexpr CollisionBase(const T & ... v)
-			: m_dim{ reinterpret_cast<const int* const>(v)... }
-		{}
-		constexpr CollisionBase(const std::array<const int* const, size>& v)
-			: m_dim{ v }
-		{}
-
-		template<typename ...T, typename = typename std::enable_if_t<std::conjunction_v<std::is_pointer<T>...>>>
-		constexpr void set(const T & ... v) { m_dim = { reinterpret_cast<const int* const>(v)... }; }
-
-		constexpr const auto& shapePtrs() const { return m_dim; }
-
-		static constexpr auto dotRect(const std::array<const int* const, 2> & d, const std::array<const int* const, 4> & r) noexcept
-		{
-			return !(*d[0] < *std::get<0>(r) ||
-				*d[0] > * std::get<0>(r) + *std::get<2>(r) ||
-				*d[1] < *std::get<1>(r) ||
-				*d[1] > * std::get<1>(r) + *std::get<3>(r));
-		}
-
-		static constexpr bool rectCir(const std::array<const int* const, 4> & r, const std::array<const int* const, 3> & c)
-		{
-			const auto halfRad = *c[2] >> 1;
-
-			//Find closest x offset
-			const auto xEdge = *c[0] + halfRad;
-
-			const auto cX = xEdge < *r[0] ? *r[0] :
-				xEdge > * r[0] + *r[2] ? *r[0] + *r[2] :
-				xEdge;
-
-			//Find closest y offset
-			const auto yEdge = *c[1] + halfRad;
-
-			const auto cY = yEdge < *r[1] ? *r[1] :
-				yEdge > * r[1] + *r[3] ? *r[1] + *r[3] :
-				yEdge;
-
-			//If the closest point is inside the circle
-			return power2(cX - *c[0] - halfRad) + power2(cY - *c[1] - halfRad) < power2(*c[2]) >> 2;
-		}
-
-		static constexpr bool rectRect(const std::array<const int* const, 4> & r1, const std::array<const int* const, 4> & r2) noexcept
-		{
-			return !(*r1[1] + *r1[3] <= *r2[1] || *r1[1] >= *r2[1] + *r2[3] || *r1[0] + *r1[2] <= *r2[0] || *r1[0] >= *r2[0] + *r2[2]);
-		}
-
-		static constexpr bool cirCir(const std::array<const int* const, 3> & c1, const std::array<const int* const, 3> & c2) noexcept
-		{
-			//If the distance between the centres of the circles is less than the sum of their rad
-			//return power2(*c1[0] + (*c1[2] >> 1) - *c2[0] - (*c2[2] >> 1)) + power2(*c1[1] + (*c1[2] >> 1) - *c2[1] - (*c2[2] >> 1)) < power2(*c1[2] + *c2[2]) >> 2;
-
-			return power2(*c1[0] - *c2[0]) + power2(*c1[1] - *c2[1]) < power2(*c1[2] + *c2[2]);
-		}
-
-		static constexpr bool dotDot(const std::array<const int* const, 2> & d1, const std::array<const int* const, 2> & d2) noexcept
-		{
-			return *d1[0] == *d2[0] && *d1[1] == *d2[1];
-		}
-
-		static constexpr bool dotCir(const std::array<const int* const, 2> & d, const std::array<const int* const, 3> & c) noexcept
-		{
-			const auto dx = std::abs(*d[0] - *c[0]);
-			const auto dy = std::abs(*d[1] - *c[1]);
-
-			if (dx > * c[2])
-				return false;
-			else if (dy > * c[2])
-				return false;
-			else if (dx + dy <= *c[2])
-				return true;
-			else if (power2(dx) + power2(dy) <= power2(*c[2]))
-				return true;
-			else
-				return false;
+		/**
+		* @summary ptr accessors
+		*/
+		constexpr const auto& ptr() const noexcept { return m_dim; }
+		constexpr auto& ptr(const T* const g) noexcept
+		{ 
+			m_dim = g;
+			return *dThis();
 		}
 
 	protected:
-		std::array<const int* const, size> m_dim;
+		/**
+		* @summary constructs empty ptr
+		*/
+		_BasicCollision_() = default;
+
+		/**
+		* @summary constructs with ptr
+		* @param "g" the ptr
+		*/
+		constexpr _BasicCollision_(const T* const g)
+			: m_dim(g)
+		{
+		}
+
+		const T* m_dim = nullptr;
 	};
 
-	class DotCol : public CollisionBase<2>
+	//Predefinitions
+	template<typename T1, typename T2>
+	class RectCol;
+
+	template<typename T1, typename T2>
+	class CirCol;
+
+	template<typename T>
+	class PointCol : public _BasicCollision_<SDLPoint<T>, PointCol>
 	{
-		using CollisionBase<2>::dotRect;
-		using CollisionBase<2>::dotCir;
-		using CollisionBase<2>::dotDot;
-		using CollisionBase<2>::rectRect;
-		using CollisionBase<2>::rectCir;
-		using CollisionBase<2>::cirCir;
-
 	public:
-		using CollisionBase::CollisionBase;
+		using _BasicCollision_::_BasicCollision_;
 
-		auto inside(const CollisionBase<4>& r) const noexcept { return dotRect(m_dim, r.shapePtrs()); }
-		auto inside(const CollisionBase<3>& c) const noexcept { return dotCir(m_dim, c.shapePtrs()); }
-		auto inside(const CollisionBase<2>& d) const noexcept { return dotDot(m_dim, d.shapePtrs()); }
+		template<typename T1, typename T2>
+		auto inside(const RectCol<T1, T2>& r) const noexcept { return dotRect(m_dim, r.m_dim); }
+
+		template<typename T1, typename T2>
+		auto inside(const CirCol<T1, T2>& c) const noexcept { return dotCir(m_dim, c.m_dim); }
+
+		template<typename T1>
+		auto inside(const PointCol<T1>& d) const noexcept { return dotDot(m_dim, d.m_dim); }
 	};
 
-	class BoxCol : public CollisionBase<4>
+	template<typename Rect_T1, typename Rect_T2>
+	class RectCol : public _BasicCollision_<SDLRect<Rect_T1, Rect_T2>, RectCol>
 	{
-		using CollisionBase<4>::dotRect;
-		using CollisionBase<4>::dotCir;
-		using CollisionBase<4>::dotDot;
-		using CollisionBase<4>::rectRect;
-		using CollisionBase<4>::rectCir;
-		using CollisionBase<4>::cirCir;
-
 	public:
-		using CollisionBase::CollisionBase;
+		using _BasicCollision_::_BasicCollision_;
 
-		bool inside(const CollisionBase<4>& r) const noexcept { return rectRect(m_dim, r.shapePtrs()); }
-		bool inside(const CollisionBase<3>& c) const noexcept { return rectCir(m_dim, c.shapePtrs()); }
-		bool inside(const CollisionBase<2>& d) const noexcept { return dotRect(d.shapePtrs(), m_dim); }
+		template<typename T1, typename T2>
+		bool inside(const RectCol<T1, T2>& r) const noexcept { return rectRect(m_dim, r.m_dim); }
+
+		template<typename T1, typename T2>
+		bool inside(const CirCol<T1, T2>& c) const noexcept { return rectCir(m_dim, c.m_dim); }
+
+		template<typename T1>
+		bool inside(const PointCol<T1>& d) const noexcept { return dotRect(d.m_dim, m_dim); }
 	};
 
-	class CirCol : public CollisionBase<3>
+	template<typename Cir_T1, typename Cir_T2>
+	class CirCol : public _BasicCollision_<SDLCircle<Cir_T1, Cir_T2>, CirCol>
 	{
-		using CollisionBase<3>::dotRect;
-		using CollisionBase<3>::dotCir;
-		using CollisionBase<3>::dotDot;
-		using CollisionBase<3>::rectRect;
-		using CollisionBase<3>::rectCir;
-		using CollisionBase<3>::cirCir;
-
 	public:
-		using CollisionBase::CollisionBase;
+		using _BasicCollision_::_BasicCollision_;
 
-		bool inside(const CollisionBase<4> & r) const noexcept { return rectCir(r.shapePtrs(), m_dim); }
-		bool inside(const CollisionBase<3> & c) const noexcept { return cirCir(m_dim, c.shapePtrs()); }
-		bool inside(const CollisionBase<2> & d) const noexcept { return dotCir(d.shapePtrs(), m_dim); }
+		template<typename T1, typename T2>
+		bool inside(const RectCol<T1, T2>& r) const noexcept { return rectCir(r.m_dim, m_dim); }
+
+		template<typename T1, typename T2>
+		bool inside(const CirCol<T1, T2>& c) const noexcept { return cirCir(m_dim, c.m_dim); }
+
+		template<typename T1>
+		bool inside(const PointCol<T1>& d) const noexcept { return dotCir(d.m_dim, m_dim); }
 	};
 
 
@@ -182,7 +213,7 @@ namespace ctl
 		Type m_val;
 	};
 
-	using DotColVar = _ColVar_<ctl::DotCol, ctl::SDLPoint>;
-	using BoxColVar = _ColVar_<ctl::BoxCol, ctl::SDLRect>;
-	using CirColVar = _ColVar_<ctl::CirCol, ctl::SDLCircle>;
+	//using DotColVar = _ColVar_<ctl::DotCol, ctl::SDLPoint>;
+	//using BoxColVar = _ColVar_<ctl::BoxCol, ctl::SDLRect>;
+	//using CirColVar = _ColVar_<ctl::CirCol, ctl::SDLCircle>;
 }
