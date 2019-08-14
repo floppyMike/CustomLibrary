@@ -11,7 +11,7 @@ namespace ctl
 	class SDLPoint
 	{
 	public:
-		using value_type = T;
+		using Val_T1 = T;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -64,7 +64,7 @@ namespace ctl
 	class SDLDim
 	{
 	public:
-		using value_type = T;
+		using Val_T1 = T;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -79,20 +79,20 @@ namespace ctl
 		/**
 		* @summary construct from width and height
 		*/
-		constexpr SDLDim(const T& pw, const T& ph)
+		constexpr SDLDim(const Val_T1& pw, const Val_T1& ph)
 			: w(pw), h(ph)
 		{
 		}
 
-		T w = static_cast<T>(0), h = static_cast<T>(0);
+		Val_T1 w = static_cast<Val_T1>(0), h = static_cast<Val_T1>(0);
 	};
 
 	template<typename Point_T, typename Dim_T>
 	class SDLRect
 	{
 	public:
-		using value_type_point = Point_T;
-		using value_type_dim = Dim_T;
+		using Val_T1 = Point_T;
+		using Val_T2 = Dim_T;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -116,7 +116,7 @@ namespace ctl
 		/**
 		* @summary construct from x, y, width and height
 		*/
-		constexpr SDLRect(const Point_T& x, const Point_T& y, const Dim_T& w, const Dim_T& h) noexcept
+		constexpr SDLRect(const Val_T1& x, const Val_T1& y, const Dim_T& w, const Dim_T& h) noexcept
 			: m_point(x, y), m_dim(w, h)
 		{
 		}
@@ -124,17 +124,17 @@ namespace ctl
 		/**
 		* @summary construct from point and dimension
 		*/
-		constexpr SDLRect(const SDLPoint<Point_T>& p, const SDLDim<Dim_T>& d) noexcept
+		constexpr SDLRect(const SDLPoint<Val_T1>& p, const SDLDim<Dim_T>& d) noexcept
 			: m_point(p), m_dim(d)
 		{
 		}
 
 	private: //These need to be in front because of quick SDL_Rect conversion
-		SDLPoint<Point_T> m_point;
+		SDLPoint<Val_T1> m_point;
 		SDLDim<Dim_T> m_dim;
 
 	public:
-		Point_T& x = m_point.x, y = m_point.y;
+		Val_T1& x = m_point.x, y = m_point.y;
 		Dim_T& w = m_dim.w, h = m_dim.h;
 	};
 
@@ -142,8 +142,8 @@ namespace ctl
 	class SDLCircle
 	{
 	public:
-		using value_type_point = Point_T;
-		using value_type_radius = Rad_T;
+		using Val_T1 = Point_T;
+		using Val_T2 = Rad_T;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -158,7 +158,7 @@ namespace ctl
 		/**
 		* @summary construct from x, y and radius
 		*/
-		constexpr SDLCircle(const T& px, const T& py, const T& pr)
+		constexpr SDLCircle(const Val_T1& px, const Val_T1& py, const Val_T2& pr)
 			: x(px), y(py), r(pr)
 		{
 		}
@@ -166,16 +166,16 @@ namespace ctl
 		/**
 		* @summary construct from point and radius
 		*/
-		constexpr SDLCircle(const SDLPoint<T>& p, const T& r)
+		constexpr SDLCircle(const SDLPoint<Val_T1>& p, const Val_T2& r)
 			: SDLCircle(p.x, p.y, r)
 		{
 		}
 
-		Point_T& x = m_point.x, y = m_point.y;
-		Rad_T r = static_cast<Rad_T>(0);
+		Val_T1& x = m_point.x, y = m_point.y;
+		Val_T2 r = static_cast<Val_T2>(0);
 
 	private:
-		SDLPoint<Point_T> m_point;
+		SDLPoint<Val_T1> m_point;
 	};
 
 	template<>
