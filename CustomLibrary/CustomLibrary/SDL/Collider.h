@@ -254,9 +254,9 @@ namespace ctl
 	template<typename T1>
 	inline constexpr bool Collider<Geo_T>::inside(const Collider<SDLPoint<T1>>& p) const noexcept
 	{
-			 if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLPoint<Geo_T::Val_T1>>)					return pointPoint(m_dim, p.ptr());
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLCircle<Geo_T::Val_T1, Geo_T::Val_T2>>) return pointCir(p.ptr(), m_dim);
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLRect<Geo_T::Val_T1, Geo_T::Val_T2>>)   return pointRect(p.ptr(), m_dim);
+			 if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLPoint<Geo_T::Val_T1>>)					return Col::pointPoint(m_dim, p.ptr());
+		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLCircle<Geo_T::Val_T1, Geo_T::Val_T2>>) return Col::pointCir(p.ptr(), m_dim);
+		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLRect<Geo_T::Val_T1, Geo_T::Val_T2>>)   return Col::pointRect(p.ptr(), m_dim);
 		return false;
 	}
 }

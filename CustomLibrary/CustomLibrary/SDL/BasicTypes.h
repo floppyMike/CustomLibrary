@@ -116,7 +116,7 @@ namespace ctl
 		/**
 		* @summary construct from x, y, width and height
 		*/
-		constexpr SDLRect(const Val_T1& x, const Val_T1& y, const Dim_T& w, const Dim_T& h) noexcept
+		constexpr SDLRect(const Val_T1& x, const Val_T1& y, const Val_T2& w, const Val_T2& h) noexcept
 			: m_point(x, y), m_dim(w, h)
 		{
 		}
@@ -124,18 +124,18 @@ namespace ctl
 		/**
 		* @summary construct from point and dimension
 		*/
-		constexpr SDLRect(const SDLPoint<Val_T1>& p, const SDLDim<Dim_T>& d) noexcept
+		constexpr SDLRect(const SDLPoint<Val_T1>& p, const SDLDim<Val_T2>& d) noexcept
 			: m_point(p), m_dim(d)
 		{
 		}
 
 	private: //These need to be in front because of quick SDL_Rect conversion
 		SDLPoint<Val_T1> m_point;
-		SDLDim<Dim_T> m_dim;
+		SDLDim<Val_T2> m_dim;
 
 	public:
 		Val_T1& x = m_point.x, y = m_point.y;
-		Dim_T& w = m_dim.w, h = m_dim.h;
+		Val_T2& w = m_dim.w, h = m_dim.h;
 	};
 
 	template <typename Point_T, typename Rad_T>
