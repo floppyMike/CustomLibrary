@@ -132,6 +132,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h">
+      <Filter>CustomLibrary\Include\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.cpp">

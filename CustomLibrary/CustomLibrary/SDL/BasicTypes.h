@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include "SDLTags.h"
 
 namespace ctl
 {
@@ -12,6 +13,7 @@ namespace ctl
 	{
 	public:
 		using Val_T1 = T;
+		using Tag = SDLTags::isPoint;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -65,6 +67,7 @@ namespace ctl
 	{
 	public:
 		using Val_T1 = T;
+		using Tag = SDLTags::isDim;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -93,6 +96,7 @@ namespace ctl
 	public:
 		using Val_T1 = Point_T;
 		using Val_T2 = Dim_T;
+		using Tag = SDLTags::isRect;
 
 		/**
 		* @summary all constructors and assignments are default
@@ -144,6 +148,7 @@ namespace ctl
 	public:
 		using Val_T1 = Point_T;
 		using Val_T2 = Rad_T;
+		using Tag = SDLTags::isCircle;
 
 		/**
 		* @summary all constructors and assignments are default

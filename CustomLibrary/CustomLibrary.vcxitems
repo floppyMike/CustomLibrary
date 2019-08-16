@@ -40,6 +40,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />

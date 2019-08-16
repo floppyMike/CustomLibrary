@@ -122,10 +122,12 @@ namespace ctl
 		}
 	}
 
-	template<typename Geo_T>
+	template<typename Geo_T/*, typename = typename std::enable_if_t<hasSDLTag<Geo_T>::value>*/>
 	class Collider
 	{
 	public:
+		static_assert(hasSDLTag_v<Geo_T>, "Type requires a \"using Tags\" alias");
+
 		using value_type = Geo_T;
 
 		/**
@@ -144,38 +146,17 @@ namespace ctl
 
 		/**
 		* @summary checks if object is inside this
-		* @param "@first" other Collider
-		* @returns if "@first" is inside this
+		* @param "col" other Collider
+		* @returns if "col" is inside this
 		*/
-		template<typename T1, typename T2>
-		constexpr bool inside(const Collider<SDLRect<T1, T2>>& r) const noexcept;
-		template<typename T1, typename T2>
-		constexpr bool inside(const Collider<const SDLRect<T1, T2>>& r) const noexcept
-		{
-			return inside(reinterpret_cast<const Collider<SDLRect<T1, T2>>&>(r));
-		}
-
-		template<typename T1, typename T2>
-		constexpr bool inside(const Collider<SDLCircle<T1, T2>>& c) const noexcept;
-		template<typename T1, typename T2>
-		constexpr bool inside(const Collider<const SDLCircle<T1, T2>>& r) const noexcept
-		{
-			return inside(reinterpret_cast<const Collider<SDLCircle<T1, T2>>&>(r));
-		}
-
-		template<typename T1>
-		constexpr bool inside(const Collider<SDLPoint<T1>>& p) const noexcept;
-		template<typename T1>
-		constexpr bool inside(const Collider<const SDLPoint<T1>>& r) const noexcept
-		{
-			return inside(reinterpret_cast<const Collider<SDLPoint<T1>>&>(r));
-		}
+		template<typename T>
+		constexpr bool inside(const Collider<T>& col) const noexcept;
 
 		/**
 		* @summary ptr accessors
 		*/
 		constexpr const auto& ptr() const noexcept { return m_dim; }
-		constexpr auto& ptr(const Geo_T* const g) noexcept
+		constexpr auto& ptr(Geo_T* const g) noexcept
 		{ 
 			m_dim = g;
 			return *this;
@@ -231,32 +212,22 @@ namespace ctl
 	};
 
 	template<typename Geo_T>
-	template<typename T1, typename T2>
-	inline constexpr bool Collider<Geo_T>::inside(const Collider<SDLRect<T1, T2>>& r) const noexcept
+	template<typename T>
+	inline constexpr bool Collider<Geo_T>::inside(const Collider<T>& col) const noexcept
 	{
-			 if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLPoint<Geo_T::Val_T1>>)					return Col::pointRect(m_dim, r.ptr());
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLCircle<Geo_T::Val_T1, Geo_T::Val_T2>>) return Col::rectCir(r.ptr(), m_dim);
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLRect<Geo_T::Val_T1, Geo_T::Val_T2>>)	return Col::rectRect(m_dim, r.ptr());
-		return false;
-	}
+		if constexpr (std::is_same_v<T::Tag, SDLTags::isRect>)
+				 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointRect(m_dim, col.ptr());
+			else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::rectCir(col.ptr(), m_dim);
+			else															  return Col::rectRect(m_dim, col.ptr());
 
-	template<typename Geo_T>
-	template<typename T1, typename T2>
-	inline constexpr bool Collider<Geo_T>::inside(const Collider<SDLCircle<T1, T2>>& c) const noexcept
-	{
-			 if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLPoint<Geo_T::Val_T1>>)					return Col::pointCir(m_dim, c.ptr());
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLCircle<Geo_T::Val_T1, Geo_T::Val_T2>>) return Col::cirCir(m_dim, c.ptr());
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLRect<Geo_T::Val_T1, Geo_T::Val_T2>>)	return Col::rectCir(c.ptr(), m_dim);
-		return false;
-	}
+		else if constexpr (std::is_same_v<T::Tag, SDLTags::isCircle>)
+				 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointCir(m_dim, col.ptr());
+			else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::cirCir(m_dim, col.ptr());
+			else															  return Col::rectCir(col.ptr(), m_dim);
 
-	template<typename Geo_T>
-	template<typename T1>
-	inline constexpr bool Collider<Geo_T>::inside(const Collider<SDLPoint<T1>>& p) const noexcept
-	{
-			 if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLPoint<Geo_T::Val_T1>>)					return Col::pointPoint(m_dim, p.ptr());
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLCircle<Geo_T::Val_T1, Geo_T::Val_T2>>) return Col::pointCir(p.ptr(), m_dim);
-		else if constexpr (std::is_same_v<std::remove_const_t<Geo_T>, SDLRect<Geo_T::Val_T1, Geo_T::Val_T2>>)   return Col::pointRect(p.ptr(), m_dim);
-		return false;
+		else
+				 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointPoint(m_dim, col.ptr());
+			else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::pointCir(col.ptr(), m_dim);
+			else															  return Col::pointRect(col.ptr(), m_dim);
 	}
 }
