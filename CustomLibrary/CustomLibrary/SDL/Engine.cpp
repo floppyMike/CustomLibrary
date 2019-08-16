@@ -61,13 +61,18 @@ void ctl::SDL::run()
 	}
 }
 
-auto& ctl::SDL::detachWin(const Uint32& winID)
+ctl::SDL& ctl::SDL::addWin(WindowBase* window)
 {
-	const auto winPtr = std::find_if(m_windows.begin(), m_windows.end(),
-		[&winID](std::unique_ptr<WindowBase>& ptr) { return ptr->ID() == winID; });
+	m_windows.emplace_back(window);
+	m_event.attach(window);
 
-	m_windows.erase(winPtr);
-	m_event.detach(winPtr->get());
+	return *this;
+}
+
+ctl::SDL& ctl::SDL::detachWin(WindowBase* window)
+{
+	m_windows.erase(std::find(m_windows.begin(), m_windows.end(), window));
+	m_event.detach(window);
 
 	return *this;
 }

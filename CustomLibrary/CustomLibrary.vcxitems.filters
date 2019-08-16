@@ -158,5 +158,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp" />
   </ItemGroup>
 </Project>

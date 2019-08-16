@@ -126,24 +126,16 @@ namespace ctl
 		void run();
 
 		/**
-		* @summary construct a window
-		* @tparam "WindowType" window type to construct
-		* @param "argv" parameters of specified window constructor
+		* @summary attach window to engine
+		* @param "window" window to attach
 		*/
-		template<typename WindowType, typename... Args>
-		auto& addWin(Args&&... argv)
-		{
-			m_windows.emplace_back(std::make_unique<WindowType>(std::forward<Args>(argv)...));
-			m_event.attach(m_windows.back().get());
-
-			return *this;
-		}
+		ctl::SDL& addWin(WindowBase* window);
 		
 		/**
-		* @summary destroy a window
-		* @param "winID" window id to destroy
+		* @summary detach a window
+		* @param "window" window to detach
 		*/
-		auto& detachWin(const Uint32& winID);
+		ctl::SDL& detachWin(WindowBase* window);
 
 		/**
 		* @summary access const delta
@@ -159,7 +151,7 @@ namespace ctl
 
 	private:
 		ObSu<SDL_Event>::Subject m_event;
-		std::vector<std::unique_ptr<WindowBase>> m_windows;
+		std::vector<WindowBase*> m_windows;
 
 		double m_fps = 0.;
 		double m_delta = 0.;

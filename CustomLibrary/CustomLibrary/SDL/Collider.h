@@ -171,7 +171,7 @@ namespace ctl
 	class ColliderVar : public Geo_t
 	{
 	public:
-		using Geo_T = Geo_t;
+		using Val_T1 = Geo_t;
 
 		/**
 		* @summary constructs with 0 and configures collider
@@ -192,6 +192,16 @@ namespace ctl
 		}
 
 		/**
+		* @summary constructs with val and configures collider
+		* @param "g" value reference to copy construct with
+		*/
+		constexpr ColliderVar(Geo_t& g) noexcept
+			: Geo_t(g)
+			, m_collider(this)
+		{
+		}
+
+		/**
 		* @summary construct with individual values
 		* @param "argv" values based on type
 		*/
@@ -203,12 +213,23 @@ namespace ctl
 		}
 
 		/**
+		* @summary construct with individual values
+		* @param "argv" values based on type
+		*/
+		template<typename... Arg>
+		constexpr ColliderVar(Arg&... argv) noexcept
+			: Geo_t(argv...)
+			, m_collider(this)
+		{
+		}
+
+		/**
 		* @summary accesses collider object		
 		*/
 		constexpr const auto& collider() const { return m_collider; }
 
 	private:
-		Collider<Geo_T> m_collider;
+		Collider<Val_T1> m_collider;
 	};
 
 	template<typename Geo_T>
