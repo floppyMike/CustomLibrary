@@ -19,7 +19,7 @@ namespace ctl
 		*/
 		template<typename Point_T, typename Rect_T1, typename Rect_T2>
 		constexpr auto pointRect(const SDLPoint<Point_T>* const d,
-			const SDLRect<Rect_T1, Rect_T2>* const r) noexcept
+			const SDLRectRef<Rect_T1, Rect_T2>* const r) noexcept
 		{
 			return !(d->x < r->x ||
 				d->x > r->x + r->w ||
@@ -34,7 +34,7 @@ namespace ctl
 		* @returns if collision is taking place
 		*/
 		template<typename Rect_T1, typename Rect_T2, typename Cir_T1, typename Cir_T2>
-		constexpr bool rectCir(const SDLRect<Rect_T1, Rect_T2>* const r,
+		constexpr bool rectCir(const SDLRectRef<Rect_T1, Rect_T2>* const r,
 			const SDLCircle<Cir_T1, Cir_T2>* const c) noexcept
 		{
 			const auto halfRad = c->r >> 1;
@@ -62,8 +62,8 @@ namespace ctl
 		* @returns if collision is taking place
 		*/
 		template<typename Rect1_T1, typename Rect1_T2, typename Rect2_T1, typename Rect2_T2>
-		constexpr bool rectRect(const SDLRect<Rect1_T1, Rect1_T2>* const r1,
-			const SDLRect<Rect2_T1, Rect2_T2>* const r2) noexcept
+		constexpr bool rectRect(const SDLRectRef<Rect1_T1, Rect1_T2>* const r1,
+			const SDLRectRef<Rect2_T1, Rect2_T2>* const r2) noexcept
 		{
 			return !(r1->y + r1->h <= r2->y ||
 				r1->y >= r2->y + r2->h ||

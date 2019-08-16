@@ -12,6 +12,8 @@ namespace ctl
 	class SDLPoint
 	{
 	public:
+		static_assert(std::is_arithmetic_v<T>, "Type must be arithmetic");
+
 		using Val_T1 = T;
 		using Tag = SDLTags::isPoint;
 
@@ -66,6 +68,8 @@ namespace ctl
 	class SDLDim
 	{
 	public:
+		static_assert(std::is_arithmetic_v<T>, "Type must be arithmetic");
+
 		using Val_T1 = T;
 		using Tag = SDLTags::isDim;
 
@@ -91,22 +95,70 @@ namespace ctl
 	};
 
 	template<typename Point_T, typename Dim_T>
-	class SDLRect
+	class SDLRectRef
 	{
 	public:
+		static_assert(std::is_arithmetic_v<Point_T>&& std::is_arithmetic_v<Dim_T>, "Types must be arithmetic");
+
+		using Val_T1 = Point_T;
+		using Val_T2 = Dim_T;
+		using Tag = SDLTags::isRect;
+
+		constexpr SDLRectRef() noexcept = delete;
+		constexpr SDLRectRef(const SDLRectRef&) noexcept = default;
+
+		constexpr SDLRectRef& operator=(const SDLRectRef&) noexcept = default;
+
+		/**
+		* @summary construct from x, y, width and height references
+		*/
+		constexpr SDLRectRef(Val_T1& x, Val_T1& y, Val_T2& w, Val_T2& h) noexcept
+			: x(x), y(y), w(w), h(h)
+		{
+		}
+
+		/**
+		* @summary construct from point and dimension
+		*/
+		constexpr SDLRectRef(SDLPoint<Val_T1>& p, SDLDim<Val_T2>& d) noexcept
+			: x(p.x), y(p.y), w(d.w), h(d.h)
+		{
+		}
+
+		Val_T1& x, y;
+		Val_T2& w, h;
+	};
+
+	template<typename Point_T, typename Dim_T>
+	class SDLRect : public SDLRectRef<Point_T, Dim_T>
+	{
+	public:
+		static_assert(std::is_arithmetic_v<Point_T> && std::is_arithmetic_v<Dim_T>, "Types must be arithmetic");
+
 		using Val_T1 = Point_T;
 		using Val_T2 = Dim_T;
 		using Tag = SDLTags::isRect;
 
 		/**
-		* @summary all constructors and assignments are default
+		* @summary constructs the Ref from this point and dimension
 		*/
-		constexpr SDLRect() = default;
-		constexpr SDLRect(const SDLRect&) = default;
-		constexpr SDLRect(SDLRect&&) = default;
+		constexpr SDLRect() noexcept
+			: SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
+		{
+		}
 
-		constexpr SDLRect& operator=(const SDLRect&) = default;
-		constexpr SDLRect& operator=(SDLRect&&) = default;
+		/**
+		* @summary copies values and constructs the Ref from this point and dimension
+		*/
+		constexpr SDLRect(const SDLRect& r) noexcept
+			: SDLRect(r.m_point, r.m_dim)
+		{
+		}
+		constexpr SDLRect& operator=(const SDLRect& r) noexcept
+		{
+			m_point = r.m_point;
+			m_dim = r.m_dim;
+		}
 
 		/**
 		* @summary handles type overload to SDL_Point
@@ -122,6 +174,7 @@ namespace ctl
 		*/
 		constexpr SDLRect(const Val_T1& x, const Val_T1& y, const Val_T2& w, const Val_T2& h) noexcept
 			: m_point(x, y), m_dim(w, h)
+			, SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
 		{
 		}
 
@@ -130,22 +183,21 @@ namespace ctl
 		*/
 		constexpr SDLRect(const SDLPoint<Val_T1>& p, const SDLDim<Val_T2>& d) noexcept
 			: m_point(p), m_dim(d)
+			, SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
 		{
 		}
 
-	private: //These need to be in front because of quick SDL_Rect conversion
+	private:
 		SDLPoint<Val_T1> m_point;
 		SDLDim<Val_T2> m_dim;
-
-	public:
-		Val_T1& x = m_point.x, y = m_point.y;
-		Val_T2& w = m_dim.w, h = m_dim.h;
 	};
 
 	template <typename Point_T, typename Rad_T>
 	class SDLCircle
 	{
 	public:
+		static_assert(std::is_arithmetic_v<Point_T> && std::is_arithmetic_v<Rad_T>, "Types must be arithmetic");
+
 		using Val_T1 = Point_T;
 		using Val_T2 = Rad_T;
 		using Tag = SDLTags::isCircle;
