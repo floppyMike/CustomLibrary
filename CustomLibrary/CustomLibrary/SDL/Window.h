@@ -95,6 +95,6 @@ namespace ctl
 	inline auto& WindowBase::setState(Args&& ...args)
 	{
 		m_state = std::make_unique<State>(args...);
-		return *this;
+		return *m_state;
 	}
 }

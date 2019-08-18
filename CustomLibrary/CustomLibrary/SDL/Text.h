@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL_ttf.h>
+
 #include <memory>
 #include <string>
 
@@ -25,7 +27,7 @@ namespace ctl
 		{
 			m_ptr.reset(TTF_OpenFont(path.c_str(), pt));
 			if (!m_ptr)
-				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
+				throw ctl::Log(SDL_GetError());
 
 			m_pt = pt;
 

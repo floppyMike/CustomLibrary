@@ -126,10 +126,15 @@ namespace ctl
 		void run();
 
 		/**
-		* @summary attach window to engine
-		* @param "window" window to attach
+		* @summary construct and attach window to engine
+		* @tparam "T" Window type
+		* @param "argv" arguments for window construction
 		*/
-		ctl::SDL& addWin(WindowBase* window);
+		template<typename T, typename... Arg>
+		auto& addWin(Arg&&... argv)
+		{
+			return static_cast<T&>(*m_windows.emplace_back(std::make_unique<T>(std::forward<Arg>(argv)...)));
+		}
 		
 		/**
 		* @summary detach a window
@@ -151,7 +156,7 @@ namespace ctl
 
 	private:
 		ObSu<SDL_Event>::Subject m_event;
-		std::vector<WindowBase*> m_windows;
+		std::vector<std::unique_ptr<WindowBase>> m_windows;
 
 		double m_fps = 0.;
 		double m_delta = 0.;

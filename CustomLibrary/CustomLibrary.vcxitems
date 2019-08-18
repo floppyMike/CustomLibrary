@@ -41,6 +41,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />
@@ -72,6 +73,8 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.cpp">
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</MinimalRebuild>
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</MinimalRebuild>

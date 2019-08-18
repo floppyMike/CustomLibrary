@@ -137,4 +137,10 @@ namespace ctl
 	}
 
 	std::string toHexadecimal(int val);
+
+	template<typename To, typename... Args>
+	auto multiStaticCast(const Args&... args)
+	{
+		return std::make_tuple(static_cast<To>(args)...);
+	}
 }

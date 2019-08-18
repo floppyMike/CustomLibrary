@@ -1,5 +1,17 @@
 #include "Error.h"
 
+ctl::Log::Log(const std::string& msg)
+	: m_msg(msg.c_str())
+{
+	m_buf.emplace_back(msg, Sev::ERR);
+}
+
+ctl::Log::Log(const char* msg)
+	: m_msg(msg)
+{
+	m_buf.emplace_back(msg, Sev::ERR);
+}
+
 void ctl::Log::streamLog(std::ostream& out, const std::string_view& msg, const Sev& sev)
 {
 	switch (sev)

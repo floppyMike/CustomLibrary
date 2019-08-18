@@ -140,14 +140,8 @@ namespace ctl
 		* @summary construct Log object
 		* @param "msg" message to store
 		*/
-		Log(const std::string& msg)
-			: m_msg(msg.c_str())
-		{
-		}
-		Log(const char* msg)
-			: m_msg(msg)
-		{
-		}
+		Log(const std::string& msg);
+		Log(const char* msg);
 
 		/**
 		* @summary converts log into text

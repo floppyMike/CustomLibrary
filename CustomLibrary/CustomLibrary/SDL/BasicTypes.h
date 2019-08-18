@@ -36,12 +36,28 @@ namespace ctl
 		}
 
 		/**
+		* @summary handles type conversion
+		*/
+		template<typename T>
+		operator SDLPoint<T>() const noexcept
+		{
+			return { static_cast<T>(x), static_cast<T>(y) };
+		}
+
+		/**
 		* @summary handles type overload to SDL_Point
-		* @remarks must be of type int
 		*/
 		operator SDL_Point() const noexcept
 		{
-			static_assert(true, "Conversion must be of type int");
+			return { static_cast<int>(x), static_cast<int>(y) };
+		}
+
+		/**
+		* @summary handles type overload to SDL_FPoint
+		*/
+		operator SDL_FPoint() const noexcept
+		{
+			return { static_cast<float>(x), static_cast<float>(y) };
 		}
 
 		/**
@@ -125,12 +141,12 @@ namespace ctl
 		{
 		}
 
-		Val_T1& x, y;
-		Val_T2& w, h;
+		Val_T1& x, & y;
+		Val_T2& w, & h;
 	};
 
 	template<typename Point_T, typename Dim_T>
-	class SDLRect : public SDLRectRef<Point_T, Dim_T>
+	class SDLRect
 	{
 	public:
 		static_assert(std::is_arithmetic_v<Point_T> && std::is_arithmetic_v<Dim_T>, "Types must be arithmetic");
@@ -143,7 +159,7 @@ namespace ctl
 		* @summary constructs the Ref from this point and dimension
 		*/
 		constexpr SDLRect() noexcept
-			: SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
+			: x(m_point.x), y(m_point.y), w(m_dim.w), h(m_dim.h)
 		{
 		}
 
@@ -154,6 +170,7 @@ namespace ctl
 			: SDLRect(r.m_point, r.m_dim)
 		{
 		}
+
 		constexpr SDLRect& operator=(const SDLRect& r) noexcept
 		{
 			m_point = r.m_point;
@@ -161,20 +178,11 @@ namespace ctl
 		}
 
 		/**
-		* @summary handles type overload to SDL_Point
-		* @remarks must be of type int
-		*/
-		operator SDL_Rect() const noexcept
-		{
-			static_assert(true, "Conversion must be of type int");
-		}
-
-		/**
 		* @summary construct from x, y, width and height
 		*/
 		constexpr SDLRect(const Val_T1& x, const Val_T1& y, const Val_T2& w, const Val_T2& h) noexcept
 			: m_point(x, y), m_dim(w, h)
-			, SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
+			, x(m_point.x), y(m_point.y), w(m_dim.w), h(m_dim.h)
 		{
 		}
 
@@ -182,14 +190,51 @@ namespace ctl
 		* @summary construct from point and dimension
 		*/
 		constexpr SDLRect(const SDLPoint<Val_T1>& p, const SDLDim<Val_T2>& d) noexcept
-			: m_point(p), m_dim(d)
-			, SDLRectRef<Point_T, Dim_T>(m_point, m_dim)
+			: SDLRect(p.x, p.y, d.w, d.h)
 		{
 		}
+
+		/**
+		* @summary handles type overload to SDL_Rect
+		* @remarks must be of type int
+		*/
+		operator SDL_Rect() const noexcept
+		{
+			return { static_cast<int>(this->x), static_cast<int>(this->y), 
+				static_cast<int>(this->w), static_cast<int>(this->h) };
+		}
+
+		/**
+		* @summary handles type overload to SDL_FRect
+		* @remarks must be of type float
+		*/
+		operator SDL_FRect() const noexcept
+		{
+			return { static_cast<float>(this->x), static_cast<float>(this->y), 
+				static_cast<float>(this->w), static_cast<float>(this->h) };
+		}
+
+		/**
+		* @summary point accessors
+		* @returns reference to SDLPoint
+		*/
+		constexpr const auto& point() const { return m_point; }
+		constexpr auto& point() { return m_point; }
+
+		/**
+		* @summary dimension accessors
+		* @returns reference to SDLDim
+		*/
+		constexpr const auto& dim() const { return m_dim; }
+		constexpr auto& dim() { return m_dim; }
 
 	private:
 		SDLPoint<Val_T1> m_point;
 		SDLDim<Val_T2> m_dim;
+
+	public:
+		Val_T1& x, & y;
+		Val_T2& w, & h;
 	};
 
 	template <typename Point_T, typename Rad_T>
@@ -216,7 +261,7 @@ namespace ctl
 		* @summary construct from x, y and radius
 		*/
 		constexpr SDLCircle(const Val_T1& px, const Val_T1& py, const Val_T2& pr)
-			: x(px), y(py), r(pr)
+			: m_point(px, py), r(pr)
 		{
 		}
 
@@ -228,23 +273,37 @@ namespace ctl
 		{
 		}
 
-		Val_T1& x = m_point.x, y = m_point.y;
+		Val_T1& x = m_point.x, & y = m_point.y;
 		Val_T2 r = static_cast<Val_T2>(0);
 
 	private:
 		SDLPoint<Val_T1> m_point;
 	};
 
+	/****************************************
+	* Implementations
+	****************************************/
+
 	template<>
 	inline SDLPoint<int>::operator SDL_Point() const noexcept
 	{
-		return *reinterpret_cast<const SDL_Point*const>(this);
+		return *reinterpret_cast<const SDL_Point* const>(this);
+	}
+	template<>
+	inline SDLPoint<float>::operator SDL_FPoint() const noexcept
+	{
+		return *reinterpret_cast<const SDL_FPoint* const>(this);
 	}
 
 	template<>
 	inline SDLRect<int, int>::operator SDL_Rect() const noexcept
 	{
 		return *reinterpret_cast<const SDL_Rect* const>(this);
+	}
+	template<>
+	inline SDLRect<float, float>::operator SDL_FRect() const noexcept
+	{
+		return *reinterpret_cast<const SDL_FRect* const>(this);
 	}
 
 	template<typename T>

@@ -135,6 +135,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h">
+      <Filter>CustomLibrary\Include\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.cpp">
@@ -161,6 +164,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
