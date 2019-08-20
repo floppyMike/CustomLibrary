@@ -30,9 +30,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\CollisionBase.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
@@ -171,6 +168,9 @@
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.cpp">
+      <Filter>CustomLibrary\Source\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
   </ItemGroup>

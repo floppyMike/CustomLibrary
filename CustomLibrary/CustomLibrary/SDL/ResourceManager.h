@@ -80,6 +80,10 @@ namespace ctl
 		std::unordered_map<std::string_view, std::any> m_res;
 	};
 
+	/******************************************
+	* Implementation
+	******************************************/
+
 	template<typename... T>
 	template<typename Type>
 	inline auto& ResManagerStatic<T...>::get(const std::string_view& var)
@@ -119,10 +123,11 @@ namespace ctl
 	template<typename T, typename ...Arg>
 	inline auto& ResManager::emplace(const std::string_view& var, Arg&& ...args)
 	{
-		const auto val = m_res.try_emplace(var, std::in_place_type<T>, args...);
+		auto val = m_res.try_emplace(var/*, std::in_place_type<T>, */);
 		if (!val.second)
 			Log::logWrite("SDL: ResourceManager: emplace: Variable is ignored.", Log::Sev::WARNING);
 
+		val.first->second.emplace<T>(std::forward<Arg>(args)...);
 		return *std::any_cast<T>(&val.first->second);
 	}
 

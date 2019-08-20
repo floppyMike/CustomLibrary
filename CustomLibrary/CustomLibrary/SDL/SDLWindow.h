@@ -151,6 +151,5 @@ namespace ctl
 	{
 		SDL& en;
 		SDLWindow& win;
-		ResManager& res;
 	};
 }

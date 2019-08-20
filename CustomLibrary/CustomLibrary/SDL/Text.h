@@ -16,43 +16,33 @@ namespace ctl
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 		Font() = default;
-		Font(const Font&) = default;
+		Font(const Font&) = delete;
 		Font(Font&&) = default;
 
 		Font& operator=(Font&&) = default;
-		Font& operator=(const Font&) = default;
+		Font& operator=(const Font&) = delete;
 
-		//Exception: If file doesn't exit
-		auto& load(const std::string& path, const int& pt)
-		{
-			m_ptr.reset(TTF_OpenFont(path.c_str(), pt));
-			if (!m_ptr)
-				throw ctl::Log(SDL_GetError());
+		/**
+		* @summary loads font from path
+		* @param "path" path where font file is located
+		* @param "pt" font size
+		* @exception "Log" at fail
+		*/
+		Font& load(const char* path, const int& pt);
 
-			m_pt = pt;
-
-			return *this;
-		}
-
-		//Exception: If font not loaded
-		//Font Styles: https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_22.html
-		auto& style(const int& style)
-		{
-			if (!m_ptr)
-				throw ctl::Log("Font: Font not loaded.", Log::Sev::ERR0R);
-
-			TTF_SetFontStyle(m_ptr.get(), style);
-
-			return *this;
-		}
-		//Exception: If font not loaded
-		auto style()
-		{
-			if (!m_ptr)
-				throw ctl::Log("Font: Font not loaded.", Log::Sev::ERR0R);
-
-			return TTF_GetFontStyle(m_ptr.get());
-		}
+		/**
+		* @summary sets font style
+		* @param "style" font style
+		* @remarks a font must be loaded
+		* @remarks font styles https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_22.html
+		*/
+		Font& style(const int& style);
+		/**
+		* @summary gets font style
+		* @remarks a font must be loaded
+		* @returns font style
+		*/
+		int style();
 
 		auto* ptr() { return m_ptr.get(); }
 		constexpr const auto& pt() const { return m_pt; }
@@ -67,7 +57,7 @@ namespace ctl
 	public:
 		Text() = default;
 		Text(Text&& x) = default;
-		Text(const Text&) = default;
+		Text(const Text&) = delete;
 
 		Text(SDLWindow* win)
 			: FixedTexture(win)
@@ -75,58 +65,88 @@ namespace ctl
 		}
 
 		Text& operator=(Text&& x) = default;
-		Text& operator=(const Text& x) = default;
+		Text& operator=(const Text& x) = delete;
 
-		//Exception: If font has a problem
-		auto& loadSolid(const std::string& text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		/**
+		* @summary loads a text
+		* @param "text" text to load
+		* @param "colour" text colour
+		* @exception "Log" at fail
+		* @remarks fast load algorithm but the worst output
+		*/
+		Text& loadSolid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF });
+		/**
+		* @summary loads a text
+		* @param "text" text to load
+		* @param "bg" background colour
+		* @param "colour" text colour
+		* @exception "Log" at fail
+		* @remarks slow load algorithm but nicer and with background colour
+		*/
+		Text& loadShaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF });
+		/**
+		* @summary loads a text
+		* @param "text" text to load
+		* @param "colour" text colour
+		* @exception "Log" at fail
+		* @remarks slowest load algorithm but nicest
+		*/
+		Text& loadBlended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF });
+		/**
+		* @summary loads a text
+		* @param "text" text to load
+		* @param "wrapper" size of line before newline
+		* @param "colour" text colour
+		* @exception "Log" at fail
+		* @remarks same as blended, has a sizeable cache and supports newline
+		*/
+		Text& loadWrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF });
+
+		/**
+		* @summary loads a text from custom function
+		* @param "text" text to load
+		* @param "loader" function to load from
+		* @param "args" arguments for loader
+		* @exception "Log" if loader returns a nullptr
+		* @remarks Return type must be SDL_Surface
+		*/
+		template<typename T, typename... Args>
+		Text& load(const char* text, T (*loader)(Args...), Args&&... args)
 		{
-			_load_(TTF_RenderUTF8_Solid(m_font->ptr(), text.c_str(), colour), text);
+			static_assert(std::is_same_v<T, SDL_Surface*>, "Return type must be of type SDL_Surface.");
+			_load_(loader(std::forward<Args>(args)...), text);
 			return *this;
 		}
-		//Exception: If font has a problem
-		auto& loadShaded(const std::string& text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			_load_(TTF_RenderUTF8_Shaded(m_font->ptr(), text.c_str(), colour, bg), text);
-			return *this;
-		}
-		//Exception: If font has a problem
-		auto& loadBlended(const std::string& text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			_load_(TTF_RenderUTF8_Blended(m_font->ptr(), text.c_str(), colour), text);
-			return *this;
-		}
-		//Exception: If font has a problem
-		auto& loadWrapped(const std::string& text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			_load_(TTF_RenderUTF8_Blended_Wrapped(m_font->ptr(), text.c_str(), colour, wrapper), text);
-			return *this;
-		}
 
-		//Exception: If font has a problem
-		auto hypoSize(const std::string &text)
-		{
-			NumVec<int, 2> temp;
-			if (TTF_SizeUTF8(m_font->ptr(), text.c_str(), &temp[0], &temp[1]) != 0)
-				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
-			return temp;
-		}
+		/**
+		* @summary gets graphical size of text
+		* @param "text" text to see size of
+		* @exception "Log" at fail
+		* @returns SDLDim<int> of width and height
+		*/
+		SDLDim<int> hypoSize(const char* text);
 
-		constexpr const std::string& textString() const { return m_text; }
+		/**
+		* @summary text accessor
+		*/
+		constexpr const std::string& text() const { return m_text; }
 
+		/**
+		* @summary font accessors
+		*/
 		constexpr auto& font(Font* font) { m_font = font; return *this; }
 		constexpr const auto& font() const { return m_font; }
 
 	private:
 		using FixedTexture::load;
 
-		void _load_(SDL_Surface* s, const std::string& text)
-		{
-			if (s == nullptr)
-				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
-
-			load(s);
-			m_text = text;
-		}
+		/**
+		* @summary load surface to texture
+		* @param "s" surface to convert
+		* @param "text" text to store as string
+		* @exception "Log" at fail
+		*/
+		void _load_(SDL_Surface* s, const char* text);
 
 		std::string m_text;
 		Font *m_font = nullptr;

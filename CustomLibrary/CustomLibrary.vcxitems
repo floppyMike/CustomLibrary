@@ -34,7 +34,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\CollisionBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
@@ -74,6 +73,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.cpp">
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</MinimalRebuild>

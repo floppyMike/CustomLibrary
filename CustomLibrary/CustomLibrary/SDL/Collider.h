@@ -68,25 +68,18 @@ namespace ctl
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& r, const U2& c) noexcept
 		{
-			//
-			// Algorithm not working!!!
-			//
-			const auto halfRad = c.r >> 1;
+			const auto [halfWidth, halfHight] = std::pair(r.w / 2, r.h / 2);
+			const auto [distanceX, distanceY] = std::pair(std::abs(r.x + halfWidth - c.x), std::abs(r.y + halfHight - c.y));
 
-			//Find closest x offset
-			const auto xEdge = c.x + halfRad;
-			const auto cX = xEdge < r.x ? r.x :
-				xEdge > r.x + r.w ? r.x + r.w :
-				xEdge;
+			if (distanceX > (halfWidth + c.r)) return false;
+			if (distanceY > (halfHight + c.r)) return false;
 
-			//Find closest y offset
-			const auto yEdge = c.y + halfRad;
-			const auto cY = yEdge < r.y ? r.y :
-				yEdge > r.y + r.h ? r.y + r.h :
-				yEdge;
+			if (distanceX <= halfWidth) return true;
+			if (distanceY <= halfHight) return true;
 
-			//If the closest point is inside the circle
-			return power2(cX - c.x - halfRad) + power2(cY - c.y - halfRad) < power2(c.r) >> 2;
+			const auto cornerDistance_sq = power2(distanceX - halfWidth) + power2(distanceY - halfHight);
+
+			return (cornerDistance_sq <= power2(c.r));
 		}
 	};
 	/**
@@ -195,11 +188,18 @@ namespace ctl
 		}
 	};
 
+	/**
+	* @summary checks for collision between two objects
+	* @param "d" point
+	* @param "c" circle
+	* @remarks object for partial function specialization
+	* @returns if collision is taking place
+	*/
 	template<typename T1, typename T2>
-	constexpr auto collision(const T1& d, const T2& r) noexcept
+	constexpr auto collision(const T1& o1, const T2& o2) noexcept
 	{
 		static_assert(hasSDLTag_v<T1> && hasSDLTag_v<T2>, "Object has no tag.");
-		return _impl_<typename T1::Tag, typename T2::Tag>::_(d, r);
+		return _impl_<typename T1::Tag, typename T2::Tag>::_(o1, o2);
 	}
 
 	template<typename Geo_T>
@@ -314,24 +314,4 @@ namespace ctl
 	private:
 		Collider<Val_T1> m_collider;
 	};
-
-	//template<typename Geo_T>
-	//template<typename T>
-	//inline constexpr bool Collider<Geo_T>::inside(const Collider<T>& col) const noexcept
-	//{
-	//	if constexpr (std::is_same_v<T::Tag, SDLTags::isRect>)
-	//			 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointRect(m_dim, col.ptr());
-	//		else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::rectCir(col.ptr(), m_dim);
-	//		else															  return Col::rectRect(m_dim, col.ptr());
-
-	//	else if constexpr (std::is_same_v<T::Tag, SDLTags::isCircle>)
-	//			 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointCir(m_dim, col.ptr());
-	//		else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::cirCir(m_dim, col.ptr());
-	//		else															  return Col::rectCir(col.ptr(), m_dim);
-
-	//	else
-	//			 if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isPoint>)  return Col::pointPoint(m_dim, col.ptr());
-	//		else if constexpr (std::is_same_v<Geo_T::Tag, SDLTags::isCircle>) return Col::pointCir(col.ptr(), m_dim);
-	//		else															  return Col::pointRect(col.ptr(), m_dim);
-	//}
 }
