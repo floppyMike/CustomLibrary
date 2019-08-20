@@ -3,17 +3,34 @@
 #include <vector>
 #include <type_traits>
 
+#include <SDL.h>
+
+#include <CustomLibrary/utility.h>
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/SDLWindow.h>
-#include <CustomLibrary/utility.h>
+#include <CustomLibrary/SDL/SDLTraits.h>
 
 namespace ctl
 {
-	enum class Fig { LINE, SQUARE, SQUARE_FILLED, POINT, CIRCLE, CIRCLE_FILLED, P_CIRCLE };
+	class Rectangle : public Graphical
+	{
+	public:
+		using Graphical::Graphical;
 
-	//---------------------------------------------------------------------
-	//----------------------------Singular---------------------------------
-	//---------------------------------------------------------------------
+		void draw()
+		{
+
+		}
+	};
+
+	void draw(const SDL_Color& rgba, SDLWindow* win, const SDLRect<int, int>& ass)
+	{
+		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
+
+
+	}
+
+	enum class Fig { LINE, SQUARE, SQUARE_FILLED, POINT, CIRCLE, CIRCLE_FILLED, P_CIRCLE };
 
 	template<Fig shape, typename Type>
 	void draw(const SDL_Color&, SDLWindow*, const Type&)

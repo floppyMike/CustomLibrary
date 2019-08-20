@@ -8,7 +8,7 @@
 
 namespace ctl
 {
-	class BaseTexture : public Graphical<BaseTexture>
+	class BaseTexture : public Graphical
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
