@@ -106,26 +106,14 @@ namespace ctl
 		/**
 		* @summary render present items
 		*/
-		void render()
-		{
-			SDL_RenderPresent(m_renderer);
-		}
+		void render();
 
 		/**
 		* @summary blend mode accessors
 		* @remarks check https://wiki.libsdl.org/SDL_BlendMode#Values
 		*/
-		auto blendMode() noexcept
-		{ 
-			SDL_BlendMode b;
-			ASSERT_N(SDL_GetRenderDrawBlendMode(m_renderer, &b), ==, 0, SDL_GetError());
-			return b;
-		}
-		auto& blendMode(const SDL_BlendMode &m) noexcept
-		{
-			ASSERT_N(SDL_SetRenderDrawBlendMode(m_renderer, m), ==, 0, SDL_GetError());
-			return *this;
-		}
+		SDL_BlendMode blendMode() noexcept;
+		SDLWindow& blendMode(const SDL_BlendMode& m) noexcept;
 
 		/**
 		* @summary render loop
@@ -137,7 +125,7 @@ namespace ctl
 		*/
 		constexpr auto* renderer() { return m_renderer; }
 
-		SDL_Colour bg = { 0xFF, 0xFF, 0xFF, 0xFF };
+		SDL_Color bg = { 0xFF, 0xFF, 0xFF, 0xFF };
 		Camera2D cam;
 
 	private:
