@@ -21,7 +21,7 @@ namespace ctl
 		* @exception "Log" if window creation fails
 		* @remarks flags are https://wiki.libsdl.org/SDL_WindowFlags#Values
 		*/
-		WindowBase(const std::string_view& name, const SDLDim<Uint32>& dim, const Uint32& windowFlags = SDL_WINDOW_SHOWN);
+		WindowBase(const std::string_view& name, const SDLDim<int>& dim, const Uint32& windowFlags = SDL_WINDOW_SHOWN);
 
 		/**
 		* @summary deallocate resources if out of scope
@@ -85,7 +85,7 @@ namespace ctl
 		SDL_Window *m_window = nullptr;
 		Uint32 m_id;
 
-		SDLDim<Uint32> m_dim;
+		SDLDim<int> m_dim;
 		std::bitset<6> m_focus;
 
 		std::unique_ptr<StateBase> m_state;

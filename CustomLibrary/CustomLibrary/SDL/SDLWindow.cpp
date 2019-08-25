@@ -1,7 +1,7 @@
 #include "SDLWindow.h"
 
 ctl::SDLWindow::SDLWindow(const std::string& name, 
-	const SDLDim<Uint32>& dim, 
+	const SDLDim<int>& dim, 
 	const Uint32& windowFlags, 
 	const Uint32& rendererFlags)
 	: WindowBase(name, dim, windowFlags)

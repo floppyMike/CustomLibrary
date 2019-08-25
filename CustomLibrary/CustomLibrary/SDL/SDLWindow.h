@@ -19,7 +19,7 @@ namespace ctl
 		* @summary constructs collider from camera location and screen size ref
 		* @param "screen" ref to screen SDLDim
 		*/
-		Camera2D(SDLDim<Uint32>& screen) noexcept
+		Camera2D(SDLDim<int>& screen) noexcept
 			: m_col(m_camLoc, screen)
 		{
 		}
@@ -67,7 +67,7 @@ namespace ctl
 
 	private:
 		SDLPoint<float> m_camLoc = { 0.f, 0.f };
-		ctl::ColliderVar<ctl::SDLRectRef<float, Uint32>> m_col;
+		ctl::ColliderVar<ctl::SDLRectRef<float, int>> m_col;
 	};
 
 	class SDLWindow : public WindowBase
@@ -84,7 +84,7 @@ namespace ctl
 		* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
 		*/
 		SDLWindow(const std::string& name,
-			const SDLDim<Uint32>& dim,
+			const SDLDim<int>& dim,
 			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
 			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 

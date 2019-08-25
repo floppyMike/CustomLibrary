@@ -1,6 +1,6 @@
 #include "Window.h"
 
-ctl::WindowBase::WindowBase(const std::string_view& name, const SDLDim<Uint32>& dim, const Uint32& windowFlags)
+ctl::WindowBase::WindowBase(const std::string_view& name, const SDLDim<int>& dim, const Uint32& windowFlags)
 	: m_dim(dim)
 	, m_focus(0b010011)
 {
