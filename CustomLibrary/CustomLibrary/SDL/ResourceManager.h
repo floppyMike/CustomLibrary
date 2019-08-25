@@ -100,7 +100,7 @@ namespace ctl
 		static_assert(std::disjunction_v<std::is_same<std::decay_t<Type>, T>...>, "Type must be of ResManager");
 
 		if (!m_res.emplace(var, std::move(dat)).second)
-			Log::note("SDL: ResourceManager: emplace: Variable is replaced.", Log::Sev::WARNING);
+			Log::logWrite("SDL: ResourceManager: emplace: Variable is replaced.", Log::Sev::WARNING);
 
 		return *this;
 	}

@@ -3,7 +3,7 @@
 void ctl::BaseTexture::render(const double& angle, const SDL_RendererFlip& flip, 
 	const SDL_Point* const center, const SDL_Rect* const clip) const
 {
-	SDL_Rect renderQuad = m_pos;
+	SDL_Rect renderQuad = m_shape;
 
 	if (clip != nullptr)
 		renderQuad.w = clip->w,
@@ -15,7 +15,7 @@ void ctl::BaseTexture::render(const double& angle, const SDL_RendererFlip& flip,
 
 void ctl::BaseTexture::render(const SDL_Rect* const clip) const
 {
-	SDL_Rect renderQuad = m_pos;
+	SDL_Rect renderQuad = m_shape;
 
 	if (clip != nullptr)
 		renderQuad.w = clip->w,
@@ -84,7 +84,8 @@ ctl::FixedTexture& ctl::FixedTexture::load(SDL_Surface* surface, const SDL_Color
 	if (key != nullptr)
 		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, key->r, key->g, key->b));
 
-	m_pos.dim() = { surface->w, surface->h };
+	m_dim = { surface->w, surface->h };
+	m_shape.dim(m_dim);
 
 	m_texture.reset(SDL_CreateTextureFromSurface(m_win->renderer(), surface));
 	if (!m_texture)

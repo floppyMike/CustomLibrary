@@ -12,7 +12,7 @@
 
 namespace ctl
 {
-	class Rectangle : public Graphical
+	class Rectangle
 	{
 	public:
 		using Graphical::Graphical;

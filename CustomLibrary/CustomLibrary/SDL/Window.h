@@ -73,7 +73,7 @@ namespace ctl
 		/**
 		* @summary const accessor for checking for mouse focus
 		*/
-		constexpr const auto& focus(const Focus& foc) const noexcept { return m_focus[foc]; }
+		constexpr auto focus(const Focus& foc) const noexcept { return m_focus[foc]; }
 
 	protected:
 		/**

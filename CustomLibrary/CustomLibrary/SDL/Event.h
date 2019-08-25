@@ -38,7 +38,10 @@ namespace ctl
 		/**
 		* @summary access for data pointer of event
 		*/
-		constexpr const auto& data() const noexcept { return std::make_pair(m_event.user.data1, m_event.user.data2); }
+		constexpr auto data() const noexcept
+		{ 
+			return std::make_pair(m_event.user.data1, m_event.user.data2); 
+		}
 		constexpr auto& data(void* data1, void* data2) noexcept
 		{
 			m_event.user.data1 = data1;

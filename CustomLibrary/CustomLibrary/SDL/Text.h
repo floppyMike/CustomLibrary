@@ -37,6 +37,7 @@ namespace ctl
 		* @remarks font styles https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_22.html
 		*/
 		Font& style(const int& style);
+
 		/**
 		* @summary gets font style
 		* @remarks a font must be loaded

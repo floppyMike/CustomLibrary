@@ -10,6 +10,7 @@ namespace ctl
 		struct isDim {};
 		struct isRect {};
 		struct isCircle {};
+		struct isLine {};
 	}
 
 	/**

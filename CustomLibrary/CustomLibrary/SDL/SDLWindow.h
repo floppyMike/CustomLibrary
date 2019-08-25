@@ -30,10 +30,7 @@ namespace ctl
 		* @returns SDLPoint of world coord
 		*/
 		template<typename T>
-		SDLPoint<T> screenToWorld(SDLPoint<T> loc) const noexcept
-		{
-			return loc += m_camLoc;
-		}
+		SDLPoint<T> screenToWorld(const SDLPoint<T>& loc) const noexcept { return loc += m_camLoc; }
 
 		/**
 		* @summary translates world coord to screen coord

@@ -8,24 +8,22 @@
 
 namespace ctl
 {
-	class BaseTexture : public Graphical
+	class BaseTexture : public Renderable
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
 		BaseTexture() = default;
 		BaseTexture(BaseTexture&& x) = default;
-		BaseTexture(const BaseTexture& x) = delete;
 
 		BaseTexture& operator=(BaseTexture&& x) = default;
-		BaseTexture& operator=(const BaseTexture& x) = delete;
 
 		/**
 		* @summary construct empty Texture
 		* @param "win" window ptr
 		*/
 		BaseTexture(SDLWindow* win)
-			: Graphical(win)
+			: Renderable(win)
 		{
 		}
 
@@ -59,8 +57,11 @@ namespace ctl
 		BaseTexture& alphaMod(const Uint8& a);
 		Uint8 alphaMod() const;
 
+		constexpr const auto& dim() const { return m_dim; }
+
 	protected:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
+		ctl::SDLDim<int> m_dim;
 	};
 
 	class FixedTexture : public BaseTexture
@@ -68,10 +69,8 @@ namespace ctl
 	public:
 		FixedTexture() = default;
 		FixedTexture(FixedTexture&& x) = default;
-		FixedTexture(const FixedTexture& x) = default;
 
 		FixedTexture& operator=(FixedTexture&& x) = default;
-		FixedTexture& operator=(const FixedTexture& x) = default;
 
 		FixedTexture(SDLWindow* engine)
 			: BaseTexture(engine)

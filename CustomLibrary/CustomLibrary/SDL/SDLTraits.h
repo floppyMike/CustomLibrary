@@ -5,21 +5,20 @@
 
 namespace ctl
 {
-	template<typename Shape>
-	class Graphical
+	class Renderable
 	{
 	public:
-		constexpr Graphical() noexcept = default;
+		constexpr Renderable() noexcept = default;
 
-		constexpr Graphical(const Graphical&) noexcept = default;
-		constexpr Graphical& operator=(const Graphical&) noexcept = default;
+		constexpr Renderable(const Renderable&) noexcept = default;
+		constexpr Renderable& operator=(const Renderable&) noexcept = default;
 
 		/**
 		* @summary constructs from window or position or both
 		* @param "win" target SDLWindow
 		* @param "pos" starting position
 		*/
-		constexpr Graphical(SDLWindow* const win) noexcept
+		Renderable(SDLWindow* const win) noexcept
 			: m_win(win)
 		{
 		}
@@ -31,7 +30,7 @@ namespace ctl
 		* @returns window ptr
 		*/
 		constexpr auto* win() { return m_win; }
-		constexpr Graphical& win(SDLWindow* win) 
+		constexpr Renderable& win(SDLWindow* win)
 		{
 			m_win = win;
 			return *this;
@@ -42,17 +41,11 @@ namespace ctl
 		* @param "p" position
 		* @returns position
 		*/
-		constexpr const auto& pos() const { return m_pos.point(); }
-		constexpr Graphical& pos(const SDLPoint<short>& p)
-		{
-			m_pos.point() = m_win->cam.worldToScreen(p);
-			return *this;
-		}
-
-		constexpr const auto& dim() const { return m_pos.dim(); }
+		constexpr const auto& renderShape() const { return m_shape; }
+		constexpr auto& renderShape() { return m_shape; }
 
 	protected:
 		SDLWindow* m_win = nullptr;
-		Shape m_pos;
+		ctl::SDLRect<short, int> m_shape;
 	};
 }
