@@ -62,6 +62,8 @@ namespace ctl
 		*/
 		operator SDL_FPoint() const noexcept;
 
+		const SDL_Point* pointPtr() const noexcept;
+
 		/**
 		* @summary assignment operators
 		*/
@@ -156,6 +158,8 @@ namespace ctl
 		* @remarks must be of type int
 		*/
 		operator SDL_Rect() const noexcept;
+		
+		const SDL_Rect* rectPtr() const noexcept;
 
 		/**
 		* @summary handles type overload to SDL_FRect
@@ -397,6 +401,12 @@ namespace ctl
 		return *reinterpret_cast<const SDL_FPoint * const>(this);
 	}
 
+	template<>
+	inline const SDL_Point* SDLPoint<int>::pointPtr() const noexcept
+	{
+		return reinterpret_cast<const SDL_Point* const>(this);
+	}
+
 	template<typename T>
 	inline constexpr auto& SDLPoint<T>::operator+=(const SDLPoint& p) noexcept
 	{
@@ -440,6 +450,18 @@ namespace ctl
 			static_cast<int>(w), static_cast<int>(h) };
 	}
 
+	template<>
+	inline const SDL_Rect* SDLRect<int, int>::rectPtr() const noexcept
+	{
+		return reinterpret_cast<const SDL_Rect* const>(this);
+	}
+
+	template<>
+	inline SDLRect<int, int>::operator SDL_Rect() const noexcept
+	{
+		return *reinterpret_cast<const SDL_Rect* const>(this);
+	}
+
 	template<typename T1, typename T2>
 	inline SDLRect<T1, T2>::operator SDL_FRect() const noexcept
 	{
@@ -447,4 +469,9 @@ namespace ctl
 			static_cast<float>(this->w), static_cast<float>(this->h) };
 	}
 
+	template<>
+	inline SDLRect<float, float>::operator SDL_FRect() const noexcept
+	{
+		return *reinterpret_cast<const SDL_FRect* const>(this);
+	}
 }

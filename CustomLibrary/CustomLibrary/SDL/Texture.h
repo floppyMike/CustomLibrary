@@ -8,7 +8,7 @@
 
 namespace ctl
 {
-	class BaseTexture : public Renderable
+	class BaseTexture : public Object<SDLRect<short, int>>
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
@@ -23,7 +23,7 @@ namespace ctl
 		* @param "win" window ptr
 		*/
 		BaseTexture(SDLWindow* win)
-			: Renderable(win)
+			: Object(win)
 		{
 		}
 

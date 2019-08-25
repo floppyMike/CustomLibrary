@@ -36,6 +36,21 @@ namespace ctl
 			return *this;
 		}
 
+	protected:
+		SDLWindow* m_win = nullptr;
+	};
+
+	template<typename Shape>
+	class Object : public Renderable
+	{
+	public:
+		using Renderable::Renderable;
+
+		constexpr Object() noexcept = default;
+
+		constexpr Object(const Object&) noexcept = default;
+		constexpr Object& operator=(const Object&) noexcept = default;
+
 		/**
 		* @summary sets and converts world position to screen position or accesses position
 		* @param "p" position
@@ -45,7 +60,7 @@ namespace ctl
 		constexpr auto& renderShape() { return m_shape; }
 
 	protected:
-		SDLWindow* m_win = nullptr;
-		ctl::SDLRect<short, int> m_shape;
+		Shape m_shape;
 	};
+
 }
