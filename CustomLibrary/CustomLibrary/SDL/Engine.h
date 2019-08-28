@@ -46,26 +46,6 @@ namespace ctl
 			SDL_Quit();
 		}
 
-		/**
-		* @summary wraps resource creation
-		* @tparam "Result" expected result type
-		* @param "c" resource creation function
-		* @param "args" arguments for resource creator
-		* @exception "Log" if resource creation fails
-		* @remarks function result must be convertible to "Result"
-		* @returns Result
-		*/
-		template<typename Result, typename Creator, typename... Arguments>
-		static auto makeResource(Creator c, Arguments&& ... args)
-		{
-			auto r = c(std::forward<Arguments>(args)...);
-
-			if (!r) 
-				throw Log(SDL_GetError());
-
-			return Result(r);
-		}
-
 #ifdef SDL_IMAGE_H_
 		/**
 		* @summary init SDL_image
