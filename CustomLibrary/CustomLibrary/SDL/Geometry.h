@@ -12,18 +12,15 @@
 
 namespace ctl
 {
-	template<typename U>
-	class Shape : public Object<U>
+	class ShapeInterface
 	{
 	public:
-		using Object<U>::Object;
-
 		virtual void draw() const = 0;
 		virtual void drawFilled() const = 0;
 
 		constexpr const auto& color() const { return m_col; }
 		constexpr auto& color(const SDL_Color& col) { m_col = col; return *this; }
-
+		
 	protected:
 		SDL_Color m_col = { 0, 0, 0, 0xFF };
 	};
@@ -32,10 +29,10 @@ namespace ctl
 	//Single
 	//----------------------------------------------
 
-	class Rectangle : public Shape<SDLRect<int, int>>
+	class Rectangle : public Object<SDLRect<int, int>>, public ShapeInterface
 	{
 	public:
-		using Shape::Shape;
+		using Object::Object;
 
 		void draw() const override
 		{
@@ -54,10 +51,10 @@ namespace ctl
 		}
 	};
 
-	class Point : public Shape<SDLPoint<int>>
+	class Point : public Object<SDLPoint<int>>, public ShapeInterface
 	{
 	public:
-		using Shape::Shape;
+		using Object::Object;
 
 		void draw() const override
 		{
@@ -72,7 +69,7 @@ namespace ctl
 		}
 	};
 
-	class Circle : public Shape<SDLCircle<int, int>>
+	class Circle : public Object<SDLCircle<int, int>>, public ShapeInterface
 	{
 		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
 		{
@@ -118,7 +115,7 @@ namespace ctl
 		}
 
 	public:
-		using Shape::Shape;
+		using Object::Object;
 
 		void draw() const override
 		{
@@ -149,10 +146,10 @@ namespace ctl
 		}
 	};
 
-	class Line : public Shape<SDLLine<int>>
+	class Line : public Object<SDLLine<int>>, public ShapeInterface
 	{
 	public:
-		using Shape::Shape;
+		using Object::Object;
 
 		void draw() const override
 		{
@@ -172,18 +169,93 @@ namespace ctl
 	//----------------------------------------------
 
 	template<typename Shape>
-	class MultiShape : public Renderable
+	class MultiShape : public ShapeInterface, public Renderable
 	{
+		static_assert(hasSDLTag_v<Shape>, "Should be a shape.");
+
+		using ShapeTag = typename Shape::Tag;
+		using PrimShape = std::conditional_t<std::is_same_v<SDLTags::isPoint, ShapeTag>, SDLPoint<int>,
+			std::conditional_t < std::is_same_v<SDLTags::isRect, ShapeTag>, SDLRect<int, int>,
+			std::conditional_t<std::is_same_v<SDLTags::isLine, ShapeTag>, SDLPoint<int>, void>>>;
+
 	public:
 		using Renderable::Renderable;
 
+		MultiShape() noexcept = default;
+		MultiShape(const MultiShape&) noexcept = default;
+		MultiShape(MultiShape&&) noexcept = default;
+
+		MultiShape& operator=(const MultiShape&) noexcept = default;
+		MultiShape& operator=(MultiShape&&) noexcept = default;
+
+		template<typename ...Arg>
+		MultiShape& emplace_back(Arg&&... argv)
+		{ 
+			m_pool.emplace_back(std::forward<Arg>(argv)...); 
+			return *this; 
+		}
+
+		MultiShape& push_back(const Shape& val)
+		{ 
+			m_pool.push_back(val); 
+			return *this; 
+		}
+		//MultiShape& push_back(Shape&& val)
+		//{ 
+		//	m_pool.push_back(std::move(val));
+		//	return *this; 
+		//}
+
+		MultiShape& clear() noexcept
+		{ 
+			m_pool.clear(); 
+			return *this; 
+		}
+
+		MultiShape& reserve(const size_t& newSize)
+		{ 
+			m_pool.reserve(newSize); 
+			return *this; 
+		}
+
+		template<typename Iter, 
+			typename = typename std::enable_if_t<std::is_same_v<typename std::iterator_traits<Iter>::value_type, Shape>>>
+		MultiShape& insert_back(const Iter& begin, const Iter& end)
+		{ 
+			m_pool.insert(m_pool.end(), begin, end);
+			return *this; 
+		}
+
+		void draw() const override
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+
+			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
+
+			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+
+			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+		}
+		void drawFilled() const override
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+
+			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
+
+			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+
+			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+		}
+
 	private:
-		SDLWindow* m_win = nullptr;
-
-		std::vector<Shape> m_pool;
-		SDL_Color m_col = { 0, 0, 0, 0xFF };
+		std::vector<PrimShape> m_pool;
 	};
-
 
 	//struct Line {};
 	//struct Square {};
