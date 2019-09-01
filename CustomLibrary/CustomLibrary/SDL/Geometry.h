@@ -12,257 +12,336 @@
 
 namespace ctl
 {
-	class Rectangle
+	class ShapeInterface
 	{
 	public:
-		using Graphical::Graphical;
+		virtual void draw() const = 0;
+		virtual void drawFilled() const = 0;
 
-		void draw()
+		constexpr const auto& color() const { return m_col; }
+		constexpr auto& color(const SDL_Color& col) { m_col = col; return *this; }
+		
+	protected:
+		SDL_Color m_col = { 0, 0, 0, 0xFF };
+	};
+
+	//----------------------------------------------
+	//Single
+	//----------------------------------------------
+
+	class Rectangle : public Object<SDLRect<int, int>>, public ShapeInterface
+	{
+	public:
+		using Object::Object;
+
+		void draw() const override
 		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
+			if (SDL_RenderDrawRect(m_win->renderer(), m_shape.rectPtr()) != 0)
+				throw Log(SDL_GetError());
+		}
+
+		void drawFilled() const override
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+
+			if (SDL_RenderFillRect(m_win->renderer(), m_shape.rectPtr()) != 0)
+				throw Log(SDL_GetError());
 		}
 	};
 
-	void draw(const SDL_Color& rgba, SDLWindow* win, const SDLRect<int, int>& ass)
+	class Point : public Object<SDLPoint<int>>, public ShapeInterface
 	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
+	public:
+		using Object::Object;
 
-
-	}
-
-	enum class Fig { LINE, SQUARE, SQUARE_FILLED, POINT, CIRCLE, CIRCLE_FILLED, P_CIRCLE };
-
-	template<Fig shape, typename Type>
-	void draw(const SDL_Color&, SDLWindow*, const Type&)
-	{
-		static_assert(true, "draw: Wrong parameters.");
-	}
-
-	template<>
-	void draw<Fig::SQUARE_FILLED>(const SDL_Color& rgba, SDLWindow* win, const SDLRect &xywh)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		if (SDL_RenderFillRect(win->renderer(), &unmove(SDLRect(win->cam.worldToScreen({ xywh.x, xywh.y }), { xywh.w, xywh.h }))) != 0)
-			throw Log(SDL_GetError(), Log::Sev::ERR0R);
-	}
-	template<>
-	void draw<Fig::SQUARE>(const SDL_Color& rgba, SDLWindow* win, const SDLRect& xywh)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		if (SDL_RenderDrawRect(win->renderer(), &unmove(SDLRect(win->cam.worldToScreen({ xywh.x, xywh.y }), { xywh.w, xywh.h }))) != 0)
-			throw Log(SDL_GetError(), Log::Sev::ERR0R);
-	}
-	template<>
-	void draw<Fig::POINT>(const SDL_Color& rgba, SDLWindow* win, const SDLPoint& xy)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		if (SDL_RenderDrawPoint(win->renderer(), xy.x - win->cam.loc().x, xy.y - win->cam.loc().y) != 0)
-			throw Log(SDL_GetError(), Log::Sev::ERR0R);
-	}
-	template<>
-	void draw<Fig::CIRCLE>(const SDL_Color& rgba, SDLWindow* win, const SDLCircle& xyr)
-	{
-		SDL_assert(SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a) == 0);
-
-		SDLPoint p(0, xyr.r);
-		int d = 3 - 2 * xyr.r;
-
-		auto drawCircle = [&xyr, &p, &d, &win]
+		void draw() const override
 		{
-			const SDLPoint ps[] =
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+			if (SDL_RenderDrawPoint(m_win->renderer(), m_shape.x, m_shape.y) != 0)
+				throw Log(SDL_GetError());
+		}
+
+		void drawFilled() const override
+		{
+			draw();
+		}
+	};
+
+	class Circle : public Object<SDLCircle<int, int>>, public ShapeInterface
+	{
+		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+
+			const auto d = m_shape.r * 2;
+
+			SDLPoint p(m_shape.r - 1, 0);
+			SDLPoint tp(1, 1);
+
+			auto err = tp.x - d;
+
+			while (p.x >= p.y)
 			{
-				win->cam.worldToScreen({ xyr.x + p.x, xyr.y + p.y }),
-				win->cam.worldToScreen({ xyr.x - p.x, xyr.y + p.y }),
-				win->cam.worldToScreen({ xyr.x + p.x, xyr.y - p.y }),
-				win->cam.worldToScreen({ xyr.x - p.x, xyr.y - p.y }),
-				win->cam.worldToScreen({ xyr.x + p.y, xyr.y + p.x }),
-				win->cam.worldToScreen({ xyr.x - p.y, xyr.y + p.x }),
-				win->cam.worldToScreen({ xyr.x + p.y, xyr.y - p.x }),
-				win->cam.worldToScreen({ xyr.x - p.y, xyr.y - p.x }),
-			};
+				const std::array<SDLPoint<int>, 8> ps =
+				{ SDLPoint<int>
+					{ m_shape.x + p.x, m_shape.y + p.y },
+					{ m_shape.x - p.x, m_shape.y + p.y },
+					{ m_shape.x + p.x, m_shape.y - p.y },
+					{ m_shape.x - p.x, m_shape.y - p.y },
+					{ m_shape.x + p.y, m_shape.y + p.x },
+					{ m_shape.x - p.y, m_shape.y + p.x },
+					{ m_shape.x + p.y, m_shape.y - p.x },
+					{ m_shape.x - p.y, m_shape.y - p.x },
+				};
 
-			SDL_assert(SDL_RenderDrawPoints(win->renderer(), ps, 8) == 0);
-		};
+				if (func(m_win->renderer(), ps.front().pointPtr(), ps.size()) != 0)
+					throw Log(SDL_GetError());
 
-		drawCircle();
-
-		while (p.y >= p.x++)
-		{
-			if (d > 0)
-				d = d + 4 * (p.x - --p.y) + 10;
-			else
-				d = d + 4 * p.x + 6;
-
-			drawCircle();
+				if (err <= 0)
+				{
+					++p.y;
+					err += tp.y;
+					tp.y += 2;
+				}
+				if (err > 0)
+				{
+					--p.x;
+					tp.x += 2;
+					err += tp.x - d;
+				}
+			}
 		}
-	}
-	template<>
-	void draw<Fig::CIRCLE_FILLED>(const SDL_Color& rgba, SDLWindow* win, const SDLCircle& xyr)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		SDLPoint p(0, xyr.r);
-		int d = 3 - 2 * xyr.r;
-
-		auto drawCircle = [&xyr, &p, &d, &win]
-		{
-			const SDLPoint ps[] =
-			{
-				win->cam.worldToScreen({ xyr.x + p.x, xyr.y + p.y }),
-				win->cam.worldToScreen({ xyr.x - p.x, xyr.y + p.y }),
-				win->cam.worldToScreen({ xyr.x + p.x, xyr.y - p.y }),
-				win->cam.worldToScreen({ xyr.x - p.x, xyr.y - p.y }),
-				win->cam.worldToScreen({ xyr.x + p.y, xyr.y + p.x }),
-				win->cam.worldToScreen({ xyr.x - p.y, xyr.y + p.x }),
-				win->cam.worldToScreen({ xyr.x + p.y, xyr.y - p.x }),
-				win->cam.worldToScreen({ xyr.x - p.y, xyr.y - p.x }),
-			};
-
-			SDL_RenderDrawLines(win->renderer(), ps, 8);
-		};
-
-		drawCircle();
-
-		while (p.y >= p.x++)
-		{
-			if (d > 0)
-				d = d + 4 * (p.x - --p.y) + 10;
-			else
-				d = d + 4 * p.x + 6;
-
-			drawCircle();
-		}
-	}
-
-	template<Fig shape, typename Type1, typename Type2>
-	void draw(const SDL_Color&, SDLWindow*, const Type1&, const Type2&)
-	{
-		static_assert(false, "draw: Wrong parameters.");
-	}
-
-	template<>
-	void draw<Fig::P_CIRCLE>(const SDL_Color& rgba, SDLWindow* win, const SDLCircle& xyr, const size_t& pres)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		const auto point = win->cam.worldToScreen({ xyr.x, xyr.y });
-
-		std::vector<SDLPoint> points;
-		points.reserve(pres + 1);
-
-		for (size_t i = 0; i < pres; ++i)
-		{
-			const auto& x = to_radians(360. / pres * (i + 1.));
-			points.push_back({ static_cast<int>(xyr.r * std::cos(x) + point.x), static_cast<int>(xyr.r * std::sin(x) + point.y) });
-		}
-		points.push_back(points.front());
-
-		SDL_RenderDrawLines(win->renderer(), points.data(), pres + 1);
-	}
-	template<>
-	void draw<Fig::LINE>(const SDL_Color& rgba, SDLWindow* win, const SDLPoint& p1, const SDLPoint& p2)
-	{
-		SDL_SetRenderDrawColor(win->renderer(), rgba.r, rgba.g, rgba.b, rgba.a);
-
-		const auto point1 = win->cam.worldToScreen(p1);
-		const auto point2 = win->cam.worldToScreen(p2);
-
-		if (SDL_RenderDrawLine(win->renderer(), point1.x, point1.y, point2.x, point2.y) != 0)
-			throw Log(SDL_GetError(), Log::Sev::ERR0R);
-	}
-
-	//---------------------------------------------------------------------
-	//------------------------------Multi----------------------------------
-	//---------------------------------------------------------------------
-
-	struct Line {};
-	struct Square {};
-	struct SquareFilled {};
-	struct Point {};
-
-	template<typename Type>
-	class FastGeo
-	{
-		using Evaluated =
-			std::conditional_t<std::is_same_v<Line, Type>, SDLPoint,
-			std::conditional_t<std::is_same_v<Square, Type>, SDLRect,
-			std::conditional_t<std::is_same_v<SquareFilled, Type>, SDLRect,
-			std::conditional_t<std::is_same_v<Point, Type>, SDLPoint, void>>>>;
 
 	public:
-		FastGeo(ctl::SDLWindow* win)
-			: m_win(win)
+		using Object::Object;
+
+		void draw() const override
 		{
+			_draw_(SDL_RenderDrawPoints);
 		}
 
+		void drawFilled() const override
+		{
+			_draw_(SDL_RenderDrawLines);
+		}
+
+		template<size_t pres>
+		void drawP() const
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+
+			std::array<SDLPoint<int>, pres + 1> ps;
+
+			for (size_t i = 0; i < pres; ++i)
+			{
+				const auto x = to_radians(360.f / pres * (i + 1.f));
+				ps[i] = { static_cast<int>(m_shape.r * std::cos(x) + m_shape.x), static_cast<int>(m_shape.r * std::sin(x) + m_shape.y) };
+			}
+			ps.back() = ps.front();
+
+			if (SDL_RenderDrawLines(m_win->renderer(), ps.data(), ps.size()) != 0)
+				throw Log(SDL_GetError());
+		}
+	};
+
+	class Line : public Object<SDLLine<int>>, public ShapeInterface
+	{
+	public:
+		using Object::Object;
+
+		void draw() const override
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
+			if (SDL_RenderDrawLine(m_win->renderer(), m_shape.x1, m_shape.x2, m_shape.y1, m_shape.y2) != 0)
+				throw Log(SDL_GetError());
+		}
+
+		void drawFilled() const override
+		{
+			draw();
+		}
+	};
+
+	//----------------------------------------------
+	//Multi
+	//----------------------------------------------
+
+	template<typename Shape>
+	class MultiShape : public ShapeInterface, public Renderable
+	{
+		static_assert(hasSDLTag_v<Shape>, "Should be a shape.");
+
+		using ShapeTag = typename Shape::Tag;
+		using PrimShape = std::conditional_t<std::is_same_v<SDLTags::isPoint, ShapeTag>, SDLPoint<int>,
+			std::conditional_t < std::is_same_v<SDLTags::isRect, ShapeTag>, SDLRect<int, int>,
+			std::conditional_t<std::is_same_v<SDLTags::isLine, ShapeTag>, SDLPoint<int>, void>>>;
+
+	public:
+		using Renderable::Renderable;
+
+		MultiShape() noexcept = default;
+		MultiShape(const MultiShape&) noexcept = default;
+		MultiShape(MultiShape&&) noexcept = default;
+
+		MultiShape& operator=(const MultiShape&) noexcept = default;
+		MultiShape& operator=(MultiShape&&) noexcept = default;
+
 		template<typename ...Arg>
-		auto& emplace_back(Arg&& ... argv) 
+		MultiShape& emplace_back(Arg&&... argv)
 		{ 
-			m_pool.emplace_back(std::move(argv)...); 
+			m_pool.emplace_back(std::forward<Arg>(argv)...); 
 			return *this; 
 		}
 
-		auto& push_back(const Evaluated& val) 
+		MultiShape& push_back(const Shape& val)
 		{ 
 			m_pool.push_back(val); 
 			return *this; 
 		}
-		auto& push_back(Evaluated&& val) 
-		{ 
-			m_pool.push_back(std::move(val));
-			return *this; 
-		}
+		//MultiShape& push_back(Shape&& val)
+		//{ 
+		//	m_pool.push_back(std::move(val));
+		//	return *this; 
+		//}
 
-		auto& clear() noexcept 
+		MultiShape& clear() noexcept
 		{ 
 			m_pool.clear(); 
 			return *this; 
 		}
 
-		auto& reserve(const size_t& newSize) 
+		MultiShape& reserve(const size_t& newSize)
 		{ 
 			m_pool.reserve(newSize); 
 			return *this; 
 		}
 
-		template<typename Iter, typename = typename std::enable_if_t<std::is_same_v<typename std::iterator_traits<Iter>::value_type, Evaluated>>>
-		auto& insert_back(const Iter& begin, const Iter& end) 
+		template<typename Iter, 
+			typename = typename std::enable_if_t<std::is_same_v<typename std::iterator_traits<Iter>::value_type, Shape>>>
+		MultiShape& insert_back(const Iter& begin, const Iter& end)
 		{ 
 			m_pool.insert(m_pool.end(), begin, end);
 			return *this; 
 		}
 
-		void draw(const SDL_Color& col)
+		void draw() const override
 		{
-			std::vector<Evaluated> temp(m_pool.begin(), m_pool.end());
-			for (auto& i : temp)
-			{
-				i.x -= m_win->cam.loc().x;
-				i.y -= m_win->cam.loc().y;
-			}
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
-			SDL_SetRenderDrawColor(m_win->renderer(), col.r, col.g, col.b, col.a);
+			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
 
-			if constexpr (std::is_same_v<Type, Line>)
-				SDL_RenderDrawLines(m_win->renderer(), temp.data(), temp.size());
+			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<Type, Square>)
-				SDL_RenderDrawRects(m_win->renderer(), temp.data(), temp.size());
+			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+		}
+		void drawFilled() const override
+		{
+			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
-			else if constexpr (std::is_same_v<Type, SquareFilled>)
-				SDL_RenderFillRects(m_win->renderer(), temp.data(), temp.size());
+			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<Type, Point>)
-				SDL_RenderDrawPoints(m_win->renderer(), temp.data(), temp.size());
+			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
+
+			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 		}
 
-		constexpr const auto& pool() const noexcept { return m_pool; }
-
 	private:
-		SDLWindow* m_win;
-		std::vector<Evaluated> m_pool;
+		std::vector<PrimShape> m_pool;
 	};
+
+	//struct Line {};
+	//struct Square {};
+	//struct SquareFilled {};
+	//struct Point {};
+
+	//template<typename Type>
+	//class FastGeo
+	//{
+	//	using Evaluated =
+	//		std::conditional_t<std::is_same_v<Line, Type>, SDLPoint,
+	//		std::conditional_t<std::is_same_v<Square, Type>, SDLRect,
+	//		std::conditional_t<std::is_same_v<SquareFilled, Type>, SDLRect,
+	//		std::conditional_t<std::is_same_v<Point, Type>, SDLPoint, void>>>>;
+
+	//public:
+	//	FastGeo(ctl::SDLWindow* win)
+	//		: m_win(win)
+	//	{
+	//	}
+
+	//	template<typename ...Arg>
+	//	auto& emplace_back(Arg&& ... argv) 
+	//	{ 
+	//		m_pool.emplace_back(std::move(argv)...); 
+	//		return *this; 
+	//	}
+
+	//	auto& push_back(const Evaluated& val) 
+	//	{ 
+	//		m_pool.push_back(val); 
+	//		return *this; 
+	//	}
+	//	auto& push_back(Evaluated&& val) 
+	//	{ 
+	//		m_pool.push_back(std::move(val));
+	//		return *this; 
+	//	}
+
+	//	auto& clear() noexcept 
+	//	{ 
+	//		m_pool.clear(); 
+	//		return *this; 
+	//	}
+
+	//	auto& reserve(const size_t& newSize) 
+	//	{ 
+	//		m_pool.reserve(newSize); 
+	//		return *this; 
+	//	}
+
+	//	template<typename Iter, typename = typename std::enable_if_t<std::is_same_v<typename std::iterator_traits<Iter>::value_type, Evaluated>>>
+	//	auto& insert_back(const Iter& begin, const Iter& end) 
+	//	{ 
+	//		m_pool.insert(m_pool.end(), begin, end);
+	//		return *this; 
+	//	}
+
+	//	void draw(const SDL_Color& col)
+	//	{
+	//		std::vector<Evaluated> temp(m_pool.begin(), m_pool.end());
+	//		for (auto& i : temp)
+	//		{
+	//			i.x -= m_win->cam.loc().x;
+	//			i.y -= m_win->cam.loc().y;
+	//		}
+
+	//		SDL_SetRenderDrawColor(m_win->renderer(), col.r, col.g, col.b, col.a);
+
+	//		if constexpr (std::is_same_v<Type, Line>)
+	//			SDL_RenderDrawLines(m_win->renderer(), temp.data(), temp.size());
+
+	//		else if constexpr (std::is_same_v<Type, Square>)
+	//			SDL_RenderDrawRects(m_win->renderer(), temp.data(), temp.size());
+
+	//		else if constexpr (std::is_same_v<Type, SquareFilled>)
+	//			SDL_RenderFillRects(m_win->renderer(), temp.data(), temp.size());
+
+	//		else if constexpr (std::is_same_v<Type, Point>)
+	//			SDL_RenderDrawPoints(m_win->renderer(), temp.data(), temp.size());
+	//	}
+
+	//	constexpr const auto& pool() const noexcept { return m_pool; }
+
+	//private:
+	//	SDLWindow* m_win;
+	//	std::vector<Evaluated> m_pool;
+	//};
 }
