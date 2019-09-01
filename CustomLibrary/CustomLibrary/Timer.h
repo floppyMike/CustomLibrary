@@ -32,7 +32,7 @@ namespace ctl
 		{
 			if (m_started && !m_paused)
 				m_paused = true,
-				m_pause = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - m_start);
+				m_pause = std::chrono::steady_clock::now() - m_start;
 		}
 
 		void unpause() noexcept
@@ -46,12 +46,7 @@ namespace ctl
 		Unit ticks() noexcept
 		{
 			if (m_started)
-			{
-				if (m_paused)
-					return std::chrono::duration_cast<Unit>(m_pause);
-				else
-					return std::chrono::duration_cast<Unit>(std::chrono::steady_clock::now() - m_start);
-			}
+				return std::chrono::duration_cast<Unit>(m_paused ? m_pause : std::chrono::steady_clock::now() - m_start);
 			else
 				return Unit(0);
 		}
@@ -61,7 +56,7 @@ namespace ctl
 
 	private:
 		std::chrono::time_point<std::chrono::steady_clock> m_start;
-		std::chrono::milliseconds m_pause;
+		std::chrono::steady_clock::duration m_pause;
 
 		bool m_paused = false;
 		bool m_started = false;
