@@ -4,7 +4,6 @@
 
 #include <type_traits>
 #include <string>
-#include <thread>
 
 #include <CustomLibrary/Timer.h>
 #include <CustomLibrary/Error.h>
@@ -105,13 +104,10 @@ namespace ctl
 	class RunLoop
 	{
 		using type = RunLoop<ImplWinDB>;
+		using window_t = typename ImplWinDB::window_t;
 
 		template<typename... T>
-		void _invoke_(void (ImplWinDB::*f)(const T&...), const T&... arg)
-		{
-			for (auto& i : m_windows)
-				(i.*f)(arg...);
-		}
+		void _invoke_(void (window_t::* f)(const T& ...), const T& ... arg);
 
 	public:
 		RunLoop(size_t fps)
@@ -122,21 +118,22 @@ namespace ctl
 		void run();
 
 		template<typename... T>
-		RunLoop& addWindow(T&& ... arg);
+		window_t& addWindow(T&& ... arg);
 		template<typename... T>
-		RunLoop& removWindow(T&& ... arg);
+		void removWindow(T&& ... arg);
 
 		constexpr const auto& fps() const noexcept { return m_fps; }
 		constexpr const auto& delta() const noexcept { return m_delta; }
 
 	private:
 		ImplWinDB m_windows;
-
+		
 		double m_fps = 0.;
 		double m_delta = 0.;
 
 		std::chrono::milliseconds m_frameTime;
 	};
+
 
 //----------------------------------------------
 //Implementation
@@ -202,18 +199,24 @@ namespace ctl
 
 	template<typename ImplWinDB>
 	template<typename ...T>
-	inline auto RunLoop<ImplWinDB>::addWindow(T&& ...arg) -> type& 
-	{ 
-		m_windows.push(std::forward<T>(arg)...); 
-		return *this; 
+	inline void RunLoop<ImplWinDB>::_invoke_(void(window_t::* f)(const T& ...), const T& ...arg)
+	{
+		for (auto& i : m_windows)
+			(i.*f)(arg...);
 	}
 
 	template<typename ImplWinDB>
 	template<typename ...T>
-	inline auto RunLoop<ImplWinDB>::removWindow(T&& ...arg) -> type& 
-	{ 
-		m_windows.pop(std::forward<T>(arg)...); 
-		return *this; 
+	inline auto RunLoop<ImplWinDB>::addWindow(T&& ...arg) -> window_t&
+	{
+		return m_windows.push(std::forward<T>(arg)...);
+	}
+
+	template<typename ImplWinDB>
+	template<typename ...T>
+	inline void RunLoop<ImplWinDB>::removWindow(T&& ...arg)
+	{
+		m_windows.erase(std::forward<T>(arg)...);
 	}
 
 }

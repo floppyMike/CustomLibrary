@@ -137,9 +137,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.cpp">
-      <Filter>CustomLibrary\Source\SDL</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
