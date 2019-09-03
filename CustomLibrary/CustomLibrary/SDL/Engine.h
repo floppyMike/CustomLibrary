@@ -24,7 +24,7 @@ namespace ctl
 		* @exception "Log" if initialization fails
 		* @remarks Flags: https://wiki.libsdl.org/SDL_Init#Remarks
 		*/
-		SDL(const size_t& fps, const Uint32& SDLFlags = SDL_INIT_VIDEO);
+		SDL(const Uint32& SDLFlags = SDL_INIT_VIDEO);
 
 		/**
 		* @summary frees the subsystems
@@ -98,49 +98,122 @@ namespace ctl
 		* @param "name" name of hint
 		* @param "value" value to set the hint at
 		*/
-		static void setHint(const char* name, const char* value) noexcept;
+		SDL& setHint(const char* name, const char* value) noexcept;
+	};
 
-		/**
-		* @summary run the engine
-		*/
+	template<typename ImplWinDB>
+	class RunLoop
+	{
+		using type = RunLoop<ImplWinDB>;
+
+		template<typename... T>
+		void _invoke_(void (ImplWinDB::*f)(const T&...), const T&... arg)
+		{
+			for (auto& i : m_windows)
+				(i.*f)(arg...);
+		}
+
+	public:
+		RunLoop(size_t fps)
+			: m_frameTime(1000 / fps)
+		{
+		}
+
 		void run();
 
-		/**
-		* @summary construct and attach window to engine
-		* @tparam "T" Window type
-		* @param "argv" arguments for window construction
-		*/
-		template<typename T, typename... Arg>
-		auto& addWin(Arg&&... argv)
-		{
-			return static_cast<T&>(*m_windows.emplace_back(std::make_unique<T>(std::forward<Arg>(argv)...)));
-		}
-		
-		/**
-		* @summary detach a window
-		* @param "window" window to detach
-		*/
-		ctl::SDL& detachWin(WindowBase* window);
+		template<typename... T>
+		RunLoop& addWindow(T&& ... arg);
+		template<typename... T>
+		RunLoop& removWindow(T&& ... arg);
 
-		/**
-		* @summary access const delta
-		* @returns delta const reference
-		*/
+		constexpr const auto& fps() const noexcept { return m_fps; }
 		constexpr const auto& delta() const noexcept { return m_delta; }
 
-		/**
-		* @summary access const frames / second
-		* @returns fps const reference
-		*/
-		constexpr const auto& FPS() const noexcept { return m_fps; }
-
 	private:
-		ObSu<SDL_Event>::Subject m_event;
-		std::vector<std::unique_ptr<WindowBase>> m_windows;
+		ImplWinDB m_windows;
 
 		double m_fps = 0.;
 		double m_delta = 0.;
 
 		std::chrono::milliseconds m_frameTime;
 	};
+
+//----------------------------------------------
+//Implementation
+//----------------------------------------------
+
+	inline ctl::SDL::SDL(const Uint32& SDLFlags)
+	{
+		if (SDL_Init(SDLFlags) < 0)
+			throw Log(SDL_GetError());
+	}
+
+	inline SDL& SDL::setHint(const char* name, const char* value) noexcept
+	{
+		if (!SDL_SetHint(name, value))
+			Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
+	}
+
+	template<typename ImplWinDB>
+	inline void RunLoop<ImplWinDB>::run()
+	{
+		Timer timer;
+		timer.start();
+		std::chrono::duration<double> lastTime(0);
+		std::chrono::duration<double> lag(0);
+
+		unsigned long long frames = 0;
+
+		for (bool quit = false; !quit; ++frames)
+		{
+			const auto time = timer.ticks<std::chrono::duration<double>>();
+			const auto elapsed = time - lastTime;
+			lastTime = time;
+			lag += elapsed;
+
+			if (time >= std::chrono::seconds(1))
+				m_fps = frames / time.count();
+
+			const auto endTime = std::chrono::steady_clock::now() + m_frameTime;
+
+			SDL_Event e;
+			while (SDL_PollEvent(&e) != 0)
+			{
+				_invoke_(ImplWinDB::event(e));
+
+				if (e.type == SDL_QUIT)
+					quit = true;
+			}
+
+			m_delta = elapsed.count();
+			_invoke_(ImplWinDB::update);
+
+			while (lag >= m_frameTime)
+			{
+				lag -= m_frameTime;
+				_invoke_(ImplWinDB::fixedUpdate);
+			}
+
+			_invoke_(ImplWinDB::render);
+
+			std::this_thread::sleep_until(endTime);
+		}
+	}
+
+	template<typename ImplWinDB>
+	template<typename ...T>
+	inline auto RunLoop<ImplWinDB>::addWindow(T&& ...arg) -> type& 
+	{ 
+		m_windows.push(std::forward<T>(arg)...); 
+		return *this; 
+	}
+
+	template<typename ImplWinDB>
+	template<typename ...T>
+	inline auto RunLoop<ImplWinDB>::removWindow(T&& ...arg) -> type& 
+	{ 
+		m_windows.pop(std::forward<T>(arg)...); 
+		return *this; 
+	}
+
 }
