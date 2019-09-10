@@ -1,27 +1,5 @@
 #include "SDLWindow.h"
 
-ctl::SDLWindow::SDLWindow(const std::string& name, 
-	const SDLDim<int>& dim, 
-	const Uint32& windowFlags, 
-	const Uint32& rendererFlags)
-	: WindowBase(name, dim, windowFlags)
-	, cam(m_dim)
-{
-	if ((m_renderer = SDL_CreateRenderer(m_window, -1, rendererFlags)) == nullptr)
-		throw ctl::Log(SDL_GetError());
-
-	SDL_RenderSetLogicalSize(m_renderer, m_dim.w, m_dim.h);
-	SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-}
-
-void ctl::SDLWindow::destroy()
-{
-	if (m_renderer != nullptr)
-		SDL_DestroyRenderer(m_renderer);
-
-	WindowBase::destroy();
-}
-
 void ctl::SDLWindow::clear()
 {
 	SDL_SetRenderDrawColor(m_renderer, bg.r, bg.g, bg.b, bg.a);

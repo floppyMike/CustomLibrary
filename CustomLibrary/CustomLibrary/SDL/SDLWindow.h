@@ -1,8 +1,5 @@
 #pragma once
 
-#include <cassert> 
-
-#include <CustomLibrary/Vector.h>
 #include <CustomLibrary/Error.h> 
 
 #include "Engine.h"
@@ -70,8 +67,11 @@ namespace ctl
 		ctl::ColliderVar<ctl::SDLRectRef<float, int>> m_col;
 	};
 
-	class SDLWindow : public WindowBase
+	template<typename ImplWatch, typename ImplWinDB>
+	class SDLWindow : public BasicWindow<ImplWatch, ImplWinDB>
 	{
+		using type = SDLWindow<ImplWatch, ImplWinDB>;
+
 	public:
 		/**
 		* @summary construct window and SDL renderer
@@ -86,7 +86,16 @@ namespace ctl
 		SDLWindow(const std::string& name,
 			const SDLDim<int>& dim,
 			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
-			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+			: BasicWindow(name, dim, windowFlags)
+			, cam(m_dim)
+		{
+			if ((m_renderer = SDL_CreateRenderer(m_window, -1, rendererFlags)) == nullptr)
+				throw ctl::Log(SDL_GetError());
+
+			SDL_RenderSetLogicalSize(m_renderer, m_dim.w, m_dim.h);
+			SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		}
 
 		virtual ~SDLWindow() 
 		{ 
@@ -96,7 +105,13 @@ namespace ctl
 		/**
 		* @summary destroy window and renderer
 		*/
-		void destroy();
+		void destroy()
+		{
+			if (m_renderer != nullptr)
+				SDL_DestroyRenderer(m_renderer);
+
+			BasicWindow::destroy();
+		}
 
 		/**
 		* @summary clear render object

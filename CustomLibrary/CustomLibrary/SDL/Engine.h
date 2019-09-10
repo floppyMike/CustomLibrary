@@ -8,7 +8,6 @@
 #include <CustomLibrary/Timer.h>
 #include <CustomLibrary/Error.h>
 
-#include "Event.h"
 #include "Window.h"
 
 namespace ctl
@@ -105,6 +104,8 @@ namespace ctl
 	{
 		using type = RunLoop<ImplWinDB>;
 		using window_t = typename ImplWinDB::window_t;
+		using state_t = typename window_t::state_t;
+		using iterator_t = typename ImplWinDB::iterator;
 
 		template<typename... T>
 		void _invoke_(void (window_t::* f)(const T& ...), const T& ... arg);
@@ -119,8 +120,7 @@ namespace ctl
 
 		template<typename... T>
 		window_t& addWindow(T&& ... arg);
-		template<typename... T>
-		void removWindow(T&& ... arg);
+		void removWindow(iterator_t iter);
 
 		constexpr const auto& fps() const noexcept { return m_fps; }
 		constexpr const auto& delta() const noexcept { return m_delta; }
@@ -132,6 +132,24 @@ namespace ctl
 		double m_delta = 0.;
 
 		std::chrono::milliseconds m_frameTime;
+	};
+
+	template<typename ImplWindow>
+	class WindowDB
+	{
+		using window_t = typename ImplWindow::window_t;
+
+	public:
+		WindowDB() = default;
+
+
+		window_t& push()
+		{
+
+		}
+
+	private:
+		std::vector<ImplWindow> m_windows;
 	};
 
 
@@ -176,25 +194,31 @@ namespace ctl
 			SDL_Event e;
 			while (SDL_PollEvent(&e) != 0)
 			{
-				_invoke_(ImplWinDB::event(e));
+				_invoke_(window_t::event(e));
 
 				if (e.type == SDL_QUIT)
 					quit = true;
 			}
 
 			m_delta = elapsed.count();
-			_invoke_(ImplWinDB::update);
+			_invoke_(window_t::update);
 
 			while (lag >= m_frameTime)
 			{
 				lag -= m_frameTime;
-				_invoke_(ImplWinDB::fixedUpdate);
+				_invoke_(window_t::fixedUpdate);
 			}
 
-			_invoke_(ImplWinDB::render);
+			_invoke_(window_t::render);
 
 			std::this_thread::sleep_until(endTime);
 		}
+	}
+
+	template<typename ImplWinDB>
+	inline void RunLoop<ImplWinDB>::removWindow(iterator_t iter)
+	{
+		m_windows.erase(iter);
 	}
 
 	template<typename ImplWinDB>
@@ -209,14 +233,7 @@ namespace ctl
 	template<typename ...T>
 	inline auto RunLoop<ImplWinDB>::addWindow(T&& ...arg) -> window_t&
 	{
-		return m_windows.push(std::forward<T>(arg)...);
-	}
-
-	template<typename ImplWinDB>
-	template<typename ...T>
-	inline void RunLoop<ImplWinDB>::removWindow(T&& ...arg)
-	{
-		m_windows.erase(std::forward<T>(arg)...);
+		return m_windows.emplace_back(std::forward<T>(arg)...);
 	}
 
 }
