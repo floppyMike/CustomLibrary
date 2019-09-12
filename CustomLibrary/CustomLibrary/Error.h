@@ -93,49 +93,6 @@ namespace ctl
 	public:
 		enum class Sev { NOTE, WARNING, ERR };
 
-		///**
-		//* @summary ostream-like output class
-		//*/
-		//class OutStream
-		//{
-		//public:
-		//	/**
-		//	* @summary set colour of last log
-		//	* @param "sev" severity of log
-		//	*/
-		//	OutStream()
-		//	{
-		//		switch (m_buf.back().second)
-		//		{
-		//		case Sev::NOTE:	   m_buf.back().first += "\x1B[37mNOTE: "; break;
-		//		case Sev::ERR:	   m_buf.back().first += "\x1B[91mERROR: "; break;
-		//		case Sev::WARNING: m_buf.back().first += "\x1B[93mWARNING: "; break;
-		//		}
-		//	}
-
-		//	/**
-		//	* @summary at end of stream set ANSI colour back to white and copy buffer to string variable
-		//	*/
-		//	~OutStream()
-		//	{
-		//		m_buf.back().first = m_stream.str() + "\033[0m";
-		//	}
-
-		//	/**
-		//	* @summary ostream-like << operator
-		//	* @param "val" value to write
-		//	*/
-		//	template<typename T>
-		//	auto& operator<<(const T& val)
-		//	{
-		//		m_stream << val;
-		//		return *this;
-		//	}
-
-		//private:
-		//	std::stringstream m_stream;
-		//};
-
 		/**
 		* @summary construct Log object
 		* @param "msg" message to store
@@ -148,7 +105,7 @@ namespace ctl
 		* @param "msg" message of log
 		* @returns text string
 		*/
-		static void streamLog(std::ostream&, const std::string_view&, const Sev&);
+		static void streamLog(std::ostream& out, const std::string_view& msg, Sev sev);
 
 		/**
 		* @summary stores a log
@@ -156,38 +113,37 @@ namespace ctl
 		* @param "sev" severity of message
 		* @remarks 
 		*/
-		static void log(const std::string_view&, const Sev&) noexcept;
-		//static OutStream log(const Sev&) noexcept;
+		static void log(const std::string_view& msg, Sev sev) noexcept;
 
 		/**
 		* @summary stores and writes a log
 		* @param "msg" message to log
 		* @param "sev" severity of message
 		*/
-		static void logWrite(const std::string_view&, const Sev&) noexcept;
+		static void logWrite(const std::string_view& msg, Sev sev) noexcept;
 
 		/**
 		* @summary forces log to be written
 		* @param "msg" message to log
 		* @param "sev" severity of message
 		*/
-		static void forceLogWrite(const std::string_view&, const Sev&) noexcept;
+		static void forceLogWrite(const std::string_view& msg, Sev sev) noexcept;
 
 		/**
 		* @summary flushes buffer to file
 		* @param "path" path to file output
 		*/
-		static void flush(const char*) noexcept;
+		static void flush(const char* path) noexcept;
 
 		/**
 		* @summary overrides "what" virtual
 		* @returns c-string of message
 		*/
-		const char* what() const noexcept override { return m_msg.c_str(); }
+		const char* what() const noexcept override;
 
 	private:
 		std::string m_msg;
-		static std::deque<std::pair<std::string_view, Sev>> m_buf;
+		inline static std::deque<std::pair<std::string_view, Sev>> m_buf;
 	};
 
 	/**
@@ -195,7 +151,74 @@ namespace ctl
 	* @param "code" errno code
 	* @returns c-string of 256 bytes
 	*/
-	const char* errnoMessage(const int&);
+	const char* errnoMessage(const int& code);
+
+
+	//----------------------------------------------
+	//Implementation
+	//----------------------------------------------
+
+	inline Log::Log(const std::string& msg)
+		: m_msg(msg.c_str())
+	{
+		m_buf.emplace_back(msg, Sev::ERR);
+	}
+	inline Log::Log(const char* msg)
+		: m_msg(msg)
+	{
+		m_buf.emplace_back(msg, Sev::ERR);
+	}
+
+	inline void Log::streamLog(std::ostream& out, const std::string_view& msg, Sev sev)
+	{
+		switch (sev)
+		{
+		case Sev::NOTE:	   out << "NOTE: " << msg << '\n'; break;
+		case Sev::ERR:	   out << "\x1B[91mERROR: " << msg << "\033[0m\n"; break;
+		case Sev::WARNING: out << "\x1B[93mWARNING: " << msg << "\033[0m\n"; break;
+		}
+	}
+
+	inline void Log::log(const std::string_view& msg, Sev sev) noexcept
+	{
+		m_buf.emplace_back(msg, sev);
+		if (m_buf.size() > 50)
+			m_buf.pop_front();
+	}
+
+	inline void Log::logWrite(const std::string_view& msg, Sev sev) noexcept
+	{
+		log(msg, sev);
+		if constexpr (LOG)
+			streamLog(std::cout, msg, sev);
+	}
+
+	inline void Log::forceLogWrite(const std::string_view& msg, Sev sev) noexcept
+	{
+		log(msg, sev);
+		streamLog(std::cout, msg, sev);
+	}
+
+	inline void Log::flush(const char* path) noexcept
+	{
+		std::ofstream fileOut(path);
+		if (fileOut.is_open())
+			for (const auto& i : m_buf)
+				streamLog(fileOut, i.first, i.second);
+	}
+
+	inline const char* Log::what() const noexcept 
+	{ 
+		return m_msg.c_str(); 
+	}
+
+	inline const char* errnoMessage(const int& code)
+	{
+		static char buffer[256];
+		strerror_s(buffer, code);
+
+		return buffer;
+	}
 }
 
 #endif // !MYERROR

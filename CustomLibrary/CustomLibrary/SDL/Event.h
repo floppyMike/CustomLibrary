@@ -13,23 +13,34 @@ namespace ctl
 		* @summary construct SDL_Event and register type
 		* @exception "Log" failure at registering event
 		*/
-		UserEvent();
+		UserEvent()
+		{
+			SDL_zero(m_event);
+
+			m_event.type = SDL_RegisterEvents(1);
+			if (m_event.type == std::numeric_limits<Uint32>::max())
+				throw Log("UserEvent: event not registered.");
+		}
 
 		/**
 		* @summary pushes event onto SDL event queue
 		*/
-		void pushEvent() noexcept;
+		void pushEvent() noexcept
+		{
+			if (SDL_PushEvent(&m_event) < 0)
+				Log::logWrite(SDL_GetError(), Log::Sev::WARNING);
+		}
 
 		/**
 		* @summary const access for event type
 		*/
-		constexpr const auto& type() const noexcept { return m_event.type; }
+		constexpr Uint32 type() const noexcept { return m_event.type; }
 
 		/**
 		* @summary access for code of event
 		*/
-		constexpr const auto& code() const noexcept { return m_event.user.code; }
-		constexpr auto& code(const Sint32& code) noexcept
+		constexpr Sint32 code() const noexcept { return m_event.user.code; }
+		constexpr UserEvent& code(const Sint32& code) noexcept
 		{
 			m_event.user.code = code;
 			return *this;
@@ -38,11 +49,11 @@ namespace ctl
 		/**
 		* @summary access for data pointer of event
 		*/
-		constexpr auto data() const noexcept
+		constexpr std::pair<void*, void*> data() const noexcept
 		{ 
-			return std::make_pair(m_event.user.data1, m_event.user.data2); 
+			return { m_event.user.data1, m_event.user.data2 };
 		}
-		constexpr auto& data(void* data1, void* data2) noexcept
+		constexpr UserEvent& data(void* data1, void* data2) noexcept
 		{
 			m_event.user.data1 = data1;
 			m_event.user.data2 = data2;

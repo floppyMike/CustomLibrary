@@ -4,152 +4,179 @@
 
 #include "Engine.h"
 #include "Window.h"
-#include "ResourceManager.h"
-#include "Collider.h"
+#include "SDLRenderer.h"
 
 namespace ctl
 {
-	class Camera2D
+	namespace sdl
 	{
-	public:
-		/**
-		* @summary constructs collider from camera location and screen size ref
-		* @param "screen" ref to screen SDLDim
-		*/
-		Camera2D(SDLDim<int>& screen) noexcept
-			: m_col(m_camLoc, screen)
+		class Camera2D
 		{
-		}
+		public:
+			/**
+			* @summary constructs collider from camera location and screen size ref
+			* @param "screen" ref to screen SDLDim
+			*/
+			constexpr Camera2D() noexcept = default;
 
-		/**
-		* @summary translates screen coord to world coord
-		* @param "screen" ref to screen SDLDim
-		* @returns SDLPoint of world coord
-		*/
-		template<typename T>
-		SDLPoint<T> screenToWorld(const SDLPoint<T>& loc) const noexcept { return loc += m_camLoc; }
+			/**
+			* @summary translates screen coord to world coord
+			* @param "screen" ref to screen SDLDim
+			* @returns SDLPoint of world coord
+			*/
+			template<typename T>
+			constexpr SDLPoint<T> screenToWorld(const SDLPoint<T>& loc) const noexcept 
+			{ 
+				return loc += m_camLoc; 
+			}
 
-		/**
-		* @summary translates world coord to screen coord
-		* @param "screen" ref to world SDLDim
-		* @returns SDLPoint of screen coord
-		*/
-		template<typename T>
-		SDLPoint<T> worldToScreen(SDLPoint<T> loc) const noexcept
+			/**
+			* @summary translates world coord to screen coord
+			* @param "screen" ref to world SDLDim
+			* @returns SDLPoint of screen coord
+			*/
+			template<typename T>
+			constexpr SDLPoint<T> worldToScreen(SDLPoint<T> loc) const noexcept
+			{
+				return loc -= m_camLoc;
+			}
+
+			/**
+			* @summary moves SDLPoint
+			* @param "deltaX" x distance
+			* @param "deltaY" y distance
+			*/
+			constexpr Camera2D& mov(const float& deltaX, const float& deltaY) noexcept
+			{
+				m_camLoc.x += deltaX;
+				m_camLoc.y += deltaY;
+
+				return *this;
+			}
+
+			/**
+			* @summary location accessors
+			*/
+			constexpr const SDLPoint<float>& loc() const noexcept 
+			{ 
+				return m_camLoc; 
+			}
+			constexpr Camera2D& loc(const SDLPoint<float>& loc) noexcept
+			{
+				m_camLoc = loc;
+				return *this;
+			}
+
+		private:
+			SDLPoint<float> m_camLoc = { 0.f, 0.f };
+		};
+
+		template<typename ImplState = StateBase, 
+			typename ImplWatch = EventWatch,
+			typename ImplCam = Camera2D,
+			typename ImplWin = Window,
+			typename ImplRend = Renderer<Window>>
+		class SDLWindow
 		{
-			return loc -= m_camLoc;
-		}
+		public:
+			using state_t = ImplState;
 
-		/**
-		* @summary moves SDLPoint
-		* @param "deltaX" x distance
-		* @param "deltaY" y distance
-		*/
-		constexpr Camera2D& mov(const float& deltaX, const float& deltaY) noexcept;
+			/**
+			* @summary construct window and SDL renderer
+			* @param "name" name of window
+			* @param "dim" size of window
+			* @param "windowFlags" window creation flags
+			* @param "rendererFlags" SDL renderer creation flags
+			* @exception "Log" if renderer creation fails
+			* @remarks "windowFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
+			* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
+			*/
+			SDLWindow(const char* name,
+				const SDLDim<int>& dim,
+				const Uint32& windowFlags = SDL_WINDOW_SHOWN,
+				const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+				: m_win(name, dim, windowFlags)
+				, m_renderer(&m_win, rendererFlags)
+			{
+			}
 
-		/**
-		* @summary location accessors
-		*/
-		constexpr const auto& loc() const noexcept { return m_camLoc; }
-		constexpr Camera2D& loc(const SDLPoint<float>& loc) noexcept
-		{ 
-			m_camLoc = loc; 
-			return *this; 
-		}
+			~SDLWindow()
+			{
+				destroy();
+			}
 
-		/**
-		* @summary collider const-accessors
-		*/
-		constexpr const auto& col() const noexcept { return m_col.collider(); }
+			void destroy()
+			{
+				m_win.destroy();
+				m_renderer.destroy();
+			}
 
-	private:
-		SDLPoint<float> m_camLoc = { 0.f, 0.f };
-		ctl::ColliderVar<ctl::SDLRectRef<float, int>> m_col;
-	};
+			template<typename State, typename ...Args>
+			ImplState& setState(Args&&... args)
+			{
+				m_state = std::make_unique<State>(std::forward<Args>(args)...);
+				return *m_state;
+			}
 
-	template<typename ImplWatch, typename ImplWinDB>
-	class SDLWindow : public BasicWindow<ImplWatch, ImplWinDB>
-	{
-		using type = SDLWindow<ImplWatch, ImplWinDB>;
+			SDLWindow& removState() noexcept
+			{
+				m_state.reset(nullptr);
+				return *this;
+			}
 
-	public:
-		/**
-		* @summary construct window and SDL renderer
-		* @param "name" name of window
-		* @param "dim" size of window
-		* @param "windowFlags" window creation flags
-		* @param "rendererFlags" SDL renderer creation flags
-		* @exception "Log" if renderer creation fails
-		* @remarks "windowFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
-		* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
-		*/
-		SDLWindow(const std::string& name,
-			const SDLDim<int>& dim,
-			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
-			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
-			: BasicWindow(name, dim, windowFlags)
-			, cam(m_dim)
-		{
-			if ((m_renderer = SDL_CreateRenderer(m_window, -1, rendererFlags)) == nullptr)
-				throw ctl::Log(SDL_GetError());
+			constexpr bool focus(EventWatch::Focus foc) const noexcept
+			{
+				return m_watch.state(foc);
+			}
 
-			SDL_RenderSetLogicalSize(m_renderer, m_dim.w, m_dim.h);
-			SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-		}
+			SDLWindow& fillColor(const SDL_Color& col)
+			{
+				m_renderer.setColor(col);
+				return *this;
+			}
 
-		virtual ~SDLWindow() 
-		{ 
-			destroy(); 
-		}
+			void event(const SDL_Event& e)
+			{
+				if (e.window.windowID == m_win.ID())
+				{
+					switch (e.window.event)
+					{
+					case SDL_WINDOWEVENT_SIZE_CHANGED: m_win.update(e);   break;
+					case SDL_WINDOWEVENT_CLOSE:		   destroy();		  break;
+					default:						   m_watch.listen(e); break;
+					}
 
-		/**
-		* @summary destroy window and renderer
-		*/
-		void destroy()
-		{
-			if (m_renderer != nullptr)
-				SDL_DestroyRenderer(m_renderer);
+					m_state->input(e);
+					m_state->event(e);
+				}
+			}
 
-			BasicWindow::destroy();
-		}
+			void update()
+			{
+				m_state->update();
+			}
 
-		/**
-		* @summary clear render object
-		*/
-		void clear();
+			void fixedUpdate()
+			{
+				m_state->fixedUpdate();
+			}
 
-		/**
-		* @summary render present items
-		*/
-		void render();
+			void render()
+			{
+				m_renderer.clear();
+				m_state->render();
+				m_renderer.render();
+			}
 
-		/**
-		* @summary blend mode accessors
-		* @remarks check https://wiki.libsdl.org/SDL_BlendMode#Values
-		*/
-		SDL_BlendMode blendMode() noexcept;
-		SDLWindow& blendMode(const SDL_BlendMode& m) noexcept;
+		private:
+			ImplWin m_win;
+			ImplRend m_renderer;
 
-		/**
-		* @summary render loop
-		*/
-		void _render_() override final;
+			ImplCam m_cam;
+			ImplWatch m_watch;
 
-		/**
-		* @summary SDL renderer accessor
-		*/
-		constexpr auto* renderer() { return m_renderer; }
+			std::unique_ptr<ImplState> m_state;
+		};
 
-		SDL_Color bg = { 0xFF, 0xFF, 0xFF, 0xFF };
-		Camera2D cam;
-
-	private:
-		SDL_Renderer *m_renderer = nullptr;
-	};
-
-	struct SDLObject
-	{
-		SDL& en;
-		SDLWindow& win;
-	};
+	}
 }

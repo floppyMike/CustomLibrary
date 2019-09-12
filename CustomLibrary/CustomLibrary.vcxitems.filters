@@ -135,27 +135,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)SDLRenderer.h">
+      <Filter>CustomLibrary\Include\SDL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp">
-      <Filter>CustomLibrary\Source\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.cpp">
-      <Filter>CustomLibrary\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.cpp">
-      <Filter>CustomLibrary\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.cpp">
-      <Filter>CustomLibrary\Source\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.cpp">
-      <Filter>CustomLibrary\Source\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">
