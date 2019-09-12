@@ -4,7 +4,7 @@
 
 namespace ctl
 {
-	namespace SDLTags
+	namespace Tags
 	{
 		struct isPoint {};
 		struct isDim {};
@@ -21,8 +21,8 @@ namespace ctl
 	struct hasSDLTag : std::false_type {};
 
 	template<typename T>
-	struct hasSDLTag<T, std::void_t<typename T::Tag>> : public std::true_type {};
+	struct hasSDLTag<T, std::void_t<typename T::tag>> : std::true_type {};
 
 	template<typename T>
-	inline constexpr bool hasSDLTag_v = hasSDLTag<T>::value;
+	constexpr bool hasSDLTag_v = hasSDLTag<T>::value;
 }

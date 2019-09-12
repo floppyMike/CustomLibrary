@@ -27,7 +27,7 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isPoint, SDLTags::isRect>
+	struct _impl_<Tags::isPoint, Tags::isRect>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& d, const U2& r) noexcept;
@@ -36,12 +36,12 @@ namespace ctl
 	* @summary handles if parameters are in reverse
 	*/
 	template<>
-	struct _impl_<SDLTags::isRect, SDLTags::isPoint>
+	struct _impl_<Tags::isRect, Tags::isPoint>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& r, const U2& d) noexcept
 		{
-			return _impl_<SDLTags::isPoint, SDLTags::isRect>::_(d, r);
+			return _impl_<Tags::isPoint, Tags::isRect>::_(d, r);
 		}
 	};
 
@@ -53,7 +53,7 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isRect, SDLTags::isCircle>
+	struct _impl_<Tags::isRect, Tags::isCircle>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& r, const U2& c) noexcept;
@@ -62,12 +62,12 @@ namespace ctl
 	* @summary handles if parameters are in reverse
 	*/
 	template<>
-	struct _impl_<SDLTags::isCircle, SDLTags::isRect>
+	struct _impl_<Tags::isCircle, Tags::isRect>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& r, const U2& c) noexcept
 		{
-			return _impl_<SDLTags::isRect, SDLTags::isCircle>::_(c, r);
+			return _impl_<Tags::isRect, Tags::isCircle>::_(c, r);
 		}
 	};
 
@@ -79,7 +79,7 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isRect, SDLTags::isRect>
+	struct _impl_<Tags::isRect, Tags::isRect>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& r1, const U2& r2) noexcept;
@@ -93,7 +93,7 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isCircle, SDLTags::isCircle>
+	struct _impl_<Tags::isCircle, Tags::isCircle>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& c1, const U2& c2) noexcept;
@@ -107,7 +107,7 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isPoint, SDLTags::isPoint>
+	struct _impl_<Tags::isPoint, Tags::isPoint>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& d1, const U2& d2) noexcept;
@@ -121,18 +121,18 @@ namespace ctl
 	* @returns if collision is taking place
 	*/
 	template<>
-	struct _impl_<SDLTags::isPoint, SDLTags::isCircle>
+	struct _impl_<Tags::isPoint, Tags::isCircle>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& d, const U2& c) noexcept;
 	};
 	template<>
-	struct _impl_<SDLTags::isCircle, SDLTags::isPoint>
+	struct _impl_<Tags::isCircle, Tags::isPoint>
 	{
 		template<typename U1, typename U2>
 		static constexpr bool _(const U1& c, const U2& p) noexcept
 		{
-			return _impl_<SDLTags::isCircle, SDLTags::isPoint>::_(p, c);
+			return _impl_<Tags::isCircle, Tags::isPoint>::_(p, c);
 		}
 	};
 
@@ -147,7 +147,7 @@ namespace ctl
 	constexpr auto collision(const T1& o1, const T2& o2) noexcept
 	{
 		static_assert(hasSDLTag_v<T1> && hasSDLTag_v<T2>, "Object has no tag.");
-		return _impl_<typename T1::Tag, typename T2::Tag>::_(o1, o2);
+		return _impl_<typename T1::tag, typename T2::tag>::_(o1, o2);
 	}
 
 	template<typename Geo_T>
@@ -202,7 +202,7 @@ namespace ctl
 	class ColliderVar : public Geo_t
 	{
 	public:
-		using Val_T1 = Geo_t;
+		using num_t1 = Geo_t;
 
 		/**
 		* @summary constructs with 0 and configures collider
@@ -260,7 +260,7 @@ namespace ctl
 		constexpr const auto& collider() const { return m_collider; }
 
 	private:
-		Collider<Val_T1> m_collider;
+		Collider<num_t1> m_collider;
 	};
 
 	/**********************************************************
@@ -276,7 +276,7 @@ namespace ctl
 	}
 
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isPoint, SDLTags::isRect>::_(const U1& d, const U2& r) noexcept
+	inline constexpr bool _impl_<Tags::isPoint, Tags::isRect>::_(const U1& d, const U2& r) noexcept
 	{
 		return !(d.x < r.x ||
 			d.x > r.x + r.w ||
@@ -284,7 +284,7 @@ namespace ctl
 			d.y > r.y + r.h);
 	}
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isRect, SDLTags::isCircle>::_(const U1& r, const U2& c) noexcept
+	inline constexpr bool _impl_<Tags::isRect, Tags::isCircle>::_(const U1& r, const U2& c) noexcept
 	{
 		const auto [halfWidth, halfHight] = std::pair(r.w / 2, r.h / 2);
 		const auto [distanceX, distanceY] = std::pair(std::abs(r.x + halfWidth - c.x), std::abs(r.y + halfHight - c.y));
@@ -300,7 +300,7 @@ namespace ctl
 		return (cornerDistance_sq <= power2(c.r));
 	}
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isRect, SDLTags::isRect>::_(const U1& r1, const U2& r2) noexcept
+	inline constexpr bool _impl_<Tags::isRect, Tags::isRect>::_(const U1& r1, const U2& r2) noexcept
 	{
 		return !(r1.y + r1.h <= r2.y ||
 			r1.y >= r2.y + r2.h ||
@@ -308,17 +308,17 @@ namespace ctl
 			r1.x >= r2.x + r2.w);
 	}
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isCircle, SDLTags::isCircle>::_(const U1& c1, const U2& c2) noexcept
+	inline constexpr bool _impl_<Tags::isCircle, Tags::isCircle>::_(const U1& c1, const U2& c2) noexcept
 	{
 		return power2(c1.x - c2.x) + power2(c1.y - c2.y) < power2(c1.r + c2.r);
 	}
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isPoint, SDLTags::isPoint>::_(const U1& d1, const U2& d2) noexcept
+	inline constexpr bool _impl_<Tags::isPoint, Tags::isPoint>::_(const U1& d1, const U2& d2) noexcept
 	{
 		return d1 == d2;
 	}
 	template<typename U1, typename U2>
-	inline constexpr bool _impl_<SDLTags::isPoint, SDLTags::isCircle>::_(const U1& d, const U2& c) noexcept
+	inline constexpr bool _impl_<Tags::isPoint, Tags::isCircle>::_(const U1& d, const U2& c) noexcept
 	{
 		const auto dx = std::abs(d.x - c.x);
 		const auto dy = std::abs(d.y - c.y);

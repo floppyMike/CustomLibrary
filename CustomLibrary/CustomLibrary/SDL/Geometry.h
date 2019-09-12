@@ -173,10 +173,10 @@ namespace ctl
 	{
 		static_assert(hasSDLTag_v<Shape>, "Should be a shape.");
 
-		using ShapeTag = typename Shape::Tag;
-		using PrimShape = std::conditional_t<std::is_same_v<SDLTags::isPoint, ShapeTag>, SDLPoint<int>,
-			std::conditional_t < std::is_same_v<SDLTags::isRect, ShapeTag>, SDLRect<int, int>,
-			std::conditional_t<std::is_same_v<SDLTags::isLine, ShapeTag>, SDLPoint<int>, void>>>;
+		using ShapeTag = typename Shape::tag;
+		using PrimShape = std::conditional_t<std::is_same_v<Tags::isPoint, ShapeTag>, SDLPoint<int>,
+			std::conditional_t < std::is_same_v<Tags::isRect, ShapeTag>, SDLRect<int, int>,
+			std::conditional_t<std::is_same_v<Tags::isLine, ShapeTag>, SDLPoint<int>, void>>>;
 
 	public:
 		using Renderable::Renderable;
@@ -230,26 +230,26 @@ namespace ctl
 		{
 			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
-			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+			if constexpr (std::is_same_v<Tags::isRect, ShapeTag>)
 				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+			else if constexpr (std::is_same_v<Tags::isPoint, ShapeTag>)
 				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+			else if constexpr (std::is_same_v<Tags::isLine, ShapeTag>)
 				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 		}
 		void drawFilled() const override
 		{
 			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
-			if constexpr (std::is_same_v<SDLTags::isRect, ShapeTag>)
+			if constexpr (std::is_same_v<Tags::isRect, ShapeTag>)
 				SDL_RenderDrawRects(m_win->renderer(), m_pool.front().rectPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<SDLTags::isPoint, ShapeTag>)
+			else if constexpr (std::is_same_v<Tags::isPoint, ShapeTag>)
 				SDL_RenderDrawPoints(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 
-			else if constexpr (std::is_same_v<SDLTags::isLine, ShapeTag>)
+			else if constexpr (std::is_same_v<Tags::isLine, ShapeTag>)
 				SDL_RenderDrawLines(m_win->renderer(), m_pool.front().pointPtr(), m_pool.size());
 		}
 
