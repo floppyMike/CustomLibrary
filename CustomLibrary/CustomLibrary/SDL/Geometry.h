@@ -29,7 +29,7 @@ namespace ctl
 	//Single
 	//----------------------------------------------
 
-	class Rectangle : public Object<SDLRect<int, int>>, public ShapeInterface
+	class Rectangle : public Object<Rect<int, int>>, public ShapeInterface
 	{
 	public:
 		using Object::Object;
@@ -51,7 +51,7 @@ namespace ctl
 		}
 	};
 
-	class Point : public Object<SDLPoint<int>>, public ShapeInterface
+	class Point : public Object<Point<int>>, public ShapeInterface
 	{
 	public:
 		using Object::Object;
@@ -69,7 +69,7 @@ namespace ctl
 		}
 	};
 
-	class Circle : public Object<SDLCircle<int, int>>, public ShapeInterface
+	class Circle : public Object<Circle<int, int>>, public ShapeInterface
 	{
 		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
 		{
@@ -77,15 +77,15 @@ namespace ctl
 
 			const auto d = m_shape.r * 2;
 
-			SDLPoint p(m_shape.r - 1, 0);
-			SDLPoint tp(1, 1);
+			Point p(m_shape.r - 1, 0);
+			Point tp(1, 1);
 
 			auto err = tp.x - d;
 
 			while (p.x >= p.y)
 			{
-				const std::array<SDLPoint<int>, 8> ps =
-				{ SDLPoint<int>
+				const std::array<Point<int>, 8> ps =
+				{ Point<int>
 					{ m_shape.x + p.x, m_shape.y + p.y },
 					{ m_shape.x - p.x, m_shape.y + p.y },
 					{ m_shape.x + p.x, m_shape.y - p.y },
@@ -132,7 +132,7 @@ namespace ctl
 		{
 			SDL_SetRenderDrawColor(m_win->renderer(), m_col.r, m_col.g, m_col.b, m_col.a);
 
-			std::array<SDLPoint<int>, pres + 1> ps;
+			std::array<Point<int>, pres + 1> ps;
 
 			for (size_t i = 0; i < pres; ++i)
 			{
@@ -146,7 +146,7 @@ namespace ctl
 		}
 	};
 
-	class Line : public Object<SDLLine<int>>, public ShapeInterface
+	class Line : public Object<Line<int>>, public ShapeInterface
 	{
 	public:
 		using Object::Object;
@@ -174,9 +174,9 @@ namespace ctl
 		static_assert(hasSDLTag_v<Shape>, "Should be a shape.");
 
 		using ShapeTag = typename Shape::tag;
-		using PrimShape = std::conditional_t<std::is_same_v<Tags::isPoint, ShapeTag>, SDLPoint<int>,
-			std::conditional_t < std::is_same_v<Tags::isRect, ShapeTag>, SDLRect<int, int>,
-			std::conditional_t<std::is_same_v<Tags::isLine, ShapeTag>, SDLPoint<int>, void>>>;
+		using PrimShape = std::conditional_t<std::is_same_v<Tags::isPoint, ShapeTag>, Point<int>,
+			std::conditional_t < std::is_same_v<Tags::isRect, ShapeTag>, Rect<int, int>,
+			std::conditional_t<std::is_same_v<Tags::isLine, ShapeTag>, Point<int>, void>>>;
 
 	public:
 		using Renderable::Renderable;
@@ -266,10 +266,10 @@ namespace ctl
 	//class FastGeo
 	//{
 	//	using Evaluated =
-	//		std::conditional_t<std::is_same_v<Line, Type>, SDLPoint,
-	//		std::conditional_t<std::is_same_v<Square, Type>, SDLRect,
-	//		std::conditional_t<std::is_same_v<SquareFilled, Type>, SDLRect,
-	//		std::conditional_t<std::is_same_v<Point, Type>, SDLPoint, void>>>>;
+	//		std::conditional_t<std::is_same_v<Line, Type>, Point,
+	//		std::conditional_t<std::is_same_v<Square, Type>, Rect,
+	//		std::conditional_t<std::is_same_v<SquareFilled, Type>, Rect,
+	//		std::conditional_t<std::is_same_v<Point, Type>, Point, void>>>>;
 
 	//public:
 	//	FastGeo(ctl::SDLWindow* win)

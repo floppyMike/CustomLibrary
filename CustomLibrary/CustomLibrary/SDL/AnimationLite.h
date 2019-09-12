@@ -8,7 +8,7 @@ namespace ctl
 {
 	class AnimationLite
 	{
-		SDLRect _passFrame_();
+		Rect _passFrame_();
 
 	public:
 		AnimationLite() = default;
@@ -18,7 +18,7 @@ namespace ctl
 		AnimationLite& operator=(const AnimationLite&) = default;
 		AnimationLite& operator=(AnimationLite&&) = default;
 
-		AnimationLite(BaseTexture*, const SDLDim&, const std::chrono::milliseconds&, const NumVec<size_t, 2> &);
+		AnimationLite(BaseTexture*, const Dim&, const std::chrono::milliseconds&, const NumVec<size_t, 2> &);
 
 		AnimationLite& unpause() noexcept;
 		AnimationLite& pause() noexcept;
@@ -32,7 +32,7 @@ namespace ctl
 
 		constexpr const auto& dim() const noexcept { return m_dim; }
 
-		constexpr auto& textureAndDim(BaseTexture* texture, const SDLDim& dim) noexcept { m_texture = texture; m_xMax = texture->dim().w / dim.w; return *this; }
+		constexpr auto& textureAndDim(BaseTexture* texture, const Dim& dim) noexcept { m_texture = texture; m_xMax = texture->dim().w / dim.w; return *this; }
 
 		constexpr const auto& interval() const noexcept { return m_waitTime; }
 		constexpr auto& interval(const std::chrono::milliseconds& i) noexcept { m_waitTime = i; return *this; }
@@ -40,7 +40,7 @@ namespace ctl
 	private:
 		BaseTexture* m_texture;
 
-		SDLDim m_dim;
+		Dim m_dim;
 		int m_xMax;
 
 		Timer m_timer;
@@ -52,7 +52,7 @@ namespace ctl
 		NumVec<size_t, 2> m_range = { 0, 0 };
 	};
 
-	SDLRect AnimationLite::_passFrame_()
+	Rect AnimationLite::_passFrame_()
 	{
 		if (!m_timer.isPaused())
 		{
@@ -70,10 +70,10 @@ namespace ctl
 			m_timer.start();
 		}
 
-		return SDLRect{ m_currFrame % m_xMax * m_dim.w, m_currFrame / m_xMax * m_dim.h, m_dim.w, m_dim.h };
+		return Rect{ m_currFrame % m_xMax * m_dim.w, m_currFrame / m_xMax * m_dim.h, m_dim.w, m_dim.h };
 	}
 
-	AnimationLite::AnimationLite(BaseTexture* texture, const SDLDim& dim, const std::chrono::milliseconds& interval, const NumVec<size_t, 2> & range)
+	AnimationLite::AnimationLite(BaseTexture* texture, const Dim& dim, const std::chrono::milliseconds& interval, const NumVec<size_t, 2> & range)
 		: m_texture(texture)
 		, m_dim(dim)
 		, m_xMax(texture->dim().w / dim.w)

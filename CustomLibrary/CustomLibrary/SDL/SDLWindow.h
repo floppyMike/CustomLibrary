@@ -15,34 +15,34 @@ namespace ctl
 		public:
 			/**
 			* @summary constructs collider from camera location and screen size ref
-			* @param "screen" ref to screen SDLDim
+			* @param "screen" ref to screen Dim
 			*/
 			constexpr Camera2D() noexcept = default;
 
 			/**
 			* @summary translates screen coord to world coord
-			* @param "screen" ref to screen SDLDim
-			* @returns SDLPoint of world coord
+			* @param "screen" ref to screen Dim
+			* @returns Point of world coord
 			*/
 			template<typename T>
-			constexpr SDLPoint<T> screenToWorld(const SDLPoint<T>& loc) const noexcept 
+			constexpr Point<T> screenToWorld(const Point<T>& loc) const noexcept 
 			{ 
 				return loc += m_camLoc; 
 			}
 
 			/**
 			* @summary translates world coord to screen coord
-			* @param "screen" ref to world SDLDim
-			* @returns SDLPoint of screen coord
+			* @param "screen" ref to world Dim
+			* @returns Point of screen coord
 			*/
 			template<typename T>
-			constexpr SDLPoint<T> worldToScreen(SDLPoint<T> loc) const noexcept
+			constexpr Point<T> worldToScreen(Point<T> loc) const noexcept
 			{
 				return loc -= m_camLoc;
 			}
 
 			/**
-			* @summary moves SDLPoint
+			* @summary moves Point
 			* @param "deltaX" x distance
 			* @param "deltaY" y distance
 			*/
@@ -57,18 +57,18 @@ namespace ctl
 			/**
 			* @summary location accessors
 			*/
-			constexpr const SDLPoint<float>& loc() const noexcept 
+			constexpr const Point<float>& loc() const noexcept 
 			{ 
 				return m_camLoc; 
 			}
-			constexpr Camera2D& loc(const SDLPoint<float>& loc) noexcept
+			constexpr Camera2D& loc(const Point<float>& loc) noexcept
 			{
 				m_camLoc = loc;
 				return *this;
 			}
 
 		private:
-			SDLPoint<float> m_camLoc = { 0.f, 0.f };
+			Point<float> m_camLoc = { 0.f, 0.f };
 		};
 
 		template<typename ImplState = StateBase, 
@@ -92,7 +92,7 @@ namespace ctl
 			* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
 			*/
 			SDLWindow(const char* name,
-				const SDLDim<int>& dim,
+				const Dim<int>& dim,
 				const Uint32& windowFlags = SDL_WINDOW_SHOWN,
 				const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 				: m_win(name, dim, windowFlags)

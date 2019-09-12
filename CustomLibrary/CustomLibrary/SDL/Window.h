@@ -12,7 +12,7 @@ namespace ctl
 		class Window
 		{
 		public:
-			Window(const char* name, const SDLDim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
+			Window(const char* name, const Dim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
 				: m_dim(dim)
 			{
 				m_window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -47,7 +47,7 @@ namespace ctl
 		private:
 			SDL_Window* m_window = nullptr;
 			Uint32 m_id;
-			SDLDim<int> m_dim;
+			Dim<int> m_dim;
 		};
 
 		class EventWatch

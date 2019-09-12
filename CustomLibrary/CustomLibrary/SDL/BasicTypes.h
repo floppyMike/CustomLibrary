@@ -16,13 +16,13 @@ namespace ctl
 	namespace sdl
 	{
 		template<typename... T>
-		class SDLShape
+		class Shape
 		{
 		public:
 			static_assert(std::conjunction_v<std::is_arithmetic<T>...>, "Type must be arithmetic");
 
 		protected:
-			SDLShape() = default;
+			Shape() = default;
 		};
 
 
@@ -31,29 +31,29 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename T>
-		class SDLPoint : SDLShape<T>
+		class Point : Shape<T>
 		{
 		public:
 			using num_t1 = T;
 			using tag = Tags::isPoint;
 
-			constexpr SDLPoint() = default;
-			constexpr SDLPoint(const SDLPoint&) = default;
+			constexpr Point() = default;
+			constexpr Point(const Point&) = default;
 
-			constexpr SDLPoint& operator=(const SDLPoint&) = default;
+			constexpr Point& operator=(const Point&) = default;
 
 			/**
 			* Copy constructs from coords.
 			* @param [in] x x-coord
 			* @param [in] y y-coord
 			*/
-			constexpr SDLPoint(const T& x, const T& y)
+			constexpr Point(const T& x, const T& y)
 				: x(x), y(y)
 			{
 			}
 
 			template<typename U>
-			operator SDLPoint<U>() const noexcept;
+			operator Point<U>() const noexcept;
 
 			/**
 			* @summary handles type overload to SDL_Point
@@ -71,39 +71,39 @@ namespace ctl
 			/**
 			* @summary assignment operators
 			*/
-			constexpr auto& operator+=(const SDLPoint& p) noexcept;
-			constexpr auto& operator-=(const SDLPoint& p) noexcept;
+			constexpr auto& operator+=(const Point& p) noexcept;
+			constexpr auto& operator-=(const Point& p) noexcept;
 
 			/**
 			* @summary arithmitic operators
 			*/
-			constexpr auto operator+(const SDLPoint& p) const noexcept;
-			constexpr auto operator-(const SDLPoint& p) const noexcept;
+			constexpr auto operator+(const Point& p) const noexcept;
+			constexpr auto operator-(const Point& p) const noexcept;
 
 			/**
 			* @summary relational operators
 			*/
-			constexpr auto operator==(const SDLPoint& p) const noexcept;
+			constexpr auto operator==(const Point& p) const noexcept;
 
 			T x, y;
 		};
 
 		template<typename T>
-		class SDLDim : SDLShape<T>
+		class Dim : Shape<T>
 		{
 		public:
 			using num_t1 = T;
 			using tag = Tags::isDim;
 
-			constexpr SDLDim() = default;
-			constexpr SDLDim(const SDLDim&) = default;
+			constexpr Dim() = default;
+			constexpr Dim(const Dim&) = default;
 
-			constexpr SDLDim& operator=(const SDLDim&) = default;
+			constexpr Dim& operator=(const Dim&) = default;
 
 			/**
 			* @summary construct from width and height
 			*/
-			constexpr SDLDim(const T& pw, const T& ph) noexcept
+			constexpr Dim(const T& pw, const T& ph) noexcept
 				: w(pw), h(ph)
 			{
 			}
@@ -117,22 +117,22 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename T1, typename T2>
-		class SDLRectRef : SDLShape<T1, T2>
+		class RectRef : Shape<T1, T2>
 		{
 		public:
 			using num_t1 = T1;
 			using num_t2 = T2;
 			using tag = Tags::isRect;
 
-			constexpr SDLRectRef() noexcept = delete;
-			constexpr SDLRectRef(const SDLRectRef&) noexcept = default;
+			constexpr RectRef() noexcept = delete;
+			constexpr RectRef(const RectRef&) noexcept = default;
 
-			constexpr SDLRectRef& operator=(const SDLRectRef&) noexcept = default;
+			constexpr RectRef& operator=(const RectRef&) noexcept = default;
 
 			/**
 			* @summary construct from x, y, width and height references
 			*/
-			constexpr SDLRectRef(T1& x, T1& y, T2& w, T2& h) noexcept
+			constexpr RectRef(T1& x, T1& y, T2& w, T2& h) noexcept
 				: x(x), y(y), w(w), h(h)
 			{
 			}
@@ -140,8 +140,8 @@ namespace ctl
 			/**
 			* @summary construct from point and dimension
 			*/
-			constexpr SDLRectRef(SDLPoint<T1>& p, SDLDim<T2>& d) noexcept
-				: SDLRectRef(p.x, p.y, d.w, d.h)
+			constexpr RectRef(Point<T1>& p, Dim<T2>& d) noexcept
+				: RectRef(p.x, p.y, d.w, d.h)
 			{
 			}
 
@@ -150,21 +150,21 @@ namespace ctl
 		};
 
 		template<typename T>
-		class SDLLineRef : SDLShape<T>
+		class LineRef : Shape<T>
 		{
 		public:
 			using num_t1 = T;
 			using tag = Tags::isLine;
 
-			constexpr SDLLineRef() noexcept = delete;
-			constexpr SDLLineRef(const SDLLineRef&) noexcept = default;
+			constexpr LineRef() noexcept = delete;
+			constexpr LineRef(const LineRef&) noexcept = default;
 
-			constexpr SDLLineRef& operator=(const SDLLineRef&) noexcept = default;
+			constexpr LineRef& operator=(const LineRef&) noexcept = default;
 
 			/**
 			* @summary construct from x, y, width and height references
 			*/
-			constexpr SDLLineRef(T& x1, T& y1, T& x2, T& y2) noexcept
+			constexpr LineRef(T& x1, T& y1, T& x2, T& y2) noexcept
 				: x1(x1), y1(y1), x2(x2), y2(y2)
 			{
 			}
@@ -172,8 +172,8 @@ namespace ctl
 			/**
 			* @summary construct from point and dimension
 			*/
-			constexpr SDLLineRef(SDLPoint<T>& p1, SDLPoint<T>& p2) noexcept
-				: SDLLineRef(p1.x, p1.y, p2.x, p2.y)
+			constexpr LineRef(Point<T>& p1, Point<T>& p2) noexcept
+				: LineRef(p1.x, p1.y, p2.x, p2.y)
 			{
 			}
 
@@ -181,22 +181,22 @@ namespace ctl
 		};
 
 		template<typename T1, typename T2>
-		class SDLCircleRef : SDLShape<T1, T2>
+		class CircleRef : Shape<T1, T2>
 		{
 		public:
 			using num_t1 = T1;
 			using num_t2 = T2;
 			using tag = Tags::isCircle;
 
-			constexpr SDLCircleRef() noexcept = delete;
-			constexpr SDLCircleRef(const SDLCircleRef&) noexcept = default;
+			constexpr CircleRef() noexcept = delete;
+			constexpr CircleRef(const CircleRef&) noexcept = default;
 
-			constexpr SDLCircleRef& operator=(const SDLCircleRef&) noexcept = default;
+			constexpr CircleRef& operator=(const CircleRef&) noexcept = default;
 
 			/**
 			* @summary construct from x, y, width and height references
 			*/
-			constexpr SDLCircleRef(T1& x, T1& y, T2& r) noexcept
+			constexpr CircleRef(T1& x, T1& y, T2& r) noexcept
 				: x(x), y(y), r(r)
 			{
 			}
@@ -204,8 +204,8 @@ namespace ctl
 			/**
 			* @summary construct from point and dimension
 			*/
-			constexpr SDLCircleRef(SDLPoint<T1>& p, T2& r) noexcept
-				: SDLCircleRef(p.x, p.y, r)
+			constexpr CircleRef(Point<T1>& p, T2& r) noexcept
+				: CircleRef(p.x, p.y, r)
 			{
 			}
 
@@ -219,7 +219,7 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename T1, typename T2>
-		class SDLRect : SDLShape<T1, T2>
+		class Rect : Shape<T1, T2>
 		{
 		public:
 			using num_t1 = T1;
@@ -229,16 +229,16 @@ namespace ctl
 			/**
 			* @summary constructs the Ref from this point and dimension
 			*/
-			constexpr SDLRect() noexcept = default;
+			constexpr Rect() noexcept = default;
 
 			/**
 			* @summary copies values and constructs the Ref from this point and dimension
 			*/
-			constexpr SDLRect(const SDLRect& r) noexcept
+			constexpr Rect(const Rect& r) noexcept
 				: m_p(r.m_p), m_d(r.m_d)
 			{
 			}
-			constexpr SDLRect& operator=(const SDLRect& r) noexcept
+			constexpr Rect& operator=(const Rect& r) noexcept
 			{
 				m_p = r.m_p;
 				m_d = r.m_d;
@@ -249,7 +249,7 @@ namespace ctl
 			/**
 			* @summary construct from x, y, width and height
 			*/
-			constexpr SDLRect(const T1& x, const T1& y, const T2& w, const T2& h) noexcept
+			constexpr Rect(const T1& x, const T1& y, const T2& w, const T2& h) noexcept
 				: m_p(x, y), m_d(w, h)
 			{
 			}
@@ -257,8 +257,8 @@ namespace ctl
 			/**
 			* @summary construct from point and dimension
 			*/
-			constexpr SDLRect(const SDLPoint<T1>& p, const SDLDim<T2>& d) noexcept
-				: SDLRect(p.x, p.y, d.w, d.h)
+			constexpr Rect(const Point<T1>& p, const Dim<T2>& d) noexcept
+				: Rect(p.x, p.y, d.w, d.h)
 			{
 			}
 
@@ -278,21 +278,21 @@ namespace ctl
 
 			/**
 			* @summary point accessors
-			* @returns reference to SDLPoint
+			* @returns reference to Point
 			*/
 			constexpr const auto& pos() const { return m_p; }
-			constexpr auto& pos(const SDLPoint<T1>& p) { m_p = p; return *this; }
+			constexpr auto& pos(const Point<T1>& p) { m_p = p; return *this; }
 
 			/**
 			* @summary dimension accessors
-			* @returns reference to SDLDim
+			* @returns reference to Dim
 			*/
 			constexpr const auto& dim() const { return m_d; }
-			constexpr auto& dim(const SDLDim<T2>& d) { m_d = d; return *this; }
+			constexpr auto& dim(const Dim<T2>& d) { m_d = d; return *this; }
 
 		private:
-			SDLPoint<T1> m_p;
-			SDLDim<T2> m_d;
+			Point<T1> m_p;
+			Dim<T2> m_d;
 
 		public:
 			T1& x = m_p.x, & y = m_p.y;
@@ -300,85 +300,85 @@ namespace ctl
 		};
 
 		template<typename T>
-		class SDLLine : public SDLShape<T>
+		class Line : public Shape<T>
 		{
 		public:
 			using num_t1 = T;
 			using tag = Tags::isLine;
 
-			constexpr SDLLine() noexcept = default;
+			constexpr Line() noexcept = default;
 
-			constexpr SDLLine(const SDLLine&) noexcept = default;
+			constexpr Line(const Line&) noexcept = default;
 
-			constexpr SDLLine& operator=(const SDLLine&) noexcept = default;
+			constexpr Line& operator=(const Line&) noexcept = default;
 
-			constexpr SDLLine(const T& x1, const T& y1, const T& x2, const T& y2) noexcept
+			constexpr Line(const T& x1, const T& y1, const T& x2, const T& y2) noexcept
 				: m_p1(x1, y1), m_p2(x2, y2)
 			{
 			}
 
-			constexpr SDLLine(const SDLPoint<T>& p1, const SDLPoint<T>& p2) noexcept
-				: SDLLine(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
+			constexpr Line(const Point<T>& p1, const Point<T>& p2) noexcept
+				: Line(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
 			{
 			}
 
 			/**
 			* @summary point accessors
-			* @returns reference to SDLPoint
+			* @returns reference to Point
 			*/
 			constexpr const auto& pos1() const { return m_p1; }
-			constexpr auto& pos1(const SDLPoint<T>& p) { m_p1 = p; return *this; }
+			constexpr auto& pos1(const Point<T>& p) { m_p1 = p; return *this; }
 
 			/**
 			* @summary point accessors
-			* @returns reference to SDLPoint
+			* @returns reference to Point
 			*/
 			constexpr const auto& pos2() const { return m_p2; }
-			constexpr auto& pos2(const SDLPoint<T>& p) { m_p2 = p; return *this; }
+			constexpr auto& pos2(const Point<T>& p) { m_p2 = p; return *this; }
 
 			T& x1 = m_p1.x, & y1 = m_p1.y, & x2 = m_p2.x, & y2 = m_p2.y;
 
 		private:
-			SDLPoint<T> m_p1;
-			SDLPoint<T> m_p2;
+			Point<T> m_p1;
+			Point<T> m_p2;
 		};
 
 		template <typename T1, typename T2>
-		class SDLCircle : public SDLShape<T1, T2>
+		class Circle : public Shape<T1, T2>
 		{
 		public:
 			using num_t1 = T1;
 			using num_t2 = T2;
 			using tag = Tags::isCircle;
 
-			constexpr SDLCircle() noexcept = default;
+			constexpr Circle() noexcept = default;
 
-			constexpr SDLCircle(const SDLCircle&) noexcept = default;
+			constexpr Circle(const Circle&) noexcept = default;
 
-			constexpr SDLCircle& operator=(const SDLCircle&) noexcept = default;
+			constexpr Circle& operator=(const Circle&) noexcept = default;
 
-			constexpr SDLCircle(const T1& x1, const T1& y1, const T2& r) noexcept
+			constexpr Circle(const T1& x1, const T1& y1, const T2& r) noexcept
 				: m_p(x1, y1), r(r)
 			{
 			}
 
-			constexpr SDLCircle(const SDLPoint<T1>& p, const T2& r) noexcept
-				: SDLCircle(p.x, p.y, r)
+			constexpr Circle(const Point<T1>& p, const T2& r) noexcept
+				: Circle(p.x, p.y, r)
 			{
 			}
 
 			/**
 			* @summary point accessors
-			* @returns reference to SDLPoint
+			* @returns reference to Point
 			*/
 			constexpr const auto& pos() const { return m_p; }
-			constexpr auto& pos(const SDLPoint<T1>& p) { m_p = p; return *this; }
+			constexpr auto& pos(const Point<T1>& p) { m_p = p; return *this; }
 
 			T1& x = m_p.x, & y = m_p.y;
 			T2 r;
 
 		private:
-			SDLPoint<T1> m_p;
+			Point<T1> m_p;
 		};
 
 		//----------------------------------------------
@@ -391,31 +391,31 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename T>
-		inline SDLPoint<T>::operator SDL_Point() const noexcept
+		inline Point<T>::operator SDL_Point() const noexcept
 		{
 			return { static_cast<int>(x), static_cast<int>(y) };
 		}
 
 		template<typename T>
-		inline SDLPoint<T>::operator SDL_FPoint() const noexcept
+		inline Point<T>::operator SDL_FPoint() const noexcept
 		{
 			return { static_cast<float>(x), static_cast<float>(y) };
 		}
 
 		template<typename T>
-		inline const SDL_Point* SDLPoint<T>::pointPtr() const noexcept
+		inline const SDL_Point* Point<T>::pointPtr() const noexcept
 		{
 			return reinterpret_cast<const SDL_Point * const>(this);
 		}
 
 		template<typename T>
-		inline SDL_Point* SDLPoint<T>::pointPtr() noexcept
+		inline SDL_Point* Point<T>::pointPtr() noexcept
 		{
 			return reinterpret_cast<SDL_Point*>(this);
 		}
 
 		template<typename T>
-		inline constexpr auto& SDLPoint<T>::operator+=(const SDLPoint& p) noexcept
+		inline constexpr auto& Point<T>::operator+=(const Point& p) noexcept
 		{
 			x += p.x;
 			y += p.y;
@@ -424,7 +424,7 @@ namespace ctl
 		}
 
 		template<typename T>
-		inline constexpr auto& SDLPoint<T>::operator-=(const SDLPoint& p) noexcept
+		inline constexpr auto& Point<T>::operator-=(const Point& p) noexcept
 		{
 			x -= p.x;
 			y -= p.y;
@@ -433,57 +433,57 @@ namespace ctl
 		}
 
 		template<typename T>
-		inline constexpr auto SDLPoint<T>::operator+(const SDLPoint& p) const noexcept
+		inline constexpr auto Point<T>::operator+(const Point& p) const noexcept
 		{
-			return SDLPoint(x + p.x, y + p.y);
+			return Point(x + p.x, y + p.y);
 		}
 
 		template<typename T>
-		inline constexpr auto SDLPoint<T>::operator-(const SDLPoint& p) const noexcept
+		inline constexpr auto Point<T>::operator-(const Point& p) const noexcept
 		{
-			return SDLPoint(x - p.x, y - p.y);
+			return Point(x - p.x, y - p.y);
 		}
 
 		template<typename T>
-		inline constexpr auto SDLPoint<T>::operator==(const SDLPoint& p) const noexcept
+		inline constexpr auto Point<T>::operator==(const Point& p) const noexcept
 		{
 			return x == p.x && y == p.y;
 		}
 
 		template<typename T1, typename T2>
-		inline SDLRect<T1, T2>::operator SDL_Rect() const noexcept
+		inline Rect<T1, T2>::operator SDL_Rect() const noexcept
 		{
 			return { static_cast<int>(x), static_cast<int>(y),
 				static_cast<int>(w), static_cast<int>(h) };
 		}
 
 		template<>
-		inline const SDL_Rect* SDLRect<int, int>::rectPtr() const noexcept
+		inline const SDL_Rect* Rect<int, int>::rectPtr() const noexcept
 		{
 			return reinterpret_cast<const SDL_Rect * const>(this);
 		}
 
 		template<>
-		inline SDLRect<int, int>::operator SDL_Rect() const noexcept
+		inline Rect<int, int>::operator SDL_Rect() const noexcept
 		{
 			return *reinterpret_cast<const SDL_Rect * const>(this);
 		}
 
 		template<typename T1, typename T2>
-		inline SDLRect<T1, T2>::operator SDL_FRect() const noexcept
+		inline Rect<T1, T2>::operator SDL_FRect() const noexcept
 		{
 			return { static_cast<float>(this->x), static_cast<float>(this->y),
 				static_cast<float>(this->w), static_cast<float>(this->h) };
 		}
 
 		template<>
-		inline SDLRect<float, float>::operator SDL_FRect() const noexcept
+		inline Rect<float, float>::operator SDL_FRect() const noexcept
 		{
 			return *reinterpret_cast<const SDL_FRect * const>(this);
 		}
 		template<typename T>
 		template<typename U>
-		inline SDLPoint<T>::operator SDLPoint<U>() const noexcept
+		inline Point<T>::operator Point<U>() const noexcept
 		{
 			return { static_cast<U>(x), static_cast<U>(y) };
 		}

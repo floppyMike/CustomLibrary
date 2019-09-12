@@ -8,7 +8,7 @@ namespace ctl
 {
 	class AnimationBase
 	{
-		virtual SDLRect* _passFrame_() = 0;
+		virtual Rect* _passFrame_() = 0;
 
 	public:
 		AnimationBase() = default;
@@ -58,10 +58,10 @@ namespace ctl
 
 	class Animation : public AnimationBase
 	{
-		SDLRect* _passFrame_();
+		Rect* _passFrame_();
 
 	public:
-		using Frame = std::pair<SDLRect, std::chrono::milliseconds>;
+		using Frame = std::pair<Rect, std::chrono::milliseconds>;
 
 		using AnimationBase::AnimationBase;
 
@@ -78,7 +78,7 @@ namespace ctl
 		{
 		}
 
-		Animation& emplace(const std::vector<Frame>::const_iterator&, const SDLRect&, const std::chrono::milliseconds&);
+		Animation& emplace(const std::vector<Frame>::const_iterator&, const Rect&, const std::chrono::milliseconds&);
 		Animation& remove(const std::vector<Frame>::const_iterator&);
 
 		template<typename Iter>
@@ -96,7 +96,7 @@ namespace ctl
 		std::vector<Frame>::iterator m_currFrame = m_frames.begin();
 	};
 	
-	SDLRect* Animation::_passFrame_()
+	Rect* Animation::_passFrame_()
 	{
 		if (!m_timer.isPaused() && !m_frames.empty())
 		{
@@ -117,7 +117,7 @@ namespace ctl
 		return &m_currFrame->first;
 	}
 
-	Animation& Animation::emplace(const std::vector<Frame>::const_iterator& loc, const SDLRect& r, const std::chrono::milliseconds& mil)
+	Animation& Animation::emplace(const std::vector<Frame>::const_iterator& loc, const Rect& r, const std::chrono::milliseconds& mil)
 	{
 		m_frames.emplace(loc, r, mil);
 		m_currFrame = m_frames.begin();

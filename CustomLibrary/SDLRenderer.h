@@ -46,7 +46,7 @@ namespace ctl
 				SDL_RenderPresent(m_renderer);
 			}
 
-			void setLogicalSize(const SDLDim<int>& dim)
+			void setLogicalSize(const Dim<int>& dim)
 			{
 				SDL_RenderSetLogicalSize(m_renderer, dim.w, dim.h);
 			}

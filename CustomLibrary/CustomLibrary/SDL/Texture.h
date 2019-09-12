@@ -8,7 +8,7 @@
 
 namespace ctl
 {
-	class BaseTexture : public Object<SDLRect<short, int>>
+	class BaseTexture : public Object<Rect<short, int>>
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
@@ -61,7 +61,7 @@ namespace ctl
 
 	protected:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
-		ctl::SDLDim<int> m_dim;
+		ctl::Dim<int> m_dim;
 	};
 
 	class FixedTexture : public BaseTexture
@@ -144,7 +144,7 @@ namespace ctl
 //			return *this;
 //		}
 //
-//		auto& load(const SDLDim &wh, const SDL_TextureAccess &a)
+//		auto& load(const Dim &wh, const SDL_TextureAccess &a)
 //		{
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_PIXELFORMAT_RGBA8888, a, wh.w, wh.h));
 //			if (!m_texture)

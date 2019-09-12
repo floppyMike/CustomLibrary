@@ -48,9 +48,9 @@ ctl::Text& ctl::Text::loadWrapped(const char* text, const Uint16& wrapper, const
 	return *this;
 }
 
-ctl::SDLDim<int> ctl::Text::hypoSize(const char* text)
+ctl::Dim<int> ctl::Text::hypoSize(const char* text)
 {
-	SDLDim<int> temp;
+	Dim<int> temp;
 
 	if (TTF_SizeUTF8(m_font->ptr(), text, &temp.w, &temp.h) != 0)
 		throw Log(SDL_GetError());

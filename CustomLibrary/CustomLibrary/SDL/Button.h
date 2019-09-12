@@ -16,7 +16,7 @@ namespace ctl
 			: m_col(&m_buttSize.x, &m_buttSize.y, &m_buttSize.w, &m_buttSize.h)
 		{}
 
-		Button(Text&& t, std::function<void()>&& f, const SDLRect& size)
+		Button(Text&& t, std::function<void()>&& f, const Rect& size)
 			: m_buttText(std::move(t))
 			, m_buttSize(size)
 			, m_col(&m_buttSize.x, &m_buttSize.y, &m_buttSize.w, &m_buttSize.h)
@@ -25,7 +25,7 @@ namespace ctl
 			m_buttText.loc({ ((size.w - m_buttText.dim().w) >> 1) + size.x, ((size.h - m_buttText.dim().h) >> 1) + size.y });
 		}
 
-		Button(Text& t, std::function<void()>&& func, const SDLRect& size)
+		Button(Text& t, std::function<void()>&& func, const Rect& size)
 			: Button(std::move(t), std::forward<std::function<void()>>(func), size)
 		{
 		}
@@ -74,7 +74,7 @@ namespace ctl
 		auto& text(Text &t) { m_buttText = std::move(t); return *this; }
 
 		constexpr const auto& dim() const { return m_buttSize; }
-		constexpr auto& dim(const SDLRect& r) { m_buttSize = r; m_buttText.loc({ ((m_buttSize.w - m_buttText.dim().w) >> 1) + m_buttSize.x, ((m_buttSize.h - m_buttText.dim().h) >> 1) + m_buttSize.y }); return *this; }
+		constexpr auto& dim(const Rect& r) { m_buttSize = r; m_buttText.loc({ ((m_buttSize.w - m_buttText.dim().w) >> 1) + m_buttSize.x, ((m_buttSize.h - m_buttText.dim().h) >> 1) + m_buttSize.y }); return *this; }
 
 		constexpr const auto& func() const { return m_func; }
 		auto& func(std::function<void()>&& f) { m_func = std::move(f); return *this; }
@@ -85,7 +85,7 @@ namespace ctl
 	private:
 		Text m_buttText;
 
-		SDLRect m_buttSize;
+		Rect m_buttSize;
 
 		BoxCol m_col;
 		bool m_isInside = false;

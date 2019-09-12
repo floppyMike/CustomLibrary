@@ -7,36 +7,36 @@ namespace ctl
 	class Frame
 	{
 	public:
-		Frame(const SDLDim&);
+		Frame(const Dim&);
 
 		virtual void draw();
 
 	private:
-		SDLDim m_size;
+		Dim m_size;
 	};
 
 	class Gui
 	{
 	public:
-		Gui(const SDLDim&);
+		Gui(const Dim&);
 
 		void draw();
 
-		Gui& addFrame(Frame*, const SDLPoint&);
+		Gui& addFrame(Frame*, const Point&);
 		Gui& moveFrame();
 		Gui& delFrame();
 
 	private:
-		SDLDim m_grid;
+		Dim m_grid;
 		std::vector<Frame*> m_elements;
 	};
 
-	Frame::Frame(const SDLDim& dim)
+	Frame::Frame(const Dim& dim)
 		: m_size(dim)
 	{
 	}
 
-	Gui::Gui(const SDLDim& grid)
+	Gui::Gui(const Dim& grid)
 		: m_grid(grid)
 	{
 	}
@@ -47,7 +47,7 @@ namespace ctl
 			i->draw();
 	}
 
-	Gui& Gui::addFrame(Frame* f, const SDLPoint& pos)
+	Gui& Gui::addFrame(Frame* f, const Point& pos)
 	{
 		m_elements.emplace_back(f);
 	}

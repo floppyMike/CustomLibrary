@@ -123,9 +123,9 @@ namespace ctl
 		* @summary gets graphical size of text
 		* @param "text" text to see size of
 		* @exception "Log" at fail
-		* @returns SDLDim<int> of width and height
+		* @returns Dim<int> of width and height
 		*/
-		SDLDim<int> hypoSize(const char* text);
+		Dim<int> hypoSize(const char* text);
 
 		/**
 		* @summary text accessor
