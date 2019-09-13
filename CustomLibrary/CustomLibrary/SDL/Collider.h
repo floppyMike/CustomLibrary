@@ -1,10 +1,5 @@
 #pragma once
 
-#include <type_traits>
-#include <array>
-
-#include <CustomLibrary/utility.h>
-
 #include "BasicTypes.h"
 
 namespace ctl
@@ -156,7 +151,7 @@ namespace ctl
 	public:
 		static_assert(hasSDLTag_v<Geo_T>, "Type requires a \"using Tags\" alias");
 
-		using value_type = Geo_T;
+		using value_t = Geo_T;
 
 		/**
 		* @summary constructs empty ptr
@@ -257,7 +252,7 @@ namespace ctl
 		/**
 		* @summary accesses collider object		
 		*/
-		constexpr const auto& collider() const { return m_collider; }
+		constexpr const auto& collider() const noexcept;
 
 	private:
 		Collider<num_t1> m_collider;
@@ -331,5 +326,11 @@ namespace ctl
 
 		else
 			return false;
+	}
+
+	template<typename Geo_t>
+	inline constexpr const auto& ColliderVar<Geo_t>::collider() const noexcept
+	{
+		return m_collider;
 	}
 }
