@@ -227,7 +227,10 @@ namespace ctl
 			/**
 			* @summary constructs the Ref from this point and dimension
 			*/
-			constexpr Rect() noexcept = default;
+			constexpr Rect() noexcept
+				: base(m_p, m_d)
+			{
+			}
 
 			/**
 			* @summary copies values and constructs the Ref from this point and dimension
@@ -242,7 +245,7 @@ namespace ctl
 			*/
 			constexpr Rect(const T1& x, const T1& y, const T2& w, const T2& h) noexcept
 				: m_p(x, y), m_d(w, h)
-				, RectRef<T1, T2>(m_p, m_d)
+				, base(m_p, m_d)
 			{
 			}
 
@@ -259,9 +262,6 @@ namespace ctl
 			* @remarks must be of type int
 			*/
 			operator SDL_Rect() const noexcept;
-
-			const SDL_Rect* rectPtr() const noexcept;
-			SDL_Rect* rectPtr() noexcept;
 
 			/**
 			* @summary handles type overload to SDL_FRect
@@ -302,7 +302,11 @@ namespace ctl
 			using num_t1 = T;
 			using tag = Tags::isLine;
 
-			constexpr Line() noexcept = default;
+			constexpr Line() noexcept
+				: base(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
+			{
+			}
+
 			constexpr Line(const Line&) noexcept = default;
 
 			constexpr auto& operator=(const Line& l) noexcept;
@@ -362,14 +366,18 @@ namespace ctl
 			using num_t2 = T2;
 			using tag = Tags::isCircle;
 
-			constexpr Circle() noexcept = default;
+			constexpr Circle() noexcept
+				: base(m_p, m_r)
+			{
+			}
 			constexpr Circle(const Circle&) noexcept = default;
 
 			constexpr auto& operator=(const Circle& c) noexcept;
 			constexpr auto& operator=(const base& b) noexcept;
 
 			constexpr Circle(const T1& x1, const T1& y1, const T2& r) noexcept
-				: m_p(x1, y1), r(r)
+				: m_p(x1, y1), m_r(r)
+				, base(m_p, m_r)
 			{
 			}
 
@@ -384,6 +392,10 @@ namespace ctl
 			*/
 			constexpr const auto& pos() const noexcept;
 			constexpr auto& pos(const Point<T1>& p) noexcept;
+
+			using base::x;
+			using base::y;
+			using base::r;
 
 		private:
 			Point<T1> m_p;
@@ -453,17 +465,6 @@ namespace ctl
 			return x == p.x && y == p.y;
 		}
 
-		template<>
-		inline Rect<int, int>::operator SDL_Rect() const noexcept
-		{
-			return *reinterpret_cast<const SDL_Rect * const>(this);
-		}
-
-		template<>
-		inline Rect<float, float>::operator SDL_FRect() const noexcept
-		{
-			return *reinterpret_cast<const SDL_FRect * const>(this);
-		}
 		template<typename T>
 		template<typename U>
 		inline Point<T>::operator Point<U>() const noexcept
@@ -494,18 +495,6 @@ namespace ctl
 		{
 			return { static_cast<int>(x), static_cast<int>(y),
 				static_cast<int>(w), static_cast<int>(h) };
-		}
-
-		template<>
-		inline const SDL_Rect* Rect<int, int>::rectPtr() const noexcept
-		{
-			return reinterpret_cast<const SDL_Rect * const>(this);
-		}
-
-		template<typename T1, typename T2>
-		inline SDL_Rect* Rect<T1, T2>::rectPtr() noexcept
-		{
-			return reinterpret_cast<SDL_Rect*>(this);
 		}
 
 		template<typename T1, typename T2>

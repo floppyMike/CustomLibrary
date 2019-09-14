@@ -5,72 +5,13 @@
 #include "Engine.h"
 #include "Window.h"
 #include "SDLRenderer.h"
+#include "Camera2D.h"
+#include "EventWatch.h"
 
 namespace ctl
 {
 	namespace sdl
 	{
-		class Camera2D
-		{
-		public:
-			/**
-			* @summary constructs collider from camera location and screen size ref
-			* @param "screen" ref to screen Dim
-			*/
-			constexpr Camera2D() noexcept = default;
-
-			/**
-			* @summary translates screen coord to world coord
-			* @param "screen" ref to screen Dim
-			* @returns Point of world coord
-			*/
-			template<typename T>
-			constexpr Point<T> screenToWorld(const Point<T>& loc) const noexcept 
-			{ 
-				return loc += m_camLoc; 
-			}
-
-			/**
-			* @summary translates world coord to screen coord
-			* @param "screen" ref to world Dim
-			* @returns Point of screen coord
-			*/
-			template<typename T>
-			constexpr Point<T> worldToScreen(Point<T> loc) const noexcept
-			{
-				return loc -= m_camLoc;
-			}
-
-			/**
-			* @summary moves Point
-			* @param "deltaX" x distance
-			* @param "deltaY" y distance
-			*/
-			constexpr Camera2D& mov(const float& deltaX, const float& deltaY) noexcept
-			{
-				m_camLoc.x += deltaX;
-				m_camLoc.y += deltaY;
-
-				return *this;
-			}
-
-			/**
-			* @summary location accessors
-			*/
-			constexpr const Point<float>& loc() const noexcept 
-			{ 
-				return m_camLoc; 
-			}
-			constexpr Camera2D& loc(const Point<float>& loc) noexcept
-			{
-				m_camLoc = loc;
-				return *this;
-			}
-
-		private:
-			Point<float> m_camLoc = { 0.f, 0.f };
-		};
-
 		template<typename ImplState = StateBase, 
 			typename ImplWatch = EventWatch,
 			typename ImplCam = Camera2D,
@@ -135,6 +76,9 @@ namespace ctl
 				return *this;
 			}
 
+			constexpr auto* renderer() { return &m_renderer; }
+			constexpr auto* window() { return &m_win; }
+
 			void event(const SDL_Event& e)
 			{
 				if (e.window.windowID == m_win.ID())
@@ -142,7 +86,6 @@ namespace ctl
 					switch (e.window.event)
 					{
 					case SDL_WINDOWEVENT_SIZE_CHANGED: m_win.update(e);   break;
-					case SDL_WINDOWEVENT_CLOSE:		   destroy();		  break;
 					default:						   m_watch.listen(e); break;
 					}
 

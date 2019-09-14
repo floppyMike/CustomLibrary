@@ -1,14 +1,15 @@
 #pragma once
 
-#include <vector>
-#include <type_traits>
-
 #include <SDL.h>
 
 #include <CustomLibrary/utility.h>
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/SDLWindow.h>
 #include <CustomLibrary/SDL/SDLTraits.h>
+
+#include <vector>
+#include <type_traits>
+#include <variant>
 
 namespace ctl
 {
@@ -19,12 +20,12 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename ImplRend = Renderer>
-		class DrawableRect : Renderable<ImplRend, Rect<float, int>>
+		class DrawableRect : Object<ImplRend, Rect<int, int>>
 		{
-			using base = Renderable<ImplRend, Rect<float, int>>;
+			using base = Object<ImplRend, Rect<int, int>>;
 
 		public:
-			using base::Renderable;
+			using base::Object;
 
 			void draw() const
 			{
@@ -46,12 +47,12 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawableCircle : Renderable<ImplRend, Circle<float, int>>
+		class DrawableCircle : Object<ImplRend, Circle<int, unsigned int>>
 		{
-			using base = Renderable<ImplRend, Circle<float, int>>;
+			using base = Object<ImplRend, Circle<int, unsigned int>>;
 
 		public:
-			using base::Renderable;
+			using base::Object;
 
 			void draw() const
 			{
@@ -83,20 +84,19 @@ namespace ctl
 			using base::shape;
 
 		private:
-			template<typename T1, typename T2>
-			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int))
+			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
 			{
 				const auto d = this->m_shape.r * 2;
 
-				Point p(this->m_shape.r - 1, 0);
-				Point tp(1, 1);
+				Point<int> p(this->m_shape.r - 1, 0);
+				Point<int> tp(1, 1);
 
-				auto err = tp.x - d;
+				int err = tp.x - d;
 
 				while (p.x >= p.y)
 				{
-					const std::array<Point<int>, 8> ps =
-					{ Point<int>
+					const std::array<SDL_Point, 8> ps =
+					{ SDL_Point
 						{ this->m_shape.x + p.x, this->m_shape.y + p.y },
 						{ this->m_shape.x - p.x, this->m_shape.y + p.y },
 						{ this->m_shape.x + p.x, this->m_shape.y - p.y },
@@ -107,7 +107,7 @@ namespace ctl
 						{ this->m_shape.x - p.y, this->m_shape.y - p.x }
 					};
 
-					if (func(this->m_rend->get(), ps.front().pointPtr(), ps.size()) != 0)
+					if (func(this->m_rend->get(), ps.data(), ps.size()) != 0)
 						throw Log(SDL_GetError());
 
 					if (err <= 0)
@@ -129,12 +129,12 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawableLine : public Renderable<ImplRend, Line<float>>
+		class DrawableLine : Object<ImplRend, Line<int>>
 		{
-			using base = Renderable<ImplRend, Line<float>>;
+			using base = Object<ImplRend, Line<int>>;
 
 		public:
-			using base::Renderable;
+			using base::Object;
 
 			void draw() const
 			{
@@ -148,12 +148,12 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawablePoint : public Renderable<ImplRend, Point<float>>
+		class DrawablePoint : Object<ImplRend, Point<int>>
 		{
-			using base = Renderable<ImplRend, Point<float>>;
+			using base = Object<ImplRend, Point<int>>;
 
 		public:
-			using base::Renderable;
+			using base::Object;
 
 			void draw() const
 			{
@@ -169,6 +169,40 @@ namespace ctl
 		//----------------------------------------------
 		//Multi
 		//----------------------------------------------
+
+		template<typename ImplRend, typename... Shapes>
+		class MultiShape : Renderable<ImplRend>
+		{
+			static_assert(std::conjunction_v<hasSDLTag_v<Shapes>...>, "Shapes must have the tag.");
+			using base = Renderable<ImplRend>;
+
+		public:
+			using base::Renderable;
+
+			template<typename T, typename... Para>
+			auto& push(Para&&... arg)
+			{
+				static_assert(std::disjunction_v<std::is_same_v<Shapes, T>...>, "Type must be of pack.");
+				std::get<std::vector<T>>(m_packs).emplace_back(std::forward<Para>(arg)...);
+
+				return *this;
+			}
+
+			void draw()
+			{
+				std::visit([](auto&& arg)
+					{
+						using T = decltype(arg);
+
+						if constexpr (std::is_same_v<)
+							
+					})
+			}
+
+		private:
+			std::tuple<std::vector<Shapes>...> m_packs;
+		};
+
 
 		//template<typename Shape>
 		//class MultiShape : public ShapeInterface, public Renderable

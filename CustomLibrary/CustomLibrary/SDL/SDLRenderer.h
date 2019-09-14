@@ -27,7 +27,8 @@ namespace ctl
 			void destroy()
 			{
 				if (m_renderer != nullptr)
-					SDL_DestroyRenderer(m_renderer);
+					SDL_DestroyRenderer(m_renderer),
+					m_renderer = nullptr;
 			}
 
 			void setColor(const SDL_Color& col)

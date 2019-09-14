@@ -6,7 +6,7 @@ namespace ctl
 {
 	namespace sdl
 	{
-		template<typename ImplRend, typename Shape>
+		template<typename ImplRend>
 		class Renderable
 		{
 		public:
@@ -37,19 +37,29 @@ namespace ctl
 				return *this;
 			}
 
+		protected:
+			ImplRend* m_rend = nullptr;
+		};
+
+
+		template<typename ImplRend, typename Shape>
+		class Object : public Renderable<ImplRend>
+		{
+		public:
+			using Renderable<ImplRend>::Renderable;
+
 			constexpr const auto& shape() const noexcept
 			{
 				return m_shape;
 			}
 
-			constexpr auto& shape(const Shape& s) const noexcept
+			constexpr auto& shape(const Shape& s) noexcept
 			{
 				m_shape = s;
 				return *this;
 			}
 
 		protected:
-			ImplRend* m_rend = nullptr;
 			Shape m_shape;
 		};
 

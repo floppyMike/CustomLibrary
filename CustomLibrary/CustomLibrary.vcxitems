@@ -33,9 +33,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h" />
@@ -56,18 +58,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
