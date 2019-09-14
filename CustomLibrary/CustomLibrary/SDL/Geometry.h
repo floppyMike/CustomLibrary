@@ -3,9 +3,7 @@
 #include <SDL.h>
 
 #include <CustomLibrary/utility.h>
-#include <CustomLibrary/SDL/Engine.h>
-#include <CustomLibrary/SDL/SDLWindow.h>
-#include <CustomLibrary/SDL/SDLTraits.h>
+#include "SDLTraits.h"
 
 #include <vector>
 #include <type_traits>
@@ -173,30 +171,35 @@ namespace ctl
 		template<typename ImplRend, typename... Shapes>
 		class MultiShape : Renderable<ImplRend>
 		{
-			static_assert(std::conjunction_v<hasSDLTag_v<Shapes>...>, "Shapes must have the tag.");
+			static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
 			using base = Renderable<ImplRend>;
 
 		public:
 			using base::Renderable;
 
-			template<typename T, typename... Para>
-			auto& push(Para&&... arg)
+			template<typename T>
+			auto& push(const T& arg)
 			{
-				static_assert(std::disjunction_v<std::is_same_v<Shapes, T>...>, "Type must be of pack.");
-				std::get<std::vector<T>>(m_packs).emplace_back(std::forward<Para>(arg)...);
+				static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
+				std::get<std::vector<T>>(m_packs).emplace_back(arg);
 
 				return *this;
 			}
 
-			void draw()
+			void draw() const
 			{
-				std::visit([](auto&& arg)
+				std::apply([this](auto&& arg)
 					{
-						using T = decltype(arg);
+						using tag_t = typename std::decay_t<decltype(arg)>::value_type::tag;
 
-						if constexpr (std::is_same_v<)
-							
-					})
+						if constexpr (std::is_same_v<Tags::isRect, tag_t>)
+							SDL_RenderDrawRects(this->m_rend->get(), arg.front().rectPtr(), arg.size());
+						else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
+							SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size());
+						else
+							static_assert(false, "Type is not supported for mass drawing.");
+
+					}, m_packs);
 			}
 
 		private:
