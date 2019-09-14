@@ -75,7 +75,7 @@ namespace ctl
 			typename ImplWatch = EventWatch,
 			typename ImplCam = Camera2D,
 			typename ImplWin = Window,
-			typename ImplRend = Renderer<Window>>
+			typename ImplRend = Renderer>
 		class SDLWindow
 		{
 		public:
@@ -163,8 +163,11 @@ namespace ctl
 
 			void render()
 			{
+				m_renderer.setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
 				m_renderer.clear();
+
 				m_state->render();
+
 				m_renderer.render();
 			}
 

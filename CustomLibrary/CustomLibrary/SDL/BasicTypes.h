@@ -320,6 +320,12 @@ namespace ctl
 			{
 			}
 
+			template<typename U>
+			constexpr operator Line<U>()
+			{
+				return { static_cast<Point<U>>(m_p1), static_cast<Point<U>>(m_p2) };
+			}
+
 			/**
 			* @summary point accessors
 			* @returns reference to Point

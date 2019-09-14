@@ -39,6 +39,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Gui.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
@@ -53,7 +54,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)SDLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.cpp">

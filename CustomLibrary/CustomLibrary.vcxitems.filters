@@ -135,7 +135,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)SDLRenderer.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLRenderer.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
   </ItemGroup>
