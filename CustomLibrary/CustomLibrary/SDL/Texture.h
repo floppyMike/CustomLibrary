@@ -1,136 +1,52 @@
 #pragma once
 
 #include "SDLTraits.h"
+#include "Surface.h"
+
+#include <SDL_image.h>
 
 namespace ctl
 {
 	namespace sdl
 	{
-		template<typename ImplRend = Renderer>
-		class TexRender
-		{
-		public:
-			using renderer_t = ImplRend;
-
-			void draw(ImplRend* rend, const Rect<int, int>& r)
-			{
-				SDL_Rect renderQuad = m_shape;
-
-				if (clip != nullptr)
-					renderQuad.w = clip->w,
-					renderQuad.h = clip->h;
-
-				if (SDL_RenderCopy(m_win->renderer(), m_texture.get(), clip, &renderQuad) < 0)
-					throw Log(SDL_GetError());
-			}
-
-		};
-
-
-		template<typename ImplTexMake, typename ImplTexRend>
-		class DrawTex : Object<typename ImplTexRend::renderer_t, Rect<int, int>>
+		class Texture
 		{
 			struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
+
 		public:
 			Texture() noexcept = default;
 			Texture(Texture&& t) noexcept = default;
 			Texture& operator=(Texture&& t) noexcept = default;
 
-			template<typename...Args>
-			void load(Args&&... arg) 
+			SDL_Texture* get() noexcept
 			{
-				std::tie(m_texture, this->m_shape) = m_maker.load(this->m_rend, std::forward<Args>(arg)...);
+				return m_texture.get();
 			}
 
-			template<typename... Args>
-			void draw(Args&&... arg) const
+			Texture& replace(SDL_Texture* tex)
 			{
-				m_drawer.draw(this->m_rend, this->m_shape, std::forward<Args>(arg)...);
+				m_texture.reset(tex);
+				return *this;
 			}
 
-		private:
-			std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
-			ImplTexMake m_maker;
-			ImplTexRend m_drawer;
-		};
-
-		class BaseTexture : public Object<Rect<short, int>>
-		{
-
-		public:
-			BaseTexture() = default;
-			BaseTexture(BaseTexture&& x) = default;
-
-			BaseTexture& operator=(BaseTexture&& x) = default;
-
-			/**
-			* @summary construct empty Texture
-			* @param "win" window ptr
-			*/
-			BaseTexture(SDLWindow* win)
-				: Object(win)
-			{
-			}
-
-			/**
-			* @summary puts texture into renderer
-			* @param "angle" angle at which to rotate the texture
-			* @param "flip" determains if texture should be flipped
-			* @param "center" determains the center of object (if nullptr then middle is taken)
-			* @param "clip" clip of part that should only be rendered
-			* @exception "Log" at fail
-			*/
-			void render(const double& angle, const SDL_RendererFlip& flip,
-				const SDL_Point* const center = nullptr, const SDL_Rect* const clip = nullptr) const
-			{
-				SDL_Rect renderQuad = m_shape;
-
-				if (clip != nullptr)
-					renderQuad.w = clip->w,
-					renderQuad.h = clip->h;
-
-				if (SDL_RenderCopyEx(m_win->renderer(), m_texture.get(), clip, &renderQuad, angle, center, flip) < 0)
-					throw Log(SDL_GetError());
-			}
-
-			/**
-			* @summary puts texture into renderer
-			* @param "clip" clip of part that should only be rendered
-			* @exception "Log" at fail
-			*/
-			void render(const SDL_Rect* const clip = nullptr) const
-			{
-				SDL_Rect renderQuad = m_shape;
-
-				if (clip != nullptr)
-					renderQuad.w = clip->w,
-					renderQuad.h = clip->h;
-
-				if (SDL_RenderCopy(m_win->renderer(), m_texture.get(), clip, &renderQuad) < 0)
-					throw Log(SDL_GetError());
-			}
-
-			/**
-			* @summary colour modifiers
-			*/
-			BaseTexture& colourMod(const SDL_Color& c)
+			Texture& colourMod(const SDL_Color& c)
 			{
 				if (SDL_SetTextureColorMod(m_texture.get(), c.r, c.g, c.b) != 0)
 					throw Log(SDL_GetError());
 
 				return *this;
 			}
-			NumVec<Uint8, 3> colourMod() const
+			auto colourMod() const
 			{
-				NumVec<Uint8, 3> c;
+				std::tuple<Uint8, Uint8, Uint8> c;
 
-				if (SDL_GetTextureColorMod(m_texture.get(), &c[0], &c[1], &c[2]) != 0)
+				if (SDL_GetTextureColorMod(m_texture.get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
 					throw Log(SDL_GetError());
 
 				return c;
 			}
 
-			BaseTexture& blendMode(const SDL_BlendMode& b)
+			Texture& blendMode(const SDL_BlendMode& b)
 			{
 				if (SDL_SetTextureBlendMode(m_texture.get(), b) != 0)
 					throw Log(SDL_GetError());
@@ -147,7 +63,7 @@ namespace ctl
 				return b;
 			}
 
-			BaseTexture& alphaMod(const Uint8& a)
+			Texture& alphaMod(const Uint8& a)
 			{
 				if (SDL_SetTextureAlphaMod(m_texture.get(), a) != 0)
 					throw Log(SDL_GetError());
@@ -164,48 +80,177 @@ namespace ctl
 				return a;
 			}
 
-			constexpr const auto& dim() const { return m_dim; }
-
-		protected:
-			ctl::Dim<int> m_dim;
+		private:
+			std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
 		};
 
-		class FixedTexture : public BaseTexture
+
+		template<typename ImplTex = Texture, typename ImplRend = Renderer>
+		class TextureRenderer : Object<ImplRend, Rect<int, int>>, ReliesOn<ImplTex>
 		{
+			using base1 = Object<ImplRend, Rect<int, int>>;
+			using base2 = ReliesOn<ImplTex>;
+
 		public:
-			FixedTexture() = default;
-			FixedTexture(FixedTexture&& x) = default;
+			using base1::base1;
 
-			FixedTexture& operator=(FixedTexture&& x) = default;
-
-			FixedTexture(SDLWindow* engine)
-				: BaseTexture(engine)
+			TextureRenderer& resetSize()
 			{
-			}
-
-			/**
-			* @summary loads texture from SDL_Surface
-			* @param "surface" SDL_Surface to load from
-			* @param "key" colour key
-			* @exception "Log" at fail
-			*/
-			FixedTexture& load(SDL_Surface* surface, const SDL_Color* const key = nullptr)
-			{
-				if (key != nullptr)
-					SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, key->r, key->g, key->b));
-
-				m_dim = { surface->w, surface->h };
-				m_shape.dim(m_dim);
-
-				m_texture.reset(SDL_CreateTextureFromSurface(m_win->renderer(), surface));
-				if (!m_texture)
+				if (SDL_QueryTexture(this->get<ImplTex>()->get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
 					throw Log(SDL_GetError());
-
-				SDL_FreeSurface(surface);
 
 				return *this;
 			}
+
+			TextureRenderer& set(ImplTex* tex)
+			{
+				base2::set(tex);
+				return resetSize();
+			}
+
+			void draw() const
+			{
+				if (SDL_RenderCopy(this->m_rend->get(), this->get<ImplTex>()->get(), nullptr, this->m_shape.rectPtr()) < 0)
+					throw Log(SDL_GetError());
+			}
+
+			using base1::renderer;
+			using base1::shape;
 		};
+
+
+		template<typename ImplTex = Texture, typename ImplRend = Renderer>
+		class TextureLoader : Renderable<ImplRend>, ReliesOn<ImplTex>
+		{
+			using base1 = Renderable<ImplRend>;
+			using base2 = ReliesOn<ImplTex>;
+
+		public:
+			using base1::base1;
+
+			template<typename ImplSur>
+			ImplTex& load(ImplSur* surface)
+			{
+				auto* tex = SDL_CreateTextureFromSurface(this->m_rend->get(), surface);
+				if (!tex)
+					throw Log(SDL_GetError());
+
+				return this->get<ImplTex>()->replace(tex);
+			}
+
+			ImplTex& load(const char* path)
+			{
+				return this->get<ImplTex>()->replace(IMG_LoadTexture(this->m_rend->get(), path));
+			}
+		
+			using base1::renderer;
+			using base2::set;
+		};
+
+
+		//class BaseTexture : public Object<Rect<short, int>>
+		//{
+
+		//public:
+		//	BaseTexture() = default;
+		//	BaseTexture(BaseTexture&& x) = default;
+
+		//	BaseTexture& operator=(BaseTexture&& x) = default;
+
+		//	/**
+		//	* @summary construct empty Texture
+		//	* @param "win" window ptr
+		//	*/
+		//	BaseTexture(SDLWindow* win)
+		//		: Object(win)
+		//	{
+		//	}
+
+		//	/**
+		//	* @summary puts texture into renderer
+		//	* @param "angle" angle at which to rotate the texture
+		//	* @param "flip" determains if texture should be flipped
+		//	* @param "center" determains the center of object (if nullptr then middle is taken)
+		//	* @param "clip" clip of part that should only be rendered
+		//	* @exception "Log" at fail
+		//	*/
+		//	void render(const double& angle, const SDL_RendererFlip& flip,
+		//		const SDL_Point* const center = nullptr, const SDL_Rect* const clip = nullptr) const
+		//	{
+		//		SDL_Rect renderQuad = m_shape;
+
+		//		if (clip != nullptr)
+		//			renderQuad.w = clip->w,
+		//			renderQuad.h = clip->h;
+
+		//		if (SDL_RenderCopyEx(m_win->renderer(), m_texture.get(), clip, &renderQuad, angle, center, flip) < 0)
+		//			throw Log(SDL_GetError());
+		//	}
+
+		//	/**
+		//	* @summary puts texture into renderer
+		//	* @param "clip" clip of part that should only be rendered
+		//	* @exception "Log" at fail
+		//	*/
+		//	void render(const SDL_Rect* const clip = nullptr) const
+		//	{
+		//		SDL_Rect renderQuad = m_shape;
+
+		//		if (clip != nullptr)
+		//			renderQuad.w = clip->w,
+		//			renderQuad.h = clip->h;
+
+		//		if (SDL_RenderCopy(m_win->renderer(), m_texture.get(), clip, &renderQuad) < 0)
+		//			throw Log(SDL_GetError());
+		//	}
+
+		//	/**
+		//	* @summary colour modifiers
+		//	*/
+
+
+		//	constexpr const auto& dim() const { return m_dim; }
+
+		//protected:
+		//	ctl::Dim<int> m_dim;
+		//};
+
+		//class FixedTexture : public BaseTexture
+		//{
+		//public:
+		//	FixedTexture() = default;
+		//	FixedTexture(FixedTexture&& x) = default;
+
+		//	FixedTexture& operator=(FixedTexture&& x) = default;
+
+		//	FixedTexture(SDLWindow* engine)
+		//		: BaseTexture(engine)
+		//	{
+		//	}
+
+		//	/**
+		//	* @summary loads texture from SDL_Surface
+		//	* @param "surface" SDL_Surface to load from
+		//	* @param "key" colour key
+		//	* @exception "Log" at fail
+		//	*/
+		//	FixedTexture& load(SDL_Surface* surface, const SDL_Color* const key = nullptr)
+		//	{
+		//		if (key != nullptr)
+		//			SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, key->r, key->g, key->b));
+
+		//		m_dim = { surface->w, surface->h };
+		//		m_shape.dim(m_dim);
+
+		//		m_texture.reset(SDL_CreateTextureFromSurface(m_win->renderer(), surface));
+		//		if (!m_texture)
+		//			throw Log(SDL_GetError());
+
+		//		SDL_FreeSurface(surface);
+
+		//		return *this;
+		//	}
+		//};
 
 	}
 }

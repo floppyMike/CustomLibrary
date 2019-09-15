@@ -63,5 +63,29 @@ namespace ctl
 			Shape m_shape;
 		};
 
+
+		template<typename Type>
+		class ReliesOn
+		{
+		public:
+			constexpr ReliesOn() noexcept = default;
+			constexpr ReliesOn(const ReliesOn& v) noexcept = default;
+			constexpr ReliesOn& operator=(const ReliesOn& v) noexcept = default;
+
+			constexpr Type& set(Type* v) noexcept
+			{
+				return *(m_var = v);
+			}
+
+			template<typename T, typename = typename std::enable_if_t<std::is_same_v<Type, T>>>
+			constexpr Type* get() const noexcept
+			{
+				return m_var;
+			}
+
+		private:
+			Type* m_var = nullptr;
+		};
+
 	}
 }

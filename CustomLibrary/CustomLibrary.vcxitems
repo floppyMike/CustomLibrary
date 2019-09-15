@@ -47,6 +47,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Sprite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Widget.h" />
