@@ -296,7 +296,7 @@ namespace ctl
 
 
 		template<typename T>
-		class Line : LineRef<T>
+		class Line : Shape<T>
 		{
 			using type = Line<T>;
 			using base = LineRef<T>;
@@ -305,56 +305,62 @@ namespace ctl
 			using num_t1 = T;
 			using tag = Tags::isLine;
 
-			constexpr Line() noexcept
-				: base(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
-			{
-			}
+			constexpr Line() noexcept = default;
 
 			constexpr Line(const Line&) noexcept = default;
 
-			constexpr auto& operator=(const Line& l) noexcept;
-
-			constexpr auto& operator=(const base& b) noexcept;
+			constexpr Line& operator=(const Line& l) noexcept = default;
 
 			constexpr Line(const T& x1, const T& y1, const T& x2, const T& y2) noexcept
-				: m_p1(x1, y1), m_p2(x2, y2)
-				, base(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
+				: x1(x1), y1(y1), x2(x2), y2(y2)
 			{
 			}
 
 			constexpr Line(const Point<T>& p1, const Point<T>& p2) noexcept
-				: Line(m_p1.x, m_p1.y, m_p2.x, m_p2.y)
+				: Line(p1.x, p1.y, p2.x, p2.y)
 			{
 			}
 
 			template<typename U>
-			constexpr operator Line<U>()
+			constexpr operator Line<U>() noexcept
 			{
-				return { static_cast<Point<U>>(m_p1), static_cast<Point<U>>(m_p2) };
+				return { static_cast<U>(x1), static_cast<U>(y1), 
+					static_cast<U>(x2), static_cast<U>(y2) };
 			}
 
-			/**
-			* @summary point accessors
-			* @returns reference to Point
-			*/
-			constexpr const auto& pos1() const;
-			constexpr auto& pos1(const Point<T>& p);
+			constexpr SDL_Point* pointPtr() noexcept
+			{
+				return reinterpret_cast<SDL_Point*>(this);
+			}
 
-			/**
-			* @summary point accessors
-			* @returns reference to Point
-			*/
-			constexpr const auto& pos2() const;
-			constexpr auto& pos2(const Point<T>& p);
+			constexpr const SDL_Point* pointPtr() const noexcept
+			{
+				return reinterpret_cast<const SDL_Point*>(this);
+			}
 
-			using base::x1;
-			using base::x2;
-			using base::y1;
-			using base::y2;
+			constexpr Point<T> pos1() const noexcept
+			{
+				return { x1, y1 };
+			}
+			constexpr auto& pos1(const Point<T>& p) noexcept
+			{
+				x1 = p.x;
+				y1 = p.y;
+				return *this;
+			}
 
-		private:
-			Point<T> m_p1;
-			Point<T> m_p2;
+			constexpr Point<T> pos2() const noexcept
+			{
+				return { x2, y2 };
+			}
+			constexpr auto& pos2(const Point<T>& p) noexcept
+			{
+				x2 = p.x;
+				y2 = p.y;
+				return *this;
+			}
+
+			T x1, y1, x2, y2;
 		};
 
 
@@ -473,50 +479,6 @@ namespace ctl
 		inline Point<T>::operator Point<U>() const noexcept
 		{
 			return { static_cast<U>(x), static_cast<U>(y) };
-		}
-
-		template<typename T>
-		inline constexpr auto& Line<T>::operator=(const Line& l) noexcept
-		{
-			m_p1 = l.m_p1;
-			m_p2 = l.m_p2;
-			return *this;
-		}
-
-		template<typename T>
-		inline constexpr auto& Line<T>::operator=(const base& b) noexcept
-		{
-			m_p1.x = b.x1;
-			m_p1.y = b.x2;
-			m_p2.x = b.y1;
-			m_p2.y = b.y2;
-			return *this;
-		}
-
-		template<typename T>
-		inline constexpr const auto& Line<T>::pos1() const
-		{
-			return m_p1;
-		}
-
-		template<typename T>
-		inline constexpr auto& Line<T>::pos1(const Point<T>& p)
-		{
-			m_p1 = p;
-			return *this;
-		}
-
-		template<typename T>
-		inline constexpr const auto& Line<T>::pos2() const
-		{
-			return m_p2;
-		}
-
-		template<typename T>
-		inline constexpr auto& Line<T>::pos2(const Point<T>& p)
-		{
-			m_p2 = p;
-			return *this;
 		}
 
 		template<typename T1, typename T2>
