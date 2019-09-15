@@ -142,115 +142,15 @@ namespace ctl
 			{
 				return this->get<ImplTex>()->replace(IMG_LoadTexture(this->m_rend->get(), path));
 			}
+
+			ImplTex& load(void* src, int size)
+			{
+				return this->get<ImplTex>()->replace(IMG_LoadTexture_RW(this->m_rend->get(), SDL_RWFromMem(src, size), 1));
+			}
 		
 			using base1::renderer;
 			using base2::set;
 		};
-
-
-		//class BaseTexture : public Object<Rect<short, int>>
-		//{
-
-		//public:
-		//	BaseTexture() = default;
-		//	BaseTexture(BaseTexture&& x) = default;
-
-		//	BaseTexture& operator=(BaseTexture&& x) = default;
-
-		//	/**
-		//	* @summary construct empty Texture
-		//	* @param "win" window ptr
-		//	*/
-		//	BaseTexture(SDLWindow* win)
-		//		: Object(win)
-		//	{
-		//	}
-
-		//	/**
-		//	* @summary puts texture into renderer
-		//	* @param "angle" angle at which to rotate the texture
-		//	* @param "flip" determains if texture should be flipped
-		//	* @param "center" determains the center of object (if nullptr then middle is taken)
-		//	* @param "clip" clip of part that should only be rendered
-		//	* @exception "Log" at fail
-		//	*/
-		//	void render(const double& angle, const SDL_RendererFlip& flip,
-		//		const SDL_Point* const center = nullptr, const SDL_Rect* const clip = nullptr) const
-		//	{
-		//		SDL_Rect renderQuad = m_shape;
-
-		//		if (clip != nullptr)
-		//			renderQuad.w = clip->w,
-		//			renderQuad.h = clip->h;
-
-		//		if (SDL_RenderCopyEx(m_win->renderer(), m_texture.get(), clip, &renderQuad, angle, center, flip) < 0)
-		//			throw Log(SDL_GetError());
-		//	}
-
-		//	/**
-		//	* @summary puts texture into renderer
-		//	* @param "clip" clip of part that should only be rendered
-		//	* @exception "Log" at fail
-		//	*/
-		//	void render(const SDL_Rect* const clip = nullptr) const
-		//	{
-		//		SDL_Rect renderQuad = m_shape;
-
-		//		if (clip != nullptr)
-		//			renderQuad.w = clip->w,
-		//			renderQuad.h = clip->h;
-
-		//		if (SDL_RenderCopy(m_win->renderer(), m_texture.get(), clip, &renderQuad) < 0)
-		//			throw Log(SDL_GetError());
-		//	}
-
-		//	/**
-		//	* @summary colour modifiers
-		//	*/
-
-
-		//	constexpr const auto& dim() const { return m_dim; }
-
-		//protected:
-		//	ctl::Dim<int> m_dim;
-		//};
-
-		//class FixedTexture : public BaseTexture
-		//{
-		//public:
-		//	FixedTexture() = default;
-		//	FixedTexture(FixedTexture&& x) = default;
-
-		//	FixedTexture& operator=(FixedTexture&& x) = default;
-
-		//	FixedTexture(SDLWindow* engine)
-		//		: BaseTexture(engine)
-		//	{
-		//	}
-
-		//	/**
-		//	* @summary loads texture from SDL_Surface
-		//	* @param "surface" SDL_Surface to load from
-		//	* @param "key" colour key
-		//	* @exception "Log" at fail
-		//	*/
-		//	FixedTexture& load(SDL_Surface* surface, const SDL_Color* const key = nullptr)
-		//	{
-		//		if (key != nullptr)
-		//			SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, key->r, key->g, key->b));
-
-		//		m_dim = { surface->w, surface->h };
-		//		m_shape.dim(m_dim);
-
-		//		m_texture.reset(SDL_CreateTextureFromSurface(m_win->renderer(), surface));
-		//		if (!m_texture)
-		//			throw Log(SDL_GetError());
-
-		//		SDL_FreeSurface(surface);
-
-		//		return *this;
-		//	}
-		//};
 
 	}
 }

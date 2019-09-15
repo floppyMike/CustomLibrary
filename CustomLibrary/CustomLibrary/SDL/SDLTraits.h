@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SDLRenderer.h"
-
 namespace ctl
 {
 	namespace sdl

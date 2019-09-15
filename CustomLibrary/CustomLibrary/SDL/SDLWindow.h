@@ -4,7 +4,7 @@
 
 #include "Engine.h"
 #include "Window.h"
-#include "SDLRenderer.h"
+#include "Renderer.h"
 #include "Camera2D.h"
 #include "EventWatch.h"
 
