@@ -39,6 +39,7 @@ namespace ctl
 				: m_win(name, dim, windowFlags)
 				, m_renderer(&m_win, rendererFlags)
 			{
+				
 			}
 
 			~SDLWindow()
@@ -55,7 +56,7 @@ namespace ctl
 			template<typename State, typename ...Args>
 			ImplState& setState(Args&&... args)
 			{
-				m_state = std::make_unique<State>(std::forward<Args>(args)...);
+				m_state = std::make_unique<State>(&m_renderer, std::forward<Args>(args)...);
 				return *m_state;
 			}
 
