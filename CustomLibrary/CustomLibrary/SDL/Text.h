@@ -111,6 +111,21 @@ namespace ctl
 				return _load_(loader(std::forward<Args>(args)...), text);
 			}
 
+			constexpr const std::string& text() const { return m_text; }
+
+			using base1::set;
+
+		private:
+			std::string m_text;
+		};
+
+
+		template<typename ImplFont>
+		class FontAttrib : public ReliesOn<ImplFont, FontAttrib<ImplFont>>
+		{
+			using base1 = ReliesOn<ImplFont, FontAttrib>;
+
+		public:
 			Dim<int> hypoSize(const char* text)
 			{
 				Dim<int> temp;
@@ -121,12 +136,7 @@ namespace ctl
 				return temp;
 			}
 
-			constexpr const std::string& text() const { return m_text; }
-
 			using base1::set;
-
-		private:
-			std::string m_text;
 		};
 
 	}
