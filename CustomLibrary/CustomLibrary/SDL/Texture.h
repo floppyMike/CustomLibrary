@@ -29,72 +29,21 @@ namespace ctl
 				return *this;
 			}
 
-			Texture& colourMod(const SDL_Color& c)
-			{
-				if (SDL_SetTextureColorMod(m_texture.get(), c.r, c.g, c.b) != 0)
-					throw Log(SDL_GetError());
-
-				return *this;
-			}
-			auto colourMod() const
-			{
-				std::tuple<Uint8, Uint8, Uint8> c;
-
-				if (SDL_GetTextureColorMod(m_texture.get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
-					throw Log(SDL_GetError());
-
-				return c;
-			}
-
-			Texture& blendMode(const SDL_BlendMode& b)
-			{
-				if (SDL_SetTextureBlendMode(m_texture.get(), b) != 0)
-					throw Log(SDL_GetError());
-
-				return *this;
-			}
-			SDL_BlendMode blendMode() const
-			{
-				SDL_BlendMode b;
-
-				if (SDL_GetTextureBlendMode(m_texture.get(), &b) != 0)
-					throw Log(SDL_GetError());
-
-				return b;
-			}
-
-			Texture& alphaMod(const Uint8& a)
-			{
-				if (SDL_SetTextureAlphaMod(m_texture.get(), a) != 0)
-					throw Log(SDL_GetError());
-
-				return *this;
-			}
-			Uint8 alphaMod() const
-			{
-				Uint8 a;
-
-				if (SDL_GetTextureAlphaMod(m_texture.get(), &a) == -1)
-					throw Log(SDL_GetError());
-
-				return a;
-			}
-
 		private:
 			std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
 		};
 
 
 		template<typename ImplTex = Texture, typename ImplRend = Renderer>
-		class TextureRenderer : Object<ImplRend, Rect<int, int>>, ReliesOn<ImplTex>
+		class TexRend : Object<ImplRend, Rect<int, int>>, public ReliesOn<ImplTex, TexRend<ImplTex, ImplRend>>
 		{
 			using base1 = Object<ImplRend, Rect<int, int>>;
-			using base2 = ReliesOn<ImplTex>;
+			using base2 = ReliesOn<ImplTex, TexRend>;
 
 		public:
 			using base1::base1;
 
-			TextureRenderer& resetSize()
+			TexRend& resetSize()
 			{
 				if (SDL_QueryTexture(this->get<ImplTex>()->get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
 					throw Log(SDL_GetError());
@@ -102,7 +51,7 @@ namespace ctl
 				return *this;
 			}
 
-			TextureRenderer& set(ImplTex* tex)
+			TexRend& set(ImplTex* tex)
 			{
 				base2::set(tex);
 				return resetSize();
@@ -120,10 +69,10 @@ namespace ctl
 
 
 		template<typename ImplTex = Texture, typename ImplRend = Renderer>
-		class TextureLoader : Renderable<ImplRend>, ReliesOn<ImplTex>
+		class TexLoad : Renderable<ImplRend>, public ReliesOn<ImplTex, TexLoad<ImplTex, ImplRend>>
 		{
 			using base1 = Renderable<ImplRend>;
-			using base2 = ReliesOn<ImplTex>;
+			using base2 = ReliesOn<ImplTex, TexLoad>;
 
 		public:
 			using base1::base1;
@@ -150,6 +99,69 @@ namespace ctl
 		
 			using base1::renderer;
 			using base2::set;
+		};
+
+
+		template<typename ImplTex>
+		class TexAttrib : public ReliesOn<ImplTex, TexAttrib<ImplTex>>
+		{
+			using base1 = ReliesOn<ImplTex, TexAttrib<ImplTex>>;
+
+		public:
+			auto& colourMod(const SDL_Color& c)
+			{
+				if (SDL_SetTextureColorMod(this->get<ImplTex>()->get(), c.r, c.g, c.b) != 0)
+					throw Log(SDL_GetError());
+
+				return *this;
+			}
+			auto colourMod() const
+			{
+				std::tuple<Uint8, Uint8, Uint8> c;
+
+				if (SDL_GetTextureColorMod(this->get<ImplTex>()->get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
+					throw Log(SDL_GetError());
+
+				return c;
+			}
+
+			auto& blendMode(const SDL_BlendMode& b)
+			{
+				if (SDL_SetTextureBlendMode(this->get<ImplTex>()->get(), b) != 0)
+					throw Log(SDL_GetError());
+
+				return *this;
+			}
+			SDL_BlendMode blendMode() const
+			{
+				SDL_BlendMode b;
+
+				if (SDL_GetTextureBlendMode(this->get<ImplTex>()->get(), &b) != 0)
+					throw Log(SDL_GetError());
+
+				return b;
+			}
+
+			auto& alphaMod(const Uint8& a)
+			{
+				if (SDL_SetTextureAlphaMod(this->get<ImplTex>()->get(), a) != 0)
+					throw Log(SDL_GetError());
+
+				return *this;
+			}
+			Uint8 alphaMod() const
+			{
+				Uint8 a;
+
+				if (SDL_GetTextureAlphaMod(this->get<ImplTex>()->get(), &a) == -1)
+					throw Log(SDL_GetError());
+
+				return a;
+			}
+
+
+			using base1::set;
+
 		};
 
 	}

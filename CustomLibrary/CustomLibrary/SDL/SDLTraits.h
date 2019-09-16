@@ -62,17 +62,18 @@ namespace ctl
 		};
 
 
-		template<typename Type>
+		template<typename Type, typename Derived>
 		class ReliesOn
 		{
-		public:
+		protected:
 			constexpr ReliesOn() noexcept = default;
 			constexpr ReliesOn(const ReliesOn& v) noexcept = default;
 			constexpr ReliesOn& operator=(const ReliesOn& v) noexcept = default;
 
-			constexpr Type& set(Type* v) noexcept
+			constexpr Derived& set(Type* v) noexcept
 			{
-				return *(m_var = v);
+				m_var = v;
+				return static_cast<Derived&>(*this);
 			}
 
 			template<typename T, typename = typename std::enable_if_t<std::is_same_v<Type, T>>>

@@ -138,15 +138,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\Micha\source\repos\CustomLibrary\CustomLibrary\CustomLibrary\SDL\Renderer.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">
-      <Filter>CustomLibrary\Source\SDL</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.cpp">
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include "SDLTraits.h"
 #include <SDL.h>
 #include <memory>
+#include <cassert>
 
 namespace ctl
 {
@@ -37,6 +38,8 @@ namespace ctl
 
 			Surface& resize(const int* const x, const int* const y)
 			{
+				assert(x == nullptr && y == nullptr && "Both x and y shouldn't be nullptrs.");
+
 				SDL_Surface* temp = SDL_CreateRGBSurface(0, 
 					x == nullptr ? static_cast<int>(static_cast<double>(*y) / m_surface->h * m_surface->w) : *x,
 					y == nullptr ? static_cast<int>(static_cast<double>(*x) / m_surface->w * m_surface->h) : *y,
@@ -46,6 +49,7 @@ namespace ctl
 				SDL_BlitScaled(m_surface.get(), nullptr, temp, nullptr);
 
 				m_surface.reset(temp);
+				return *this;
 			}
 
 		private:
