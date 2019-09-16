@@ -18,6 +18,11 @@ namespace ctl
 			Surface(Surface&&) noexcept = default;
 			Surface& operator=(Surface&&) noexcept = default;
 
+			Surface(SDL_Surface* s) noexcept
+				: m_surface(s)
+			{
+			}
+
 			SDL_Surface* get() noexcept
 			{
 				return m_surface.get();

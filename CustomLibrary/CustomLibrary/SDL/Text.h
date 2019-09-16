@@ -51,7 +51,7 @@ namespace ctl
 
 
 		template<typename ImplFont = Font>
-		class FontLoad : ReliesOn<ImplFont, FontLoad<ImplFont>>
+		class FontLoad : public ReliesOn<ImplFont, FontLoad<ImplFont>>
 		{
 			using base1 = ReliesOn<ImplFont, FontLoad>;
 
@@ -72,7 +72,7 @@ namespace ctl
 		template<typename ImplFont = Font>
 		class TextLoad : public ReliesOn<ImplFont, TextLoad<ImplFont>>
 		{
-			using base1 = ReliesOn<ImplFont, TextLoad<ImplFont>>;
+			using base1 = ReliesOn<ImplFont, TextLoad>;
 
 			SDL_Surface* _load_(SDL_Surface* s, const char* text)
 			{
@@ -86,22 +86,22 @@ namespace ctl
 		public:
 			SDL_Surface* loadSolid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Solid(m_font->ptr(), text, colour), text);
+				return _load_(TTF_RenderUTF8_Solid(this->get<ImplFont>()->get(), text, colour), text);
 			}
 
 			SDL_Surface* loadShaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Shaded(m_font->ptr(), text, colour, bg), text);
+				return _load_(TTF_RenderUTF8_Shaded(this->get<ImplFont>()->get(), text, colour, bg), text);
 			}
 
 			SDL_Surface* loadBlended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Blended(m_font->ptr(), text, colour), text);
+				return _load_(TTF_RenderUTF8_Blended(this->get<ImplFont>()->get(), text, colour), text);
 			}
 
 			SDL_Surface* loadWrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Blended_Wrapped(m_font->ptr(), text, colour, wrapper), text);
+				return _load_(TTF_RenderUTF8_Blended_Wrapped(this->get<ImplFont>()->get(), text, colour, wrapper), text);
 			}
 
 			template<typename T, typename... Args>
@@ -115,7 +115,7 @@ namespace ctl
 			{
 				Dim<int> temp;
 
-				if (TTF_SizeUTF8(m_ptr.get(), text, &temp.w, &temp.h) != 0)
+				if (TTF_SizeUTF8(this->get<ImplFont>()->get(), text, &temp.w, &temp.h) != 0)
 					throw Log(SDL_GetError());
 
 				return temp;

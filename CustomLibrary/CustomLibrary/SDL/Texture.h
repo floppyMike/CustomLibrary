@@ -18,6 +18,11 @@ namespace ctl
 			Texture(Texture&& t) noexcept = default;
 			Texture& operator=(Texture&& t) noexcept = default;
 
+			Texture(SDL_Texture* t) noexcept
+				: m_texture(t)
+			{
+			}
+
 			SDL_Texture* get() noexcept
 			{
 				return m_texture.get();
@@ -78,9 +83,9 @@ namespace ctl
 			using base1::base1;
 
 			template<typename ImplSur>
-			ImplTex& load(ImplSur* surface)
+			ImplTex& load(ImplSur&& surface)
 			{
-				auto* tex = SDL_CreateTextureFromSurface(this->m_rend->get(), surface);
+				auto* tex = SDL_CreateTextureFromSurface(this->m_rend->get(), surface.get());
 				if (!tex)
 					throw Log(SDL_GetError());
 
@@ -159,9 +164,7 @@ namespace ctl
 				return a;
 			}
 
-
 			using base1::set;
-
 		};
 
 	}
