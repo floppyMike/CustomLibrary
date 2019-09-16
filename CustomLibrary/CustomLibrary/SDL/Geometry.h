@@ -18,7 +18,7 @@ namespace ctl
 		//----------------------------------------------
 
 		template<typename ImplRend = Renderer>
-		class DrawableRect : Object<ImplRend, Rect<int, int>>
+		class RectDraw : Object<ImplRend, Rect<int, int>>
 		{
 			using base = Object<ImplRend, Rect<int, int>>;
 
@@ -43,7 +43,7 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawableCircle : Object<ImplRend, Circle<int, unsigned int>>
+		class CircleDraw : Object<ImplRend, Circle<int, unsigned int>>
 		{
 			using base = Object<ImplRend, Circle<int, unsigned int>>;
 
@@ -125,7 +125,7 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawableLine : Object<ImplRend, Line<int>>
+		class LineDraw : Object<ImplRend, Line<int>>
 		{
 			using base = Object<ImplRend, Line<int>>;
 
@@ -144,7 +144,7 @@ namespace ctl
 
 
 		template<typename ImplRend = Renderer>
-		class DrawablePoint : Object<ImplRend, Point<int>>
+		class PointDraw : Object<ImplRend, Point<int>>
 		{
 			using base = Object<ImplRend, Point<int>>;
 
