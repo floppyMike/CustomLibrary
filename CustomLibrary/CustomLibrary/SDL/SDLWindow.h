@@ -7,12 +7,13 @@
 #include "Renderer.h"
 #include "Camera2D.h"
 #include "EventWatch.h"
+#include "State.h"
 
 namespace ctl
 {
 	namespace sdl
 	{
-		template<typename ImplState = StateBase, 
+		template<typename ImplState, 
 			typename ImplWatch = EventWatch,
 			typename ImplCam = Camera2D,
 			typename ImplWin = Window,
@@ -39,7 +40,7 @@ namespace ctl
 				: m_win(name, dim, windowFlags)
 				, m_renderer(&m_win, rendererFlags)
 			{
-				
+				m_renderer.setLogicalSize(m_win.dim());
 			}
 
 			~SDLWindow()

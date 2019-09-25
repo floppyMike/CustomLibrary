@@ -1,11 +1,34 @@
 #pragma once
 
 #include <CustomLibrary/Timer.h>
-#include <CustomLibrary/SDL/SDLWindow.h>
-#include <CustomLibrary/SDL/Sprite.h>
+#include "Texture.h"
+#include "BasicTypes.h"
+
+#include <vector>
 
 namespace ctl
 {
+	namespace sdl
+	{
+		template<typename ImplTex, typename ImplRend>
+		class Animation
+		{
+		public:
+			using Frame = std::pair<Rect<int, int>, std::chrono::milliseconds>;
+
+			Animation()
+			{
+			}
+
+		private:
+			Timer m_time;
+			std::chrono::milliseconds m_tillNext = std::chrono::milliseconds(0);
+
+			std::vector<Frame> m_frames;
+			std::vector<Frame>::iterator m_currFrame = m_frames.begin();
+		};
+
+	}
 	class AnimationBase
 	{
 		virtual Rect* _passFrame_() = 0;

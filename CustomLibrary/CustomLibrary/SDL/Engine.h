@@ -11,211 +11,203 @@
 
 #include "Window.h"
 
-namespace ctl
+namespace ctl::sdl
 {
-	namespace sdl
+	class SDL
 	{
-		class SDL
-		{
-		public:
-			/**
-			* @summary initialize SDL and construct the engine
-			* @param "fps" global application frames / second
-			* @param "SDLFlags" flags for SDL creation
-			* @exception "Log" if initialization fails
-			* @remarks Flags: https://wiki.libsdl.org/SDL_Init#Remarks
-			*/
-			SDL(const Uint32& SDLFlags = SDL_INIT_VIDEO);
+	public:
+		SDL(const Uint32& SDLFlags = SDL_INIT_VIDEO);
 
-			/**
-			* @summary frees the subsystems
-			*/
-			virtual ~SDL()
-			{
+		/**
+		* @summary frees the subsystems
+		*/
+		virtual ~SDL()
+		{
 #ifdef SDL_MIXER_H_
-				Mix_Quit();
+			Mix_Quit();
 #endif //SDL_MIXER_H_
 
 #ifdef SDL_TTF_H_
-				TTF_Quit();
+			TTF_Quit();
 #endif //_SDL_TTF_H
 
 #ifdef SDL_IMAGE_H_
-				IMG_Quit();
+			IMG_Quit();
 #endif //SDL_IMAGE_H_
 
-				SDL_Quit();
-			}
+			SDL_Quit();
+		}
 
 #ifdef SDL_IMAGE_H_
-			/**
-			* @summary init SDL_image
-			* @param "flags" flags for initializer
-			* @exception "Log" if initialization fails
-			*/
-			auto& initIMG(const int& flags = IMG_INIT_PNG)
-			{
-				if ((IMG_Init(flags) & flags) != flags)
-					throw Log(SDL_GetError());
+		/**
+		* @summary init SDL_image
+		* @param "flags" flags for initializer
+		* @exception "Log" if initialization fails
+		*/
+		auto& initIMG(const int& flags = IMG_INIT_PNG)
+		{
+			if ((IMG_Init(flags) & flags) != flags)
+				throw Log(SDL_GetError());
 
-				return *this;
-			}
+			return *this;
+		}
 #endif //SDL_IMAGE_H_
 
 #ifdef SDL_MIXER_H_
-			/**
-			* @summary init SDL_mixer
-			* @param "feq" frequency
-			* @param "format" format
-			* @param "channels" channels
-			* @param "chunksize" chunksize
-			* @exception "Log" if initialization fails
-			*/
-			auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
-			{
-				if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
-					throw Log(SDL_GetError());
+		/**
+		* @summary init SDL_mixer
+		* @param "feq" frequency
+		* @param "format" format
+		* @param "channels" channels
+		* @param "chunksize" chunksize
+		* @exception "Log" if initialization fails
+		*/
+		auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
+		{
+			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
+				throw Log(SDL_GetError());
 
-				return *this;
-			}
+			return *this;
+		}
 #endif //SDL_MIXER_H_
 
 #ifdef SDL_TTF_H_
-			/**
-			* @summary init SDL_ttf
-			* @exception "Log" if initialization fails
-			*/
-			auto& initTTF()
-			{
-				if (TTF_Init() == -1)
-					throw Log(SDL_GetError());
+		/**
+		* @summary init SDL_ttf
+		* @exception "Log" if initialization fails
+		*/
+		auto& initTTF()
+		{
+			if (TTF_Init() == -1)
+				throw Log(SDL_GetError());
 
-				return *this;
-			}
+			return *this;
+		}
 #endif //SDL_TTF_H_
 
-			/**
-			* @summary sets a hint
-			* @param "name" name of hint
-			* @param "value" value to set the hint at
-			*/
-			SDL& setHint(const char* name, const char* value) noexcept;
-		};
+		/**
+		* @summary sets a hint
+		* @param "name" name of hint
+		* @param "value" value to set the hint at
+		*/
+		SDL& setHint(const char* name, const char* value) noexcept;
+	};
 
-		template<typename ImplWin = SDLWindow<>>
-		class RunLoop
+	template<typename ImplWin>
+	class RunLoop
+	{
+		using type = RunLoop<ImplWin>;
+		using state_t = typename ImplWin::state_t;
+
+		template<typename... T>
+		void _invoke_(void (ImplWin::* f)(const T& ...), const T& ... arg);
+
+	public:
+		RunLoop() = default;
+
+		RunLoop(ImplWin* win)
+			: m_windows(1, win)
 		{
-			using type = RunLoop<ImplWin>;
-			using state_t = typename ImplWin::state_t;
+		}
 
-			template<typename... T>
-			void _invoke_(void (ImplWin::* f)(const T& ...), const T& ... arg);
+		void run(size_t fps);
 
-		public:
-			RunLoop(size_t fps)
-				: m_frameTime(1000 / fps)
+		ImplWin& addWindow(ImplWin* win);
+		void removWindow(typename std::vector<ImplWin>::iterator iter);
+
+		constexpr const auto& fps() const noexcept { return m_fps; }
+		constexpr const auto& delta() const noexcept { return m_delta; }
+
+	private:
+		std::vector<ImplWin*> m_windows;
+
+		double m_fps = 0.;
+		double m_delta = 0.;
+	};
+
+
+	//----------------------------------------------
+	//Implementation
+	//----------------------------------------------
+
+	inline SDL::SDL(const Uint32& SDLFlags)
+	{
+		if (SDL_Init(SDLFlags) < 0)
+			throw Log(SDL_GetError());
+	}
+
+	inline SDL& SDL::setHint(const char* name, const char* value) noexcept
+	{
+		if (!SDL_SetHint(name, value))
+			Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
+	}
+
+	template<typename ImplWin>
+	inline void RunLoop<ImplWin>::run(size_t fps)
+	{
+		const std::chrono::milliseconds frameTime(1000 / fps);
+
+		Timer timer;
+		timer.start();
+		std::chrono::duration<double> lastTime(0);
+		std::chrono::duration<double> lag(0);
+
+		unsigned long long frames = 0;
+
+		for (bool quit = false; !quit; ++frames)
+		{
+			const auto time = timer.ticks<std::chrono::duration<double>>();
+			const auto elapsed = time - lastTime;
+			lastTime = time;
+			lag += elapsed;
+
+			if (time >= std::chrono::seconds(1))
+				m_fps = frames / time.count();
+
+			const auto endTime = std::chrono::steady_clock::now() + frameTime;
+
+			SDL_Event e;
+			while (SDL_PollEvent(&e) != 0)
 			{
+				_invoke_(&ImplWin::event, e);
+
+				if (e.type == SDL_QUIT)
+					quit = true;
 			}
 
-			void run();
+			m_delta = elapsed.count();
+			_invoke_(&ImplWin::update);
 
-			ImplWin& addWindow(ImplWin* win);
-			void removWindow(typename std::vector<ImplWin>::iterator iter);
-
-			constexpr const auto& fps() const noexcept { return m_fps; }
-			constexpr const auto& delta() const noexcept { return m_delta; }
-
-		private:
-			std::vector<ImplWin*> m_windows;
-
-			double m_fps = 0.;
-			double m_delta = 0.;
-
-			std::chrono::milliseconds m_frameTime;
-		};
-
-
-		//----------------------------------------------
-		//Implementation
-		//----------------------------------------------
-
-		inline SDL::SDL(const Uint32& SDLFlags)
-		{
-			if (SDL_Init(SDLFlags) < 0)
-				throw Log(SDL_GetError());
-		}
-
-		inline SDL& SDL::setHint(const char* name, const char* value) noexcept
-		{
-			if (!SDL_SetHint(name, value))
-				Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
-		}
-
-		template<typename ImplWin>
-		inline void RunLoop<ImplWin>::run()
-		{
-			Timer timer;
-			timer.start();
-			std::chrono::duration<double> lastTime(0);
-			std::chrono::duration<double> lag(0);
-
-			unsigned long long frames = 0;
-
-			for (bool quit = false; !quit; ++frames)
+			while (lag >= frameTime)
 			{
-				const auto time = timer.ticks<std::chrono::duration<double>>();
-				const auto elapsed = time - lastTime;
-				lastTime = time;
-				lag += elapsed;
-
-				if (time >= std::chrono::seconds(1))
-					m_fps = frames / time.count();
-
-				const auto endTime = std::chrono::steady_clock::now() + m_frameTime;
-
-				SDL_Event e;
-				while (SDL_PollEvent(&e) != 0)
-				{
-					_invoke_(&ImplWin::event, e);
-
-					if (e.type == SDL_QUIT)
-						quit = true;
-				}
-
-				m_delta = elapsed.count();
-				_invoke_(&ImplWin::update);
-
-				while (lag >= m_frameTime)
-				{
-					lag -= m_frameTime;
-					_invoke_(&ImplWin::fixedUpdate);
-				}
-
-				_invoke_(&ImplWin::render);
-
-				std::this_thread::sleep_until(endTime);
+				lag -= frameTime;
+				_invoke_(&ImplWin::fixedUpdate);
 			}
-		}
 
-		template<typename ImplWin>
-		inline ImplWin& RunLoop<ImplWin>::addWindow(ImplWin* win)
-		{
-			return *m_windows.emplace_back(win);
-		}
+			_invoke_(&ImplWin::render);
 
-		template<typename ImplWin>
-		inline void RunLoop<ImplWin>::removWindow(typename std::vector<ImplWin>::iterator iter)
-		{
-			m_windows.erase(iter);
+			std::this_thread::sleep_until(endTime);
 		}
+	}
 
-		template<typename ImplWin>
-		template<typename ...T>
-		inline void RunLoop<ImplWin>::_invoke_(void(ImplWin::* f)(const T& ...), const T& ...arg)
-		{
-			for (auto& i : m_windows)
-				(i->*f)(arg...);
-		}
+	template<typename ImplWin>
+	inline ImplWin& RunLoop<ImplWin>::addWindow(ImplWin* win)
+	{
+		return *m_windows.emplace_back(win);
+	}
 
-		}
+	template<typename ImplWin>
+	inline void RunLoop<ImplWin>::removWindow(typename std::vector<ImplWin>::iterator iter)
+	{
+		m_windows.erase(iter);
+	}
+
+	template<typename ImplWin>
+	template<typename ...T>
+	inline void RunLoop<ImplWin>::_invoke_(void(ImplWin::* f)(const T& ...), const T& ...arg)
+	{
+		for (auto& i : m_windows)
+			(i->*f)(arg...);
+	}
+
 }
