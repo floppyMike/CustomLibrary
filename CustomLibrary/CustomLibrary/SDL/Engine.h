@@ -93,11 +93,21 @@ namespace ctl::sdl
 		SDL& setHint(const char* name, const char* value) noexcept;
 	};
 
-	template<typename ImplWin>
+
+	class IWindow
+	{
+	public:
+		virtual void event(const SDL_Event&) = 0;
+		virtual void update() = 0;
+		virtual void fixedUpdate() = 0;
+		virtual void render() = 0;
+	};
+
+
+	template<typename ImplWin = IWindow>
 	class RunLoop
 	{
 		using type = RunLoop<ImplWin>;
-		using state_t = typename ImplWin::state_t;
 
 		template<typename... T>
 		void _invoke_(void (ImplWin::* f)(const T& ...), const T& ... arg);
@@ -105,15 +115,10 @@ namespace ctl::sdl
 	public:
 		RunLoop() = default;
 
-		RunLoop(ImplWin* win)
-			: m_windows(1, win)
-		{
-		}
-
 		void run(size_t fps);
 
 		ImplWin& addWindow(ImplWin* win);
-		void removWindow(typename std::vector<ImplWin>::iterator iter);
+		//void removWindow(typename std::vector<ImplWin>::iterator iter);
 
 		constexpr const auto& fps() const noexcept { return m_fps; }
 		constexpr const auto& delta() const noexcept { return m_delta; }
@@ -196,15 +201,15 @@ namespace ctl::sdl
 		return *m_windows.emplace_back(win);
 	}
 
-	template<typename ImplWin>
-	inline void RunLoop<ImplWin>::removWindow(typename std::vector<ImplWin>::iterator iter)
-	{
-		m_windows.erase(iter);
-	}
+	//template<typename ImplWin>
+	//inline void RunLoop<ImplWin>::removWindow(typename std::vector<ImplWin>::iterator iter)
+	//{
+	//	m_windows.erase(iter);
+	//}
 
 	template<typename ImplWin>
 	template<typename ...T>
-	inline void RunLoop<ImplWin>::_invoke_(void(ImplWin::* f)(const T& ...), const T& ...arg)
+	inline void RunLoop<ImplWin>::_invoke_(void (ImplWin::* f)(const T& ...), const T& ...arg)
 	{
 		for (auto& i : m_windows)
 			(i->*f)(arg...);

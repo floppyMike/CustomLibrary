@@ -6,125 +6,99 @@
 #include "Window.h"
 #include "Renderer.h"
 #include "Camera2D.h"
-#include "EventWatch.h"
 #include "State.h"
 
-namespace ctl
+namespace ctl::sdl
 {
-	namespace sdl
+	class IState
 	{
-		template<typename ImplState, 
-			typename ImplWatch = EventWatch,
-			typename ImplCam = Camera2D,
-			typename ImplWin = Window,
-			typename ImplRend = Renderer>
-		class SDLWindow
+	public:
+		virtual ~IState() {}
+
+		virtual void event(const SDL_Event&) = 0;
+		virtual void input(const SDL_Event&) = 0;
+		virtual void update() = 0;
+		virtual void fixedUpdate() = 0;
+		virtual void draw() = 0;
+	};
+
+
+	class SDLWindow : public IWindow
+	{
+	public:
+		SDLWindow(const char* name,
+			const Dim<int>& dim,
+			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
+			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+			: m_win(name, dim, windowFlags)
+			, m_renderer(&m_win, rendererFlags)
 		{
-		public:
-			using state_t = ImplState;
+			m_renderer.setLogicalSize(m_win.dim());
+		}
 
-			/**
-			* @summary construct window and SDL renderer
-			* @param "name" name of window
-			* @param "dim" size of window
-			* @param "windowFlags" window creation flags
-			* @param "rendererFlags" SDL renderer creation flags
-			* @exception "Log" if renderer creation fails
-			* @remarks "windowFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
-			* @remarks "rendererFlags" check https://wiki.libsdl.org/SDL_CreateRenderer#Remarks
-			*/
-			SDLWindow(const char* name,
-				const Dim<int>& dim,
-				const Uint32& windowFlags = SDL_WINDOW_SHOWN,
-				const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
-				: m_win(name, dim, windowFlags)
-				, m_renderer(&m_win, rendererFlags)
+		~SDLWindow()
+		{
+			destroy();
+		}
+
+		void destroy()
+		{
+			m_win.destroy();
+			m_renderer.destroy();
+		}
+
+		template<typename State, typename ...Args>
+		IState& setState(Args&&... args)
+		{
+			return *(m_state = std::make_unique<State>(std::forward<Args>(args)...));
+		}
+
+		SDLWindow& removState() noexcept
+		{
+			m_state.reset(nullptr);
+			return *this;
+		}
+
+		constexpr auto& renderer() noexcept { return m_renderer; }
+		constexpr auto& window() noexcept { return m_win; }
+
+	private:
+		Window m_win;
+		Renderer m_renderer;
+
+		Camera2D m_cam;
+
+		std::unique_ptr<IState> m_state;
+
+
+		void event(const SDL_Event& e) override
+		{
+			if (e.window.windowID == m_win.ID())
 			{
-				m_renderer.setLogicalSize(m_win.dim());
+				m_state->input(e);
+				m_state->event(e);
 			}
+		}
 
-			~SDLWindow()
-			{
-				destroy();
-			}
+		void update() override
+		{
+			m_state->update();
+		}
 
-			void destroy()
-			{
-				m_win.destroy();
-				m_renderer.destroy();
-			}
+		void fixedUpdate() override
+		{
+			m_state->fixedUpdate();
+		}
 
-			template<typename State, typename ...Args>
-			ImplState& setState(Args&&... args)
-			{
-				m_state = std::make_unique<State>(&m_renderer, std::forward<Args>(args)...);
-				return *m_state;
-			}
+		void render() override
+		{
+			m_renderer.setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
+			m_renderer.clear();
 
-			SDLWindow& removState() noexcept
-			{
-				m_state.reset(nullptr);
-				return *this;
-			}
+			m_state->draw();
 
-			constexpr bool focus(EventWatch::Focus foc) const noexcept
-			{
-				return m_watch.state(foc);
-			}
+			m_renderer.render();
+		}
+	};
 
-			SDLWindow& fillColor(const SDL_Color& col)
-			{
-				m_renderer.setColor(col);
-				return *this;
-			}
-
-			constexpr auto* renderer() { return &m_renderer; }
-			constexpr auto* window() { return &m_win; }
-
-			void event(const SDL_Event& e)
-			{
-				if (e.window.windowID == m_win.ID())
-				{
-					switch (e.window.event)
-					{
-					case SDL_WINDOWEVENT_SIZE_CHANGED: m_win.update(e);   break;
-					default:						   m_watch.listen(e); break;
-					}
-
-					m_state->input(e);
-					m_state->event(e);
-				}
-			}
-
-			void update()
-			{
-				m_state->update();
-			}
-
-			void fixedUpdate()
-			{
-				m_state->fixedUpdate();
-			}
-
-			void render()
-			{
-				m_renderer.setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
-				m_renderer.clear();
-
-				m_state->render();
-
-				m_renderer.render();
-			}
-
-		private:
-			ImplWin m_win;
-			ImplRend m_renderer;
-
-			ImplCam m_cam;
-			ImplWatch m_watch;
-
-			std::unique_ptr<ImplState> m_state;
-		};
-
-	}
 }

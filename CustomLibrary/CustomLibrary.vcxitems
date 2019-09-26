@@ -29,6 +29,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h" />
