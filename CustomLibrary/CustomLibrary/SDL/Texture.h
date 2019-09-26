@@ -40,9 +40,9 @@ namespace ctl
 
 
 		template<typename ImplTex = Texture, typename ImplRend = Renderer>
-		class TexRend : Object<ImplRend, Rect<int, int>>, public ReliesOn<ImplTex, TexRend<ImplTex, ImplRend>>
+		class TexRend : Shapeable<ImplRend, Rect<int, int>>, public ReliesOn<ImplTex, TexRend<ImplTex, ImplRend>>
 		{
-			using base1 = Object<ImplRend, Rect<int, int>>;
+			using base1 = Shapeable<ImplRend, Rect<int, int>>;
 			using base2 = ReliesOn<ImplTex, TexRend>;
 
 		public:

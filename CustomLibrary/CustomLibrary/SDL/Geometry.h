@@ -9,210 +9,211 @@
 #include <type_traits>
 #include <variant>
 
-namespace ctl
+namespace ctl::sdl
 {
-	namespace sdl
+	//----------------------------------------------
+	//Single
+	//----------------------------------------------
+
+	template<typename ImplRend = Renderer>
+	class RectDraw : Shapeable<Rect<int, int>, RectDraw<ImplRend>>, Renderable<ImplRend>
 	{
-		//----------------------------------------------
-		//Single
-		//----------------------------------------------
+		using base1 = Shapeable<Rect<int, int>, RectDraw<ImplRend>>;
+		using base2 = Renderable<ImplRend>;
 
-		template<typename ImplRend = Renderer>
-		class RectDraw : Object<ImplRend, Rect<int, int>>
+	public:
+		using base2::base2;
+
+		void draw() const
 		{
-			using base = Object<ImplRend, Rect<int, int>>;
+			if (SDL_RenderDrawRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
+				throw Log(SDL_GetError());
+		}
 
-		public:
-			using base::Object;
-
-			void draw() const
-			{
-				if (SDL_RenderDrawRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
-					throw Log(SDL_GetError());
-			}
-
-			void drawFilled() const
-			{
-				if (SDL_RenderFillRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
-					throw Log(SDL_GetError());
-			}
-
-			using base::renderer;
-			using base::shape;
-		};
-
-
-		template<typename ImplRend = Renderer>
-		class CircleDraw : Object<ImplRend, Circle<int, unsigned int>>
+		void drawFilled() const
 		{
-			using base = Object<ImplRend, Circle<int, unsigned int>>;
+			if (SDL_RenderFillRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
+				throw Log(SDL_GetError());
+		}
 
-		public:
-			using base::Object;
+		using base2::renderer;
+		using base1::shape;
+	};
 
-			void draw() const
+
+	template<typename ImplRend = Renderer>
+	class CircleDraw : Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, Renderable<ImplRend>
+	{
+		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>;
+		using base2 = Renderable<ImplRend>;
+
+	public:
+		using base2::base2;
+
+		void draw() const
+		{
+			_draw_(SDL_RenderDrawPoints);
+		}
+
+		void drawFilled() const
+		{
+			_draw_(SDL_RenderDrawLines);
+		}
+
+		void drawP(int pres) const
+		{
+			std::vector<SDL_Point> ps;
+			ps.reserve(pres + 1);
+
+			for (size_t i = 0; i < pres; ++i)
 			{
-				_draw_(SDL_RenderDrawPoints);
+				const auto x = to_radians(360.f / pres * (i + 1.f));
+				ps[i] = { static_cast<int>(this->m_shape.r * std::cos(x) + this->m_shape.x), static_cast<int>(this->m_shape.r * std::sin(x) + this->m_shape.y) };
 			}
+			ps.back() = ps.front();
 
-			void drawFilled() const
+			if (SDL_RenderDrawLines(this->m_rend->get(), ps.data(), ps.size()) != 0)
+				throw Log(SDL_GetError());
+		}
+
+		using base2::renderer;
+		using base1::shape;
+
+	private:
+		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
+		{
+			const auto d = this->m_shape.r * 2;
+
+			Point<int> p(this->m_shape.r - 1, 0);
+			Point<int> tp(1, 1);
+
+			int err = tp.x - d;
+
+			while (p.x >= p.y)
 			{
-				_draw_(SDL_RenderDrawLines);
-			}
+				const std::array<SDL_Point, 8> ps =
+				{ SDL_Point
+					{ this->m_shape.x + p.x, this->m_shape.y + p.y },
+					{ this->m_shape.x - p.x, this->m_shape.y + p.y },
+					{ this->m_shape.x + p.x, this->m_shape.y - p.y },
+					{ this->m_shape.x - p.x, this->m_shape.y - p.y },
+					{ this->m_shape.x + p.y, this->m_shape.y + p.x },
+					{ this->m_shape.x - p.y, this->m_shape.y + p.x },
+					{ this->m_shape.x + p.y, this->m_shape.y - p.x },
+					{ this->m_shape.x - p.y, this->m_shape.y - p.x }
+				};
 
-			void drawP(int pres) const
-			{
-				std::vector<SDL_Point> ps;
-				ps.reserve(pres + 1);
+				if (func(this->m_rend->get(), ps.data(), ps.size()) != 0)
+					throw Log(SDL_GetError());
 
-				for (size_t i = 0; i < pres; ++i)
+				if (err <= 0)
 				{
-					const auto x = to_radians(360.f / pres * (i + 1.f));
-					ps[i] = { static_cast<int>(this->m_shape.r * std::cos(x) + this->m_shape.x), static_cast<int>(this->m_shape.r * std::sin(x) + this->m_shape.y) };
+					++p.y;
+					err += tp.y;
+					tp.y += 2;
 				}
-				ps.back() = ps.front();
-
-				if (SDL_RenderDrawLines(this->m_rend->get(), ps.data(), ps.size()) != 0)
-					throw Log(SDL_GetError());
-			}
-
-			using base::renderer;
-			using base::shape;
-
-		private:
-			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
-			{
-				const auto d = this->m_shape.r * 2;
-
-				Point<int> p(this->m_shape.r - 1, 0);
-				Point<int> tp(1, 1);
-
-				int err = tp.x - d;
-
-				while (p.x >= p.y)
+				if (err > 0)
 				{
-					const std::array<SDL_Point, 8> ps =
-					{ SDL_Point
-						{ this->m_shape.x + p.x, this->m_shape.y + p.y },
-						{ this->m_shape.x - p.x, this->m_shape.y + p.y },
-						{ this->m_shape.x + p.x, this->m_shape.y - p.y },
-						{ this->m_shape.x - p.x, this->m_shape.y - p.y },
-						{ this->m_shape.x + p.y, this->m_shape.y + p.x },
-						{ this->m_shape.x - p.y, this->m_shape.y + p.x },
-						{ this->m_shape.x + p.y, this->m_shape.y - p.x },
-						{ this->m_shape.x - p.y, this->m_shape.y - p.x }
-					};
-
-					if (func(this->m_rend->get(), ps.data(), ps.size()) != 0)
-						throw Log(SDL_GetError());
-
-					if (err <= 0)
-					{
-						++p.y;
-						err += tp.y;
-						tp.y += 2;
-					}
-					if (err > 0)
-					{
-						--p.x;
-						tp.x += 2;
-						err += tp.x - d;
-					}
+					--p.x;
+					tp.x += 2;
+					err += tp.x - d;
 				}
 			}
+		}
 
-		};
+	};
 
 
-		template<typename ImplRend = Renderer>
-		class LineDraw : Object<ImplRend, Line<int>>
+	template<typename ImplRend = Renderer>
+	class LineDraw : Shapeable<Line<int>, LineDraw<ImplRend>>, Renderable<ImplRend>
+	{
+		using base1 = Shapeable<Line<int>, LineDraw<ImplRend>>;
+		using base2 = Renderable<ImplRend>;
+
+	public:
+		using base2::base2;
+
+		void draw() const
 		{
-			using base = Object<ImplRend, Line<int>>;
+			if (SDL_RenderDrawLine(this->m_rend->get(), this->m_shape.x1, this->m_shape.y1, this->m_shape.x2, this->m_shape.y2) != 0)
+				throw Log(SDL_GetError());
+		}
 
-		public:
-			using base::Object;
-
-			void draw() const
-			{
-				if (SDL_RenderDrawLine(this->m_rend->get(), this->m_shape.x1, this->m_shape.y1, this->m_shape.x2, this->m_shape.y2) != 0)
-					throw Log(SDL_GetError());
-			}
-
-			using base::renderer;
-			using base::shape;
-		};
+		using base2::renderer;
+		using base1::shape;
+	};
 
 
-		template<typename ImplRend = Renderer>
-		class PointDraw : Object<ImplRend, Point<int>>
+	template<typename ImplRend = Renderer>
+	class PointDraw : Shapeable<Point<int>, PointDraw<ImplRend>>, Renderable<ImplRend>
+	{
+		using base1 = Shapeable<Point<int>, PointDraw<ImplRend>>;
+		using base2 = Renderable<ImplRend>;
+
+	public:
+		using base2::base2;
+
+		void draw() const
 		{
-			using base = Object<ImplRend, Point<int>>;
-
-		public:
-			using base::Object;
-
-			void draw() const
-			{
-				if (SDL_RenderDrawPoint(this->m_rend->get(), this->m_shape.x, this->m_shape.y) != 0)
-					throw Log(SDL_GetError());
-			}
+			if (SDL_RenderDrawPoint(this->m_rend->get(), this->m_shape.x, this->m_shape.y) != 0)
+				throw Log(SDL_GetError());
+		}
 		
-			using base::renderer;
-			using base::shape;
-		};
+		using base2::renderer;
+		using base1::shape;
+	};
 
 
-		//----------------------------------------------
-		//Multi
-		//----------------------------------------------
+	//----------------------------------------------
+	//Multi
+	//----------------------------------------------
 
-		template<typename ImplRend, typename... Shapes>
-		class MultiShape : Renderable<ImplRend>
+	template<typename ImplRend, typename... Shapes>
+	class MultiShape : Renderable<ImplRend>
+	{
+		static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
+		using base = Renderable<ImplRend>;
+
+		template<typename T>
+		void drawHandler(T& arg) const
 		{
-			static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
-			using base = Renderable<ImplRend>;
+			using tag_t = typename T::value_type::tag;
 
-			template<typename T>
-			void drawHandler(T& arg) const
-			{
-				using tag_t = typename T::value_type::tag;
+			if constexpr (std::is_same_v<Tags::isRect, tag_t>)
+				SDL_RenderDrawRects(this->m_rend->get(), arg.front().rectPtr(), arg.size());
 
-				if constexpr (std::is_same_v<Tags::isRect, tag_t>)
-					SDL_RenderDrawRects(this->m_rend->get(), arg.front().rectPtr(), arg.size());
+			else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
+				SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size() << 1);
 
-				else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
-					SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size() << 1);
+			else if constexpr (std::is_same_v<Tags::isPoint, tag_t>)
+				SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size());
 
-				else if constexpr (std::is_same_v<Tags::isPoint, tag_t>)
-					SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size());
+			else
+				static_assert(false, "Type is not supported for mass drawing.");
+		}
 
-				else
-					static_assert(false, "Type is not supported for mass drawing.");
-			}
+	public:
+		using base::Renderable;
 
-		public:
-			using base::Renderable;
+		template<typename T>
+		auto& push(const T& arg)
+		{
+			static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
+			std::get<std::vector<T>>(m_packs).emplace_back(arg);
 
-			template<typename T>
-			auto& push(const T& arg)
-			{
-				static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
-				std::get<std::vector<T>>(m_packs).emplace_back(arg);
+			return *this;
+		}
 
-				return *this;
-			}
+		void draw() const
+		{
+			std::apply([this](auto&&... arg)
+				{
+					(this->drawHandler(arg), ...);
+				}, m_packs);
+		}
 
-			void draw() const
-			{
-				std::apply([this](auto&&... arg)
-					{
-						(this->drawHandler(arg), ...);
-					}, m_packs);
-			}
+	private:
+		std::tuple<std::vector<Shapes>...> m_packs;
+	};
 
-		private:
-			std::tuple<std::vector<Shapes>...> m_packs;
-		};
-
-	}
 }

@@ -40,21 +40,19 @@ namespace ctl
 		};
 
 
-		template<typename ImplRend, typename Shape>
-		class Object : public Renderable<ImplRend>
+		template<typename Shape, typename Derived>
+		class Shapeable
 		{
 		public:
-			using Renderable<ImplRend>::Renderable;
-
 			constexpr const auto& shape() const noexcept
 			{
 				return m_shape;
 			}
 
-			constexpr auto& shape(const Shape& s) noexcept
+			constexpr Derived& shape(const Shape& s) noexcept
 			{
 				m_shape = s;
-				return *this;
+				return *static_cast<Derived*>(this);
 			}
 
 		protected:
