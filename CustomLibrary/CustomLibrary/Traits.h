@@ -45,6 +45,9 @@ namespace ctl
 	using is_detected = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::value_t;
 
 	template <template<typename...> typename Op, typename... Args>
+	constexpr auto is_detected_v = is_detected<Op, Args...>::value;
+
+	template <template<typename...> typename Op, typename... Args>
 	using detected_t = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::type;
 
 	template <typename Default, template<typename...> typename Op, typename... Args>

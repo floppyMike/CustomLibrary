@@ -73,11 +73,14 @@ namespace ctl::sdl
 	template<typename ImplTex>
 	class TexLoad : public crtp<ImplTex, TexLoad>
 	{
+		template<typename T>
+		using has_resetSize = decltype(std::declval<T&>().resetSize());
+
 	public:
 		template<typename ImplSur>
 		ImplTex& load(ImplSur&& surface)
 		{
-			auto* tex = SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface.get());
+			auto* tex = SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface);
 			if (!tex)
 				throw Log(SDL_GetError());
 
@@ -86,11 +89,16 @@ namespace ctl::sdl
 
 		ImplTex& load(const char* path)
 		{
+			static_assert(is_detected_v<has_resetSize, ImplTex>, "resetSize is required for setting the renderer size.");
+
 			auto* data = IMG_LoadTexture(this->_().renderer()->get(), path);
 			if (data == nullptr)
 				throw Log(SDL_GetError());
 
-			return this->_().replace(data);
+			this->_().replace(data);
+			this->_().resetSize();
+
+			return this->_();
 		}
 
 		ImplTex& load(void* src, int size)
