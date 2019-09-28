@@ -144,6 +144,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ResourceManager.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Traits.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">

@@ -2,172 +2,160 @@
 
 #include "SDLTraits.h"
 #include "Surface.h"
+#include "Renderer.h"
+
+#include <CustomLibrary/Traits.h>
 
 #include <SDL_image.h>
 
-namespace ctl
+namespace ctl::sdl
 {
-	namespace sdl
+	template<typename ImplRend, template<typename> class... Func>
+	class basicTexture : Renderable<ImplRend>, public Func<basicTexture<ImplRend, Func...>>...
 	{
-		class Texture
+		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
+
+		using base1 = Renderable<ImplRend>;
+
+	public:
+		using base1::base1;
+
+		basicTexture() noexcept = default;
+		basicTexture(basicTexture&& t) noexcept = default;
+		basicTexture& operator=(basicTexture&& t) noexcept = default;
+
+		SDL_Texture* get() const noexcept
 		{
-			struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
+			return m_texture.get();
+		}
 
-		public:
-			Texture() noexcept = default;
-			Texture(Texture&& t) noexcept = default;
-			Texture& operator=(Texture&& t) noexcept = default;
-
-			Texture(SDL_Texture* t) noexcept
-				: m_texture(t)
-			{
-			}
-
-			SDL_Texture* get() noexcept
-			{
-				return m_texture.get();
-			}
-
-			Texture& replace(SDL_Texture* tex)
-			{
-				m_texture.reset(tex);
-				return *this;
-			}
-
-		private:
-			std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
-		};
-
-
-		template<typename ImplTex = Texture, typename ImplRend = Renderer>
-		class TexRend : Shapeable<ImplRend, Rect<int, int>>, public ReliesOn<ImplTex, TexRend<ImplTex, ImplRend>>
+		basicTexture& replace(SDL_Texture* tex) noexcept
 		{
-			using base1 = Shapeable<ImplRend, Rect<int, int>>;
-			using base2 = ReliesOn<ImplTex, TexRend>;
+			m_texture.reset(tex);
+			return *this;
+		}
 
-		public:
-			using base1::base1;
+		using base1::renderer;
 
-			TexRend& resetSize()
-			{
-				if (SDL_QueryTexture(this->get<ImplTex>()->get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
-					throw Log(SDL_GetError());
+	private:
+		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
+	};
 
-				return *this;
-			}
-
-			TexRend& set(ImplTex* tex)
-			{
-				base2::set(tex);
-				return resetSize();
-			}
-
-			void draw() const
-			{
-				if (SDL_RenderCopy(this->m_rend->get(), this->get<ImplTex>()->get(), nullptr, this->m_shape.rectPtr()) < 0)
-					throw Log(SDL_GetError());
-			}
-
-			using base1::renderer;
-			using base1::shape;
-		};
+	template<template<typename> class... Func>
+	using Texture = basicTexture<Renderer, Func...>;
 
 
-		template<typename ImplTex = Texture, typename ImplRend = Renderer>
-		class TexLoad : Renderable<ImplRend>, public ReliesOn<ImplTex, TexLoad<ImplTex, ImplRend>>
+	template<typename ImplTex>
+	class TexRend : public Shapeable<Rect<int, int>, ImplTex>, public crtp<ImplTex, TexRend>
+	{
+		using base1 = Shapeable<Rect<int, int>, ImplTex>;
+
+	public:
+		ImplTex& resetSize()
 		{
-			using base1 = Renderable<ImplRend>;
-			using base2 = ReliesOn<ImplTex, TexLoad>;
+			if (SDL_QueryTexture(this->_().get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
+				throw Log(SDL_GetError());
 
-		public:
-			using base1::base1;
+			return this->_();
+		}
 
-			template<typename ImplSur>
-			ImplTex& load(ImplSur&& surface)
-			{
-				auto* tex = SDL_CreateTextureFromSurface(this->m_rend->get(), surface.get());
-				if (!tex)
-					throw Log(SDL_GetError());
+		void draw() const
+		{
+			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().get(), nullptr, this->m_shape.rectPtr()) < 0)
+				throw Log(SDL_GetError());
+		}
 
-				return this->get<ImplTex>()->replace(tex);
-			}
+		using base1::shape;
+	};
 
-			ImplTex& load(const char* path)
-			{
-				return this->get<ImplTex>()->replace(IMG_LoadTexture(this->m_rend->get(), path));
-			}
 
-			ImplTex& load(void* src, int size)
-			{
-				return this->get<ImplTex>()->replace(IMG_LoadTexture_RW(this->m_rend->get(), SDL_RWFromMem(src, size), 1));
-			}
+	template<typename ImplTex>
+	class TexLoad : public crtp<ImplTex, TexLoad>
+	{
+	public:
+		template<typename ImplSur>
+		ImplTex& load(ImplSur&& surface)
+		{
+			auto* tex = SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface.get());
+			if (!tex)
+				throw Log(SDL_GetError());
+
+			return this->_().replace(tex);
+		}
+
+		ImplTex& load(const char* path)
+		{
+			auto* data = IMG_LoadTexture(this->_().renderer()->get(), path);
+			if (data == nullptr)
+				throw Log(SDL_GetError());
+
+			return this->_().replace(data);
+		}
+
+		ImplTex& load(void* src, int size)
+		{
+			return this->_().replace(IMG_LoadTexture_RW(this->_().renderer()->get(), SDL_RWFromMem(src, size), 1));
+		}
 		
-			using base1::renderer;
-			using base2::set;
-		};
+	};
 
 
-		template<typename ImplTex>
-		class TexAttrib : public ReliesOn<ImplTex, TexAttrib<ImplTex>>
+	template<typename ImplTex>
+	class TexAttrib : public crtp<ImplTex, TexAttrib>
+	{
+	public:
+		auto& colourMod(Uint8 r, Uint8 g, Uint8 b)
 		{
-			using base1 = ReliesOn<ImplTex, TexAttrib<ImplTex>>;
+			if (SDL_SetTextureColorMod(this->_().get(), r, g, b) != 0)
+				throw Log(SDL_GetError());
 
-		public:
-			auto& colourMod(const SDL_Color& c)
-			{
-				if (SDL_SetTextureColorMod(this->get<ImplTex>()->get(), c.r, c.g, c.b) != 0)
-					throw Log(SDL_GetError());
+			return *this;
+		}
+		auto colourMod() const
+		{
+			std::tuple<Uint8, Uint8, Uint8> c;
 
-				return *this;
-			}
-			auto colourMod() const
-			{
-				std::tuple<Uint8, Uint8, Uint8> c;
+			if (SDL_GetTextureColorMod(this->_().get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
+				throw Log(SDL_GetError());
 
-				if (SDL_GetTextureColorMod(this->get<ImplTex>()->get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
-					throw Log(SDL_GetError());
+			return c;
+		}
 
-				return c;
-			}
+		auto& blendMode(const SDL_BlendMode& b)
+		{
+			if (SDL_SetTextureBlendMode(this->_().get(), b) != 0)
+				throw Log(SDL_GetError());
 
-			auto& blendMode(const SDL_BlendMode& b)
-			{
-				if (SDL_SetTextureBlendMode(this->get<ImplTex>()->get(), b) != 0)
-					throw Log(SDL_GetError());
+			return *this;
+		}
+		SDL_BlendMode blendMode() const
+		{
+			SDL_BlendMode b;
 
-				return *this;
-			}
-			SDL_BlendMode blendMode() const
-			{
-				SDL_BlendMode b;
+			if (SDL_GetTextureBlendMode(this->_().get(), &b) != 0)
+				throw Log(SDL_GetError());
 
-				if (SDL_GetTextureBlendMode(this->get<ImplTex>()->get(), &b) != 0)
-					throw Log(SDL_GetError());
+			return b;
+		}
 
-				return b;
-			}
+		auto& alphaMod(const Uint8& a)
+		{
+			if (SDL_SetTextureAlphaMod(this->_().get(), a) != 0)
+				throw Log(SDL_GetError());
 
-			auto& alphaMod(const Uint8& a)
-			{
-				if (SDL_SetTextureAlphaMod(this->get<ImplTex>()->get(), a) != 0)
-					throw Log(SDL_GetError());
+			return *this;
+		}
+		Uint8 alphaMod() const
+		{
+			Uint8 a;
 
-				return *this;
-			}
-			Uint8 alphaMod() const
-			{
-				Uint8 a;
+			if (SDL_GetTextureAlphaMod(this->_().get(), &a) == -1)
+				throw Log(SDL_GetError());
 
-				if (SDL_GetTextureAlphaMod(this->get<ImplTex>()->get(), &a) == -1)
-					throw Log(SDL_GetError());
+			return a;
+		}
+	};
 
-				return a;
-			}
-
-			using base1::set;
-		};
-
-	}
 }
 
 

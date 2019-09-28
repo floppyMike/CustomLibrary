@@ -11,9 +11,7 @@ struct State : public sdl::IState
 		, m_c(m_rend)
 		, m_p(m_rend)
 		, m_multi(m_rend)
-		, m_loader(m_rend)
-		, m_renderer(m_rend)
-		, m_tRend(m_rend)
+		, m_texture(m_rend)
 	{
 		m_r.shape({ 10, 10, 40, 40 });
 		m_l.shape({ 100, 100, 500, 400 });
@@ -33,14 +31,14 @@ struct State : public sdl::IState
 		m_multi.push(ctl::sdl::Point<int>(21, 401));
 		m_multi.push(ctl::sdl::Point<int>(19, 401));
 
-		m_loader.set(&m_texture).load("assets/ass.png");
-		m_renderer.set(&m_texture).shape({ 200, 20, m_renderer.shape().w >> 2, m_renderer.shape().h >> 2 });
+		m_texture.load("assets/ass.png").resetSize();
+		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
 
-		ctl::sdl::FontLoad<>().set(&m_font).load("assets/ass1.ttf", 40);
-		ctl::sdl::TexLoad<>(m_rend).set(&m_text).load(
-			ctl::sdl::Surface(
-				ctl::sdl::TextLoad<>().set(&m_font).loadBlended("Hello There!")));
-		m_tRend.set(&m_text).shape({ 10, 200, m_tRend.shape().w, m_tRend.shape().h });
+		//ctl::sdl::FontLoad<>().set(&m_font).load("assets/ass1.ttf", 40);
+		//ctl::sdl::TexLoad<>(m_rend).set(&m_text).load(
+		//	ctl::sdl::Surface(
+		//		ctl::sdl::TextLoad<>().set(&m_font).loadBlended("Hello There!")));
+		//m_tRend.set(&m_text).shape({ 10, 200, m_tRend.shape().w, m_tRend.shape().h });
 	}
 
 	void event(const SDL_Event&) override
@@ -70,8 +68,8 @@ struct State : public sdl::IState
 		m_rend->setColor({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
 
-		m_renderer.draw();
-		m_tRend.draw();
+		m_texture.draw();
+		//m_tRend.draw();
 	}
 
 private:
@@ -87,13 +85,11 @@ private:
 		ctl::sdl::Line<int>,
 		ctl::sdl::Point<int>> m_multi;
 
-	ctl::sdl::Texture m_texture;
-	ctl::sdl::TexLoad<> m_loader;
-	ctl::sdl::TexRend<> m_renderer;
+	sdl::Texture<sdl::TexRend, sdl::TexLoad, sdl::TexAttrib> m_texture;
 
-	ctl::sdl::Font m_font;
-	ctl::sdl::Texture m_text;
-	ctl::sdl::TexRend<> m_tRend;
+	//ctl::sdl::Font m_font;
+	//ctl::sdl::Texture m_text;
+	//ctl::sdl::TexRend<> m_tRend;
 };
 
 

@@ -52,6 +52,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Traits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\utility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h" />

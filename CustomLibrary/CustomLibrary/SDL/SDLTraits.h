@@ -29,10 +29,15 @@ namespace ctl
 			* @remarks after setting a new window you must recreate the resource
 			* @returns window ptr
 			*/
-			constexpr Renderable& renderer(ImplRend* const r)
+			constexpr Renderable& renderer(ImplRend* const r) noexcept
 			{
 				m_rend = r;
 				return *this;
+			}
+
+			constexpr ImplRend* renderer() const noexcept
+			{
+				return m_rend;
 			}
 
 		protected:

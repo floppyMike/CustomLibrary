@@ -16,7 +16,7 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename ImplRend = Renderer>
-	class RectDraw : Shapeable<Rect<int, int>, RectDraw<ImplRend>>, Renderable<ImplRend>
+	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<ImplRend>>, Renderable<ImplRend>
 	{
 		using base1 = Shapeable<Rect<int, int>, RectDraw<ImplRend>>;
 		using base2 = Renderable<ImplRend>;
@@ -42,7 +42,7 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class CircleDraw : Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, Renderable<ImplRend>
+	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, Renderable<ImplRend>
 	{
 		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>;
 		using base2 = Renderable<ImplRend>;
@@ -125,7 +125,7 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class LineDraw : Shapeable<Line<int>, LineDraw<ImplRend>>, Renderable<ImplRend>
+	class LineDraw : public Shapeable<Line<int>, LineDraw<ImplRend>>, Renderable<ImplRend>
 	{
 		using base1 = Shapeable<Line<int>, LineDraw<ImplRend>>;
 		using base2 = Renderable<ImplRend>;
@@ -145,7 +145,7 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class PointDraw : Shapeable<Point<int>, PointDraw<ImplRend>>, Renderable<ImplRend>
+	class PointDraw : public Shapeable<Point<int>, PointDraw<ImplRend>>, Renderable<ImplRend>
 	{
 		using base1 = Shapeable<Point<int>, PointDraw<ImplRend>>;
 		using base2 = Renderable<ImplRend>;

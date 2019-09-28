@@ -4,218 +4,302 @@
 #include <queue>
 #include <tuple>
 
-namespace ctl
-{
-	struct Directed {};
-	struct Undirected {};
+#include "Traits.h"
 
-	template<typename T = void>
-	class Graph
+
+namespace ctl::gph
+{
+	struct isDirected {};
+	struct isUndirected {};
+	struct isBoth {};
+
+	using Vertex = size_t;
+
+	struct Weighted
+	{
+		struct Edge
+		{
+			Vertex source;
+			Vertex dest;
+			double weight;
+		};
+		struct Link
+		{
+			Vertex dest;
+			double weight;
+		};
+
+	protected:
+		void _push_(const Edge& e) { m_adjList[e.source].push_back({ e.dest, e.weight }); }
+		void _pushRev_(const Edge& e) { m_adjList[e.dest].push_back({ e.source, e.weight }); }
+
+		std::vector<std::vector<Link>> m_adjList;
+	};
+
+	struct NoWeight
+	{
+		struct Edge
+		{
+			Vertex source;
+			Vertex dest;
+		};
+		struct Link
+		{
+			Vertex dest;
+		};
+
+	protected:
+		void _push_(const Edge& e) { m_adjList[e.source].push_back({ e.dest }); }
+		void _pushRev_(const Edge& e) { m_adjList[e.dest].push_back({ e.source }); }
+
+		std::vector<std::vector<Link>> m_adjList;
+	};
+
+
+	template<typename Weight>
+	class Direct : protected Weight
 	{
 	public:
-		//source, destination, weight
-		using Edge = std::tuple<size_t, size_t, double>;
-		//node
-		using Vertex = size_t;
+		using direction_t = isDirected;
+		using edge_t = typename Weight::Edge;
+		using link_t = typename Weight::Link;
 
-		//--------------------------------------------------------------------------
-		//--------------------------------Methods-----------------------------------
-		//--------------------------------------------------------------------------
+		Direct() = default;
 
-	private:
+		template<typename Iter>
+		Direct(Iter begin, Iter end, size_t size)
+		{
+			static_assert(std::is_same_v<std::iterator_traits<Iter>::value_type, edge_t>, "Must be of type Edge");
+
+			this->m_adjList.resize(size);
+			for (; begin != end; ++begin)
+				this->_push_(*begin);
+		}
+
+		auto& push(const edge_t& e)
+		{
+			if (this->m_adjList.size() < e.source + 1)
+				this->m_adjList.resize(e.source + 1);
+
+			this->_push_(e);
+
+			return *this;
+		}
+
+	};
+
+	template<typename Weight>
+	class Undirect : protected Weight
+	{
+	public:
+		using direction_t = isUndirected;
+		using edge_t = typename Weight::Edge;
+		using link_t = typename Weight::Link;
+
+		Undirect() = default;
+
+		template<typename Iter>
+		Undirect(Iter begin, Iter end, size_t size)
+		{
+			static_assert(std::is_same_v<std::iterator_traits<Iter>::value_type, edge_t>, "Must be of type Edge");
+
+			this->m_adjList.resize(size);
+			for (; begin != end; ++begin)
+				this->_push_(*begin),
+				this->_pushRev_(*begin);
+		}
+
+		auto& push(const edge_t& e)
+		{
+			const auto max = std::max(e.source + 1, e.dest + 1);
+			if (this->m_adjList.size() < max)
+				this->m_adjList.resize(max);
+
+			this->_push_(e);
+			this->_pushRev_(e);
+
+			return *this;
+		}
+
+	};
+
+
+	template<typename Direction, template<typename> class... Func>
+	class Graph : public Direction, public Func<Graph<Direction, Func...>>...
+	{
+	public:
+		using direction_t = typename Direction::direction_t;
+		using edge_t = typename Direction::edge_t;
+		using link_t = typename Direction::link_t;
+
+		using Direction::Direction;
+
+		auto begin() const
+		{
+			return this->m_adjList.begin();
+		}
+		auto end() const
+		{
+			return this->m_adjList.end();
+		}
+
+		const auto& linesFrom(size_t n) const
+		{
+			return this->m_adjList.at(n);
+		}
+
+		size_t size() const noexcept
+		{
+			return this->m_adjList.size();
+		}
+
+		void extendTo(size_t size)
+		{
+			this->m_adjList.resize(size);
+		}
+	};
+
+
+	template<typename ImplGraph>
+	class Connected : public crtp<ImplGraph, Connected>
+	{
 		//Mark all unchecked nodes
-		std::vector<bool>& _goThrough_(std::vector<bool> &check, const Vertex &nextNode = 0) const
+		std::vector<bool>& _goThrough_(std::vector<bool>& check, Vertex nextNode) const
 		{
 			check[nextNode] = true;
 			//Find node that's not been activated and recurse to it. If none found go back in stack.
-			for (auto& i : m_adjList[nextNode])
-				if (!check[i.second])
-					_goThrough_(check, i.second);
+			for (auto& i : this->_().linesFrom(nextNode))
+				if (!check[i.dest])
+					_goThrough_(check, i.dest);
 			return check;
 		}
 
 	public:
-		bool connected() const
+		bool connected(Vertex start = 0) const
 		{
-			std::vector<bool> table(m_adjList.size(), false);
-			for (const auto& i : _goThrough_(table))
+			std::vector<bool> table(this->_().size(), false);
+			for (const auto& i : _goThrough_(table, start))
 				if (!i)
 					return false;
 			return true;
 		}
 
-		auto dijkstra(const Vertex &start) const
+		bool connected(Vertex start, Vertex with, std::vector<bool>&& checkList = std::vector<bool>(this->_().size(), false))
 		{
-			std::priority_queue<DestEdge, std::vector<DestEdge>, std::greater<DestEdge>> pq;
-			std::vector<double> dist(m_adjList.size(), std::numeric_limits<double>::max());
-			std::vector<bool> visited(m_adjList.size(), false);
+			return _goThrough_(checkList, start)[with];
+		}
+	};
 
-			pq.emplace(0., start);
+
+	template<typename ImplGraph>
+	class Dijkstra : public crtp<ImplGraph, Dijkstra>
+	{
+	public:
+		auto dijkstra(Vertex start) const
+		{
+			using link_t = typename ImplGraph::link_t;
+
+			std::priority_queue<link_t, std::vector<link_t>, bool (*)(const link_t&, const link_t&)> pq
+			([](const link_t& l, const link_t& r) { return l.weight > r.weight; });
+
+			std::vector<double> dist(this->_().size(), std::numeric_limits<double>::max());
+			std::vector<bool> visited(this->_().size(), false);
+
+			pq.push({ start, 0. });
 			dist[start] = 0.;
 
 			while (!pq.empty())
 			{
-				const auto current = pq.top().second;
+				const auto current = pq.top().dest;
 				pq.pop();
 				visited[current] = true;
 
 				//Check if vertex is marked and new calculated distance is lower than the currently saved one.
-				for (const auto &x : m_adjList[current])
-					if (!visited[x.second] && dist[x.second] > dist[current] + x.first)
+				for (const auto& x : this->_().linesFrom(current))
+					if (!visited[x.dest] && dist[x.dest] > dist[current] + x.weight)
 					{
-						dist[x.second] = dist[current] + x.first;
-						pq.emplace(dist[x.second], x.second);
+						dist[x.dest] = dist[current] + x.weight;
+						pq.push({ x.dest, dist[x.dest] });
 					}
 			}
 
 			return dist;
 		}
 
-		auto dijkstraWPath(const Vertex &start) const
-		{
-			//Same as only distance dijkstra
-			std::priority_queue<DestEdge, std::vector<DestEdge>, std::greater<DestEdge>> pq;
-			std::vector<double> dist(m_adjList.size(), std::numeric_limits<double>::max());
-			std::vector<bool> visited(m_adjList.size(), false);
+		//auto dijkstraWPath(Vertex start) const
+		//{
+		//	std::priority_queue<Line, std::vector<Line>, bool (*)(const Line&, const Line&)> pq
+		//	([](const Line& l, const Line& r) { return l.weight > r.weight; });
 
-			std::vector<size_t> path(m_adjList.size());
+		//	std::vector<double> dist(this->_().size(), std::numeric_limits<double>::max());
+		//	std::vector<bool> visited(this->_().size(), false);
 
-			pq.emplace(0., start);
-			dist[start] = 0.;
-			//0 vertex points to nothing
-			path.front() = -1;
+		//	std::vector<size_t> path(this->_().size());
 
-			while (!pq.empty())
-			{
-				const auto current = pq.top().second;
-				pq.pop();
-				visited[current] = true;
+		//	pq.emplace(0., start);
+		//	dist[start] = 0.;
+		//	//0 vertex points to nothing
+		//	path.front() = -1;
 
-				for (const auto &x : m_adjList[current])
-					if (!visited[x.second] && dist[x.second] > dist[current] + x.first)
-					{
-						dist[x.second] = dist[current] + x.first;
-						pq.emplace(dist[x.second], x.second);
-						
-						path[x.second] = current;
-					}
-			}
+		//	while (!pq.empty())
+		//	{
+		//		const auto current = pq.top().dest;
+		//		pq.pop();
+		//		visited[current] = true;
 
-			return make_pair(dist, path);
-		}
+		//		for (const auto& x : this->_()[current])
+		//			if (!visited[x.dest] && dist[x.dest] > dist[current] + x.weight)
+		//			{
+		//				dist[x.dest] = dist[current] + x.weight;
+		//				pq.emplace(dist[x.dest], x.dest);
 
-#ifdef _IOSTREAM_
-		friend std::ostream& operator<<(std::ostream &out, const Graph &g)
-		{
-			for (size_t i = 0; i < g.m_adjList.size(); ++i)
-			{
-				std::cout << i << " ->   ";
-				for (auto& iter : g.m_adjList[i])
-					std::cout << iter.second << '(' << iter.first << ")\t";
-				std::cout << '\n';
-			}
+		//				path[x.dest] = current;
+		//			}
+		//	}
 
-			return out;
-		}
-#endif // _IOSTREAM_
-
-	protected:
-		//--------------------------------------------------------------------------
-		//-----------------------------Constructors---------------------------------
-		//--------------------------------------------------------------------------
-
-		Graph() = default;
-		Graph(const Graph &) = default;
-		Graph(Graph &&) = default;
-
-		Graph(const size_t &size)
-			: m_adjList(size) {}
-
-		//destination, weight
-		using DestEdge = std::pair<double, size_t>;
-		std::vector<std::vector<DestEdge>> m_adjList;
+		//	return make_pair(dist, path);
+		//}
 	};
 
-	template<>
-	class Graph<ctl::Directed> : public Graph<>
+
+	template<typename ImplGraph>
+	class Transpose : public crtp<ImplGraph, Transpose>
 	{
 	public:
-		//--------------------------------------------------------------------------
-		//-----------------------------Constructors---------------------------------
-		//--------------------------------------------------------------------------
-
-		Graph() = default;
-		Graph(const Graph &) = default;
-		Graph(Graph &&) = default;
-
-		Graph(const std::initializer_list<Edge> &init, const size_t &size)
-			: Graph<>(size)
-		{
-			for (auto& i : init)
-				m_adjList[std::get<0>(i)].emplace_back(std::get<2>(i), std::get<1>(i));
-		}
-
-		//--------------------------------------------------------------------------
-		//--------------------------------Methods-----------------------------------
-		//--------------------------------------------------------------------------
-
-		auto& pushEdge(const Edge &e)
-		{
-			if (m_adjList.size() < std::get<0>(e) + 1)
-				m_adjList.resize(std::get<0>(e) + 1);
-
-			m_adjList[std::get<0>(e)].emplace_back(std::get<2>(e), std::get<1>(e));
-
-			return *this;
-		}
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isUndirected>, "Graph must be directed to use this.");
 
 		//Reserse directions of edges
-		Graph transpose() const
+		ImplGraph transpose() const
 		{
-			Graph out;
-			out.m_adjList.resize(m_adjList.size());
+			ImplGraph out;
+			out.extendTo(this->_().size());
 
-			for (size_t i = 0; i < m_adjList.size(); ++i)
-				for (auto& iter : m_adjList[i])
-					out.m_adjList[iter.first].emplace_back(i, iter.second);
+			for (size_t i = 0; i < this->_().size(); ++i)
+				for (const auto& iter : this->_().linesFrom(i))
+					out.push({ iter.dest, i, iter.weight });
 
 			return out;
 		}
 	};
 
-	template<>
-	class Graph<ctl::Undirected> : public Graph<>
+
+	//Graph must have the connected function
+	template<typename ImplGraph>
+	class Eulerian : public crtp<ImplGraph, Eulerian>
 	{
 	public:
-		//--------------------------------------------------------------------------
-		//-----------------------------Constructors---------------------------------
-		//--------------------------------------------------------------------------
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use this.");
 
-		Graph() = default;
-		Graph(const Graph &) = default;
-		Graph(Graph &&) = default;
+		enum { NONE, PATH, CIRCLE };
 
-		Graph(const std::initializer_list<Edge> &init, const size_t &size)
-			: Graph<>(size)
-		{
-			for (auto& i : init)
-				m_adjList[std::get<0>(i)].emplace_back(std::get<2>(i), std::get<1>(i)),
-				m_adjList[std::get<1>(i)].emplace_back(std::get<2>(i), std::get<0>(i));
-		}
-
-		//--------------------------------------------------------------------------
-		//--------------------------------Methods-----------------------------------
-		//--------------------------------------------------------------------------
-
-		enum Eulerian { NONE, PATH, CIRCLE };
 		Eulerian eulerian() const
 		{
-			if (!connected())
+			if (!this->_().connected())
 				return NONE;
 
 			uint8_t odds = 0;
-			for (auto& i : m_adjList)
-				if (i.size() & 1) //if divisable by 2
+			for (const auto& i : this->_())
+				if (i.size() & 1)
 				{
 					++odds;
 					if (odds > 2) //no point continuing
@@ -229,53 +313,55 @@ namespace ctl
 			default: return NONE;
 			}
 		}
+	};
 
-		auto& pushEdge(const Edge &e)
-		{
-			const auto max = std::max(std::get<0>(e) + 1, std::get<1>(e) + 1);
-			if (m_adjList.size() < max)
-				m_adjList.resize(max);
 
-			//In undirected graph it points in 2 directions
-			m_adjList[std::get<0>(e)].emplace_back(std::get<2>(e), std::get<1>(e));
-			m_adjList[std::get<1>(e)].emplace_back(std::get<2>(e), std::get<0>(e));
-
-			return *this;
-		}
+	template<typename ImplGraph>
+	class MST : public crtp<ImplGraph, MST>
+	{
+	public:
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use this.");
 
 		auto minimumSpanningTree() const
 		{
-			std::priority_queue<DestEdge, std::vector<DestEdge>, std::greater<DestEdge>> pq;
-			std::vector<double> key(m_adjList.size(), std::numeric_limits<double>::max());
-			std::vector<bool> inMST(m_adjList.size(), false);
+			using link_t = typename ImplGraph::link_t;
+
+			std::priority_queue<link_t, std::vector<link_t>, bool (*)(const link_t&, const link_t&)> pq
+			([](const link_t& l, const link_t& r) { return l.weight > r.weight; });
+
+			std::vector<double> key(this->_().size(), std::numeric_limits<double>::max());
+			std::vector<bool> inMST(this->_().size(), false);
 
 			//Path for new graph
-			std::vector<DestEdge> parent(m_adjList.size());
+			std::vector<link_t> parent(this->_().size());
 
-			pq.emplace(0., 0);
+			pq.push({ 0, 0. });
 			key[0] = 0.;
 
 			while (!pq.empty())
 			{
-				const auto current = pq.top().second;
+				const auto current = pq.top().dest;
 				pq.pop();
 
 				inMST[current] = true;
 
-				for (auto& i : m_adjList[current])
-					if (!inMST[i.second] && key[i.second] > i.first)
+				for (const auto& i : this->_().linesFrom(current))
+					if (!inMST[i.dest] && key[i.dest] > i.weight)
 					{
-						key[i.second] = i.first;
-						pq.emplace(key[i.second], i.second);
-						parent[i.second] = { i.first, current };
+						key[i.dest] = i.weight;
+						pq.push({ i.dest, i.weight });
+
+						parent[i.dest] = { current, i.weight };
 					}
 			}
 
-			Graph mst;
+			ImplGraph mst;
+			mst.extendTo(this->_().size());
 			for (size_t i = 1; i < parent.size(); ++i)
-				mst.pushEdge({ i, parent[i].second, parent[i].first });
+				mst.push({ i, parent[i].dest, parent[i].weight });
 
 			return mst;
 		}
 	};
+
 }
