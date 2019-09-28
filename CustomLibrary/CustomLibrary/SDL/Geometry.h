@@ -16,10 +16,11 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename ImplRend = Renderer>
-	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<ImplRend>>, Renderable<ImplRend>
+	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<ImplRend>>, 
+		Renderable<ImplRend, RectDraw<ImplRend>>
 	{
 		using base1 = Shapeable<Rect<int, int>, RectDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend>;
+		using base2 = Renderable<ImplRend, RectDraw<ImplRend>>;
 
 	public:
 		using base2::base2;
@@ -42,10 +43,11 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, Renderable<ImplRend>
+	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, 
+		Renderable<ImplRend, CircleDraw<ImplRend>>
 	{
 		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend>;
+		using base2 = Renderable<ImplRend, CircleDraw<ImplRend>>;
 
 	public:
 		using base2::base2;
@@ -125,10 +127,11 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class LineDraw : public Shapeable<Line<int>, LineDraw<ImplRend>>, Renderable<ImplRend>
+	class LineDraw : public Shapeable<Line<int>, LineDraw<ImplRend>>, 
+		Renderable<ImplRend, LineDraw<ImplRend>>
 	{
 		using base1 = Shapeable<Line<int>, LineDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend>;
+		using base2 = Renderable<ImplRend, LineDraw<ImplRend>>;
 
 	public:
 		using base2::base2;
@@ -145,10 +148,11 @@ namespace ctl::sdl
 
 
 	template<typename ImplRend = Renderer>
-	class PointDraw : public Shapeable<Point<int>, PointDraw<ImplRend>>, Renderable<ImplRend>
+	class PointDraw : public Shapeable<Point<int>, PointDraw<ImplRend>>, 
+		Renderable<ImplRend, PointDraw<ImplRend>>
 	{
 		using base1 = Shapeable<Point<int>, PointDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend>;
+		using base2 = Renderable<ImplRend, PointDraw<ImplRend>>;
 
 	public:
 		using base2::base2;
@@ -169,10 +173,10 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename ImplRend, typename... Shapes>
-	class MultiShape : Renderable<ImplRend>
+	class MultiShape : Renderable<ImplRend, MultiShape<ImplRend, Shapes...>>
 	{
 		static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
-		using base = Renderable<ImplRend>;
+		using base = Renderable<ImplRend, MultiShape<ImplRend, Shapes...>>;
 
 		template<typename T>
 		void drawHandler(T& arg) const
