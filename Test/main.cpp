@@ -12,6 +12,7 @@ struct State : public sdl::IState
 		, m_p(m_rend)
 		, m_multi(m_rend)
 		, m_texture(m_rend)
+		, m_text(m_rend)
 	{
 		m_r.shape({ 10, 10, 40, 40 });
 		m_l.shape({ 100, 100, 500, 400 });
@@ -35,6 +36,8 @@ struct State : public sdl::IState
 		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
 
 		m_font.load("assets/ass1.ttf", 40);
+		m_text.set(m_font.get()).loadBlended("Hello There!");
+		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 		//m_text.loadBlended("Hello There!");
 
 		//ctl::sdl::FontLoad<>().set(&m_font).load("assets/ass1.ttf", 40);
@@ -72,7 +75,7 @@ struct State : public sdl::IState
 		m_multi.draw();
 
 		m_texture.draw();
-		//m_tRend.draw();
+		m_text.draw();
 	}
 
 private:
@@ -88,10 +91,10 @@ private:
 		ctl::sdl::Line<int>,
 		ctl::sdl::Point<int>> m_multi;
 
-	sdl::Texture<sdl::TexLoad, sdl::TexRend> m_texture;
+	sdl::Texture m_texture;
 
-	sdl::Font<sdl::FontLoad> m_font;
-	sdl::Texture<sdl::TexRend, sdl::TextLoad> m_text;
+	sdl::Font m_font;
+	sdl::Text m_text;
 	//ctl::sdl::Texture m_text;
 	//ctl::sdl::TexRend<> m_tRend;
 };

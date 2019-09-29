@@ -42,9 +42,6 @@ namespace ctl::sdl
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
 	};
 
-	template<template<typename> class... Func>
-	using Texture = basicTexture<Renderer, Func...>;
-
 
 	template<typename ImplTex>
 	class TexRend : public Shapeable<Rect<int, int>, ImplTex>, public crtp<ImplTex, TexRend>
@@ -76,34 +73,33 @@ namespace ctl::sdl
 		template<typename T>
 		using has_resetSize = decltype(std::declval<T&>().resetSize());
 
-	public:
-		template<typename ImplSur>
-		ImplTex& load(ImplSur&& surface)
-		{
-			auto* tex = SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface);
-			if (!tex)
-				throw Log(SDL_GetError());
-
-			return this->_().replace(tex);
-		}
-
-		ImplTex& load(const char* path)
+		ImplTex& _load_(SDL_Texture* tex)
 		{
 			static_assert(is_detected_v<has_resetSize, ImplTex>, "resetSize is required for setting the renderer size.");
 
-			auto* data = IMG_LoadTexture(this->_().renderer()->get(), path);
-			if (data == nullptr)
+			if (!tex)
 				throw Log(SDL_GetError());
 
-			this->_().replace(data);
+			this->_().replace(tex);
 			this->_().resetSize();
 
 			return this->_();
 		}
 
+	public:
+		ImplTex& load(SDL_Surface* surface)
+		{
+			return _load_(SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface));
+		}
+
+		ImplTex& load(const char* path)
+		{
+			return _load_(IMG_LoadTexture(this->_().renderer()->get(), path));
+		}
+
 		ImplTex& load(void* src, int size)
 		{
-			return this->_().replace(IMG_LoadTexture_RW(this->_().renderer()->get(), SDL_RWFromMem(src, size), 1));
+			return _load_(IMG_LoadTexture_RW(this->_().renderer()->get(), SDL_RWFromMem(src, size), 1));
 		}
 		
 	};
@@ -164,6 +160,9 @@ namespace ctl::sdl
 			return a;
 		}
 	};
+
+
+	using Texture = basicTexture<Renderer, TexLoad, TexRend, TexAttrib>;
 
 }
 

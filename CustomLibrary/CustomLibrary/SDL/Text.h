@@ -11,37 +11,25 @@
 namespace ctl::sdl
 {
 	template<template<typename> class... Func>
-	class Font : public Func<Font<Func...>>...
+	class basicFont : public Func<basicFont<Func...>>...
 	{
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 	public:
-		Font() = default;
-		Font(Font&&) = default;
-		Font& operator=(Font&&) = default;
+		basicFont() = default;
+		basicFont(basicFont&&) = default;
+		basicFont& operator=(basicFont&&) = default;
 
 		TTF_Font* get() noexcept
 		{
+			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		Font& reset(TTF_Font* f) noexcept
+		basicFont& reset(TTF_Font* f) noexcept
 		{
 			m_ptr.reset(f);
 			return *this;
-		}
-
-		Font& style(int style)
-		{
-			assert(!m_ptr && "Font is not loaded.");
-			TTF_SetFontStyle(m_ptr.get(), style);
-			return *this;
-		}
-
-		int style()
-		{
-			assert(!m_ptr && "Font is not loaded.");
-			return TTF_GetFontStyle(m_ptr.get());
 		}
 
 	private:
@@ -64,75 +52,88 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplTex, typename ImplFont>
-	class TextLoad : public crtp<ImplTex, TextLoad>, public ReliesOn<ImplFont, ImplTex>
+	template<typename ImplFont>
+	class FontAttrib : public crtp<ImplFont, FontAttrib>
 	{
-		template<typename T>
-		using has_load = decltype(std::declval<T&>().load(std::declval<SDL_Surface&>()));
+	public:
+		ImplFont& style(int style)
+		{
+			TTF_SetFontStyle(this->_().get(), style);
+			return this->_();
+		}
 
-		SDL_Surface* _load_(SDL_Surface* s, const char* text)
+		int style()
+		{
+			return TTF_GetFontStyle(this->_().get());
+		}
+
+		Dim<int> hypoSize(const char* text)
+		{
+			Dim<int> temp;
+
+			if (TTF_SizeUTF8(this->_().get(), text, &temp.w, &temp.h) != 0)
+				throw Log(SDL_GetError());
+
+			return temp;
+		}
+	};
+
+
+	using Font = basicFont<FontLoad, FontAttrib>;
+
+
+	template<typename ImplTex>
+	class TextLoad : public crtp<ImplTex, TextLoad>, public ReliesOn<TTF_Font, ImplTex>
+	{
+		using baseR = ReliesOn<TTF_Font, ImplTex>;
+
+		template<typename T>
+		using has_load = decltype(std::declval<T&>().load(std::declval<SDL_Surface*>()));
+
+		ImplTex& _load_(SDL_Surface* s, const char* text)
 		{
 			if (s == nullptr)
 				throw Log(SDL_GetError());
 
-			static_assert(ctl::is_detected_v<has_load, >)
+			static_assert(ctl::is_detected_v<has_load, ImplTex>, "\"load\" required for turning SDL_Surface to Texture");
+
+			this->_().load(s);
+			SDL_FreeSurface(s);
 
 			m_text = text;
-			return s;
+			return this->_();
 		}
 
 	public:
-		SDL_Surface* loadSolid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		ImplTex& loadSolid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
-			return _load_(TTF_RenderUTF8_Solid(this->get<ImplFont>()->get(), text, colour), text);
+			return _load_(TTF_RenderUTF8_Solid(this->get<TTF_Font>(), text, colour), text);
 		}
 
-		SDL_Surface* loadShaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		ImplTex& loadShaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
-			return _load_(TTF_RenderUTF8_Shaded(this->get<ImplFont>()->get(), text, colour, bg), text);
+			return _load_(TTF_RenderUTF8_Shaded(this->get<TTF_Font>(), text, colour, bg), text);
 		}
 
-		SDL_Surface* loadBlended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		ImplTex& loadBlended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
-			return _load_(TTF_RenderUTF8_Blended(this->get<ImplFont>()->get(), text, colour), text);
+			return _load_(TTF_RenderUTF8_Blended(this->get<TTF_Font>(), text, colour), text);
 		}
 
-		SDL_Surface* loadWrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		ImplTex& loadWrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
-			return _load_(TTF_RenderUTF8_Blended_Wrapped(this->get<ImplFont>()->get(), text, colour, wrapper), text);
-		}
-
-		template<typename T, typename... Args>
-		SDL_Surface* load(const char* text, T(*loader)(Args...), Args&&... args)
-		{
-			static_assert(std::is_same_v<T, SDL_Surface*>, "Return type must be of type SDL_Surface.");
-			return _load_(loader(std::forward<Args>(args)...), text);
+			return _load_(TTF_RenderUTF8_Blended_Wrapped(this->get<TTF_Font>(), text, colour, wrapper), text);
 		}
 
 		constexpr const std::string& text() const noexcept { return m_text; }
+
+		using baseR::set;
 
 	private:
 		std::string m_text;
 	};
 
 
-	//template<typename ImplFont>
-	//class FontAttrib : public ReliesOn<ImplFont, FontAttrib<ImplFont>>
-	//{
-	//	using base1 = ReliesOn<ImplFont, FontAttrib>;
-
-	//public:
-	//	Dim<int> hypoSize(const char* text)
-	//	{
-	//		Dim<int> temp;
-
-	//		if (TTF_SizeUTF8(this->get<ImplFont>()->get(), text, &temp.w, &temp.h) != 0)
-	//			throw Log(SDL_GetError());
-
-	//		return temp;
-	//	}
-
-	//	using base1::set;
-	//};
+	using Text = basicTexture<Renderer, TexLoad, TextLoad, TexRend, TexAttrib>;
 
 }
