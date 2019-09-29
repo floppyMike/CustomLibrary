@@ -7,47 +7,31 @@
 #include "Collider.h"
 #include "Geometry.h"
 
-namespace ctl
+namespace ctl::sdl
 {
-	class Button
+	template<template<typename> class... Func>
+	class basicButton : public Shapeable<Rect<int, int>, basicButton<Func...>>, public Func<basicButton<Func...>>...
 	{
 	public:
-		Button()
-			: m_col(&m_buttSize.x, &m_buttSize.y, &m_buttSize.w, &m_buttSize.h)
-		{}
+		basicButton() = default;
 
-		Button(Text&& t, std::function<void()>&& f, const Rect& size)
-			: m_buttText(std::move(t))
-			, m_buttSize(size)
-			, m_col(&m_buttSize.x, &m_buttSize.y, &m_buttSize.w, &m_buttSize.h)
-			, m_func(std::move(f))
-		{
-			m_buttText.loc({ ((size.w - m_buttText.dim().w) >> 1) + size.x, ((size.h - m_buttText.dim().h) >> 1) + size.y });
-		}
-
-		Button(Text& t, std::function<void()>&& func, const Rect& size)
-			: Button(std::move(t), std::forward<std::function<void()>>(func), size)
+		basicButton(std::function<void()>&& func)
+			: m_func(std::move(func))
 		{
 		}
 
-		auto& event(const SDL_Event &e)
+		void event(const SDL_Event &e)
 		{
 			switch (e.type)
 			{
 			case SDL_MOUSEMOTION:
-				if (m_col.inside(DotCol(&unmove(e.motion.x + m_buttText.window()->cam.loc().x), &unmove(e.motion.y + m_buttText.window()->cam.loc().y))))
+				if (collision(Point(e.motion.x, e.motion.y), this->m_shape))
 				{
 					if (!m_isInside)
-					{
 						m_isInside = true;
-						m_colour = { m_colour.r - 5u, m_colour.g - 5u, m_colour.b - 5u, m_colour.a };
-					}
 				}
 				else if (m_isInside)
-				{
 					m_isInside = false;
-					m_colour = { m_colour.r + 5u, m_colour.g + 5u, m_colour.b + 5u, m_colour.a };
-				}
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
@@ -58,40 +42,61 @@ namespace ctl
 			default:
 				break;
 			}
-
-			return *this;
 		}
 
-		auto& draw()
-		{
-			ctl::draw<Fig::SQUARE_FILLED>(m_colour, m_buttText.window(), m_buttSize);
-			m_buttText.render();
-			return *this;
-		}
-
-		constexpr const auto& text() const { return m_buttText; }
-		auto& text(Text &&t) { m_buttText = std::move(t); return *this; }
-		auto& text(Text &t) { m_buttText = std::move(t); return *this; }
-
-		constexpr const auto& dim() const { return m_buttSize; }
-		constexpr auto& dim(const Rect& r) { m_buttSize = r; m_buttText.loc({ ((m_buttSize.w - m_buttText.dim().w) >> 1) + m_buttSize.x, ((m_buttSize.h - m_buttText.dim().h) >> 1) + m_buttSize.y }); return *this; }
-
-		constexpr const auto& func() const { return m_func; }
-		auto& func(std::function<void()>&& f) { m_func = std::move(f); return *this; }
-
-		constexpr const auto& colour() const { return m_colour; }
-		constexpr auto& colour(const SDL_Color& colour) { m_colour = colour; return *this; }
+		auto& func(std::function<void()>&& f) noexcept { m_func = std::move(f); return *this; }
+		bool isInside() const noexcept { return m_isInside; }
 
 	private:
-		Text m_buttText;
-
-		Rect m_buttSize;
-
-		BoxCol m_col;
 		bool m_isInside = false;
-
-		SDL_Color m_colour = { 220, 220, 220, 0xFF };
-
 		std::function<void()> m_func;
 	};
+
+
+	template<typename ImplBut>
+	class ButtonRend : public Renderable<Renderer, ImplBut>, public crtp<ImplBut, ButtonRend>
+	{
+	protected:
+		ButtonRend()
+		{
+			m_text.renderer(this->_().renderer());
+			m_rect.shape(this->_().shape());
+		}
+
+	public:
+		ImplBut& text(TTF_Font* f, const char* str)
+		{
+			m_text.set(f).loadBlended(str);
+			m_text.shape({ ((this->_().shape().w - m_text.shape().w) >> 1) + this->_().shape().x, 
+				((this->_().shape().h - m_text.shape().h) >> 1) + this->_().shape().y, 
+				m_text.shape().w, m_text.shape().h });
+
+			return this->_();
+		}
+
+		void draw() const
+		{
+			SDL_Color col = m_col;
+			if (this->_().isInside())
+			{
+				col.r -= 5;
+				col.g -= 5;
+				col.b -= 5;
+			}
+
+			this->renderer()->setColor(col);
+			m_rect.drawFilled();
+
+			this->renderer()->setColor({ 0, 0, 0, 0xFF });
+			m_rect.draw();
+
+			m_text.draw();
+		}
+
+	private:
+		SDL_Color m_col = { 0xFF, 0xFF, 0xFF, 0xFF };
+		RectDraw<> m_rect;
+		Text m_text;
+	};
+
 }

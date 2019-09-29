@@ -11,7 +11,7 @@
 namespace ctl::sdl
 {
 	template<typename ImplRend, template<typename> class... Func>
-	class basicTexture : Renderable<ImplRend, basicTexture<ImplRend, Func...>>, 
+	class basicTexture : public Renderable<ImplRend, basicTexture<ImplRend, Func...>>, 
 		public Func<basicTexture<ImplRend, Func...>>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };

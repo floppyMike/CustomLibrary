@@ -53,6 +53,7 @@ namespace ctl
 
 			constexpr auto* get() 
 			{
+				assert(m_renderer == nullptr && "Renderer isn't loaded.");
 				return m_renderer; 
 			}
 

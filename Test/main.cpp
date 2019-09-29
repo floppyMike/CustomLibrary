@@ -38,18 +38,15 @@ struct State : public sdl::IState
 		m_font.load("assets/ass1.ttf", 40);
 		m_text.set(m_font.get()).loadBlended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
-		//m_text.loadBlended("Hello There!");
 
-		//ctl::sdl::FontLoad<>().set(&m_font).load("assets/ass1.ttf", 40);
-		//ctl::sdl::TexLoad<>(m_rend).set(&m_text).load(
-		//	ctl::sdl::Surface(
-		//		ctl::sdl::TextLoad<>().set(&m_font).loadBlended("Hello There!")));
-		//m_tRend.set(&m_text).shape({ 10, 200, m_tRend.shape().w, m_tRend.shape().h });
+		m_b.renderer(m_rend);
+		m_b.shape({ 70, 70, 200, 50 });
+		m_b.text(m_font.get(), "Hey!");
 	}
 
-	void event(const SDL_Event&) override
+	void event(const SDL_Event& e) override
 	{
-
+		m_b.event(e);
 	}
 	void input(const SDL_Event&) override
 	{
@@ -76,6 +73,8 @@ struct State : public sdl::IState
 
 		m_texture.draw();
 		m_text.draw();
+
+		m_b.draw();
 	}
 
 private:
@@ -95,8 +94,8 @@ private:
 
 	sdl::Font m_font;
 	sdl::Text m_text;
-	//ctl::sdl::Texture m_text;
-	//ctl::sdl::TexRend<> m_tRend;
+
+	sdl::basicButton<sdl::ButtonRend> m_b;
 };
 
 

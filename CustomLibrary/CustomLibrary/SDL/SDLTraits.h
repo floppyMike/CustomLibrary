@@ -30,7 +30,7 @@ namespace ctl::sdl
 		constexpr Derived& renderer(ImplRend* const r) noexcept
 		{
 			m_rend = r;
-			return *this;
+			return static_cast<Derived&>(*this);
 		}
 
 		constexpr ImplRend* renderer() const noexcept

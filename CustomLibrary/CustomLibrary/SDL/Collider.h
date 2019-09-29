@@ -248,11 +248,5 @@ namespace ctl
 				return false;
 		}
 
-		template<typename Geo_t>
-		inline constexpr const auto& ColliderVar<Geo_t>::collider() const noexcept
-		{
-			return m_collider;
-		}
-
 	}
 }
