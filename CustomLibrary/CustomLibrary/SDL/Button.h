@@ -11,7 +11,44 @@ namespace ctl::sdl
 {
 	//Note: Why not make the button itself into a extension?
 
-	template<typename Derived>
+	template<typename ImplTex>
+	class ButtonEx : public crtp<ImplTex, ButtonEx>
+	{
+	public:
+		void event(const SDL_Event& e)
+		{
+			switch (e.type)
+			{
+			case SDL_MOUSEMOTION:
+				if (collision(Point(e.motion.x, e.motion.y), this->_().shape()))
+				{
+					if (!m_isInside)
+						m_isInside = true;
+				}
+				else if (m_isInside)
+					m_isInside = false;
+				break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				if (m_isInside)
+					m_func();
+				break;
+
+			default:
+				break;
+			}
+		}
+
+		ImplTex& func(std::function<void()>&& f) noexcept { m_func = std::move(f); return this->_(); }
+		bool isInside() const noexcept { return m_isInside; }
+
+	private:
+		bool m_isInside = false;
+		std::function<void()> m_func;
+	};
+
+
+	/*template<typename Derived>
 	class basicButton : public Shapeable<Rect<int, int>, Derived>
 	{
 	public:
@@ -122,7 +159,7 @@ namespace ctl::sdl
 		SDL_Color m_col = { 0xFF, 0xFF, 0xFF, 0xFF };
 		RectDraw<> m_rect;
 		Text m_text;
-	};
+	};*/
 
 
 

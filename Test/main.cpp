@@ -40,8 +40,6 @@ struct State : public sdl::IState
 		m_text.set(m_font.get()).loadBlended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 
-		m_b.shape({ 70, 70, 200, 50 });
-		m_b.text(m_font.get(), "Hey!");
 	}
 
 	void event(const SDL_Event& e) override
@@ -49,7 +47,6 @@ struct State : public sdl::IState
 	}
 	void input(const SDL_Event& e) override
 	{
-		m_b.event(e);
 	}
 	void update() override
 	{
@@ -72,8 +69,6 @@ struct State : public sdl::IState
 
 		m_texture.draw();
 		m_text.draw();
-
-		m_b.draw();
 	}
 
 private:
