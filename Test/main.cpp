@@ -13,7 +13,6 @@ struct State : public sdl::IState
 		, m_multi(m_rend)
 		, m_texture(m_rend)
 		, m_text(m_rend)
-		, m_b(m_rend)
 	{
 		m_r.shape({ 10, 10, 40, 40 });
 		m_l.shape({ 100, 100, 500, 400 });
@@ -88,8 +87,6 @@ private:
 
 	sdl::Font m_font;
 	sdl::Text m_text;
-
-	sdl::ButtonRend<sdl::basicButton> m_b;
 };
 
 
