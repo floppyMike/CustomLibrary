@@ -13,6 +13,7 @@ struct State : public sdl::IState
 		, m_multi(m_rend)
 		, m_texture(m_rend)
 		, m_text(m_rend)
+		, m_b(m_rend)
 	{
 		m_r.shape({ 10, 10, 40, 40 });
 		m_l.shape({ 100, 100, 500, 400 });
@@ -39,18 +40,16 @@ struct State : public sdl::IState
 		m_text.set(m_font.get()).loadBlended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 
-		m_b.renderer(m_rend);
 		m_b.shape({ 70, 70, 200, 50 });
 		m_b.text(m_font.get(), "Hey!");
 	}
 
 	void event(const SDL_Event& e) override
 	{
-		m_b.event(e);
 	}
-	void input(const SDL_Event&) override
+	void input(const SDL_Event& e) override
 	{
-
+		m_b.event(e);
 	}
 	void update() override
 	{
@@ -95,7 +94,7 @@ private:
 	sdl::Font m_font;
 	sdl::Text m_text;
 
-	sdl::basicButton<sdl::ButtonRend> m_b;
+	sdl::ButtonRend<sdl::basicButton> m_b;
 };
 
 

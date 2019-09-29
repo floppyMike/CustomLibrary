@@ -3,6 +3,8 @@
 #include <CustomLibrary/Error.h>
 #include <SDL.h>
 
+#include <cassert>
+
 namespace ctl
 {
 	namespace sdl
@@ -53,7 +55,7 @@ namespace ctl
 
 			constexpr auto* get() 
 			{
-				assert(m_renderer == nullptr && "Renderer isn't loaded.");
+				assert(m_renderer != nullptr && "Renderer isn't loaded.");
 				return m_renderer; 
 			}
 

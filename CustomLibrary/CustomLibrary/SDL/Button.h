@@ -9,8 +9,10 @@
 
 namespace ctl::sdl
 {
-	template<template<typename> class... Func>
-	class basicButton : public Shapeable<Rect<int, int>, basicButton<Func...>>, public Func<basicButton<Func...>>...
+	//Note: Why not make the button itself into a extension?
+
+	template<typename Derived>
+	class basicButton : public Shapeable<Rect<int, int>, Derived>
 	{
 	public:
 		basicButton() = default;
@@ -53,41 +55,64 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplBut>
-	class ButtonRend : public Renderable<Renderer, ImplBut>, public crtp<ImplBut, ButtonRend>
+	template<template<typename> class ImplBut>
+	class ButtonRend : public ImplBut<ButtonRend<ImplBut>>
 	{
-	protected:
-		ButtonRend()
+		using baseB = ImplBut<ButtonRend<ImplBut>>;
+
+		void _syncSize_()
 		{
-			m_text.renderer(this->_().renderer());
-			m_rect.shape(this->_().shape());
+			m_text.shape({ ((baseB::shape().w - m_text.shape().w) >> 1) + baseB::shape().x,
+				((baseB::shape().h - m_text.shape().h) >> 1) + baseB::shape().y,
+				m_text.shape().w, m_text.shape().h });
 		}
 
 	public:
-		ImplBut& text(TTF_Font* f, const char* str)
+		ButtonRend(Renderer* r)
+			: m_text(r)
+			, m_rect(r)
+		{
+		}
+
+		ButtonRend& renderer(Renderer* r)
+		{
+			m_text.renderer(r);
+			m_rect.renderer(r);
+
+			return *this;
+		}
+
+		ButtonRend& shape(const Rect<int, int>& r)
+		{
+			baseB::shape(r);
+			m_rect.shape(r);
+			_syncSize_();
+
+			return *this;
+		}
+
+		ButtonRend& text(TTF_Font* f, const char* str)
 		{
 			m_text.set(f).loadBlended(str);
-			m_text.shape({ ((this->_().shape().w - m_text.shape().w) >> 1) + this->_().shape().x, 
-				((this->_().shape().h - m_text.shape().h) >> 1) + this->_().shape().y, 
-				m_text.shape().w, m_text.shape().h });
+			_syncSize_();
 
-			return this->_();
+			return *this;
 		}
 
 		void draw() const
 		{
 			SDL_Color col = m_col;
-			if (this->_().isInside())
+			if (this->isInside())
 			{
-				col.r -= 5;
-				col.g -= 5;
-				col.b -= 5;
+				col.r -= 20;
+				col.g -= 20;
+				col.b -= 20;
 			}
 
-			this->renderer()->setColor(col);
+			m_rect.renderer()->setColor(col);
 			m_rect.drawFilled();
 
-			this->renderer()->setColor({ 0, 0, 0, 0xFF });
+			m_rect.renderer()->setColor({ 0, 0, 0, 0xFF });
 			m_rect.draw();
 
 			m_text.draw();
@@ -98,5 +123,7 @@ namespace ctl::sdl
 		RectDraw<> m_rect;
 		Text m_text;
 	};
+
+
 
 }
