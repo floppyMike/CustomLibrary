@@ -78,10 +78,9 @@ private:
 	ctl::sdl::CircleDraw<> m_c;
 	ctl::sdl::PointDraw<> m_p;
 
-	ctl::sdl::MultiShape<ctl::sdl::Renderer,
-		ctl::sdl::Rect<int, int>,
-		ctl::sdl::Line<int>,
-		ctl::sdl::Point<int>> m_multi;
+	sdl::MultiShape<sdl::Rect<int, int>,
+		sdl::Line<int>,
+		sdl::Point<int>> m_multi;
 
 	sdl::Texture m_texture;
 

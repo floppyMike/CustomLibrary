@@ -4,7 +4,7 @@
 
 #include <CustomLibrary/Error.h>
 
-namespace ctl
+namespace ctl::sdl
 {
 	class UserEvent
 	{
@@ -35,6 +35,16 @@ namespace ctl
 		* @summary const access for event type
 		*/
 		constexpr Uint32 type() const noexcept { return m_event.type; }
+
+		constexpr Uint32 userType() const noexcept
+		{
+			return m_event.user.type;
+		}
+		constexpr auto& userType(Uint32 t) noexcept
+		{
+			m_event.user.type = t;
+			return *this;
+		}
 
 		/**
 		* @summary access for code of event

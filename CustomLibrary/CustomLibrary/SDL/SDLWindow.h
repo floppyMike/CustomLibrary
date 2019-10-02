@@ -93,7 +93,7 @@ namespace ctl::sdl
 		void render() override
 		{
 			m_renderer.setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
-			m_renderer.clear();
+			m_renderer.fill();
 
 			m_state->draw();
 

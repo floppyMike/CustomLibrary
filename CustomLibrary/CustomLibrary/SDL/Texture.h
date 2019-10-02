@@ -10,16 +10,16 @@
 
 namespace ctl::sdl
 {
-	template<typename ImplRend, template<typename> class... Func>
-	class basicTexture : public Renderable<ImplRend, basicTexture<ImplRend, Func...>>, 
-		public Func<basicTexture<ImplRend, Func...>>...
+	template<template<typename> class... Func>
+	class basicTexture : public Drawable<basicTexture<Func...>>, 
+		public Func<basicTexture<Func...>>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
-		using base1 = Renderable<ImplRend, basicTexture<ImplRend, Func...>>;
+		using base1 = Drawable<basicTexture<Func...>>;
 
 	public:
-		using base1::base1;
+		basicTexture(sdl::Renderer* r) : base1(r) {}
 
 		basicTexture() noexcept = default;
 		basicTexture(basicTexture&& t) noexcept = default;
@@ -30,7 +30,7 @@ namespace ctl::sdl
 			return m_texture.get();
 		}
 
-		basicTexture& replace(SDL_Texture* tex) noexcept
+		auto& replace(SDL_Texture* tex) noexcept
 		{
 			m_texture.reset(tex);
 			return *this;
@@ -75,13 +75,13 @@ namespace ctl::sdl
 
 		ImplTex& _load_(SDL_Texture* tex)
 		{
-			static_assert(is_detected_v<has_resetSize, ImplTex>, "resetSize is required for setting the renderer size.");
-
 			if (!tex)
 				throw Log(SDL_GetError());
 
 			this->_().replace(tex);
-			this->_().resetSize();
+
+			if constexpr (is_detected_v<has_resetSize, ImplTex>)
+				this->_().resetSize();
 
 			return this->_();
 		}
@@ -162,7 +162,7 @@ namespace ctl::sdl
 	};
 
 
-	using Texture = basicTexture<Renderer, TexLoad, TexRend, TexAttrib>;
+	using Texture = basicTexture<TexLoad, TexRend, TexAttrib>;
 
 }
 

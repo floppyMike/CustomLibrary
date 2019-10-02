@@ -7,7 +7,6 @@
 
 #include <vector>
 #include <type_traits>
-#include <variant>
 
 namespace ctl::sdl
 {
@@ -15,15 +14,15 @@ namespace ctl::sdl
 	//Single
 	//----------------------------------------------
 
-	template<typename ImplRend = Renderer>
-	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<ImplRend>>, 
-		Renderable<ImplRend, RectDraw<ImplRend>>
+	template<template<typename> class... Func>
+	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<Func...>>, 
+		public Drawable<RectDraw<Func...>>, public Func<RectDraw<Func...>>...
 	{
-		using base1 = Shapeable<Rect<int, int>, RectDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend, RectDraw<ImplRend>>;
+		using base1 = Shapeable<Rect<int, int>, RectDraw<Func...>>;
+		using base2 = Drawable<RectDraw<Func...>>;
 
 	public:
-		using base2::base2;
+		RectDraw(sdl::Renderer* r) : base2(r) {}
 
 		void draw() const
 		{
@@ -42,15 +41,15 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplRend = Renderer>
-	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>, 
-		Renderable<ImplRend, CircleDraw<ImplRend>>
+	template<template<typename> class... Func>
+	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<Func...>>,
+		public Drawable<CircleDraw<Func...>>, public Func<CircleDraw<Func...>>...
 	{
-		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend, CircleDraw<ImplRend>>;
+		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<Func...>>;
+		using base2 = Drawable<CircleDraw<Func...>>;
 
 	public:
-		using base2::base2;
+		CircleDraw(sdl::Renderer* r) : base2(r) {}
 
 		void draw() const
 		{
@@ -70,7 +69,8 @@ namespace ctl::sdl
 			for (size_t i = 0; i < pres; ++i)
 			{
 				const auto x = to_radians(360.f / pres * (i + 1.f));
-				ps[i] = { static_cast<int>(this->m_shape.r * std::cos(x) + this->m_shape.x), static_cast<int>(this->m_shape.r * std::sin(x) + this->m_shape.y) };
+				ps[i] = { static_cast<int>(this->m_shape.r * std::cos(x) + this->m_shape.x), 
+					static_cast<int>(this->m_shape.r * std::sin(x) + this->m_shape.y) };
 			}
 			ps.back() = ps.front();
 
@@ -126,15 +126,15 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplRend = Renderer>
-	class LineDraw : public Shapeable<Line<int>, LineDraw<ImplRend>>, 
-		Renderable<ImplRend, LineDraw<ImplRend>>
+	template<template<typename> class... Func>
+	class LineDraw : public Shapeable<Line<int>, LineDraw<Func...>>,
+		public Drawable<LineDraw<Func...>>, public Func<LineDraw<Func...>>...
 	{
-		using base1 = Shapeable<Line<int>, LineDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend, LineDraw<ImplRend>>;
+		using base1 = Shapeable<Line<int>, LineDraw<Func...>>;
+		using base2 = Drawable<LineDraw<Func...>>;
 
 	public:
-		using base2::base2;
+		LineDraw(sdl::Renderer* r) : base2(r) {}
 
 		void draw() const
 		{
@@ -147,15 +147,15 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplRend = Renderer>
-	class PointDraw : public Shapeable<Point<int>, PointDraw<ImplRend>>, 
-		Renderable<ImplRend, PointDraw<ImplRend>>
+	template<template<typename> class... Func>
+	class PointDraw : public Shapeable<Point<int>, PointDraw<Func...>>,
+		public Drawable<PointDraw<Func...>>, public Func<PointDraw<Func...>>...
 	{
-		using base1 = Shapeable<Point<int>, PointDraw<ImplRend>>;
-		using base2 = Renderable<ImplRend, PointDraw<ImplRend>>;
+		using base1 = Shapeable<Point<int>, PointDraw<Func...>>;
+		using base2 = Drawable<PointDraw<Func...>>;
 
 	public:
-		using base2::base2;
+		PointDraw(sdl::Renderer* r) : base2(r) {}
 
 		void draw() const
 		{
@@ -172,11 +172,11 @@ namespace ctl::sdl
 	//Multi
 	//----------------------------------------------
 
-	template<typename ImplRend, typename... Shapes>
-	class MultiShape : Renderable<ImplRend, MultiShape<ImplRend, Shapes...>>
+	template<typename... Shapes>
+	class MultiShape : public Drawable<MultiShape<Shapes...>>
 	{
 		static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
-		using base = Renderable<ImplRend, MultiShape<ImplRend, Shapes...>>;
+		using base = Drawable<MultiShape<Shapes...>>;
 
 		template<typename T>
 		void drawHandler(T& arg) const
@@ -197,7 +197,7 @@ namespace ctl::sdl
 		}
 
 	public:
-		using base::Renderable;
+		MultiShape(sdl::Renderer* r) : base(r) {}
 
 		template<typename T>
 		auto& push(const T& arg)

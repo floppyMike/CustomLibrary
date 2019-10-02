@@ -13,6 +13,13 @@
 
 namespace ctl::sdl
 {
+	constexpr SDL_Color RED = { 0xFF, 0, 0, 0xFF };
+	constexpr SDL_Color GREEN = { 0, 0xFF, 0, 0xFF };
+	constexpr SDL_Color BLUE = { 0, 0, 0xFF, 0xFF };
+	constexpr SDL_Color YELLOW = { 0xFF, 0xFF, 0, 0xFF };
+	constexpr SDL_Color ORANGE = { 0xFF, 0xFF / 2, 0xFF / 4, 0xFF };
+
+
 	class SDL
 	{
 	public:

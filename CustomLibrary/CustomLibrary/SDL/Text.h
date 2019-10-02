@@ -20,13 +20,13 @@ namespace ctl::sdl
 		basicFont(basicFont&&) = default;
 		basicFont& operator=(basicFont&&) = default;
 
-		TTF_Font* get() noexcept
+		auto* get() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		basicFont& reset(TTF_Font* f) noexcept
+		auto& reset(TTF_Font* f) noexcept
 		{
 			m_ptr.reset(f);
 			return *this;
@@ -38,14 +38,13 @@ namespace ctl::sdl
 
 
 	template<typename ImplFont>
-	class FontLoad : public crtp<ImplFont, FontLoad>
+	class FontPathLoader : public crtp<ImplFont, FontPathLoader>
 	{
 	public:
-		ImplFont& load(const char* path, int pt)
+		auto& load(const char* path, int pt)
 		{
 			auto* temp = TTF_OpenFont(path, pt);
-			if (temp == nullptr)
-				throw ctl::Log(SDL_GetError());
+			assert(temp != nullptr && "Nothing found at path.");
 
 			return this->_().reset(temp);
 		}
@@ -56,44 +55,40 @@ namespace ctl::sdl
 	class FontAttrib : public crtp<ImplFont, FontAttrib>
 	{
 	public:
-		ImplFont& style(int style)
+		auto& style(int style)
 		{
 			TTF_SetFontStyle(this->_().get(), style);
 			return this->_();
 		}
 
-		int style()
+		auto style()
 		{
 			return TTF_GetFontStyle(this->_().get());
 		}
 
-		Dim<int> hypoSize(const char* text)
+		auto hypoSize(const char* text)
 		{
 			Dim<int> temp;
-
-			if (TTF_SizeUTF8(this->_().get(), text, &temp.w, &temp.h) != 0)
-				throw Log(SDL_GetError());
-
+			TTF_SizeUTF8(this->_().get(), text, &temp.w, &temp.h);
 			return temp;
 		}
 	};
 
 
-	using Font = basicFont<FontLoad, FontAttrib>;
+	using Font = basicFont<FontPathLoader, FontAttrib>;
 
 
 	template<typename ImplTex>
-	class TextLoad : public crtp<ImplTex, TextLoad>, public ReliesOn<TTF_Font, ImplTex>
+	class TextureTextLoader : public crtp<ImplTex, TextureTextLoader>, public ReliesOn<TTF_Font, ImplTex>
 	{
 		using baseR = ReliesOn<TTF_Font, ImplTex>;
 
 		template<typename T>
 		using has_load = decltype(std::declval<T&>().load(std::declval<SDL_Surface*>()));
 
-		ImplTex& _load_(SDL_Surface* s, const char* text)
+		auto& _load_(SDL_Surface* s, const char* text)
 		{
-			if (s == nullptr)
-				throw Log(SDL_GetError());
+			assert(s != nullptr && "Font isn't assigned.");
 
 			static_assert(ctl::is_detected_v<has_load, ImplTex>, "\"load\" required for turning SDL_Surface to Texture");
 
@@ -125,7 +120,7 @@ namespace ctl::sdl
 			return _load_(TTF_RenderUTF8_Blended_Wrapped(this->get<TTF_Font>(), text, colour, wrapper), text);
 		}
 
-		constexpr const std::string& text() const noexcept { return m_text; }
+		constexpr const auto& text() const noexcept { return m_text; }
 
 		using baseR::set;
 
@@ -134,6 +129,6 @@ namespace ctl::sdl
 	};
 
 
-	using Text = basicTexture<Renderer, TexLoad, TextLoad, TexRend, TexAttrib>;
+	using Text = basicTexture<TexLoad, TextureTextLoader, TexRend, TexAttrib>;
 
 }

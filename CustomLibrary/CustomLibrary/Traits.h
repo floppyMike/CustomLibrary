@@ -52,4 +52,29 @@ namespace ctl
 
 	template <typename Default, template<typename...> typename Op, typename... Args>
 	using detected_or = detail::Detector<Default, void, Op, Args...>;
+
+
+	template<typename Type, typename Derived>
+	class ReliesOn
+	{
+	protected:
+		constexpr ReliesOn() noexcept = default;
+		constexpr ReliesOn(const ReliesOn& v) noexcept = default;
+		constexpr ReliesOn& operator=(const ReliesOn& v) noexcept = default;
+
+		constexpr Derived& set(Type* v) noexcept
+		{
+			m_var = v;
+			return static_cast<Derived&>(*this);
+		}
+
+		template<typename T, typename = typename std::enable_if_t<std::is_same_v<Type, T>>>
+		constexpr Type* get() const noexcept
+		{
+			return m_var;
+		}
+
+	private:
+		Type* m_var = nullptr;
+	};
 }

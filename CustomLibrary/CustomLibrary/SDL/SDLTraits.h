@@ -1,22 +1,24 @@
 #pragma once
 
+#include "Renderer.h"
+
 namespace ctl::sdl
 {
-	template<typename ImplRend, typename Derived>
-	class Renderable
+	template<typename Derived>
+	class Drawable
 	{
-	public:
-		constexpr Renderable() noexcept = default;
+	protected:
+		constexpr Drawable() noexcept = default;
 
-		constexpr Renderable(const Renderable&) noexcept = default;
-		constexpr Renderable& operator=(const Renderable&) noexcept = default;
+		constexpr Drawable(const Drawable&) noexcept = default;
+		constexpr Drawable& operator=(const Drawable&) noexcept = default;
 
 		/**
 		* @summary constructs from window or position or both
 		* @param "win" target SDLWindow
 		* @param "pos" starting position
 		*/
-		Renderable(ImplRend* const r) noexcept
+		Drawable(sdl::Renderer* const r) noexcept
 			: m_rend(r)
 		{
 		}
@@ -27,64 +29,39 @@ namespace ctl::sdl
 		* @remarks after setting a new window you must recreate the resource
 		* @returns window ptr
 		*/
-		constexpr Derived& renderer(ImplRend* const r) noexcept
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
+			assert(r != nullptr && "Renderer passed is a nullptr.");
 			m_rend = r;
 			return static_cast<Derived&>(*this);
 		}
 
-		constexpr ImplRend* renderer() const noexcept
+		constexpr auto& renderer() const noexcept
 		{
+			assert(m_rend != nullptr && "Renderer isn't assigned.");
 			return m_rend;
 		}
 
-	protected:
-		ImplRend* m_rend = nullptr;
+		sdl::Renderer* m_rend = nullptr;
 	};
 
 
 	template<typename Shape, typename Derived>
 	class Shapeable
 	{
-	public:
+	protected:
 		constexpr const auto& shape() const noexcept
 		{
 			return m_shape;
 		}
 
-		constexpr Derived& shape(const Shape& s) noexcept
+		constexpr auto& shape(const Shape& s) noexcept
 		{
 			m_shape = s;
 			return *static_cast<Derived*>(this);
 		}
 
-	protected:
 		Shape m_shape;
-	};
-
-
-	template<typename Type, typename Derived>
-	class ReliesOn
-	{
-	protected:
-		constexpr ReliesOn() noexcept = default;
-		constexpr ReliesOn(const ReliesOn& v) noexcept = default;
-		constexpr ReliesOn& operator=(const ReliesOn& v) noexcept = default;
-
-		constexpr Derived& set(Type* v) noexcept
-		{
-			m_var = v;
-			return static_cast<Derived&>(*this);
-		}
-
-		template<typename T, typename = typename std::enable_if_t<std::is_same_v<Type, T>>>
-		constexpr Type* get() const noexcept
-		{
-			return m_var;
-		}
-
-	private:
-		Type* m_var = nullptr;
 	};
 
 }

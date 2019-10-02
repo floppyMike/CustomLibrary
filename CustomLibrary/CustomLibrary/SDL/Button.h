@@ -6,6 +6,7 @@
 #include "SDLWindow.h"
 #include "Collider.h"
 #include "Geometry.h"
+#include <CustomLibrary/Traits.h>
 
 namespace ctl::sdl
 {
