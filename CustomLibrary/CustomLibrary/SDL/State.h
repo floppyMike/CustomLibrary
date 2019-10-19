@@ -1,16 +1,49 @@
 #pragma once
 
-#include <SDL.h> 
+#include <memory>
+#include <functional>
 
-namespace ctl
+namespace ctl::sdl
 {
-	class StateBase
+	class IState
 	{
 	public:
-		virtual void event(const SDL_Event&) = 0;
-		virtual void input(const SDL_Event&) = 0;
-		virtual void update() = 0;
-		virtual void fixedUpdate() = 0;
-		virtual void render() = 0;
+		virtual ~IState() {}
+
+		virtual void event(const SDL_Event&) {}
+		virtual void input(const SDL_Event&) {}
+		virtual void update() {}
+		virtual void fixedUpdate() {}
+		virtual void draw() {}
 	};
+
+
+	template<typename ImplState>
+	class StateManager
+	{
+	public:
+		const auto& operator->() const noexcept { return m_state; }
+		auto& operator->() noexcept { return m_state; }
+
+		template<typename State, typename... Arg>
+		void set(Arg&&... args)
+		{
+			m_func = [args = std::make_tuple(std::forward<Arg>(args)...)] { return std::apply([](auto&&... args)
+				{ return std::make_unique<State>(args...); }, std::move(args)); };
+		}
+
+		void update()
+		{
+			if (m_func)
+			{
+				m_state = m_func();
+				m_func = nullptr;
+			}
+		}
+
+	private:
+		std::unique_ptr<ImplState> m_state;
+		std::function<std::unique_ptr<ImplState> ()> m_func;
+	};
+
 }

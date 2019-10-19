@@ -22,6 +22,7 @@ namespace ctl::sdl
 		using base2 = Drawable<RectDraw<Func...>>;
 
 	public:
+		RectDraw() = default;
 		RectDraw(sdl::Renderer* r) : base2(r) {}
 
 		void draw() const
@@ -38,6 +39,7 @@ namespace ctl::sdl
 
 		using base2::renderer;
 		using base1::shape;
+		using base1::translate;
 	};
 
 
@@ -80,6 +82,7 @@ namespace ctl::sdl
 
 		using base2::renderer;
 		using base1::shape;
+		using base1::translate;
 
 	private:
 		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
@@ -144,6 +147,7 @@ namespace ctl::sdl
 
 		using base2::renderer;
 		using base1::shape;
+		using base1::translate;
 	};
 
 

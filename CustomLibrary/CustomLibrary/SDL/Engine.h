@@ -13,6 +13,8 @@
 
 namespace ctl::sdl
 {
+	constexpr SDL_Color BLACK = { 0, 0, 0, 0xFF };
+	constexpr SDL_Color WHITE = { 0xFF, 0xFF, 0xFF, 0xFF };
 	constexpr SDL_Color RED = { 0xFF, 0, 0, 0xFF };
 	constexpr SDL_Color GREEN = { 0, 0xFF, 0, 0xFF };
 	constexpr SDL_Color BLUE = { 0, 0, 0xFF, 0xFF };
@@ -168,6 +170,8 @@ namespace ctl::sdl
 
 		for (bool quit = false; !quit; ++frames)
 		{
+			const auto endTime = std::chrono::steady_clock::now() + frameTime;
+
 			const auto time = timer.ticks<std::chrono::duration<double>>();
 			const auto elapsed = time - lastTime;
 			lastTime = time;
@@ -175,8 +179,6 @@ namespace ctl::sdl
 
 			if (time >= std::chrono::seconds(1))
 				m_fps = frames / time.count();
-
-			const auto endTime = std::chrono::steady_clock::now() + frameTime;
 
 			SDL_Event e;
 			while (SDL_PollEvent(&e) != 0)

@@ -64,6 +64,7 @@ namespace ctl::sdl
 		}
 
 		using base1::shape;
+		using base1::translate;
 	};
 
 

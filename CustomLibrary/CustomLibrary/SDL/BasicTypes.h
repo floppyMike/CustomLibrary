@@ -73,6 +73,11 @@ namespace ctl::sdl
 			return nullptr;
 		}
 
+		constexpr auto& translate(const Point<T>& delta) noexcept
+		{
+			return *this += delta;
+		}
+
 		/**
 		* @summary assignment operators
 		*/
@@ -148,6 +153,13 @@ namespace ctl::sdl
 		{
 		}
 
+		constexpr auto& translate(const Point<T1>& delta) noexcept
+		{
+			x += delta.x;
+			y += delta.y;
+			return *this;
+		}
+
 		T1& x, & y;
 		T2& w, & h;
 	};
@@ -176,6 +188,15 @@ namespace ctl::sdl
 		constexpr LineRef(Point<T>& p1, Point<T>& p2) noexcept
 			: LineRef(p1.x, p1.y, p2.x, p2.y)
 		{
+		}
+
+		constexpr auto& translate(const Point<T>& delta1, const Point<T>& delta2) noexcept
+		{
+			x1 += delta1.x;
+			y1 += delta1.y;
+			x2 += delta2.x;
+			y2 += delta2.y;
+			return *this;
 		}
 
 		T& x1, & y1, & x2, & y2;
@@ -208,6 +229,13 @@ namespace ctl::sdl
 		constexpr CircleRef(Point<T1>& p, T2& r) noexcept
 			: CircleRef(p.x, p.y, r)
 		{
+		}
+
+		constexpr auto& translate(const Point<T1>& delta) noexcept
+		{
+			x += delta.x;
+			y += delta.y;
+			return *this;
 		}
 
 		T1& x, & y;
@@ -288,6 +316,13 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		constexpr auto& translate(const Point<T1>& delta) noexcept
+		{
+			x += delta.x;
+			y += delta.y;
+			return *this;
+		}
+
 		T1 x, y;
 		T2 w, h;
 	};
@@ -358,6 +393,15 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		constexpr auto& translate(const Point<T>& delta1, const Point<T>& delta2) noexcept
+		{
+			x1 += delta1.x;
+			y1 += delta1.y;
+			x2 += delta2.x;
+			y2 += delta2.y;
+			return *this;
+		}
+
 		T x1, y1, x2, y2;
 	};
 
@@ -399,6 +443,13 @@ namespace ctl::sdl
 		{
 			x = p.x;
 			y = p.y;
+			return *this;
+		}
+
+		constexpr auto& translate(const Point<T1>& delta) noexcept
+		{
+			x += delta.x;
+			y += delta.y;
 			return *this;
 		}
 

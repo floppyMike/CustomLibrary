@@ -31,7 +31,7 @@ namespace ctl::sdl
 		*/
 		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
-			assert(r != nullptr && "Renderer passed is a nullptr.");
+			//assert(r != nullptr && "Renderer passed is a nullptr.");
 			m_rend = r;
 			return static_cast<Derived&>(*this);
 		}
@@ -58,6 +58,13 @@ namespace ctl::sdl
 		constexpr auto& shape(const Shape& s) noexcept
 		{
 			m_shape = s;
+			return *static_cast<Derived*>(this);
+		}
+
+		template<typename... Arg>
+		constexpr auto& translate(Arg&&... args) noexcept
+		{
+			m_shape.translate(std::forward<Arg>(args)...);
 			return *static_cast<Derived*>(this);
 		}
 

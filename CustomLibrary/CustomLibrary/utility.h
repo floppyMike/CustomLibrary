@@ -100,15 +100,13 @@ namespace ctl
 	template<class T>
 	constexpr auto& unmove(T&& t) noexcept { return t; }
 
-	template<typename Container, typename T>
-	void fastRemove(Container& c, const T& item)
+	template<typename Container, typename Iter>
+	void fastRemove(Container& c, Iter i)
 	{
-		const auto& it = std::find(c.begin(), c.end(), item);
-		if (it != c.end())
-		{
-			std::iter_swap(it, c.end() - 1);
-			c.erase(c.end() - 1);
-		}
+		assert(i != c.end() && "End iterator cannot be deleted.");
+
+		std::iter_swap(i, c.end() - 1);
+		c.erase(c.end() - 1);
 	}
 
 	template<typename T, typename Pred>

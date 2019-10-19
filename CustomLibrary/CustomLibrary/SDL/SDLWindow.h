@@ -10,19 +10,6 @@
 
 namespace ctl::sdl
 {
-	class IState
-	{
-	public:
-		virtual ~IState() {}
-
-		virtual void event(const SDL_Event&) = 0;
-		virtual void input(const SDL_Event&) = 0;
-		virtual void update() = 0;
-		virtual void fixedUpdate() = 0;
-		virtual void draw() = 0;
-	};
-
-
 	class SDLWindow : public IWindow
 	{
 	public:
