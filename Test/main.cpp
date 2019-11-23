@@ -51,19 +51,19 @@ struct State : public sdl::IState
 	{
 
 	}
-	void fixedUpdate() override
+	void fixed_update() override
 	{
 
 	}
 	void draw() override
 	{
-		m_rend->setColor({ 0, 0, 0, 0xFF });
+		m_rend->color({ 0, 0, 0, 0xFF });
 		m_r.drawFilled();
 		m_l.draw();
 		m_c.draw();
 		m_p.draw();
 
-		m_rend->setColor({ 0, 0, 0xFF, 0xFF });
+		m_rend->color({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
 
 		m_texture.draw();
@@ -98,10 +98,10 @@ int main(int argc, char** argv)
 			.initTTF();
 
 		sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		win.setState<State>(&win.renderer());
+		win.queue_state<State>(&win.renderer());
 
 		sdl::RunLoop<> loop;
-		loop.addWindow(&win);
+		loop.add_window(&win);
 
 		loop.run(30);
 

@@ -13,7 +13,7 @@ namespace ctl::sdl
 		virtual void event(const SDL_Event&) {}
 		virtual void input(const SDL_Event&) {}
 		virtual void update() {}
-		virtual void fixedUpdate() {}
+		virtual void fixed_update() {}
 		virtual void draw() {}
 	};
 

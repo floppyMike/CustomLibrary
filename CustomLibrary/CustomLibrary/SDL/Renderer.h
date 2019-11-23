@@ -31,7 +31,7 @@ namespace ctl::sdl
 				m_renderer = nullptr;
 		}
 
-		void setColor(const SDL_Color& col)
+		void color(const SDL_Color& col)
 		{
 			assert(m_renderer != nullptr && "Renderer isn't loaded.");
 			SDL_SetRenderDrawColor(m_renderer, col.r, col.g, col.b, col.a);
@@ -49,7 +49,7 @@ namespace ctl::sdl
 			SDL_RenderPresent(m_renderer);
 		}
 
-		void setLogicalSize(const Dim<int>& dim)
+		void logical_size(const Dim<int>& dim)
 		{
 			assert(m_renderer != nullptr && "Renderer isn't loaded.");
 			SDL_RenderSetLogicalSize(m_renderer, dim.w, dim.h);

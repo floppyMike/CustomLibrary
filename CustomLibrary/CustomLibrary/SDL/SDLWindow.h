@@ -20,7 +20,7 @@ namespace ctl::sdl
 			: m_win(name, dim, windowFlags)
 			, m_renderer(&m_win, rendererFlags)
 		{
-			m_renderer.setLogicalSize(m_win.dim());
+			m_renderer.logical_size(m_win.dim());
 		}
 
 		~SDLWindow()
@@ -35,15 +35,9 @@ namespace ctl::sdl
 		}
 
 		template<typename State, typename ...Args>
-		IState& setState(Args&&... args)
+		void queue_state(Args&&... args)
 		{
-			return *(m_state = std::make_unique<State>(std::forward<Args>(args)...));
-		}
-
-		SDLWindow& removState() noexcept
-		{
-			m_state.reset(nullptr);
-			return *this;
+			m_state.set<State>(std::forward<Args>(args)...);
 		}
 
 		constexpr auto& renderer() noexcept { return m_renderer; }
@@ -55,8 +49,13 @@ namespace ctl::sdl
 
 		Camera2D m_cam;
 
-		std::unique_ptr<IState> m_state;
+		StateManager<IState> m_state;
 
+
+		void pre_pass() override
+		{
+			m_state.update();
+		}
 
 		void event(const SDL_Event& e) override
 		{
@@ -72,14 +71,14 @@ namespace ctl::sdl
 			m_state->update();
 		}
 
-		void fixedUpdate() override
+		void fixed_update() override
 		{
-			m_state->fixedUpdate();
+			m_state->fixed_update();
 		}
 
 		void render() override
 		{
-			m_renderer.setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
+			m_renderer.color({ 0xFF, 0xFF, 0xFF, 0xFF });
 			m_renderer.fill();
 
 			m_state->draw();

@@ -106,9 +106,10 @@ namespace ctl::sdl
 	class IWindow
 	{
 	public:
+		virtual void pre_pass() = 0;
 		virtual void event(const SDL_Event&) = 0;
 		virtual void update() = 0;
-		virtual void fixedUpdate() = 0;
+		virtual void fixed_update() = 0;
 		virtual void render() = 0;
 	};
 
@@ -126,7 +127,7 @@ namespace ctl::sdl
 
 		void run(size_t fps);
 
-		ImplWin& addWindow(ImplWin* win);
+		ImplWin& add_window(ImplWin* win);
 		//void removWindow(typename std::vector<ImplWin>::iterator iter);
 
 		constexpr const auto& fps() const noexcept { return m_fps; }
@@ -180,11 +181,12 @@ namespace ctl::sdl
 			if (time >= std::chrono::seconds(1))
 				m_fps = frames / time.count();
 
+			_invoke_(&ImplWin::pre_pass);
+
 			SDL_Event e;
 			while (SDL_PollEvent(&e) != 0)
 			{
 				_invoke_(&ImplWin::event, e);
-
 				if (e.type == SDL_QUIT)
 					quit = true;
 			}
@@ -195,7 +197,7 @@ namespace ctl::sdl
 			while (lag >= frameTime)
 			{
 				lag -= frameTime;
-				_invoke_(&ImplWin::fixedUpdate);
+				_invoke_(&ImplWin::fixed_update);
 			}
 
 			_invoke_(&ImplWin::render);
@@ -205,7 +207,7 @@ namespace ctl::sdl
 	}
 
 	template<typename ImplWin>
-	inline ImplWin& RunLoop<ImplWin>::addWindow(ImplWin* win)
+	inline ImplWin& RunLoop<ImplWin>::add_window(ImplWin* win)
 	{
 		return *m_windows.emplace_back(win);
 	}

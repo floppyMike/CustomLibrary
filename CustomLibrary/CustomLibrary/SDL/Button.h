@@ -147,10 +147,10 @@ namespace ctl::sdl
 				col.b -= 20;
 			}
 
-			m_rect.renderer()->setColor(col);
+			m_rect.renderer()->color(col);
 			m_rect.drawFilled();
 
-			m_rect.renderer()->setColor({ 0, 0, 0, 0xFF });
+			m_rect.renderer()->color({ 0, 0, 0, 0xFF });
 			m_rect.draw();
 
 			m_text.draw();
