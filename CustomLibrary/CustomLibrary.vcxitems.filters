@@ -153,4 +153,8 @@
       <Filter>CustomLibrary\Source\SDL</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ClassDiagram.cd" />
+    <None Include="$(MSBuildThisFileDirectory)ClassDiagram1.cd" />
+  </ItemGroup>
 </Project>

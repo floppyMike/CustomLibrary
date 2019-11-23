@@ -99,7 +99,7 @@ namespace ctl::sdl
 		* @param "name" name of hint
 		* @param "value" value to set the hint at
 		*/
-		SDL& setHint(const char* name, const char* value) noexcept;
+		SDL& set_hint(const char* name, const char* value) noexcept;
 	};
 
 
@@ -150,7 +150,7 @@ namespace ctl::sdl
 			throw Log(SDL_GetError());
 	}
 
-	inline SDL& SDL::setHint(const char* name, const char* value) noexcept
+	inline SDL& SDL::set_hint(const char* name, const char* value) noexcept
 	{
 		if (!SDL_SetHint(name, value))
 			Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);

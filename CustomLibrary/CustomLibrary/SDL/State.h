@@ -28,8 +28,8 @@ namespace ctl::sdl
 		template<typename State, typename... Arg>
 		void set(Arg&&... args)
 		{
-			m_func = [args = std::make_tuple(std::forward<Arg>(args)...)] { return std::apply([](auto&&... args)
-				{ return std::make_unique<State>(args...); }, std::move(args)); };
+			m_func = [args = std::make_tuple(std::forward<Arg>(args)...)]() mutable { return std::apply([](auto&&... args)
+				{ return std::make_unique<State>(std::forward<Arg>(args)...); }, std::move(args)); };
 		}
 
 		void update()

@@ -7,6 +7,11 @@ namespace ctl::sdl
 {
 	class Window
 	{
+		constexpr void _win_exist_() const noexcept
+		{
+			assert(m_window != nullptr && "Window isn't loaded.");
+		}
+
 	public:
 		Window(const char* name, const Dim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
 		{
@@ -32,17 +37,17 @@ namespace ctl::sdl
 
 		constexpr auto* get() noexcept 
 		{ 
-			assert(m_window != nullptr && "Window isn't loaded.");
+			_win_exist_();
 			return m_window; 
 		}
 		constexpr auto ID() const noexcept 
 		{
+			_win_exist_();
 			return m_id;
 		}
 		auto dim() const noexcept 
 		{
-			assert(m_window != nullptr && "Window isn't loaded.");
-
+			_win_exist_();
 			Dim<int> size;
 			SDL_GetWindowSize(m_window, &size.w, &size.h);
 			return size;

@@ -80,4 +80,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)ClassDiagram.cd" />
+    <None Include="$(MSBuildThisFileDirectory)ClassDiagram1.cd" />
+  </ItemGroup>
 </Project>
