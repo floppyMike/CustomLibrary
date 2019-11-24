@@ -36,7 +36,7 @@ namespace ctl::sdl
 			return static_cast<Derived&>(*this);
 		}
 
-		constexpr auto& renderer() const noexcept
+		constexpr auto* renderer() const noexcept
 		{
 			assert(m_rend != nullptr && "Renderer isn't assigned.");
 			return m_rend;

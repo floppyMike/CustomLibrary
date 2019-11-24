@@ -16,7 +16,7 @@ namespace ctl::sdl
 		SDLWindow(const char* name,
 			const Dim<int>& dim,
 			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
-			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED)
 			: m_win(name, dim, windowFlags)
 			, m_renderer(&m_win, rendererFlags)
 		{

@@ -104,7 +104,6 @@ int main(int argc, char** argv)
 		loop.add_window(&win);
 
 		loop.run(30);
-
 	}
 	catch (const std::exception & err)
 	{
