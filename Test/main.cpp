@@ -2,16 +2,16 @@
 
 using namespace ctl;
 
-struct State : public sdl::IState
+struct State : sdl::IState
 {
-	State(ctl::sdl::Renderer* r)
+	State(sdl::Renderer* r)
 		: m_rend(r)
 		, m_r(m_rend, { 10, 10, 40, 40 })
 		, m_l(m_rend, { 100, 100, 500, 400 })
 		, m_c(m_rend, { 200, 100, 40 })
 		, m_p(m_rend, { 200, 100 })
 		, m_multi(m_rend)
-		//, m_texture(m_rend)
+		, m_texture(m_rend)
 		//, m_text(m_rend)
 	{
 		m_multi.push(ctl::sdl::Rect<int, int>(400, 400, 50, 50));
@@ -27,8 +27,8 @@ struct State : public sdl::IState
 		m_multi.push(ctl::sdl::Point<int>(21, 401));
 		m_multi.push(ctl::sdl::Point<int>(19, 401));
 
-		//m_texture.load("assets/ass.png");
-		//m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
+		m_texture.load("assets/ass.png");
+		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
 
 		//m_font.load("assets/ass1.ttf", 40);
 		//m_text.set(m_font.get()).loadBlended("Hello There!");
@@ -61,7 +61,7 @@ struct State : public sdl::IState
 		m_rend->color({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
 
-		//m_texture.draw();
+		m_texture.draw();
 		//m_text.draw();
 	}
 
@@ -77,7 +77,7 @@ private:
 		sdl::Line<int>,
 		sdl::Point<int>> m_multi;
 
-	//sdl::Texture m_texture;
+	sdl::Texture m_texture;
 
 	//sdl::Font m_font;
 	//sdl::Text m_text;

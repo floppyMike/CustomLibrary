@@ -16,6 +16,10 @@ namespace ctl::sdl
 	public:
 		using shape_t = Shape;
 
+		Frame(Renderer* rend)
+			: m_rend(rend)
+		{
+		}
 		Frame(Renderer* rend, const Shape& s)
 			: m_rend(rend)
 			, m_shape(s)
@@ -25,6 +29,10 @@ namespace ctl::sdl
 		Frame() = default;
 
 		constexpr const auto& shape() const noexcept
+		{
+			return m_shape;
+		}
+		constexpr auto& shape() noexcept
 		{
 			return m_shape;
 		}
