@@ -5,38 +5,35 @@
 #include "Renderer.h"
 
 #include <CustomLibrary/Traits.h>
+#include <CustomLibrary/SDL/Geometry.h>
 
 #include <SDL_image.h>
 
 namespace ctl::sdl
 {
-	template<template<typename> class... Func>
-	class basicTexture : public Drawable<basicTexture<Func...>>, 
-		public Func<basicTexture<Func...>>...
+	template<template<typename> class... Ex>
+	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
-		using base1 = Drawable<basicTexture<Func...>>;
-
 	public:
-		basicTexture(sdl::Renderer* r) : base1(r) {}
+		using RectFrame<>::Frame;
+		TextureFrame() = default;
 
-		basicTexture() noexcept = default;
-		basicTexture(basicTexture&& t) noexcept = default;
-		basicTexture& operator=(basicTexture&& t) noexcept = default;
-
-		SDL_Texture* get() const noexcept
+		SDL_Texture* texture() const noexcept
 		{
 			return m_texture.get();
 		}
 
-		auto& replace(SDL_Texture* tex) noexcept
+		auto& texture(SDL_Texture* tex) noexcept
 		{
 			m_texture.reset(tex);
 			return *this;
 		}
-
-		using base1::renderer;
+		
+		using RectFrame<>::renderer;
+		using RectFrame<>::shape;
+		using RectFrame<>::translate;
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
@@ -44,45 +41,33 @@ namespace ctl::sdl
 
 
 	template<typename ImplTex>
-	class TexRend : public Shapeable<Rect<int, int>, ImplTex>, public crtp<ImplTex, TexRend>
+	class ETexRend : public crtp<ImplTex, ETexRend>
 	{
-		using base1 = Shapeable<Rect<int, int>, ImplTex>;
-
 	public:
-		ImplTex& resetSize()
-		{
-			if (SDL_QueryTexture(this->_().get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
-				throw Log(SDL_GetError());
-
-			return this->_();
-		}
-
 		void draw() const
 		{
-			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().get(), nullptr, this->m_shape.rectPtr()) < 0)
+			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().texture(), nullptr, this->_().shape().rectPtr()) < 0)
 				throw Log(SDL_GetError());
 		}
-
-		using base1::shape;
-		using base1::translate;
 	};
 
 
 	template<typename ImplTex>
-	class TexLoad : public crtp<ImplTex, TexLoad>
+	class ETexLoad : public crtp<ImplTex, ETexLoad>
 	{
-		template<typename T>
-		using has_resetSize = decltype(std::declval<T&>().resetSize());
+		void _reset_size_()
+		{
+			if (SDL_QueryTexture(this->_().texture(), nullptr, nullptr, &this->_().shape().w, &this->_().shape().h) != 0)
+				throw Log(SDL_GetError());
+		}
 
 		ImplTex& _load_(SDL_Texture* tex)
 		{
 			if (!tex)
 				throw Log(SDL_GetError());
 
-			this->_().replace(tex);
-
-			if constexpr (is_detected_v<has_resetSize, ImplTex>)
-				this->_().resetSize();
+			this->_().texture(tex);
+			_reset_size_();
 
 			return this->_();
 		}
@@ -107,7 +92,7 @@ namespace ctl::sdl
 
 
 	template<typename ImplTex>
-	class TexAttrib : public crtp<ImplTex, TexAttrib>
+	class ETexAttrib : public crtp<ImplTex, ETexAttrib>
 	{
 	public:
 		auto& colourMod(Uint8 r, Uint8 g, Uint8 b)
@@ -163,7 +148,7 @@ namespace ctl::sdl
 	};
 
 
-	using Texture = basicTexture<TexLoad, TexRend, TexAttrib>;
+	using Texture = TextureFrame<ETexLoad, ETexRend, ETexAttrib>;
 
 }
 

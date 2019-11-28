@@ -2,6 +2,41 @@
 
 #include <type_traits>
 
+
+#define HAS_METHOD_TYPE(method) \
+	template<typename T, typename... Arg> \
+	using has_##method = decltype(std::declval<T&>().method(std::declval<Arg>()...)); 
+
+#define FORWARDING_MEMBER_FUNCTION(Inner, inner, function, qualifiers) \
+    template< \
+        typename... Args, \
+        typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
+    > \
+    constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
+        noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
+        ( \
+            std::is_reference<return_type>::value or \
+            std::is_nothrow_move_constructible<return_type>::value \
+        ) \
+    ) { \
+        return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
+    }
+
+#define FORWARDING_MEMBER_FUNCTIONS_C(Inner, inner, function, reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
+    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
+
+#define FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, reference) \
+    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
+    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
+    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
+    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
+
+#define FORWARDING_MEMBER_FUNCTIONS(Inner, inner, function) \
+    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
+    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
+
+
 namespace ctl
 {
 	template<typename T, template<typename> class crtpType>
@@ -53,10 +88,6 @@ namespace ctl
 	template <typename Default, template<typename...> typename Op, typename... Args>
 	using detected_or = detail::Detector<Default, void, Op, Args...>;
 
-#define HAS_METHOD_TYPE(method) \
-	template<typename T, typename... Arg> \
-	using has_##method = decltype(std::declval<T&>().method(std::declval<Arg>()...)); 
-
 
 	template<typename Type, typename Derived>
 	class ReliesOn
@@ -81,34 +112,4 @@ namespace ctl
 	private:
 		Type* m_var = nullptr;
 	};
-
-
-#define FORWARDING_MEMBER_FUNCTION(Inner, inner, function, qualifiers) \
-    template< \
-        typename... Args, \
-        typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
-    > \
-    constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
-        noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
-        ( \
-            std::is_reference<return_type>::value or \
-            std::is_nothrow_move_constructible<return_type>::value \
-        ) \
-    ) { \
-        return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
-    }
-
-#define FORWARDING_MEMBER_FUNCTIONS_C(Inner, inner, function, reference) \
-	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
-
-#define FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
-
-#define FORWARDING_MEMBER_FUNCTIONS(Inner, inner, function) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
 }
