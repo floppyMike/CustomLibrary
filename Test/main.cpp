@@ -12,7 +12,7 @@ struct State : sdl::IState
 		, m_p(m_rend, { 200, 100 })
 		, m_multi(m_rend)
 		, m_texture(m_rend)
-		//, m_text(m_rend)
+		, m_text(m_rend)
 	{
 		m_multi.push(ctl::sdl::Rect<int, int>(400, 400, 50, 50));
 		m_multi.push(ctl::sdl::Rect<int, int>(400, 300, 50, 50));
@@ -30,9 +30,9 @@ struct State : sdl::IState
 		m_texture.load("assets/ass.png");
 		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
 
-		//m_font.load("assets/ass1.ttf", 40);
-		//m_text.set(m_font.get()).loadBlended("Hello There!");
-		//m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
+		m_font.load("assets/ass1.ttf", 40);
+		m_text.font(m_font.get()).load_blended("Hello There!");
+		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 
 	}
 
@@ -62,7 +62,7 @@ struct State : sdl::IState
 		m_multi.draw();
 
 		m_texture.draw();
-		//m_text.draw();
+		m_text.draw();
 	}
 
 private:
@@ -79,8 +79,8 @@ private:
 
 	sdl::Texture m_texture;
 
-	//sdl::Font m_font;
-	//sdl::Text m_text;
+	sdl::Font m_font;
+	sdl::Text m_text;
 };
 
 
