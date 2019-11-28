@@ -71,19 +71,21 @@ namespace ctl::sdl
 	class ERendererRender : public crtp<Impl, ERendererRender>
 	{
 	public:
-		void request_render()
+		void do_render(bool r)
 		{
-			m_do_render = true;
+			m_do_render = r;
+		}
+
+		bool will_render() const noexcept
+		{
+			return m_do_render;
 		}
 
 		void render()
 		{
 			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
-			if (m_do_render)
-			{
-				SDL_RenderPresent(this->_().get());
-				m_do_render = false;
-			}
+			SDL_RenderPresent(this->_().get());
+			m_do_render = false;
 		}
 
 	private:

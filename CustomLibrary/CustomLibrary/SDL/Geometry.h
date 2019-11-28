@@ -10,166 +10,206 @@
 
 namespace ctl::sdl
 {
+	template<typename Shape, template<typename> class... Ex>
+	class Frame : public Ex<Frame<Shape, Ex...>>...
+	{
+	public:
+		using shape_t = Shape;
+
+		Frame(Renderer* rend, const Shape& s)
+			: m_rend(rend)
+			, m_shape(s)
+		{
+		}
+
+		Frame() = default;
+
+		constexpr const auto& shape() const noexcept
+		{
+			return m_shape;
+		}
+
+		constexpr auto& shape(const shape_t& s) noexcept
+		{
+			m_shape = s;
+			return *this;
+		}
+
+		template<typename... Arg>
+		constexpr auto& translate(Arg&&... args) noexcept
+		{
+			m_shape.translate(std::forward<Arg>(args)...);
+			return *this;
+		}
+
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
+		{
+			m_rend = r;
+			return *this;
+		}
+
+		constexpr auto* renderer() const noexcept
+		{
+			assert(m_rend != nullptr && "Renderer isn't assigned.");
+			return m_rend;
+		}
+
+	private:
+		Renderer* m_rend = nullptr;
+		shape_t m_shape;
+	};
+
+
 	//----------------------------------------------
 	//Single
 	//----------------------------------------------
 
-	template<template<typename> class... Func>
-	class RectDraw : public Shapeable<Rect<int, int>, RectDraw<Func...>>, 
-		public Drawable<RectDraw<Func...>>, public Func<RectDraw<Func...>>...
+	template<template<typename> class... Ex>
+	using RectFrame = Frame<Rect<int, int>, Ex...>;
+
+	template<template<typename> class... Ex>
+	using CircleFrame = Frame<Circle<int, unsigned int>, Ex...>;
+
+	template<template<typename> class... Ex>
+	using LineFrame = Frame<Line<int>, Ex...>;
+
+	template<template<typename> class... Ex>
+	using PointFrame = Frame<Point<int>, Ex...>;
+
+
+	namespace detail
 	{
-		using base1 = Shapeable<Rect<int, int>, RectDraw<Func...>>;
-		using base2 = Drawable<RectDraw<Func...>>;
+		template<typename, typename>
+		class _Drawable_ {};
 
-	public:
-		RectDraw() = default;
-		RectDraw(sdl::Renderer* r) : base2(r) {}
-
-		void draw() const
+		template<typename Impl>
+		class _Drawable_<Impl, Tags::isRect>
 		{
-			if (SDL_RenderDrawRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
-				throw Log(SDL_GetError());
-		}
+			const Impl& _() const noexcept { return static_cast<const Impl&>(*this); }
 
-		void drawFilled() const
-		{
-			if (SDL_RenderFillRect(this->m_rend->get(), this->m_shape.rectPtr()) != 0)
-				throw Log(SDL_GetError());
-		}
-
-		using base2::renderer;
-		using base1::shape;
-		using base1::translate;
-	};
-
-
-	template<template<typename> class... Func>
-	class CircleDraw : public Shapeable<Circle<int, unsigned int>, CircleDraw<Func...>>,
-		public Drawable<CircleDraw<Func...>>, public Func<CircleDraw<Func...>>...
-	{
-		using base1 = Shapeable<Circle<int, unsigned int>, CircleDraw<Func...>>;
-		using base2 = Drawable<CircleDraw<Func...>>;
-
-	public:
-		CircleDraw(sdl::Renderer* r) : base2(r) {}
-
-		void draw() const
-		{
-			_draw_(SDL_RenderDrawPoints);
-		}
-
-		void drawFilled() const
-		{
-			_draw_(SDL_RenderDrawLines);
-		}
-
-		void drawP(int pres) const
-		{
-			std::vector<SDL_Point> ps;
-			ps.reserve(pres + 1);
-
-			for (size_t i = 0; i < pres; ++i)
+		public:
+			void draw() const
 			{
-				const auto x = to_radians(360.f / pres * (i + 1.f));
-				ps[i] = { static_cast<int>(this->m_shape.r * std::cos(x) + this->m_shape.x), 
-					static_cast<int>(this->m_shape.r * std::sin(x) + this->m_shape.y) };
-			}
-			ps.back() = ps.front();
-
-			if (SDL_RenderDrawLines(this->m_rend->get(), ps.data(), ps.size()) != 0)
-				throw Log(SDL_GetError());
-		}
-
-		using base2::renderer;
-		using base1::shape;
-		using base1::translate;
-
-	private:
-		void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
-		{
-			const auto d = this->m_shape.r * 2;
-
-			Point<int> p(this->m_shape.r - 1, 0);
-			Point<int> tp(1, 1);
-
-			int err = tp.x - d;
-
-			while (p.x >= p.y)
-			{
-				const std::array<SDL_Point, 8> ps =
-				{ SDL_Point
-					{ this->m_shape.x + p.x, this->m_shape.y + p.y },
-					{ this->m_shape.x - p.x, this->m_shape.y + p.y },
-					{ this->m_shape.x + p.x, this->m_shape.y - p.y },
-					{ this->m_shape.x - p.x, this->m_shape.y - p.y },
-					{ this->m_shape.x + p.y, this->m_shape.y + p.x },
-					{ this->m_shape.x - p.y, this->m_shape.y + p.x },
-					{ this->m_shape.x + p.y, this->m_shape.y - p.x },
-					{ this->m_shape.x - p.y, this->m_shape.y - p.x }
-				};
-
-				if (func(this->m_rend->get(), ps.data(), ps.size()) != 0)
+				if (SDL_RenderDrawRect(this->_().renderer()->get(), this->_().shape().rectPtr()) != 0)
 					throw Log(SDL_GetError());
+			}
 
-				if (err <= 0)
+			void draw_filled() const
+			{
+				if (SDL_RenderFillRect(this->_().renderer()->get(), this->_().shape().rectPtr()) != 0)
+					throw Log(SDL_GetError());
+			}
+		};
+
+		template<typename Impl>
+		class _Drawable_<Impl, Tags::isCircle>
+		{
+			const Impl& _() const noexcept { return static_cast<const Impl&>(*this); }
+
+		public:
+			void draw() const
+			{
+				_draw_(SDL_RenderDrawPoints);
+			}
+
+			void drawFilled() const
+			{
+				_draw_(SDL_RenderDrawLines);
+			}
+
+			void drawP(int pres) const
+			{
+				std::vector<SDL_Point> ps;
+				ps.reserve(pres + 1);
+
+				for (size_t i = 0; i < pres; ++i)
 				{
-					++p.y;
-					err += tp.y;
-					tp.y += 2;
+					const auto x = to_radians(360.f / pres * (i + 1.f));
+					ps[i] = { static_cast<int>(this->_().shape().r * std::cos(x) + this->_().shape().x),
+						static_cast<int>(this->_().shape().r * std::sin(x) + this->_().shape().y) };
 				}
-				if (err > 0)
+				ps.back() = ps.front();
+
+				if (SDL_RenderDrawLines(this->_().renderer()->get(), ps.data(), ps.size()) != 0)
+					throw Log(SDL_GetError());
+			}
+
+		private:
+			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
+			{
+				const auto d = this->_().shape().r * 2;
+
+				Point<int> p(this->_().shape().r - 1, 0);
+				Point<int> tp(1, 1);
+
+				int err = tp.x - d;
+
+				while (p.x >= p.y)
 				{
-					--p.x;
-					tp.x += 2;
-					err += tp.x - d;
+					const std::array<SDL_Point, 8> ps =
+					{ SDL_Point
+						{ this->_().shape().x + p.x, this->_().shape().y + p.y },
+						{ this->_().shape().x - p.x, this->_().shape().y + p.y },
+						{ this->_().shape().x + p.x, this->_().shape().y - p.y },
+						{ this->_().shape().x - p.x, this->_().shape().y - p.y },
+						{ this->_().shape().x + p.y, this->_().shape().y + p.x },
+						{ this->_().shape().x - p.y, this->_().shape().y + p.x },
+						{ this->_().shape().x + p.y, this->_().shape().y - p.x },
+						{ this->_().shape().x - p.y, this->_().shape().y - p.x }
+					};
+
+					if (func(this->_().renderer()->get(), ps.data(), ps.size()) != 0)
+						throw Log(SDL_GetError());
+
+					if (err <= 0)
+					{
+						++p.y;
+						err += tp.y;
+						tp.y += 2;
+					}
+					if (err > 0)
+					{
+						--p.x;
+						tp.x += 2;
+						err += tp.x - d;
+					}
 				}
 			}
-		}
+		};
 
-	};
-
-
-	template<template<typename> class... Func>
-	class LineDraw : public Shapeable<Line<int>, LineDraw<Func...>>,
-		public Drawable<LineDraw<Func...>>, public Func<LineDraw<Func...>>...
-	{
-		using base1 = Shapeable<Line<int>, LineDraw<Func...>>;
-		using base2 = Drawable<LineDraw<Func...>>;
-
-	public:
-		LineDraw(sdl::Renderer* r) : base2(r) {}
-
-		void draw() const
+		template<typename Impl>
+		class _Drawable_<Impl, Tags::isLine>
 		{
-			if (SDL_RenderDrawLine(this->m_rend->get(), this->m_shape.x1, this->m_shape.y1, this->m_shape.x2, this->m_shape.y2) != 0)
-				throw Log(SDL_GetError());
-		}
+			const Impl& _() const noexcept { return static_cast<const Impl&>(*this); }
 
-		using base2::renderer;
-		using base1::shape;
-		using base1::translate;
-	};
+		public:
+			void draw() const
+			{
+				if (SDL_RenderDrawLine(this->_().renderer()->get(), this->_().shape().x1, this->_().shape().y1, this->_().shape().x2, this->_().shape().y2) != 0)
+					throw Log(SDL_GetError());
+			}
+		};
 
-
-	template<template<typename> class... Func>
-	class PointDraw : public Shapeable<Point<int>, PointDraw<Func...>>,
-		public Drawable<PointDraw<Func...>>, public Func<PointDraw<Func...>>...
-	{
-		using base1 = Shapeable<Point<int>, PointDraw<Func...>>;
-		using base2 = Drawable<PointDraw<Func...>>;
-
-	public:
-		PointDraw(sdl::Renderer* r) : base2(r) {}
-
-		void draw() const
+		template<typename Impl>
+		class _Drawable_<Impl, Tags::isPoint>
 		{
-			if (SDL_RenderDrawPoint(this->m_rend->get(), this->m_shape.x, this->m_shape.y) != 0)
-				throw Log(SDL_GetError());
-		}
-		
-		using base2::renderer;
-		using base1::shape;
-	};
+			const Impl& _() const noexcept { return static_cast<const Impl&>(*this); }
+			
+		public:
+			void draw() const
+			{
+				if (SDL_RenderDrawPoint(this->_().renderer()->get(), this->_().shape().x, this->_().shape().y) != 0)
+					throw Log(SDL_GetError());
+			}
+		};
+
+		template<template<typename, template<typename> class...> typename T, typename Shape, template<typename> class... Arg>
+		constexpr auto _extracted_tag_(const T<Shape, Arg...>&) -> typename Shape::tag;
+	}
+
+
+	template<typename Impl>
+	using EDrawable = detail::_Drawable_<Impl, decltype(detail::_extracted_tag_(std::declval<Impl>()))>;
 
 
 	//----------------------------------------------
@@ -177,31 +217,30 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename... Shapes>
-	class MultiShape : public Drawable<MultiShape<Shapes...>>
+	class MultiShape
 	{
 		static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
-		using base = Drawable<MultiShape<Shapes...>>;
 
 		template<typename T>
-		void drawHandler(T& arg) const
+		void draw_handler(T& arg) const
 		{
 			using tag_t = typename T::value_type::tag;
 
 			if constexpr (std::is_same_v<Tags::isRect, tag_t>)
-				SDL_RenderDrawRects(this->m_rend->get(), arg.front().rectPtr(), arg.size());
+				SDL_RenderDrawRects(m_rend->get(), arg.front().rectPtr(), arg.size());
 
 			else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
-				SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size() << 1);
+				SDL_RenderDrawLines(m_rend->get(), arg.front().pointPtr(), arg.size() << 1);
 
 			else if constexpr (std::is_same_v<Tags::isPoint, tag_t>)
-				SDL_RenderDrawLines(this->m_rend->get(), arg.front().pointPtr(), arg.size());
+				SDL_RenderDrawLines(m_rend->get(), arg.front().pointPtr(), arg.size());
 
 			else
 				static_assert(false, "Type is not supported for mass drawing.");
 		}
 
 	public:
-		MultiShape(sdl::Renderer* r) : base(r) {}
+		MultiShape(sdl::Renderer* r) : m_rend(r) {}
 
 		template<typename T>
 		auto& push(const T& arg)
@@ -216,11 +255,24 @@ namespace ctl::sdl
 		{
 			std::apply([this](auto&&... arg)
 				{
-					(this->drawHandler(arg), ...);
+					(this->draw_handler(arg), ...);
 				}, m_packs);
 		}
 
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
+		{
+			m_rend = r;
+			return *this;
+		}
+
+		constexpr auto* renderer() const noexcept
+		{
+			assert(m_rend != nullptr && "Renderer isn't assigned.");
+			return m_rend;
+		}
+
 	private:
+		Renderer* m_rend = nullptr;
 		std::tuple<std::vector<Shapes>...> m_packs;
 	};
 

@@ -78,12 +78,15 @@ namespace ctl::sdl
 
 		void render() override
 		{
-			m_renderer.color({ 0xFF, 0xFF, 0xFF, 0xFF });
-			m_renderer.fill();
+			if (m_renderer.will_render())
+			{
+				m_renderer.color({ 0xFF, 0xFF, 0xFF, 0xFF });
+				m_renderer.fill();
 
-			m_state->draw();
+				m_state->draw();
 
-			m_renderer.render();
+				m_renderer.render();
+			}
 		}
 	};
 
