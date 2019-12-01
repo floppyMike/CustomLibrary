@@ -14,18 +14,18 @@ struct State : sdl::IState
 		, m_texture(m_rend)
 		, m_text(m_rend)
 	{
-		m_multi.push(ctl::sdl::Rect<int, int>(400, 400, 50, 50));
-		m_multi.push(ctl::sdl::Rect<int, int>(400, 300, 50, 50));
+		m_multi.push(sdl::Rect<int, int>(400, 400, 50, 50));
+		m_multi.push(sdl::Rect<int, int>(400, 300, 50, 50));
 
-		m_multi.push(ctl::sdl::Line<int>(400, 300, 50, 50));
-		m_multi.push(ctl::sdl::Line<int>(400, 300, 449, 449));
-		m_multi.push(ctl::sdl::Line<int>(50, 50, 449, 449));
+		m_multi.push(sdl::Line<int>(400, 300, 50, 50));
+		m_multi.push(sdl::Line<int>(400, 300, 449, 449));
+		m_multi.push(sdl::Line<int>(50, 50, 449, 449));
 
-		m_multi.push(ctl::sdl::Point<int>(20, 400));
-		m_multi.push(ctl::sdl::Point<int>(20, 401));
-		m_multi.push(ctl::sdl::Point<int>(20, 402));
-		m_multi.push(ctl::sdl::Point<int>(21, 401));
-		m_multi.push(ctl::sdl::Point<int>(19, 401));
+		m_multi.push(sdl::Point<int>(20, 400));
+		m_multi.push(sdl::Point<int>(20, 401));
+		m_multi.push(sdl::Point<int>(20, 402));
+		m_multi.push(sdl::Point<int>(21, 401));
+		m_multi.push(sdl::Point<int>(19, 401));
 
 		m_texture.load("assets/ass.png");
 		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
@@ -72,6 +72,9 @@ private:
 	sdl::CircleFrame<sdl::EDrawable> m_c;
 	sdl::LineFrame<sdl::EDrawable> m_l;
 	sdl::PointFrame<sdl::EDrawable> m_p;
+
+	std::vector<int> as;
+	std::vector<double> ass;
 
 	sdl::MultiShape<sdl::Rect<int, int>,
 		sdl::Line<int>,

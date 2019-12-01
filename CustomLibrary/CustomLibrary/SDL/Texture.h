@@ -34,6 +34,7 @@ namespace ctl::sdl
 		using RectFrame<>::renderer;
 		using RectFrame<>::shape;
 		using RectFrame<>::translate;
+		using RectFrame<>::pos;
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;

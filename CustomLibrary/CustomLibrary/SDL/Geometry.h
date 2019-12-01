@@ -50,6 +50,13 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		template<typename... Arg>
+		constexpr auto& pos(Arg&&... args) noexcept
+		{
+			m_shape.pos(std::forward<Arg>(args)...);
+			return *this;
+		}
+
 		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
 			m_rend = r;
