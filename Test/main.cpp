@@ -2,6 +2,75 @@
 
 using namespace ctl;
 
+template<template<typename, template<typename> class...> class T, typename Shape, template<typename> class... Arg>
+constexpr auto _extracted_tag_(const T<Shape, Arg...>&) -> typename Shape::tag;
+
+template<template<typename> class... Ex>
+class Test : public Ex<Test<Ex...>>...
+{
+public:
+	Test() = default;
+
+	//template<template<typename> class... T, typename >
+	//Test(const Test<T...>& t)
+	//{
+
+	//}
+
+	template<template<typename> class... Args>
+	Test(Args<Test>&&... arg)
+		: Args<Test>(std::forward<Args<Test>>(arg))...
+	{
+	}
+
+private:
+
+};
+
+template<typename Impl>
+class Ex1 : public crtp<Impl, Ex1>
+{
+public:
+	Ex1() = default;
+	Ex1(const Ex1&) = default;
+
+	Ex1(int e)
+		: m_hello_there(e)
+	{
+	}
+
+	void print()
+	{
+		std::clog << m_hello_there << '\n';
+	}
+
+private:
+	int m_hello_there = 5;
+};
+
+template<typename Impl>
+class Ex2 : public crtp<Impl, Ex2>
+{
+public:
+	Ex2() = default;
+
+	void chaka()
+	{
+		std::cout << "Chaka!\n";
+	}
+};
+
+template<typename Impl>
+class Ex3 : public crtp<Impl, Ex3>
+{
+public:
+	Ex3() = default;
+
+private:
+	std::string ohhh = "Hello there";
+};
+
+
 struct State : sdl::IState
 {
 	State(sdl::Renderer* r)
@@ -91,17 +160,24 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		sdl::SDL sdl;
-		sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
-			.initTTF();
+		Test<Ex3, Ex1> test(Ex1<Test<Ex3, Ex1>>(10));
+		test.print();
 
-		sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		win.queue_state<State>(&win.renderer());
+		Test<Ex1, Ex2> test1(Ex2<Test<Ex1, Ex2>>(), Ex1<Test<Ex1, Ex2>>(5));
+		test1 = static_cast<Ex1<Test<Ex1, Ex2>>>(*reinterpret_cast<Ex1<Test<Ex1, Ex2>>*>(&static_cast<Ex1<Test<Ex3, Ex1>>>(test)));
+		test1.print();
 
-		sdl::RunLoop<> loop;
-		loop.add_window(&win);
+		//sdl::SDL sdl;
+		//sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
+		//	.initTTF();
 
-		loop.run(30);
+		//sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		//win.queue_state<State>(&win.renderer());
+
+		//sdl::RunLoop<> loop;
+		//loop.add_window(&win);
+
+		//loop.run(30);
 	}
 	catch (const std::exception & err)
 	{

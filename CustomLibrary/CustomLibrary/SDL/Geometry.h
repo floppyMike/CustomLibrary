@@ -218,7 +218,7 @@ namespace ctl::sdl
 			}
 		};
 
-		template<template<typename, template<typename> class...> typename T, typename Shape, template<typename> class... Arg>
+		template<template<typename, template<typename> class...> class T, typename Shape, template<typename> class... Arg>
 		constexpr auto _extracted_tag_(const T<Shape, Arg...>&) -> typename Shape::tag;
 	}
 
