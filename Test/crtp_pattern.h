@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Globals.h"
 
 template<template<typename> class... Ex>
