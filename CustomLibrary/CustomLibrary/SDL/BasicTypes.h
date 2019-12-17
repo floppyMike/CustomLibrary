@@ -78,6 +78,14 @@ namespace ctl::sdl
 			return *this += delta;
 		}
 
+		constexpr auto& pos(const Point<T>& p) noexcept
+		{
+			x = p.x;
+			y = p.y;
+
+			return *this;
+		}
+
 		/**
 		* @summary assignment operators
 		*/
@@ -160,6 +168,14 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		constexpr auto& pos(const Point<T1>& p) noexcept
+		{
+			x = p.x;
+			y = p.y;
+
+			return *this;
+		}
+
 		T1& x, & y;
 		T2& w, & h;
 	};
@@ -199,6 +215,16 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		constexpr auto& pos(const Point<T>& p1, const Point<T>& p2) noexcept
+		{
+			x1 = p1.x;
+			y1 = p1.y;
+			x2 = p2.x;
+			y2 = p2.y;
+
+			return *this;
+		}
+
 		T& x1, & y1, & x2, & y2;
 	};
 
@@ -235,6 +261,14 @@ namespace ctl::sdl
 		{
 			x += delta.x;
 			y += delta.y;
+			return *this;
+		}
+
+		constexpr auto& pos(const Point<T1>& p) noexcept
+		{
+			x = p.x;
+			y = p.y;
+
 			return *this;
 		}
 
@@ -399,6 +433,16 @@ namespace ctl::sdl
 			y1 += delta1.y;
 			x2 += delta2.x;
 			y2 += delta2.y;
+			return *this;
+		}
+
+		constexpr auto& pos(const Point<T>& p1, const Point<T>& p2) noexcept
+		{
+			x1 = p1.x;
+			y1 = p1.y;
+			x2 = p2.x;
+			y2 = p2.y;
+
 			return *this;
 		}
 

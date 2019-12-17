@@ -23,15 +23,15 @@ namespace ctl::sdl
 			case SDL_MOUSEMOTION:
 				if (collision(Point(e.motion.x, e.motion.y), this->_().shape()))
 				{
-					if (!m_isInside)
-						m_isInside = true;
+					if (!m_is_inside)
+						m_is_inside = true;
 				}
-				else if (m_isInside)
-					m_isInside = false;
+				else if (m_is_inside)
+					m_is_inside = false;
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				if (m_isInside)
+				if (m_is_inside)
 					m_func();
 				break;
 
@@ -41,10 +41,10 @@ namespace ctl::sdl
 		}
 
 		ImplTex& func(std::function<void()>&& f) noexcept { m_func = std::move(f); return this->_(); }
-		bool isInside() const noexcept { return m_isInside; }
+		bool is_inside() const noexcept { return m_is_inside; }
 
 	private:
-		bool m_isInside = false;
+		bool m_is_inside = false;
 		std::function<void()> m_func;
 	};
 

@@ -6,25 +6,21 @@
 
 #include "Error.h"
 
-namespace ctl
+namespace ctl::rnd
 {
-	//Seperated
-	namespace Gen
-	{
-		using Mersenne = std::mt19937;
-		using Linear = std::minstd_rand;
-		using SubWCar = std::ranlux24_base;
-	}
+	using Mersenne = std::mt19937;
+	using Linear = std::minstd_rand;
+	using SubWCar = std::ranlux24_base;
 
 	//Gen::
-	template<class G, typename = typename std::enable_if_t<std::is_same_v<Gen::Mersenne, G> || std::is_same_v<Gen::Linear, G> || std::is_same_v<Gen::SubWCar, G>>>
+	template<typename G, typename = typename std::enable_if_t<std::is_same_v<Mersenne, G> || std::is_same_v<Linear, G> || std::is_same_v<SubWCar, G>>>
 	class RandomGen
 	{
 	public:
 		RandomGen() : m_gen{ rd() } {}
 
 		template<typename Type, typename = typename std::enable_if<std::is_arithmetic<Type>::value, Type>::type>
-		constexpr Type randNumber(const Type &min, const Type &max)
+		constexpr Type rand_number(const Type &min, const Type &max)
 		{
 			assert(min < max && "RandomGenerator: min is larger or equal to max.");
 
@@ -35,7 +31,7 @@ namespace ctl
 		}
 
 		template<typename Iter/*, typename = typename std::enable_if_t<!std::is_same_v<typename std::iterator_traits<Iter>::type_value, void>>*/>
-		constexpr Iter randIter(Iter first, const Iter &last)
+		constexpr Iter rand_iter(Iter first, const Iter &last)
 		{
 			std::advance(first, randNumber<size_t>(0, std::distance(first, last) - 1));
 			return first;
