@@ -98,15 +98,15 @@ public:
 	{
 	}
 
-	//template<template<typename> class... T>
-	//Test(const Test<T...>& cast)
-	//	: T<Test>(static_cast<T<Test>>(*reinterpret_cast<T<Test>*>(&static_cast<T<Test<T...>>>(cast))))...
-	//{
-	//}
+	template<template<typename> class... T>
+	Test(const Test<T...>& cast)
+		: T<Test>(static_cast<T<Test>>(*reinterpret_cast<T<Test>*>(static_cast<T<Test<T...>>*>(&cast))))...
+	{
+	}
 
 	template<template<typename> class... T>
 	Test(Test<T...>&& cast)
-		: T<Test>(std::move(static_cast<T<Test>>(*reinterpret_cast<T<Test>*>(&static_cast<T<Test<T...>>>(cast)))))...
+		: T<Test>(static_cast<T<Test>&&>(*reinterpret_cast<T<Test>*>(static_cast<T<Test<T...>>*>(&cast))))...
 	{
 	}
 };
