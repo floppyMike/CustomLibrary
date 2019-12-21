@@ -36,6 +36,13 @@
     FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
     FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
 
+#define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
+template<typename... Args> \
+inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) \
+{ \
+    return lowLevelF(std::forward<Args>(args)...); \
+}
+
 
 namespace ctl
 {
@@ -48,6 +55,37 @@ namespace ctl
 	private:
 		crtp() = default;
 		friend crtpType<T>;
+	};
+
+
+	template<template<typename> class... Ex>
+	class Extendable : public Ex<Extendable<Ex...>>...
+	{
+	public:
+		Extendable() = default;
+		Extendable(const Extendable&) = default;
+		Extendable(Extendable&&) = default;
+
+		Extendable& operator=(const Extendable&) = default;
+		Extendable& operator=(Extendable&&) = default;
+
+		template<template<typename> class... T>
+		Extendable(T<Extendable>&&... arg)
+			: T<Extendable>(std::move(arg))...
+		{
+		}
+
+		template<template<typename> class... T>
+		Extendable(const Extendable<T...>& cast)
+			: T<Extendable>(static_cast<T<Extendable>>(*reinterpret_cast<T<Extendable>*>(static_cast<T<Extendable<T...>>*>(&cast))))...
+		{
+		}
+
+		template<template<typename> class... T>
+		Extendable(Extendable<T...>&& cast)
+			: T<Extendable>(static_cast<T<Extendable>&&>(*reinterpret_cast<T<Extendable>*>(static_cast<T<Extendable<T...>>*>(&cast))))...
+		{
+		}
 	};
 
 

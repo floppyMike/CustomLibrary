@@ -3,7 +3,8 @@
 #include <SDL.h>
 
 #include <CustomLibrary/utility.h>
-#include "SDLTraits.h"
+#include "BasicTypes.h"
+#include "Renderer.h"
 
 #include <vector>
 #include <type_traits>
@@ -16,6 +17,8 @@ namespace ctl::sdl
 	public:
 		using shape_t = Shape;
 
+		//using Extendable<Ex...>::Extendable;
+
 		Frame(Renderer* rend)
 			: m_rend(rend)
 		{
@@ -25,18 +28,11 @@ namespace ctl::sdl
 			, m_shape(s)
 		{
 		}
-
-		Frame() = default;
-
+		
 		constexpr const auto& shape() const noexcept
 		{
 			return m_shape;
 		}
-		constexpr auto& shape() noexcept
-		{
-			return m_shape;
-		}
-
 		constexpr auto& shape(const shape_t& s) noexcept
 		{
 			m_shape = s;
@@ -219,7 +215,7 @@ namespace ctl::sdl
 		};
 
 		template<template<typename, template<typename> class...> class T, typename Shape, template<typename> class... Arg>
-		constexpr auto _extracted_tag_(const T<Shape, Arg...>&) -> typename Shape::tag;
+		constexpr auto _extracted_tag_(T<Shape, Arg...>&&) -> typename Shape::tag {}
 	}
 
 
@@ -245,13 +241,14 @@ namespace ctl::sdl
 				SDL_RenderDrawRects(m_rend->get(), arg.front().rectPtr(), arg.size());
 
 			else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
-				SDL_RenderDrawLines(m_rend->get(), arg.front().pointPtr(), arg.size() << 1);
+				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size() << 1);
 
 			else if constexpr (std::is_same_v<Tags::isPoint, tag_t>)
-				SDL_RenderDrawLines(m_rend->get(), arg.front().pointPtr(), arg.size());
+				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size());
 
 			else
-				static_assert(false, "Type is not supported for mass drawing.");
+				assert(false && "Type is not supported for mass drawing.");
+				//static_assert(false, "Type is not supported for mass drawing.");
 		}
 
 	public:

@@ -6,9 +6,12 @@ template<template<typename> class... Ex>
 class Test : public Ex<Test<Ex...>>...
 {
 public:
-	Test()
-	{
-	}
+	Test() = default;
+	Test(const Test&) = default;
+	Test(Test&&) = default;
+
+	Test& operator=(const Test&) = default;
+	Test& operator=(Test&&) = default;
 
 	template<template<typename> class... T>
 	Test(T<Test>&&... arg)

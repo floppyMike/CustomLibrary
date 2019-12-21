@@ -5,7 +5,7 @@
 #include "Renderer.h"
 
 #include <CustomLibrary/Traits.h>
-#include <CustomLibrary/SDL/Geometry.h>
+#include "Geometry.h"
 
 #include <SDL_image.h>
 
@@ -58,8 +58,10 @@ namespace ctl::sdl
 	{
 		void _reset_size_()
 		{
-			if (SDL_QueryTexture(this->_().texture(), nullptr, nullptr, &this->_().shape().w, &this->_().shape().h) != 0)
+			Rect<int, int> size = this->_().shape();
+			if (SDL_QueryTexture(this->_().texture(), nullptr, nullptr, &size.w, &size.h) != 0)
 				throw Log(SDL_GetError());
+			this->_().shape(size);
 		}
 
 		ImplTex& _load_(SDL_Texture* tex)

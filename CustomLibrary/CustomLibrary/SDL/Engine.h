@@ -155,6 +155,7 @@ namespace ctl::sdl
 	{
 		if (!SDL_SetHint(name, value))
 			Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
+		return *this;
 	}
 
 	template<typename ImplWin>

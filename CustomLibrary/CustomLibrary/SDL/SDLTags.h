@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace ctl
+namespace ctl::sdl
 {
 	namespace Tags
 	{

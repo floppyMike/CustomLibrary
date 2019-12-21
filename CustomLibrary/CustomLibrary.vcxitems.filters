@@ -19,6 +19,9 @@
     <Filter Include="CustomLibrary\Include\Default">
       <UniqueIdentifier>{5f02ca78-a201-4ba7-b699-82cea4c9a790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Shapes">
+      <UniqueIdentifier>{b464e54e-7c70-400c-8029-2d14a35bd609}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
@@ -146,6 +149,21 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Traits.h">
       <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Point.h">
+      <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Rect.h">
+      <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Dim.h">
+      <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Line.h">
+      <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Circle.h">
+      <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
