@@ -63,7 +63,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h" />

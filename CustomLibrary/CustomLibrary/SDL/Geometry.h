@@ -34,12 +34,16 @@ namespace ctl::sdl
 		template<template<typename> class... T>
 		Frame(const Frame<Shape, T...>& cast)
 			: T<Frame>(static_cast<T<Frame>>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
+			, m_rend(cast.m_rend)
+			, m_shape(cast.m_shape)
 		{
 		}
 
 		template<template<typename> class... T>
 		Frame(Frame<Shape, T...>&& cast)
 			: T<Frame>(static_cast<T<Frame>&&>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
+			, m_rend(cast.m_rend)
+			, m_shape(cast.m_shape)
 		{
 		}
 
@@ -79,7 +83,7 @@ namespace ctl::sdl
 		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, pos)
 		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, translate)
 
-	private:
+	protected:
 		Renderer* m_rend = nullptr;
 		shape_t m_shape;
 	};

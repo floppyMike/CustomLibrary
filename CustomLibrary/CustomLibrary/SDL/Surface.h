@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SDLTraits.h"
 #include <SDL.h>
 #include <memory>
 #include <cassert>

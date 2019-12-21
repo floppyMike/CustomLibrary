@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BasicTypes.h"
-#include "SDLTraits.h"
 #include "Texture.h"
 #include <CustomLibrary/Error.h>
 

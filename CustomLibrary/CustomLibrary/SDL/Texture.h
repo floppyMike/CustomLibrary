@@ -1,10 +1,9 @@
 #pragma once
 
-#include "SDLTraits.h"
 #include "Surface.h"
 #include "Renderer.h"
 
-#include <CustomLibrary/Traits.h>
+#include "../Traits.h"
 #include "Geometry.h"
 
 #include <SDL_image.h>
@@ -30,6 +29,13 @@ namespace ctl::sdl
 			m_texture.reset(tex);
 			return *this;
 		}
+
+		auto& reset_shape()
+		{
+			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
+				throw err::Log(SDL_GetError());
+			return *this;
+		}
 		
 		using RectFrame<>::renderer;
 		using RectFrame<>::shape;
@@ -41,75 +47,72 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplTex>
-	class ETexRend : public crtp<ImplTex, ETexRend>
+	template<typename Impl>
+	class ETexRend
 	{
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
 		void draw() const
 		{
-			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().texture(), nullptr, this->_().shape().rect_ptr()) < 0)
+			if (SDL_RenderCopy(pthis->renderer()->get(), pthis->texture(), nullptr, pthis->shape().rect_ptr()) < 0)
 				throw err::Log(SDL_GetError());
 		}
 	};
 
 
-	template<typename ImplTex>
-	class ETexLoad : public crtp<ImplTex, ETexLoad>
+	template<typename Impl>
+	class ETexLoad
 	{
-		void _reset_size_()
-		{
-			Rect<int, int> size = this->_().shape();
-			if (SDL_QueryTexture(this->_().texture(), nullptr, nullptr, &size.w, &size.h) != 0)
-				throw err::Log(SDL_GetError());
-			this->_().shape(size);
-		}
+		Impl* const pthis = static_cast<Impl*>(this);
 
-		ImplTex& _load_(SDL_Texture* tex)
+		Impl& _load_(SDL_Texture* tex)
 		{
 			if (!tex)
 				throw err::Log(SDL_GetError());
 
-			this->_().texture(tex);
-			_reset_size_();
+			pthis->texture(tex);
+			pthis->reset_shape();
 
-			return this->_();
+			return *pthis;
 		}
 
 	public:
-		ImplTex& load(SDL_Surface* surface)
+		Impl& load(SDL_Surface* surface)
 		{
-			return _load_(SDL_CreateTextureFromSurface(this->_().renderer()->get(), surface));
+			return _load_(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
 		}
 
-		ImplTex& load(const char* path)
+		Impl& load(const char* path)
 		{
-			return _load_(IMG_LoadTexture(this->_().renderer()->get(), path));
+			return _load_(IMG_LoadTexture(pthis->renderer()->get(), path));
 		}
 
-		ImplTex& load(void* src, int size)
+		Impl& load(void* src, int size)
 		{
-			return _load_(IMG_LoadTexture_RW(this->_().renderer()->get(), SDL_RWFromMem(src, size), 1));
+			return _load_(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
 		}
-		
 	};
 
 
-	template<typename ImplTex>
-	class ETexAttrib : public crtp<ImplTex, ETexAttrib>
+	template<typename Impl>
+	class ETexAttrib
 	{
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
-		auto& colourMod(Uint8 r, Uint8 g, Uint8 b)
+		auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
 		{
-			if (SDL_SetTextureColorMod(this->_().get(), r, g, b) != 0)
+			if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
 				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
-		auto colourMod() const
+		auto color_mod() const
 		{
 			std::tuple<Uint8, Uint8, Uint8> c;
 
-			if (SDL_GetTextureColorMod(this->_().get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
+			if (SDL_GetTextureColorMod(pthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
 				throw err::Log(SDL_GetError());
 
 			return c;
@@ -117,7 +120,7 @@ namespace ctl::sdl
 
 		auto& blendMode(const SDL_BlendMode& b)
 		{
-			if (SDL_SetTextureBlendMode(this->_().get(), b) != 0)
+			if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
 				throw err::Log(SDL_GetError());
 
 			return *this;
@@ -126,7 +129,7 @@ namespace ctl::sdl
 		{
 			SDL_BlendMode b;
 
-			if (SDL_GetTextureBlendMode(this->_().get(), &b) != 0)
+			if (SDL_GetTextureBlendMode(pthis->texture(), &b) != 0)
 				throw err::Log(SDL_GetError());
 
 			return b;
@@ -134,7 +137,7 @@ namespace ctl::sdl
 
 		auto& alphaMod(const Uint8& a)
 		{
-			if (SDL_SetTextureAlphaMod(this->_().get(), a) != 0)
+			if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
 				throw err::Log(SDL_GetError());
 
 			return *this;
@@ -143,7 +146,7 @@ namespace ctl::sdl
 		{
 			Uint8 a;
 
-			if (SDL_GetTextureAlphaMod(this->_().get(), &a) == -1)
+			if (SDL_GetTextureAlphaMod(pthis->texture(), &a) == -1)
 				throw err::Log(SDL_GetError());
 
 			return a;

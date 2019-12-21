@@ -34,7 +34,6 @@ struct State : sdl::IState
 		m_font.load("assets/ass1.ttf", 40);
 		m_text.font(m_font.get()).load_blended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
-
 	}
 
 	void event(const SDL_Event& e) override
@@ -74,9 +73,6 @@ private:
 	sdl::LineFrame<sdl::EDrawable> m_l;
 	sdl::PointFrame<sdl::EDrawable> m_p;
 
-	std::vector<int> as;
-	std::vector<double> ass;
-
 	sdl::MultiShape<sdl::Rect<int, int>,
 		sdl::Line<int>,
 		sdl::Point<int>> m_multi;
@@ -92,20 +88,6 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		//Test<ETest1, ETest2> test1;
-		//
-		//Test<ETest1> test2(ETest1<Test<ETest1>>(1));
-		//test2 = ETest1<Test<ETest1>>(10);
-
-		//Test<ETest2> test3(ETest2<Test<ETest2>>(80));
-		//
-		//Test<ETest1, ETest2> test3(static_cast<ETest2<Test<ETest1, ETest2>>>(
-		//	*reinterpret_cast<ETest2<Test<ETest1, ETest2>>*>(&static_cast<ETest2<Test<ETest2>>>(test2))));
-
-		//Test<ETest1, ETest2> test4(std::move(test3));
-		//
-		//test4.print_int();
-
 		sdl::SDL sdl;
 		sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
 			.initTTF();
