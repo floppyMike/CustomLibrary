@@ -8,40 +8,40 @@
 	using has_##method = decltype(std::declval<T&>().method(std::declval<Arg>()...)); 
 
 #define FORWARDING_MEMBER_FUNCTION(Inner, inner, function, qualifiers) \
-    template< \
-        typename... Args, \
-        typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
-    > \
-    constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
-        noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
-        ( \
-            std::is_reference<return_type>::value or \
-            std::is_nothrow_move_constructible<return_type>::value \
-        ) \
-    ) { \
-        return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
-    }
+	template< \
+		typename... Args, \
+		typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
+	> \
+	constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
+		noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
+		( \
+			std::is_reference<return_type>::value or \
+			std::is_nothrow_move_constructible<return_type>::value \
+		) \
+	) { \
+		return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
+	}
 
 #define FORWARDING_MEMBER_FUNCTIONS_C(Inner, inner, function, reference) \
 	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
 
 #define FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
 
 #define FORWARDING_MEMBER_FUNCTIONS(Inner, inner, function) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
+	FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
+	FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
 
-#define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
-template<typename... Args> \
-inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) \
-{ \
-    return lowLevelF(std::forward<Args>(args)...); \
-}
+//#define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
+//template<typename... Args> \
+//inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) \
+//{ \
+//    return lowLevelF(std::forward<Args>(args)...); \
+//}
 
 
 namespace ctl
@@ -58,11 +58,12 @@ namespace ctl
 	};
 
 
-	template<template<typename> class... Ex>
-	class Extendable : public Ex<Extendable<Ex...>>...
+	template<template<template<typename> class...> class Base, template<typename> class... Ex>
+	struct Extendable : public Ex<Base<Ex...>>...
 	{
 	public:
 		Extendable() = default;
+
 		Extendable(const Extendable&) = default;
 		Extendable(Extendable&&) = default;
 
@@ -70,20 +71,20 @@ namespace ctl
 		Extendable& operator=(Extendable&&) = default;
 
 		template<template<typename> class... T>
-		Extendable(T<Extendable>&&... arg)
-			: T<Extendable>(std::move(arg))...
+		Extendable(T<Base<Ex...>>&&... arg)
+			: T<Base<Ex...>>(std::move(arg))...
 		{
 		}
 
 		template<template<typename> class... T>
-		Extendable(const Extendable<T...>& cast)
-			: T<Extendable>(static_cast<T<Extendable>>(*reinterpret_cast<T<Extendable>*>(static_cast<T<Extendable<T...>>*>(&cast))))...
+		Extendable(const Base<T...>& cast)
+			: T<Base<Ex...>>(static_cast<T<Base<Ex...>>>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
 		{
 		}
 
 		template<template<typename> class... T>
-		Extendable(Extendable<T...>&& cast)
-			: T<Extendable>(static_cast<T<Extendable>&&>(*reinterpret_cast<T<Extendable>*>(static_cast<T<Extendable<T...>>*>(&cast))))...
+		Extendable(Base<T...>&& cast)
+			: T<Base<Ex...>>(static_cast<T<Base<Ex...>>&&>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
 		{
 		}
 	};

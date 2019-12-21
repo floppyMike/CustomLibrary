@@ -43,12 +43,12 @@ namespace ctl::sdl
 				static_cast<float>(w), static_cast<float>(h) };
 		}
 
-		SDL_Rect* rectPtr() noexcept
+		SDL_Rect* rect_ptr() noexcept
 		{
 			static_assert(false, "Must be of type int.");
 			return nullptr;
 		}
-		const SDL_Rect* rectPtr() const noexcept
+		const SDL_Rect* rect_ptr() const noexcept
 		{
 			static_assert(false, "Must be of type int.");
 			return nullptr;
@@ -69,7 +69,7 @@ namespace ctl::sdl
 		{
 			return { w, h };
 		}
-		constexpr Rect<T1, T2>& dim(const Dim<T2>& d) noexcept
+		constexpr auto& dim(const Dim<T2>& d) noexcept
 		{
 			w = d.w;
 			h = d.h;
@@ -142,13 +142,13 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<>
-	inline SDL_Rect* Rect<int, int>::rectPtr() noexcept
+	inline SDL_Rect* Rect<int, int>::rect_ptr() noexcept
 	{
 		return reinterpret_cast<SDL_Rect*>(this);
 	}
 
 	template<>
-	inline const SDL_Rect* Rect<int, int>::rectPtr() const noexcept
+	inline const SDL_Rect* Rect<int, int>::rect_ptr() const noexcept
 	{
 		return reinterpret_cast<const SDL_Rect*>(this);
 	}

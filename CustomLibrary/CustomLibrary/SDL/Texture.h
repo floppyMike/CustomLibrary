@@ -47,7 +47,7 @@ namespace ctl::sdl
 	public:
 		void draw() const
 		{
-			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().texture(), nullptr, this->_().shape().rectPtr()) < 0)
+			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().texture(), nullptr, this->_().shape().rect_ptr()) < 0)
 				throw Log(SDL_GetError());
 		}
 	};
