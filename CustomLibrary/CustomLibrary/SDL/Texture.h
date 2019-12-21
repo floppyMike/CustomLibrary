@@ -48,7 +48,7 @@ namespace ctl::sdl
 		void draw() const
 		{
 			if (SDL_RenderCopy(this->_().renderer()->get(), this->_().texture(), nullptr, this->_().shape().rect_ptr()) < 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 		}
 	};
 
@@ -60,14 +60,14 @@ namespace ctl::sdl
 		{
 			Rect<int, int> size = this->_().shape();
 			if (SDL_QueryTexture(this->_().texture(), nullptr, nullptr, &size.w, &size.h) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 			this->_().shape(size);
 		}
 
 		ImplTex& _load_(SDL_Texture* tex)
 		{
 			if (!tex)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			this->_().texture(tex);
 			_reset_size_();
@@ -101,7 +101,7 @@ namespace ctl::sdl
 		auto& colourMod(Uint8 r, Uint8 g, Uint8 b)
 		{
 			if (SDL_SetTextureColorMod(this->_().get(), r, g, b) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -110,7 +110,7 @@ namespace ctl::sdl
 			std::tuple<Uint8, Uint8, Uint8> c;
 
 			if (SDL_GetTextureColorMod(this->_().get(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return c;
 		}
@@ -118,7 +118,7 @@ namespace ctl::sdl
 		auto& blendMode(const SDL_BlendMode& b)
 		{
 			if (SDL_SetTextureBlendMode(this->_().get(), b) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -127,7 +127,7 @@ namespace ctl::sdl
 			SDL_BlendMode b;
 
 			if (SDL_GetTextureBlendMode(this->_().get(), &b) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return b;
 		}
@@ -135,7 +135,7 @@ namespace ctl::sdl
 		auto& alphaMod(const Uint8& a)
 		{
 			if (SDL_SetTextureAlphaMod(this->_().get(), a) != 0)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -144,7 +144,7 @@ namespace ctl::sdl
 			Uint8 a;
 
 			if (SDL_GetTextureAlphaMod(this->_().get(), &a) == -1)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return a;
 		}
@@ -192,11 +192,11 @@ namespace ctl::sdl
 //		{
 //			SDL_Surface* f_s = SDL_ConvertSurfaceFormat(s, SDL_GetWindowPixelFormat(m_win->window()), 0);
 //			if (f_s == nullptr)
-//				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_GetWindowPixelFormat(m_win->window()), SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h));
 //			if (!m_texture)
-//				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			lock();
 //			memcpy(m_pixels, f_s->pixels, f_s->pitch * f_s->h);
@@ -216,7 +216,7 @@ namespace ctl::sdl
 //		{
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_PIXELFORMAT_RGBA8888, a, wh.w, wh.h));
 //			if (!m_texture)
-//				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			m_dim = wh;
 //
@@ -229,7 +229,7 @@ namespace ctl::sdl
 //				Log::note("Texture is already locked.", Log::Sev::WARNING);
 //
 //			if (SDL_LockTexture(m_texture.get(), nullptr, &m_pixels, &m_pitch) != 0)
-//				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
 //		}
 //
 //		void unlock()
@@ -245,7 +245,7 @@ namespace ctl::sdl
 //		auto& target() 
 //		{ 
 //			if (SDL_SetRenderTarget(m_win->renderer(), m_texture.get()) != 0) 
-//				throw ctl::Log(SDL_GetError(), Log::Sev::ERR0R); 
+//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R); 
 //
 //			return *this;
 //		}

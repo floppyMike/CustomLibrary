@@ -19,7 +19,7 @@ namespace ctl::sdl
 
 			m_event.type = SDL_RegisterEvents(1);
 			if (m_event.type == std::numeric_limits<Uint32>::max())
-				throw Log("UserEvent: event not registered.");
+				throw err::Log("UserEvent: event not registered.");
 		}
 
 		/**

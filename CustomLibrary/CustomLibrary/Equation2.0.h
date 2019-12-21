@@ -13,7 +13,7 @@ namespace ctl
 	double factorial(double x)
 	{
 		if (std::round(x) != x || x < 0)
-			throw Log("Number has a point or it's negative.", Log::Type::ERROR);
+			throw err::Log("Number has a point or it's negative.", Log::Type::ERROR);
 		double y = x;
 		for (short i = 1; i < x; i++)
 			y *= i;
@@ -79,7 +79,7 @@ namespace ctl
 		bool _parseSample_(std::vector<Math> &list, const std::string &buf, const T &sample)
 		{
 			if constexpr (LOG)
-				Log("Equation2.0: Parse: parseSample called.");
+				err::Log("Equation2.0: Parse: parseSample called.");
 
 			const auto iter_sample = std::find_if(sample.begin(), sample.end(), [&buf](const T::value_type &x) constexpr { return x.first == buf; });
 			if (iter_sample != sample.end())
@@ -93,7 +93,7 @@ namespace ctl
 		bool parseModifer(std::vector<Math> &list, const std::string &buf)
 		{
 			if constexpr (ctl::LOG)
-				ctl::Log("Equation2.0: Parse: parseModifer called.");
+				ctl::err::Log("Equation2.0: Parse: parseModifer called.");
 
 			constexpr std::array<std::pair<std::string_view, double(*)(double)>, 9> modif1
 			{ std::pair<std::string_view, double(*)(double)>
@@ -109,7 +109,7 @@ namespace ctl
 		bool parseJoiner(std::vector<Math> &list, const std::string &buf)
 		{
 			if constexpr (ctl::LOG)
-				ctl::Log("Equation2.0: Parse: parseJoiner called.");
+				ctl::err::Log("Equation2.0: Parse: parseJoiner called.");
 
 			constexpr std::array<std::pair<std::string_view, double(*)(double, double)>, 3> modif2
 			{ std::pair<std::string_view, double(*)(double, double)>
@@ -123,7 +123,7 @@ namespace ctl
 		bool parseConstant(std::vector<Math> &list, const std::string &buf)
 		{
 			if constexpr (ctl::LOG)
-				ctl::Log("Equation2.0: Parse: parseConstant called.");
+				ctl::err::Log("Equation2.0: Parse: parseConstant called.");
 
 			constexpr std::array<std::pair<std::string_view, double>, 2> constant
 			{ std::pair<std::string_view, double>
@@ -137,7 +137,7 @@ namespace ctl
 		bool parse(std::vector<Math> &list, const std::string &buf) override
 		{
 			if constexpr (LOG)
-				Log("Equation2.0: parse called.");
+				err::Log("Equation2.0: parse called.");
 
 			if (parseModifer(list, buf))
 				return true;
@@ -155,7 +155,7 @@ namespace ctl
 		void evaluateModifer(std::vector<Math> &subEqu)
 		{
 			if constexpr (LOG)
-				Log("Equation2.0: Evaluate: modifer started.");
+				err::Log("Equation2.0: Evaluate: modifer started.");
 
 			for (auto iter = subEqu.begin(), end = subEqu.end(); iter != subEqu.end(); ++iter)
 				if (iter->is_Type<double(*)(double)>())
@@ -170,7 +170,7 @@ namespace ctl
 		void evaluatejoiner(std::vector<Math> &subEqu)
 		{
 			if constexpr (LOG)
-				Log("Equation2.0: Evaluate: joiner started.");
+				err::Log("Equation2.0: Evaluate: joiner started.");
 
 			for (auto iter = subEqu.begin(), end = subEqu.end(); iter != end; ++iter)
 			{
@@ -188,7 +188,7 @@ namespace ctl
 					{
 						const auto numerus = (iter + 1)->get<double>();
 						if (numerus == 0.)
-							throw Log("Equation2.0: Evaluate: numerus is 0.", Log::Type::ERROR);
+							throw err::Log("Equation2.0: Evaluate: numerus is 0.", Log::Type::ERROR);
 						*(iter - 1) = (iter - 1)->get<double>() / (iter + 1)->get<double>();
 					}
 
@@ -201,7 +201,7 @@ namespace ctl
 		double evaluate(std::vector<Math> subEqu) override
 		{
 			if constexpr (LOG)
-				Log("Equation2.0: evaluation started.");
+				err::Log("Equation2.0: evaluation started.");
 
 			//Erase disabled spots
 			subEqu.erase(std::remove(subEqu.begin(), subEqu.end(), Math(true)), subEqu.end());
@@ -228,7 +228,7 @@ namespace ctl
 		equString.erase(std::remove(equString.begin(), equString.end(), ' '), equString.end());
 
 		if constexpr (LOG)
-			Log("Equation2.0: parsing started.");
+			err::Log("Equation2.0: parsing started.");
 
 		//Parse
 		//Known limitations:
@@ -291,7 +291,7 @@ namespace ctl
 		equMain.shrink_to_fit();
 
 		if constexpr (LOG)
-			Log("Equation2.0: bracket search started.");
+			err::Log("Equation2.0: bracket search started.");
 
 		//Find brackets
 		using EquIter = std::array<std::vector<Math>::iterator, 2>;
@@ -303,18 +303,18 @@ namespace ctl
 			{
 				auto temp = std::find_if(equBrackets.rbegin(), equBrackets.rend(), [&](const EquIter &x) { return x[1] == end; });
 				if (temp == equBrackets.rend())
-					throw Log("Equation2.0: Synthax Error: missing closing bracket.");
+					throw err::Log("Equation2.0: Synthax Error: missing closing bracket.");
 
 				(*temp)[1] = iter;
 			}
 
 		if constexpr (LOG)
-			Log("Equation2.0: bracket sort started.");
+			err::Log("Equation2.0: bracket sort started.");
 
 		//Sort order of calculation
 		std::sort(equBrackets.begin(), equBrackets.end(), [](const EquIter &x, const EquIter &y) constexpr { return std::distance(x[0], x[1]) < std::distance(y[0], y[1]); });
 		if (!equBrackets.empty() && equBrackets.front()[1] == equMain.end())
-			throw Log("Back brackets missing.");
+			throw err::Log("Back brackets missing.");
 
 		//Calculate
 		for (auto iter = equBrackets.begin(), end = equBrackets.end(); iter != end; ++iter)

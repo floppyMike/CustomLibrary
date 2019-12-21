@@ -17,6 +17,14 @@ namespace ctl::sdl
 	public:
 		using shape_t = Shape;
 
+		Frame() = default;
+
+		Frame(const Frame&) = default;
+		Frame(Frame&&) = default;
+
+		Frame& operator=(const Frame&) = default;
+		Frame& operator=(Frame&&) = default;
+
 		template<template<typename> class... T>
 		Frame(T<Frame>&&... arg)
 			: T<Frame>(std::move(arg))...
@@ -25,13 +33,13 @@ namespace ctl::sdl
 
 		template<template<typename> class... T>
 		Frame(const Frame<Shape, T...>& cast)
-			: T<Frame>(static_cast<T<Frame>>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame>*>(&cast))))...
+			: T<Frame>(static_cast<T<Frame>>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
 		{
 		}
 
 		template<template<typename> class... T>
 		Frame(Frame<Shape, T...>&& cast)
-			: T<Frame>(static_cast<T<Frame>&&>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame>*>(&cast))))...
+			: T<Frame>(static_cast<T<Frame>&&>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
 		{
 		}
 
@@ -56,20 +64,6 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		template<typename... Arg>
-		constexpr auto& translate(Arg&&... args) noexcept
-		{
-			m_shape.translate(std::forward<Arg>(args)...);
-			return *this;
-		}
-
-		template<typename... Arg>
-		constexpr auto& pos(Arg&&... args) noexcept
-		{
-			m_shape.pos(std::forward<Arg>(args)...);
-			return *this;
-		}
-
 		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
 			m_rend = r;
@@ -81,6 +75,9 @@ namespace ctl::sdl
 			assert(m_rend != nullptr && "Renderer isn't assigned.");
 			return m_rend;
 		}
+
+		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, pos)
+		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, translate)
 
 	private:
 		Renderer* m_rend = nullptr;
@@ -119,13 +116,13 @@ namespace ctl::sdl
 			void draw() const
 			{
 				if (SDL_RenderDrawRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 			}
 
 			void draw_filled() const
 			{
 				if (SDL_RenderFillRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 			}
 		};
 
@@ -159,7 +156,7 @@ namespace ctl::sdl
 				ps.back() = ps.front();
 
 				if (SDL_RenderDrawLines(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 			}
 
 		private:
@@ -187,7 +184,7 @@ namespace ctl::sdl
 					};
 
 					if (func(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-						throw Log(SDL_GetError());
+						throw err::Log(SDL_GetError());
 
 					if (err <= 0)
 					{
@@ -214,7 +211,7 @@ namespace ctl::sdl
 			void draw() const
 			{
 				if (SDL_RenderDrawLine(pthis->renderer()->get(), pthis->shape().x1, pthis->shape().y1, pthis->shape().x2, pthis->shape().y2) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 			}
 		};
 
@@ -227,7 +224,7 @@ namespace ctl::sdl
 			void draw() const
 			{
 				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->shape().x, pthis->shape().y) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 			}
 		};
 

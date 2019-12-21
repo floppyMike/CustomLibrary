@@ -59,7 +59,7 @@ namespace ctl
 		auto& train(const Data &d, const double &learnRate)
 		{
 			if (d.first.size() != m_neurons.front() || d.second.size() != m_neurons.back())
-				throw Log("Neural Network: train: Data is inconsistant with amount of neurons.", Log::Severity::ERR0R);
+				throw err::Log("Neural Network: train: Data is inconsistant with amount of neurons.", Log::Severity::ERR0R);
 
 			//Calculate output and store it
 			std::vector<Matrix<double>> neuronOutput;
@@ -116,7 +116,7 @@ namespace ctl
 		{
 			//Check
 			if (d.size() != m_neurons.front())
-				throw Log("Neural Network: query: Data is inconsistant with amount of neurons.", Log::Severity::ERR0R);
+				throw err::Log("Neural Network: query: Data is inconsistant with amount of neurons.", Log::Severity::ERR0R);
 
 			//Feedforward
 			Matrix<double> pred(d.begin(), d.end());
@@ -144,7 +144,7 @@ namespace ctl
 		{
 			std::ofstream file(fileName, std::ios::binary | std::ios::out);
 			if (!file)
-				throw Log("NeuralNet: save: file couldn't be created.", Log::Severity::ERR0R);
+				throw err::Log("NeuralNet: save: file couldn't be created.", Log::Severity::ERR0R);
 
 			for (const auto& iter : m_connections)
 			{
@@ -166,7 +166,7 @@ namespace ctl
 		{
 			std::ifstream file(fileName, std::ios::binary | std::ios::in);
 			if (!file)
-				throw Log("NeuralNet: open: file is empty or non existant.", Log::Severity::ERR0R);
+				throw err::Log("NeuralNet: open: file is empty or non existant.", Log::Severity::ERR0R);
 
 			for (auto& conn : m_connections)
 				for (auto& wei_bia : conn)

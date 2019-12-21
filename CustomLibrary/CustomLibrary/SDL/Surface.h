@@ -37,7 +37,7 @@ namespace ctl
 			Surface& colorKey(Uint32 key, SDL_bool enabled = SDL_TRUE)
 			{
 				if (SDL_SetColorKey(m_surface.get(), enabled, key) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 				return *this;
 			}
 

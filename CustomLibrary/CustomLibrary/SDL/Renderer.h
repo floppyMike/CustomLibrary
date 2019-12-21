@@ -17,7 +17,7 @@ namespace ctl::sdl
 		basicRenderer(ImplWin* win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
 			if ((m_renderer = SDL_CreateRenderer(win->get(), -1, rendererFlags)) == nullptr)
-				throw ctl::Log(SDL_GetError());
+				throw ctl::err::Log(SDL_GetError());
 
 			SDL_SetRenderDrawColor(m_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		}

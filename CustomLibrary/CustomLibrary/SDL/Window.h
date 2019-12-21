@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BasicTypes.h"
+#include "../Error.h"
+
 #include <cassert>
 
 namespace ctl::sdl
@@ -18,7 +20,7 @@ namespace ctl::sdl
 			m_window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 				dim.w, dim.h, windowFlags);
 			if (m_window == nullptr)
-				throw ctl::Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			m_id = SDL_GetWindowID(m_window);
 		}

@@ -34,14 +34,14 @@ namespace ctl
 		{
 			m_rectWindow = { 0, 0, 1, 1 };
 			if (SetConsoleWindowInfo(m_hConsoleOut, TRUE, &m_rectWindow) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			COORD coord = { m_screenSize[0], m_screenSize[1] };
 			if (SetConsoleScreenBufferSize(m_hConsoleOut, coord) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			if (SetConsoleActiveScreenBuffer(m_hConsoleOut) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			CONSOLE_FONT_INFOEX cfi =
 			{
@@ -54,23 +54,23 @@ namespace ctl
 			};
 			wcscpy_s(cfi.FaceName, fontName.data());
 			if (SetCurrentConsoleFontEx(m_hConsoleOut, false, &cfi) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			m_rectWindow = { 0, 0, m_screenSize[0] - 1, m_screenSize[1] - 1 };
 			if (SetConsoleWindowInfo(m_hConsoleOut, TRUE, &m_rectWindow) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			if (SetConsoleMode(m_hConsoleIn, ENABLE_EXTENDED_FLAGS | ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT) == 0)
-				throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 
 			////Check screen size
 			//CONSOLE_SCREEN_BUFFER_INFO csbi;
 			//if (!GetConsoleScreenBufferInfo(m_hConsoleIn, &csbi))
-			//	throw Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
+			//	throw err::Log("ConsoleDisplay: " + GetLastError(), ctl::Log::Severity::ERR0R);
 			//if (m_screenSize[0] > csbi.dwMaximumWindowSize.X)
-			//	throw Log("ConsoleDisplay: console width too large.", ctl::Log::Severity::ERR0R);
+			//	throw err::Log("ConsoleDisplay: console width too large.", ctl::Log::Severity::ERR0R);
 			//if (m_screenSize[1] > csbi.dwMaximumWindowSize.Y)
-			//	throw Log("ConsoleDisplay: console width too large.", ctl::Log::Severity::ERR0R);
+			//	throw err::Log("ConsoleDisplay: console width too large.", ctl::Log::Severity::ERR0R);
 		}
 
 		~ConsoleDisplay()
@@ -96,7 +96,7 @@ namespace ctl
 		constexpr void _locCheck_(const size_t &xy) const
 		{
 			if (xy > static_cast<size_t>(m_screenSize.product()) || xy < 0)
-				throw Log("ConsoleDisplay: loc: out of range.", ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: loc: out of range.", ctl::Log::Severity::ERR0R);
 		}
 	public:
 		auto& loc(const size_t &xy) { _locCheck_(xy); return m_buff[xy]; }
@@ -112,7 +112,7 @@ namespace ctl
 		auto& outputBuff()
 		{
 			if (WriteConsoleOutput(m_hConsoleOut, m_buff.data(), { m_screenSize[0], m_screenSize[1] }, { 0, 0 }, &m_rectWindow) == 0)
-				throw Log("ConsoleDisplay: outputBuff: " + GetLastError(), ctl::Log::Severity::ERR0R);
+				throw err::Log("ConsoleDisplay: outputBuff: " + GetLastError(), ctl::Log::Severity::ERR0R);
 			
 			return *this;
 		}

@@ -183,7 +183,7 @@ namespace ctl::net
 		void _throwErr_(const std::error_code& err)
 		{
 			if (err)
-				throw Log(err.message());
+				throw err::Log(err.message());
 		}
 
 		void _resolve_(const std::error_code& err, tcp::resolver::results_type endIter);
@@ -246,9 +246,9 @@ namespace ctl::net
 		std::getline(response_s, statusMessage);
 
 		if (!response_s || httpVersion.substr(0, 5) != "HTTP/")
-			throw Log("Invalid response\n");
+			throw err::Log("Invalid response\n");
 		if (statusCode != 200)
-			throw Log("Response returned with status code " + std::to_string(statusCode));
+			throw err::Log("Response returned with status code " + std::to_string(statusCode));
 
 		m_session.async_read_until(m_buffer, "\r\n\r\n", [this](const std::error_code& err, size_t bytes) { _readHeaders_(err, bytes); });
 	}
@@ -279,6 +279,6 @@ namespace ctl::net
 		}
 
 		else if (err != asio::error::eof)
-			throw Log(err.message());
+			throw err::Log(err.message());
 	}
 }

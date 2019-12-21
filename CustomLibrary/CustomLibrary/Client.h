@@ -89,7 +89,7 @@ namespace ctl::net
 	inline void FClient::_resolve_(const std::error_code& err, tcp::resolver::iterator endIter)
 	{
 		if (err)
-			throw Log(err.message());
+			throw err::Log(err.message());
 
 		asio::async_connect(*m_socket, endIter,
 			std::bind(&FClient::_connect_, this, std::placeholders::_1));
@@ -98,7 +98,7 @@ namespace ctl::net
 	inline void FClient::_connect_(const std::error_code& err)
 	{
 		if (err)
-			throw Log(err.message());
+			throw err::Log(err.message());
 
 		asio::async_write(*m_socket, m_request,
 			std::bind(&FClient::_writeRequest_, this, std::placeholders::_1));
@@ -107,7 +107,7 @@ namespace ctl::net
 	inline void FClient::_writeRequest_(const std::error_code& err)
 	{
 		if (err)
-			throw Log(err.message());
+			throw err::Log(err.message());
 
 		asio::async_read_until(*m_socket, m_response, "\r\n",
 			std::bind(&FClient::_readStatusLine_, this, std::placeholders::_1));
@@ -116,7 +116,7 @@ namespace ctl::net
 	inline void FClient::_readStatusLine_(const std::error_code& err)
 	{
 		if (err)
-			throw Log(err.message());
+			throw err::Log(err.message());
 
 		std::istream response_s(&m_response);
 		std::string httpVersion;
@@ -127,9 +127,9 @@ namespace ctl::net
 		std::getline(response_s, statusMessage);
 
 		if (!response_s || httpVersion.substr(0, 5) != "HTTP/")
-			throw Log("Client: Invalid response\n");
+			throw err::Log("Client: Invalid response\n");
 		if (statusCode != 200)
-			throw Log("Client: Response returned with status code " + std::to_string(statusCode));
+			throw err::Log("Client: Response returned with status code " + std::to_string(statusCode));
 
 		asio::async_read_until(*m_socket, m_response, "\r\n\r\n",
 			std::bind(&FClient::_readHeaders_, this, std::placeholders::_1));
@@ -138,7 +138,7 @@ namespace ctl::net
 	inline void FClient::_readHeaders_(const std::error_code& err)
 	{
 		if (err)
-			throw Log(err.message());
+			throw err::Log(err.message());
 
 		std::istream response_s(&m_response);
 
@@ -163,7 +163,7 @@ namespace ctl::net
 		}
 
 		else if (err != asio::error::eof)
-			throw Log(err.message());
+			throw err::Log(err.message());
 	}
 
 
