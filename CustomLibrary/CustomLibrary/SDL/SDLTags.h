@@ -11,6 +11,9 @@ namespace ctl::sdl
 		struct isRect {};
 		struct isCircle {};
 		struct isLine {};
+
+		struct isFont {};
+		struct isTexture {};
 	}
 
 	/**

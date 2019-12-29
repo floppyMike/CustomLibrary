@@ -58,36 +58,36 @@ namespace ctl
 	};
 
 
-	template<template<template<typename> class...> class Base, template<typename> class... Ex>
-	struct Extendable : public Ex<Base<Ex...>>...
-	{
-	public:
-		Extendable() = default;
+	//template<template<template<typename> class...> class Base, template<typename> class... Ex>
+	//struct Extendable : public Ex<Base<Ex...>>...
+	//{
+	//public:
+	//	Extendable() = default;
 
-		Extendable(const Extendable&) = default;
-		Extendable(Extendable&&) = default;
+	//	Extendable(const Extendable&) = default;
+	//	Extendable(Extendable&&) = default;
 
-		Extendable& operator=(const Extendable&) = default;
-		Extendable& operator=(Extendable&&) = default;
+	//	Extendable& operator=(const Extendable&) = default;
+	//	Extendable& operator=(Extendable&&) = default;
 
-		template<template<typename> class... T>
-		Extendable(T<Base<Ex...>>&&... arg)
-			: T<Base<Ex...>>(std::move(arg))...
-		{
-		}
+	//	template<template<typename> class... T>
+	//	Extendable(T<Base<Ex...>>&&... arg)
+	//		: T<Base<Ex...>>(std::move(arg))...
+	//	{
+	//	}
 
-		template<template<typename> class... T>
-		Extendable(const Base<T...>& cast)
-			: T<Base<Ex...>>(static_cast<T<Base<Ex...>>>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
-		{
-		}
+	//	template<template<typename> class... T>
+	//	Extendable(const Base<T...>& cast)
+	//		: T<Base<Ex...>>(static_cast<T<Base<Ex...>>>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
+	//	{
+	//	}
 
-		template<template<typename> class... T>
-		Extendable(Base<T...>&& cast)
-			: T<Base<Ex...>>(static_cast<T<Base<Ex...>>&&>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
-		{
-		}
-	};
+	//	template<template<typename> class... T>
+	//	Extendable(Base<T...>&& cast)
+	//		: T<Base<Ex...>>(static_cast<T<Base<Ex...>>&&>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
+	//	{
+	//	}
+	//};
 
 
 	namespace detail 
@@ -106,7 +106,7 @@ namespace ctl
 			using type = Default;
 		};
 
-		template <typename Default, template<typename...> typename Op, typename... Args>
+		template <typename Default, template<typename...> class Op, typename... Args>
 		struct Detector<Default, std::void_t<Op<Args...>>, Op, Args...> 
 		{
 			using value_t = std::true_type;
@@ -115,16 +115,16 @@ namespace ctl
 
 	}
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	using is_detected = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::value_t;
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	constexpr auto is_detected_v = is_detected<Op, Args...>::value;
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	using detected_t = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::type;
 
-	template <typename Default, template<typename...> typename Op, typename... Args>
+	template <typename Default, template<typename...> class Op, typename... Args>
 	using detected_or = detail::Detector<Default, void, Op, Args...>;
 
 

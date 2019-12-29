@@ -1,7 +1,18 @@
-#include "Globals.h"
+#include <tuple>
+#include <iostream>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+
+#include <CustomLibrary/SDL/Engine.h>
+#include <CustomLibrary/SDL/SDLWindow.h>
+#include <CustomLibrary/SDL/State.h>
+#include <CustomLibrary/SDL/Texture.h>
+#include <CustomLibrary/SDL/Text.h>
+#include <CustomLibrary/SDL/Geometry.h>
+//#include <CustomLibrary/SDL/Button.h>
 
 using namespace ctl;
-
 
 struct State : sdl::IState
 {
@@ -53,10 +64,10 @@ struct State : sdl::IState
 	void draw() override
 	{
 		m_rend->color({ 0, 0, 0, 0xFF });
-		m_r.draw();
-		m_l.draw();
-		m_c.draw();
-		m_p.draw();
+		m_r.draw_rect();
+		m_l.draw_line();
+		m_c.draw_circle();
+		m_p.draw_point();
 
 		m_rend->color({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
@@ -79,7 +90,7 @@ private:
 
 	sdl::Texture m_texture;
 
-	sdl::Font m_font;
+	sdl::basicFont<sdl::EFontPathLoader, sdl::EFontAttrib> m_font;
 	sdl::Text m_text;
 };
 

@@ -10,8 +10,8 @@
 
 namespace ctl::sdl
 {
-	template<template<typename> class... Ex>
-	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>>...
+	template<template<typename, typename...> class... Ex>
+	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>, Tags::isTexture, Tags::isRect>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
@@ -26,7 +26,11 @@ namespace ctl::sdl
 
 		auto& texture(SDL_Texture* tex) noexcept
 		{
+			assert(tex && "SDL_Texture is a nullptr.");
+
 			m_texture.reset(tex);
+			reset_shape();
+
 			return *this;
 		}
 
@@ -47,8 +51,8 @@ namespace ctl::sdl
 	};
 
 
-	template<typename Impl>
-	class ETexRend
+	template<typename Impl, typename... Tag>
+	class ERender
 	{
 		Impl* const pthis = static_cast<Impl*>(this);
 
@@ -58,49 +62,13 @@ namespace ctl::sdl
 			if (SDL_RenderCopy(pthis->renderer()->get(), pthis->texture(), nullptr, pthis->shape().rect_ptr()) < 0)
 				throw err::Log(SDL_GetError());
 		}
-	};
 
-
-	template<typename Impl>
-	class ETexLoad
-	{
-		Impl* const pthis = static_cast<Impl*>(this);
-
-		Impl& _load_(SDL_Texture* tex)
+		void draw(double angle, const Point<int>& center, SDL_RendererFlip flip) const
 		{
-			if (!tex)
+			if (SDL_RenderCopyEx(pthis->renderer()->get(), pthis->texture(), nullptr, pthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 				throw err::Log(SDL_GetError());
-
-			pthis->texture(tex);
-			pthis->reset_shape();
-
-			return *pthis;
 		}
 
-	public:
-		Impl& load(SDL_Surface* surface)
-		{
-			return _load_(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
-		}
-
-		Impl& load(const char* path)
-		{
-			return _load_(IMG_LoadTexture(pthis->renderer()->get(), path));
-		}
-
-		Impl& load(void* src, int size)
-		{
-			return _load_(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
-		}
-	};
-
-
-	template<typename Impl>
-	class ETexAttrib
-	{
-		Impl* const pthis = static_cast<Impl*>(this);
-
-	public:
 		auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
 		{
 			if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
@@ -118,14 +86,14 @@ namespace ctl::sdl
 			return c;
 		}
 
-		auto& blendMode(const SDL_BlendMode& b)
+		auto& blend_mode(const SDL_BlendMode& b)
 		{
 			if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
 				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
-		SDL_BlendMode blendMode() const
+		SDL_BlendMode blend_mode() const
 		{
 			SDL_BlendMode b;
 
@@ -135,14 +103,14 @@ namespace ctl::sdl
 			return b;
 		}
 
-		auto& alphaMod(const Uint8& a)
+		auto& alpha_mod(const Uint8& a)
 		{
 			if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
 				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
-		Uint8 alphaMod() const
+		Uint8 alpha_mod() const
 		{
 			Uint8 a;
 
@@ -154,7 +122,31 @@ namespace ctl::sdl
 	};
 
 
-	using Texture = TextureFrame<ETexLoad, ETexRend, ETexAttrib>;
+	template<typename Impl, typename... Tag>
+	class ELoader
+	{
+		Impl* const pthis = static_cast<Impl*>(this);
+
+	public:
+		Impl& load(SDL_Surface* surface)
+		{
+			return pthis->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
+		}
+
+		Impl& load(const char* path)
+		{
+			return pthis->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
+		}
+
+		Impl& load(void* src, int size)
+		{
+			return pthis->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
+		}
+	};
+
+
+
+	using Texture = TextureFrame<ELoader, ERender>;
 
 }
 

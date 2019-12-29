@@ -11,12 +11,12 @@
 
 namespace ctl::sdl
 {
-	template<typename Shape, template<typename> class... Ex>
-	class Frame : public Ex<Frame<Shape, Ex...>>...
+	template<typename Shape, template<typename, typename...> class... Ex>
+	class Frame : public Ex<Frame<Shape, Ex...>, typename Shape::tag>...
 	{
-	public:
-		using shape_t = Shape;
+		using tag_t = typename Shape::tag;
 
+	public:
 		Frame() = default;
 
 		Frame(const Frame&) = default;
@@ -25,23 +25,23 @@ namespace ctl::sdl
 		Frame& operator=(const Frame&) = default;
 		Frame& operator=(Frame&&) = default;
 
-		template<template<typename> class... T>
-		Frame(T<Frame>&&... arg)
-			: T<Frame>(std::move(arg))...
+		template<template<typename, typename> class... T>
+		Frame(T<Frame, tag_t>&&... arg)
+			: T<Frame, tag_t>(std::move(arg))...
 		{
 		}
 
-		template<template<typename> class... T>
+		template<template<typename, typename> class... T>
 		Frame(const Frame<Shape, T...>& cast)
-			: T<Frame>(static_cast<T<Frame>>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
+			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
 			, m_rend(cast.m_rend)
 			, m_shape(cast.m_shape)
 		{
 		}
 
-		template<template<typename> class... T>
+		template<template<typename, typename> class... T>
 		Frame(Frame<Shape, T...>&& cast)
-			: T<Frame>(static_cast<T<Frame>&&>(*reinterpret_cast<T<Frame>*>(static_cast<T<Frame<Shape, T...>>*>(&cast))))...
+			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>&&>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
 			, m_rend(cast.m_rend)
 			, m_shape(cast.m_shape)
 		{
@@ -62,7 +62,7 @@ namespace ctl::sdl
 		{
 			return m_shape;
 		}
-		constexpr auto& shape(const shape_t& s) noexcept
+		constexpr auto& shape(const Shape& s) noexcept
 		{
 			m_shape = s;
 			return *this;
@@ -80,12 +80,12 @@ namespace ctl::sdl
 			return m_rend;
 		}
 
-		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, pos)
-		FORWARDING_MEMBER_FUNCTIONS(shape_t, m_shape, translate)
+		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, pos)
+		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, translate)
 
 	protected:
 		Renderer* m_rend = nullptr;
-		shape_t m_shape;
+		Shape m_shape;
 	};
 
 
@@ -93,20 +93,20 @@ namespace ctl::sdl
 	//Single
 	//----------------------------------------------
 
-	template<template<typename> class... Ex>
+	template<template<typename, typename...> class... Ex>
 	using RectFrame = Frame<Rect<int, int>, Ex...>;
 
-	template<template<typename> class... Ex>
+	template<template<typename, typename...> class... Ex>
 	using CircleFrame = Frame<Circle<int, unsigned int>, Ex...>;
 
-	template<template<typename> class... Ex>
+	template<template<typename, typename...> class... Ex>
 	using LineFrame = Frame<Line<int>, Ex...>;
 
-	template<template<typename> class... Ex>
+	template<template<typename, typename...> class... Ex>
 	using PointFrame = Frame<Point<int>, Ex...>;
 
 
-	namespace detail
+	namespace
 	{
 		template<typename, typename>
 		class _Drawable_ {};
@@ -117,13 +117,13 @@ namespace ctl::sdl
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
 		public:
-			void draw() const
+			void draw_rect() const
 			{
 				if (SDL_RenderDrawRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
 			}
 
-			void draw_filled() const
+			void draw_filled_rect() const
 			{
 				if (SDL_RenderFillRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
@@ -136,17 +136,17 @@ namespace ctl::sdl
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
 		public:
-			void draw() const
+			void draw_circle() const
 			{
 				_draw_(SDL_RenderDrawPoints);
 			}
 
-			void drawFilled() const
+			void draw_filled_circle() const
 			{
 				_draw_(SDL_RenderDrawLines);
 			}
 
-			void drawP(int pres) const
+			void draw_p(int pres) const
 			{
 				std::vector<SDL_Point> ps;
 				ps.reserve(pres + 1);
@@ -212,7 +212,7 @@ namespace ctl::sdl
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
 		public:
-			void draw() const
+			void draw_line() const
 			{
 				if (SDL_RenderDrawLine(pthis->renderer()->get(), pthis->shape().x1, pthis->shape().y1, pthis->shape().x2, pthis->shape().y2) != 0)
 					throw err::Log(SDL_GetError());
@@ -225,20 +225,21 @@ namespace ctl::sdl
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
 		public:
-			void draw() const
+			void draw_point() const
 			{
 				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->shape().x, pthis->shape().y) != 0)
 					throw err::Log(SDL_GetError());
 			}
 		};
-
-		template<template<typename, template<typename> class...> class T, typename Shape, template<typename> class... Arg>
-		constexpr auto _extracted_tag_(T<Shape, Arg...>&&) -> typename Shape::tag;
 	}
 
 
-	template<typename Impl>
-	using EDrawable = detail::_Drawable_<Impl, decltype(detail::_extracted_tag_(std::declval<Impl>()))>;
+	template<typename Impl, typename... Tag>
+	using EDrawable = _Drawable_<Impl, std::conditional_t<std::disjunction_v<std::is_same<Tags::isRect, Tag>...>, Tags::isRect, 
+		std::conditional_t<std::disjunction_v<std::is_same<Tags::isPoint, Tag>...>, Tags::isPoint,
+		std::conditional_t<std::disjunction_v<std::is_same<Tags::isLine, Tag>...>, Tags::isLine,
+		std::conditional_t<std::disjunction_v<std::is_same<Tags::isCircle, Tag>...>, Tags::isCircle,
+		void>>>>>;
 
 
 	//----------------------------------------------

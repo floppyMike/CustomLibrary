@@ -148,7 +148,7 @@ namespace ctl::sdl
 			}
 
 			m_rect.renderer()->color(col);
-			m_rect.drawFilled();
+			m_rect.draw_filled();
 
 			m_rect.renderer()->color({ 0, 0, 0, 0xFF });
 			m_rect.draw();

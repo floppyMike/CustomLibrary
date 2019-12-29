@@ -4,10 +4,9 @@
 #include <functional>
 
 #include "Error.h"
-#include "Vector.h"
 #include "RandomGenerator.h"
 
-namespace ctl
+namespace ctl::mat
 {
 	template<typename Type, typename Allocator = std::allocator<Type>, 
 		typename = typename std::enable_if_t<std::is_arithmetic_v<Type>>>
@@ -169,7 +168,7 @@ namespace ctl
 		auto& emplace_back(const Type &ele)
 		{
 			if (m_data.size() == m_data.capacity())
-				throw err::Log("Matrix: emplace_back: reserved size reached", Log::Severity::ERR0R);
+				throw err::Log("Matrix: emplace_back: reserved size reached");
 
 			m_data.emplace_back(ele);
 
@@ -178,9 +177,9 @@ namespace ctl
 		auto& emplace_back(Type&& ele)
 		{
 			if (m_data.size() == m_data.capacity())
-				throw err::Log("Matrix: emplace_back: reserved size reached", Log::Severity::ERR0R);
+				throw err::Log("Matrix: emplace_back: reserved size reached");
 
-			m_data.emplace_back(ele);
+			m_data.emplace_back(std::move(ele));
 
 			return *this;
 		}

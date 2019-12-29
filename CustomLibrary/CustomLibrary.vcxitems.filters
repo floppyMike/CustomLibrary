@@ -22,6 +22,9 @@
     <Filter Include="CustomLibrary\Include\SDL\Shapes">
       <UniqueIdentifier>{b464e54e-7c70-400c-8029-2d14a35bd609}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Extensions">
+      <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
