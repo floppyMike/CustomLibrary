@@ -1,18 +1,17 @@
 #pragma once
 
-#include "SDLTags.h"
-#include <SDL.h>
+#include "Tags.h"
 
-namespace ctl::sdl
+namespace ctl::mth
 {
 	template<typename T>
 	class Point
 	{
-		static_assert(std::conjunction_v<std::is_arithmetic<T>>, "Type must be arithmetic");
+		static_assert(std::is_arithmetic_v<T>, "Type must be arithmetic");
 
 	public:
 		using num_t1 = T;
-		using tag = Tags::isPoint;
+		using tag = tag::isPoint;
 
 		constexpr Point() = default;
 		constexpr Point(const Point&) = default;
@@ -32,14 +31,8 @@ namespace ctl::sdl
 		template<typename U>
 		operator Point<U>() const noexcept;
 
-		/**
-		* @summary handles type overload to SDL_Point
-		*/
+#ifdef SDL_h_
 		operator SDL_Point() const noexcept;
-
-		/**
-		* @summary handles type overload to SDL_FPoint
-		*/
 		operator SDL_FPoint() const noexcept;
 
 		const SDL_Point* point_ptr() const noexcept
@@ -52,6 +45,7 @@ namespace ctl::sdl
 			static_assert(false, "Type must be int.");
 			return nullptr;
 		}
+#endif // SDL_h_
 
 		constexpr auto& translate(const Point<T>& delta) noexcept
 		{
@@ -90,6 +84,7 @@ namespace ctl::sdl
 	//Implementation
 	//----------------------------------------------
 
+#ifdef SDL_h_
 	template<typename T>
 	inline Point<T>::operator SDL_Point() const noexcept
 	{
@@ -113,6 +108,7 @@ namespace ctl::sdl
 	{
 		return reinterpret_cast<SDL_Point*>(this);
 	}
+#endif // SDL_h_
 
 	//--------------------------------------------------------
 

@@ -1,21 +1,20 @@
 #pragma once
 
-#include "SDLTags.h"
+#include "Tags.h"
 #include "Dim.h"
 #include "Point.h"
-#include <SDL.h>
 
-namespace ctl::sdl
+namespace ctl::mth
 {
 	template<typename T1, typename T2>
 	class Rect
 	{
-		static_assert(std::conjunction_v<std::is_arithmetic<T1>, std::is_arithmetic<T2>>, "Type must be arithmetic");
+		static_assert(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>, "Type must be arithmetic");
 
 	public:
 		using num_t1 = T1;
 		using num_t2 = T2;
-		using tag = Tags::isRect;
+		using tag = tag::isRect;
 
 		constexpr Rect() noexcept = default;
 
@@ -27,11 +26,12 @@ namespace ctl::sdl
 		{
 		}
 
-		constexpr Rect(const Point<T1>& p, const Dim<T2>& d) noexcept
+		constexpr Rect(const mth::Point<T1>& p, const mth::Dim<T2>& d) noexcept
 			: Rect(p.x, p.y, d.w, d.h)
 		{
 		}
 
+#ifdef SDL_h_
 		operator SDL_Rect() const noexcept
 		{
 			return { static_cast<int>(x), static_cast<int>(y),
@@ -53,30 +53,31 @@ namespace ctl::sdl
 			static_assert(false, "Must be of type int.");
 			return nullptr;
 		}
+#endif // SDL_h_
 
-		constexpr Point<T1> pos() const
+		constexpr mth::Point<T1> pos() const
 		{
 			return { x, y };
 		}
-		constexpr auto& pos(const Point<T1>& p) noexcept
+		constexpr auto& pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
 			return *this;
 		}
 
-		constexpr Dim<T2> dim() const noexcept
+		constexpr mth::Dim<T2> dim() const noexcept
 		{
 			return { w, h };
 		}
-		constexpr auto& dim(const Dim<T2>& d) noexcept
+		constexpr auto& dim(const mth::Dim<T2>& d) noexcept
 		{
 			w = d.w;
 			h = d.h;
 			return *this;
 		}
 
-		constexpr auto& translate(const Point<T1>& delta) noexcept
+		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
@@ -91,12 +92,12 @@ namespace ctl::sdl
 	template<typename T1, typename T2>
 	class RectRef
 	{
-		static_assert(std::conjunction_v<std::is_arithmetic<T1>, std::is_arithmetic<T2>>, "Type must be arithmetic");
+		static_assert(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>, "Type must be arithmetic");
 
 	public:
 		using num_t1 = T1;
 		using num_t2 = T2;
-		using tag = Tags::isRect;
+		using tag = tag::isRect;
 
 		constexpr RectRef() noexcept = delete;
 		constexpr RectRef(const RectRef&) noexcept = default;
@@ -112,19 +113,19 @@ namespace ctl::sdl
 		/**
 		* @summary construct from point and dimension
 		*/
-		constexpr RectRef(Point<T1>& p, Dim<T2>& d) noexcept
+		constexpr RectRef(mth::Point<T1>& p, mth::Dim<T2>& d) noexcept
 			: RectRef(p.x, p.y, d.w, d.h)
 		{
 		}
 
-		constexpr auto& translate(const Point<T1>& delta) noexcept
+		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
 			return *this;
 		}
 
-		constexpr auto& pos(const Point<T1>& p) noexcept
+		constexpr auto& pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
@@ -141,6 +142,7 @@ namespace ctl::sdl
 	//Implementation
 	//----------------------------------------------
 
+#ifdef SDL_h_
 	template<>
 	inline SDL_Rect* Rect<int, int>::rect_ptr() noexcept
 	{
@@ -152,4 +154,6 @@ namespace ctl::sdl
 	{
 		return reinterpret_cast<const SDL_Rect*>(this);
 	}
+#endif // SDL_h_
+
 }

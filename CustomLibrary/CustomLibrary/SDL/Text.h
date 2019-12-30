@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BasicTypes.h"
+#include "../BasicTypes.h"
 #include "Texture.h"
 #include "../Error.h"
 
@@ -11,12 +11,12 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class basicFont : public Ex<basicFont<Ex...>, Tags::isFont>...
+	class basicFont : public Ex<basicFont<Ex...>, tag::isFont>...
 	{
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 	public:
-		using tag = Tags::isFont;
+		using tag = tag::isFont;
 
 		basicFont() = default;
 		basicFont(basicFont&&) = default;
@@ -42,6 +42,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tag>
 	class EFontLoader
 	{
+		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -58,6 +59,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tag>
 	class EFontAttrib
 	{
+		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -74,7 +76,7 @@ namespace ctl::sdl
 
 		auto hypo_size(const char* text)
 		{
-			Dim<int> temp;
+			mth::Dim<int> temp;
 			TTF_SizeUTF8(pthis->font(), text, &temp.w, &temp.h);
 			return temp;
 		}
@@ -87,7 +89,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... T>
 	class ETextLoader
 	{
-		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 		auto& _load_(SDL_Surface* s, const char* text)

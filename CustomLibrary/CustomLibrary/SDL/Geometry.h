@@ -2,8 +2,8 @@
 
 #include <SDL.h>
 
-#include <CustomLibrary/utility.h>
-#include "BasicTypes.h"
+#include "../utility.h"
+#include "../BasicTypes.h"
 #include "Renderer.h"
 
 #include <vector>
@@ -94,16 +94,16 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<template<typename, typename...> class... Ex>
-	using RectFrame = Frame<Rect<int, int>, Ex...>;
+	using RectFrame = Frame<mth::Rect<int, int>, Ex...>;
 
 	template<template<typename, typename...> class... Ex>
-	using CircleFrame = Frame<Circle<int, unsigned int>, Ex...>;
+	using CircleFrame = Frame<mth::Circle<int, unsigned int>, Ex...>;
 
 	template<template<typename, typename...> class... Ex>
-	using LineFrame = Frame<Line<int>, Ex...>;
+	using LineFrame = Frame<mth::Line<int>, Ex...>;
 
 	template<template<typename, typename...> class... Ex>
-	using PointFrame = Frame<Point<int>, Ex...>;
+	using PointFrame = Frame<mth::Point<int>, Ex...>;
 
 
 	namespace
@@ -112,7 +112,7 @@ namespace ctl::sdl
 		class _Drawable_ {};
 
 		template<typename Impl>
-		class _Drawable_<Impl, Tags::isRect>
+		class _Drawable_<Impl, tag::isRect>
 		{
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
@@ -131,7 +131,7 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, Tags::isCircle>
+		class _Drawable_<Impl, tag::isCircle>
 		{
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
@@ -168,8 +168,8 @@ namespace ctl::sdl
 			{
 				const auto d = pthis->shape().r * 2;
 
-				Point<int> p(pthis->shape().r - 1, 0);
-				Point<int> tp(1, 1);
+				mth::Point<int> p(pthis->shape().r - 1, 0);
+				mth::Point<int> tp(1, 1);
 
 				int err = tp.x - d;
 
@@ -207,7 +207,7 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, Tags::isLine>
+		class _Drawable_<Impl, tag::isLine>
 		{
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
@@ -220,7 +220,7 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, Tags::isPoint>
+		class _Drawable_<Impl, tag::isPoint>
 		{
 			const Impl* const pthis = static_cast<const Impl*>(this);
 
@@ -235,10 +235,10 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... Tag>
-	using EDrawable = _Drawable_<Impl, std::conditional_t<std::disjunction_v<std::is_same<Tags::isRect, Tag>...>, Tags::isRect, 
-		std::conditional_t<std::disjunction_v<std::is_same<Tags::isPoint, Tag>...>, Tags::isPoint,
-		std::conditional_t<std::disjunction_v<std::is_same<Tags::isLine, Tag>...>, Tags::isLine,
-		std::conditional_t<std::disjunction_v<std::is_same<Tags::isCircle, Tag>...>, Tags::isCircle,
+	using EDrawable = _Drawable_<Impl, std::conditional_t<std::disjunction_v<std::is_same<tag::isRect, Tag>...>, tag::isRect,
+		std::conditional_t<std::disjunction_v<std::is_same<tag::isPoint, Tag>...>, tag::isPoint,
+		std::conditional_t<std::disjunction_v<std::is_same<tag::isLine, Tag>...>, tag::isLine,
+		std::conditional_t<std::disjunction_v<std::is_same<tag::isCircle, Tag>...>, tag::isCircle,
 		void>>>>>;
 
 
@@ -249,20 +249,20 @@ namespace ctl::sdl
 	template<typename... Shapes>
 	class MultiShape
 	{
-		static_assert(contains_tag_v<Shapes...>, "Shapes must have the tag.");
+		static_assert(tag::contains_tag_v<Shapes...>, "Shapes must have the tag.");
 
 		template<typename T>
 		void draw_handler(T& arg) const
 		{
 			using tag_t = typename T::value_type::tag;
 
-			if constexpr (std::is_same_v<Tags::isRect, tag_t>)
+			if constexpr (std::is_same_v<tag::isRect, tag_t>)
 				SDL_RenderDrawRects(m_rend->get(), arg.front().rect_ptr(), arg.size());
 
-			else if constexpr (std::is_same_v<Tags::isLine, tag_t>)
+			else if constexpr (std::is_same_v<tag::isLine, tag_t>)
 				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size() << 1);
 
-			else if constexpr (std::is_same_v<Tags::isPoint, tag_t>)
+			else if constexpr (std::is_same_v<tag::isPoint, tag_t>)
 				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size());
 
 			else

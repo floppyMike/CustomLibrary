@@ -2,7 +2,7 @@
 
 #include "../Error.h"
 #include "../Traits.h"
-#include "Dim.h"
+#include "../Dim.h"
 #include <SDL.h>
 
 #include <cassert>
@@ -56,7 +56,7 @@ namespace ctl::sdl
 	class ERendererDefault : public crtp<Impl, ERendererDefault>
 	{
 	public:
-		void logical_size(const ctl::sdl::Dim<int>& dim)
+		void logical_size(const mth::Dim<int>& dim)
 		{
 			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
 			SDL_RenderSetLogicalSize(this->_().get(), dim.w, dim.h);

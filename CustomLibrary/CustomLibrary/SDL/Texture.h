@@ -11,7 +11,7 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>, Tags::isTexture, Tags::isRect>...
+	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>, tag::isTexture, tag::isRect>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
@@ -51,10 +51,10 @@ namespace ctl::sdl
 	};
 
 
-	template<typename Impl, typename... Tag>
+	template<typename Impl, typename... T>
 	class ETextureRender
 	{
-		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -64,7 +64,7 @@ namespace ctl::sdl
 				throw err::Log(SDL_GetError());
 		}
 
-		void draw(double angle, const Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
+		void draw(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
 		{
 			if (SDL_RenderCopyEx(pthis->renderer()->get(), pthis->texture(), blit, pthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 				throw err::Log(SDL_GetError());
@@ -123,10 +123,10 @@ namespace ctl::sdl
 	};
 
 
-	template<typename Impl, typename... Tag>
+	template<typename Impl, typename... T>
 	class ETextureLoader
 	{
-		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -209,7 +209,7 @@ namespace ctl::sdl
 //			return *this;
 //		}
 //
-//		auto& load(const Dim &wh, const SDL_TextureAccess &a)
+//		auto& load(const mth::Dim &wh, const SDL_TextureAccess &a)
 //		{
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_PIXELFORMAT_RGBA8888, a, wh.w, wh.h));
 //			if (!m_texture)

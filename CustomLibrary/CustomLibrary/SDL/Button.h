@@ -11,7 +11,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tags>
 	class EButton
 	{
-		static_assert(has_shape_v<Tags...>, "Parent doesn't support shapes.");
+		static_assert(tag::has_shape_v<Tags...>, "Parent doesn't support shapes.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -20,7 +20,7 @@ namespace ctl::sdl
 			switch (e.type)
 			{
 			case SDL_MOUSEMOTION:
-				if (collision(Point(e.motion.x, e.motion.y), pthis->shape()))
+				if (collision(mth::Point(e.motion.x, e.motion.y), pthis->shape()))
 				{
 					if (!m_is_inside)
 						m_is_inside = true;

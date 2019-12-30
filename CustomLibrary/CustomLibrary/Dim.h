@@ -1,9 +1,9 @@
 #pragma once
 
-#include "SDLTags.h"
+#include "Tags.h"
 #include <SDL.h>
 
-namespace ctl::sdl
+namespace ctl::mth
 {
 	template<typename T>
 	class Dim
@@ -12,7 +12,7 @@ namespace ctl::sdl
 
 	public:
 		using num_t1 = T;
-		using tag = Tags::isDim;
+		using tag = tag::isDim;
 
 		constexpr Dim() = default;
 		constexpr Dim(const Dim&) = default;

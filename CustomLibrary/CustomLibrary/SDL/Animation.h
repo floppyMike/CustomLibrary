@@ -2,7 +2,7 @@
 
 #include "../Timer.h"
 #include "Texture.h"
-#include "BasicTypes.h"
+#include "../BasicTypes.h"
 
 #include <vector>
 
@@ -10,14 +10,14 @@ namespace ctl::sdl
 {
 	struct AniFrame
 	{
-		Rect<int, int> shape;
+		mth::Rect<int, int> shape;
 		std::chrono::milliseconds step;
 	};
 
 	template<typename Impl, typename... T>
 	class EAnimation
 	{
-		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:

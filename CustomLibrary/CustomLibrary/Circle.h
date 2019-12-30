@@ -1,21 +1,19 @@
 #pragma once
 
-#include "SDLTags.h"
 #include "Point.h"
-#include "BasicTypes.h"
-#include <SDL.h>
+#include "Tags.h"
 
-namespace ctl::sdl
+namespace ctl::mth
 {
 	template <typename T1, typename T2>
 	class Circle
 	{
-		static_assert(std::conjunction_v<std::is_arithmetic<T1>, std::is_arithmetic<T2>>, "Type must be arithmetic");
+		static_assert(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>, "Type must be arithmetic");
 
 	public:
 		using num_t1 = T1;
 		using num_t2 = T2;
-		using tag = Tags::isCircle;
+		using tag = tag::isCircle;
 
 		constexpr Circle() noexcept = default;
 		constexpr Circle(const Circle&) noexcept = default;
@@ -27,27 +25,27 @@ namespace ctl::sdl
 		{
 		}
 
-		constexpr Circle(const Point<T1>& p, const T2& r) noexcept
+		constexpr Circle(const mth::Point<T1>& p, const T2& r) noexcept
 			: Circle(p.x, p.y, r)
 		{
 		}
 
 		/**
 		* @summary point accessors
-		* @returns reference to Point
+		* @returns reference to mth::Point
 		*/
 		constexpr const auto& pos() const noexcept
 		{
-			return Point<T1>(x, y);
+			return mth::Point<T1>(x, y);
 		}
-		constexpr auto& pos(const Point<T1>& p) noexcept
+		constexpr auto& pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
 			return *this;
 		}
 
-		constexpr auto& translate(const Point<T1>& delta) noexcept
+		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
@@ -62,12 +60,12 @@ namespace ctl::sdl
 	template<typename T1, typename T2>
 	class CircleRef
 	{
-		static_assert(std::conjunction_v<std::is_arithmetic<T1>, std::is_arithmetic<T2>>, "Type must be arithmetic");
+		static_assert(std::is_arithmetic_v<T1> && std::is_arithmetic_v<T2>, "Type must be arithmetic");
 
 	public:
 		using num_t1 = T1;
 		using num_t2 = T2;
-		using tag = Tags::isCircle;
+		using tag = tag::isCircle;
 
 		constexpr CircleRef() noexcept = delete;
 		constexpr CircleRef(const CircleRef&) noexcept = default;
@@ -85,19 +83,19 @@ namespace ctl::sdl
 		/**
 		* @summary construct from point and dimension
 		*/
-		constexpr CircleRef(Point<T1>& p, T2& r) noexcept
+		constexpr CircleRef(mth::Point<T1>& p, T2& r) noexcept
 			: CircleRef(p.x, p.y, r)
 		{
 		}
 
-		constexpr auto& translate(const Point<T1>& delta) noexcept
+		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
 			return *this;
 		}
 
-		constexpr auto& pos(const Point<T1>& p) noexcept
+		constexpr auto& pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;

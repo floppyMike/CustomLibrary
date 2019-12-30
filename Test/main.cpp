@@ -30,18 +30,18 @@ struct State : sdl::IState
 		, m_ani(m_rend)
 		, m_text(m_rend)
 	{
-		m_multi.push(sdl::Rect(400, 400, 50, 50));
-		m_multi.push(sdl::Rect(400, 300, 50, 50));
+		m_multi.push(mth::Rect(400, 400, 50, 50));
+		m_multi.push(mth::Rect(400, 300, 50, 50));
 
-		m_multi.push(sdl::Line(400, 300, 50, 50));
-		m_multi.push(sdl::Line(400, 300, 449, 449));
-		m_multi.push(sdl::Line(50, 50, 449, 449));
+		m_multi.push(mth::Line(400, 300, 50, 50));
+		m_multi.push(mth::Line(400, 300, 449, 449));
+		m_multi.push(mth::Line(50, 50, 449, 449));
 
-		m_multi.push(sdl::Point(20, 400));
-		m_multi.push(sdl::Point(20, 401));
-		m_multi.push(sdl::Point(20, 402));
-		m_multi.push(sdl::Point(21, 401));
-		m_multi.push(sdl::Point(19, 401));
+		m_multi.push(mth::Point(20, 400));
+		m_multi.push(mth::Point(20, 401));
+		m_multi.push(mth::Point(20, 402));
+		m_multi.push(mth::Point(21, 401));
+		m_multi.push(mth::Point(19, 401));
 
 		m_texture.load("assets/ass.png");
 		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
@@ -53,10 +53,10 @@ struct State : sdl::IState
 		m_r.func([] { std::cout << "Button Press!\n"; });
 
 		constexpr size_t LLAMA = 48;
-		m_ani.load("assets/llama.png").shape(sdl::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
+		m_ani.load("assets/llama.png").shape(mth::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
 		for (size_t y = 0; y < 3; ++y)
 			for (size_t x = 0; x < 2; ++x)
-				m_ani.push_frame({ sdl::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
+				m_ani.push_frame({ mth::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
 		m_ani.start_ani();
 	}
 
@@ -100,9 +100,9 @@ private:
 	sdl::LineFrame<sdl::EDrawable> m_l;
 	sdl::PointFrame<sdl::EDrawable> m_p;
 
-	sdl::MultiShape<sdl::Rect<int, int>,
-		sdl::Line<int>,
-		sdl::Point<int>> m_multi;
+	sdl::MultiShape<mth::Rect<int, int>,
+		mth::Line<int>,
+		mth::Point<int>> m_multi;
 
 	sdl::Texture m_texture;
 	sdl::TextureFrame<sdl::ETextureRender, sdl::ETextureLoader, sdl::EAnimation> m_ani;

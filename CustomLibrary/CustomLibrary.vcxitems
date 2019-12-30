@@ -15,20 +15,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\BasicTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Circle.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Client.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Coder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleDisplay.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ConsoleUtility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\CString.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Dim.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Equation2.0.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Error.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Line.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Parse.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Point.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\RandomGenerator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Rect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
@@ -37,19 +43,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Circle.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Dim.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Line.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Point.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Rect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -57,7 +57,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h" />
@@ -65,6 +64,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Tags.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Timer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Traits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\UnitConvertison.h" />

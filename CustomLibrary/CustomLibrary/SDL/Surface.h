@@ -69,7 +69,7 @@ namespace ctl
 		//public:
 		//	SurfaceLoader() noexcept = default;
 
-		//	ImplSurf& load(const Dim<int>& size)
+		//	ImplSurf& load(const mth::Dim<int>& size)
 		//	{
 
 		//	}

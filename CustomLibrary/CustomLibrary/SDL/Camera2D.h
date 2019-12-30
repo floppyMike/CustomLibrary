@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BasicTypes.h"
+#include "../BasicTypes.h"
 
 namespace ctl::sdl
 {
@@ -9,28 +9,28 @@ namespace ctl::sdl
 	public:
 		/**
 		* @summary constructs collider from camera location and screen size ref
-		* @param "screen" ref to screen Dim
+		* @param "screen" ref to screen mth::Dim
 		*/
 		constexpr Camera2D() noexcept = default;
 
 		/**
 		* @summary translates screen coord to world coord
-		* @param "screen" ref to screen Dim
-		* @returns Point of world coord
+		* @param "screen" ref to screen mth::Dim
+		* @returns mth::Point of world coord
 		*/
 		template<typename T>
-		constexpr Point<T> screenToWorld(const Point<T>& loc) const noexcept;
+		constexpr mth::Point<T> screenToWorld(const mth::Point<T>& loc) const noexcept;
 
 		/**
 		* @summary translates world coord to screen coord
-		* @param "screen" ref to world Dim
-		* @returns Point of screen coord
+		* @param "screen" ref to world mth::Dim
+		* @returns mth::Point of screen coord
 		*/
 		template<typename T>
-		constexpr Point<T> worldToScreen(Point<T> loc) const noexcept;
+		constexpr mth::Point<T> worldToScreen(mth::Point<T> loc) const noexcept;
 
 		/**
-		* @summary moves Point
+		* @summary moves mth::Point
 		* @param "deltaX" x distance
 		* @param "deltaY" y distance
 		*/
@@ -41,10 +41,10 @@ namespace ctl::sdl
 		*/
 		constexpr const auto& loc() const noexcept;
 
-		constexpr auto& loc(const Point<int>& loc) noexcept;
+		constexpr auto& loc(const mth::Point<int>& loc) noexcept;
 
 	private:
-		Point<int> m_camLoc = { 0, 0 };
+		mth::Point<int> m_camLoc = { 0, 0 };
 	};
 
 
@@ -53,13 +53,13 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename T>
-	constexpr Point<T> Camera2D::screenToWorld(const Point<T>& loc) const noexcept
+	constexpr mth::Point<T> Camera2D::screenToWorld(const mth::Point<T>& loc) const noexcept
 	{
 		return loc += m_camLoc;
 	}
 
 	template<typename T>
-	inline constexpr Point<T> Camera2D::worldToScreen(Point<T> loc) const noexcept
+	inline constexpr mth::Point<T> Camera2D::worldToScreen(mth::Point<T> loc) const noexcept
 	{
 		return loc -= m_camLoc;
 	}
@@ -77,7 +77,7 @@ namespace ctl::sdl
 		return m_camLoc;
 	}
 
-	inline constexpr auto& Camera2D::loc(const Point<int>& loc) noexcept
+	inline constexpr auto& Camera2D::loc(const mth::Point<int>& loc) noexcept
 	{
 		m_camLoc = loc;
 		return *this;
