@@ -17,7 +17,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... T>
 	class EAnimation
 	{
-		static_assert(has_tag_v<Tags::isRect, T...>, "Parent must be a rectangle.");
+		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:

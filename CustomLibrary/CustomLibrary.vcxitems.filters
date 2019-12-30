@@ -27,13 +27,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
@@ -164,6 +158,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Circle.h">
       <Filter>CustomLibrary\Include\SDL\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

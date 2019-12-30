@@ -84,9 +84,10 @@ namespace ctl::sdl
 	using Font = basicFont<EFontLoader, EFontAttrib>;
 
 
-	template<typename Impl, typename... Tag>
+	template<typename Impl, typename... T>
 	class ETextLoader
 	{
+		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 		auto& _load_(SDL_Surface* s, const char* text)

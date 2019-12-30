@@ -54,6 +54,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tag>
 	class ETextureRender
 	{
+		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
@@ -125,6 +126,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tag>
 	class ETextureLoader
 	{
+		static_assert(has_tag_v<Tags::isTexture, T...>, "Parent must be a texture.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
