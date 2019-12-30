@@ -85,7 +85,6 @@ int main(int argc, char** argv)
 
 
 
-		// Get Platform and Device
 		std::vector<cl::Platform> platforms;
 		cl::Platform::get(&platforms);
 		auto platform = platforms.front();
@@ -93,43 +92,14 @@ int main(int argc, char** argv)
 		platform.getDevices(CL_DEVICE_TYPE_GPU, &devices);
 		auto device = devices.front();
 
-		//This context doesn't work. Causes CL_INVALID_CONTEXT (-34)
 		cl_context_properties properties[] = { CL_CONTEXT_PLATFORM, (cl_context_properties)platform(), 0 };
 		cl::Context myContext(device, properties);
-
-		//If I stick with the default context, things work.
-		cl::Context defaultContext = cl::Context::getDefault();
-
-		//The choice of context here determines whether it works or not:
-		// myContext -> Fails with CL_INVALID_CONTEXT (-34)
-		// defaultContext -> works
-		//auto chosenContext = myContext;
 
 		std::ifstream helloWorldFile("hello_world.cl");
 		std::string src(std::istreambuf_iterator<char>(helloWorldFile), (std::istreambuf_iterator<char>()));
 
 		cl::Program program(myContext, src);
 		program.build(devices, "");
-
-		//Debugging code: Check to make sure that the contexts are similar
-		//auto myContextDevices = myContext.getInfo<CL_CONTEXT_DEVICES>();
-		//auto defaultContextDevices = defaultContext.getInfo<CL_CONTEXT_DEVICES>();
-		//auto devicesMatch = myContextDevices == defaultContextDevices; //true
-
-		//auto myContextProperties = myContext.getInfo<CL_CONTEXT_PROPERTIES>();
-		//auto defaultContextProperties = defaultContext.getInfo<CL_CONTEXT_PROPERTIES>();
-		//auto propertiesMatch = myContextProperties == defaultContextProperties; //true
-
-		//auto myContextNumDevices = myContext.getInfo<CL_CONTEXT_NUM_DEVICES>();
-		//auto defaultContextNumDevices = defaultContext.getInfo<CL_CONTEXT_NUM_DEVICES>();
-		//auto numDevicesMatch = myContextNumDevices == defaultContextNumDevices; //true
-
-		//auto myContextRefCount = myContext.getInfo<CL_CONTEXT_REFERENCE_COUNT>();           // 1 if defaultContext, 3 if myContext
-		//auto defaultContextRefCount = defaultContext.getInfo<CL_CONTEXT_REFERENCE_COUNT>(); // 4 if defaultContext, 2 if myContext
-		//auto refCountsMatch = myContextRefCount == defaultContextRefCount;                  // false
-
-		//auto contextsMatch = myContext == defaultContext; //false
-		//End of debugging code
 
 		//Continuing with computation
 		char buf[16];
@@ -139,8 +109,8 @@ int main(int argc, char** argv)
 		kernel.setArg(0, outputBuffer);
 
 		cl::CommandQueue commandQueue(myContext, device);
-		auto result = commandQueue.enqueueNDRangeKernel(kernel, 0, 1, 1);           //CL_SUCCESS
-		commandQueue.enqueueReadBuffer(outputBuffer, CL_TRUE, 0, sizeof(buf), buf); // Execution fails here, raises cl::Error (-34)
+		commandQueue.enqueueNDRangeKernel(kernel, 0, 1, 1);
+		commandQueue.enqueueReadBuffer(outputBuffer, CL_TRUE, 0, sizeof(buf), buf);
 
 		std::cout << buf;
 
