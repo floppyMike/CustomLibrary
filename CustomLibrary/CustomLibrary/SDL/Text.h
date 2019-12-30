@@ -1,9 +1,8 @@
 #pragma once
 
-#include "BasicTypes.h"
-#include "SDLTraits.h"
+#include "../BasicTypes.h"
 #include "Texture.h"
-#include <CustomLibrary/Error.h>
+#include "../Error.h"
 
 #include <SDL_ttf.h>
 
@@ -11,23 +10,25 @@
 
 namespace ctl::sdl
 {
-	template<template<typename> class... Func>
-	class basicFont : public Func<basicFont<Func...>>...
+	template<template<typename, typename...> class... Ex>
+	class basicFont : public Ex<basicFont<Ex...>, tag::isFont>...
 	{
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 	public:
+		using tag = tag::isFont;
+
 		basicFont() = default;
 		basicFont(basicFont&&) = default;
 		basicFont& operator=(basicFont&&) = default;
 
-		auto* get() noexcept
+		auto* font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		auto& reset(TTF_Font* f) noexcept
+		auto& font(TTF_Font* f) noexcept
 		{
 			m_ptr.reset(f);
 			return *this;
@@ -38,93 +39,98 @@ namespace ctl::sdl
 	};
 
 
-	template<typename ImplFont>
-	class EFontPathLoader : public crtp<ImplFont, EFontPathLoader>
+	template<typename Impl, typename... Tag>
+	class EFontLoader
 	{
+		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
 		auto& load(const char* path, int pt)
 		{
 			auto* temp = TTF_OpenFont(path, pt);
 			assert(temp != nullptr && "Nothing found at path.");
 
-			return this->_().reset(temp);
+			return pthis->font(temp);
 		}
 	};
 
 
-	template<typename ImplFont>
-	class EFontAttrib : public crtp<ImplFont, EFontAttrib>
+	template<typename Impl, typename... Tag>
+	class EFontAttrib
 	{
+		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
 		auto& style(int style)
 		{
-			TTF_SetFontStyle(this->_().get(), style);
+			TTF_SetFontStyle(pthis->font(), style);
 			return this->_();
 		}
 
 		auto style()
 		{
-			return TTF_GetFontStyle(this->_().get());
+			return TTF_GetFontStyle(pthis->font());
 		}
 
-		auto hypoSize(const char* text)
+		auto hypo_size(const char* text)
 		{
-			Dim<int> temp;
-			TTF_SizeUTF8(this->_().get(), text, &temp.w, &temp.h);
+			mth::Dim<int> temp;
+			TTF_SizeUTF8(pthis->font(), text, &temp.w, &temp.h);
 			return temp;
 		}
 	};
 
 
-	using Font = basicFont<EFontPathLoader, EFontAttrib>;
+	using Font = basicFont<EFontLoader, EFontAttrib>;
 
 
-	template<typename ImplTex>
-	class ETextureTextLoader : public crtp<ImplTex, ETextureTextLoader>
+	template<typename Impl, typename... T>
+	class ETextLoader
 	{
-		template<typename T>
-		using has_load = decltype(std::declval<T&>().load(std::declval<SDL_Surface*>()));
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
+		Impl* const pthis = static_cast<Impl*>(this);
 
 		auto& _load_(SDL_Surface* s, const char* text)
 		{
 			assert(s != nullptr && "Font isn't assigned.");
 
-			static_assert(ctl::is_detected_v<has_load, ImplTex>, "\"load\" required for turning SDL_Surface to Texture");
-
-			this->_().load(s);
+			pthis->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), s));
 			SDL_FreeSurface(s);
 
 			m_text = text;
-			return this->_();
+			return *pthis;
 		}
 
 	public:
 		auto& font(TTF_Font* f) noexcept
 		{
 			m_font = f;
-			return this->_();
+			return *pthis;
 		}
 		auto* font() noexcept
 		{
+			assert(m_font && "Font no assigned.");
 			return m_font;
 		}
 
-		ImplTex& load_solid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		Impl& load_solid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
 			return _load_(TTF_RenderUTF8_Solid(m_font, text, colour), text);
 		}
 
-		ImplTex& load_shaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		Impl& load_shaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
 			return _load_(TTF_RenderUTF8_Shaded(m_font, text, colour, bg), text);
 		}
 
-		ImplTex& load_blended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		Impl& load_blended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
 			return _load_(TTF_RenderUTF8_Blended(m_font, text, colour), text);
 		}
 
-		ImplTex& load_wrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		Impl& load_wrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 		{
 			return _load_(TTF_RenderUTF8_Blended_Wrapped(m_font, text, colour, wrapper), text);
 		}
@@ -137,6 +143,6 @@ namespace ctl::sdl
 	};
 
 
-	using Text = TextureFrame<ETexLoad, ETextureTextLoader, ETexRend, ETexAttrib>;
+	using Text = TextureFrame<ETextLoader, ETextureRender>;
 
 }

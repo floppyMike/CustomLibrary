@@ -2,12 +2,13 @@
 
 #include <SDL.h>
 
+#include "../Timer.h"
+#include "../Error.h"
+
 #include <type_traits>
 #include <string>
+#include <vector>
 #include <thread>
-
-#include <CustomLibrary/Timer.h>
-#include <CustomLibrary/Error.h>
 
 #include "Window.h"
 
@@ -19,7 +20,7 @@ namespace ctl::sdl
 	constexpr SDL_Color GREEN = { 0, 0xFF, 0, 0xFF };
 	constexpr SDL_Color BLUE = { 0, 0, 0xFF, 0xFF };
 	constexpr SDL_Color YELLOW = { 0xFF, 0xFF, 0, 0xFF };
-	constexpr SDL_Color ORANGE = { 0xFF, 0xFF / 2, 0xFF / 4, 0xFF };
+	constexpr SDL_Color ORANGE = { 0xFF, 0xFF >> 1, 0xFF >> 2, 0xFF };
 
 
 	class SDL
@@ -56,7 +57,7 @@ namespace ctl::sdl
 		auto& initIMG(const int& flags = IMG_INIT_PNG)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -74,7 +75,7 @@ namespace ctl::sdl
 		auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
-				throw Log(SDL_GetError());
+				throw err::err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -88,7 +89,7 @@ namespace ctl::sdl
 		auto& initTTF()
 		{
 			if (TTF_Init() == -1)
-				throw Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			return *this;
 		}
@@ -117,8 +118,6 @@ namespace ctl::sdl
 	template<typename ImplWin = IWindow>
 	class RunLoop
 	{
-		using type = RunLoop<ImplWin>;
-
 		template<typename... T>
 		void _invoke_(void (ImplWin::* f)(const T& ...), const T& ... arg);
 
@@ -148,13 +147,15 @@ namespace ctl::sdl
 	inline SDL::SDL(const Uint32& SDLFlags)
 	{
 		if (SDL_Init(SDLFlags) < 0)
-			throw Log(SDL_GetError());
+			throw err::Log(SDL_GetError());
 	}
 
 	inline SDL& SDL::set_hint(const char* name, const char* value) noexcept
 	{
 		if (!SDL_SetHint(name, value))
-			Log::logWrite(std::string("SDL: setHint: ") + name + " failed with value " + value, Log::Sev::WARNING);
+			err::g_log.write(std::string("SDL: setHint: ") + name + " failed with value " + value);
+
+		return *this;
 	}
 
 	template<typename ImplWin>

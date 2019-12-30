@@ -228,8 +228,8 @@ namespace ctl::gph
 
 		//auto dijkstraWPath(Vertex start) const
 		//{
-		//	std::priority_queue<Line, std::vector<Line>, bool (*)(const Line&, const Line&)> pq
-		//	([](const Line& l, const Line& r) { return l.weight > r.weight; });
+		//	std::priority_queue<mth::Line, std::vector<mth::Line>, bool (*)(const mth::Line&, const mth::Line&)> pq
+		//	([](const mth::Line& l, const mth::Line& r) { return l.weight > r.weight; });
 
 		//	std::vector<double> dist(this->_().size(), std::numeric_limits<double>::max());
 		//	std::vector<bool> visited(this->_().size(), false);

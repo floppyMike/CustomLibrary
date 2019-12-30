@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 
-#include <CustomLibrary/Error.h>
+#include "../Error.h"
 
 namespace ctl::sdl
 {
@@ -19,16 +19,16 @@ namespace ctl::sdl
 
 			m_event.type = SDL_RegisterEvents(1);
 			if (m_event.type == std::numeric_limits<Uint32>::max())
-				throw Log("UserEvent: event not registered.");
+				throw err::Log("UserEvent: event not registered.");
 		}
 
 		/**
 		* @summary pushes event onto SDL event queue
 		*/
-		void pushEvent() noexcept
+		void push_event() noexcept
 		{
 			if (SDL_PushEvent(&m_event) < 0)
-				Log::logWrite(SDL_GetError(), Log::Sev::WARNING);
+				err::g_log.write(SDL_GetError());
 		}
 
 		/**
@@ -36,11 +36,11 @@ namespace ctl::sdl
 		*/
 		constexpr Uint32 type() const noexcept { return m_event.type; }
 
-		constexpr Uint32 userType() const noexcept
+		constexpr Uint32 user_type() const noexcept
 		{
 			return m_event.user.type;
 		}
-		constexpr auto& userType(Uint32 t) noexcept
+		constexpr auto& user_type(Uint32 t) noexcept
 		{
 			m_event.user.type = t;
 			return *this;

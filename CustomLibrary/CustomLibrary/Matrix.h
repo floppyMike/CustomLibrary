@@ -4,10 +4,9 @@
 #include <functional>
 
 #include "Error.h"
-#include "Vector.h"
 #include "RandomGenerator.h"
 
-namespace ctl
+namespace ctl::mat
 {
 	template<typename Type, typename Allocator = std::allocator<Type>, 
 		typename = typename std::enable_if_t<std::is_arithmetic_v<Type>>>
@@ -94,7 +93,7 @@ namespace ctl
 		auto& _elementwise_(const Matrix &from, Matrix &to, Arith &&arith) const
 		{
 			if (from.m_dim != to.m_dim)
-				throw Log("Matrix: operator elementwise: size differs.", Log::Severity::ERR0R);
+				throw err::Log("Matrix: operator elementwise: size differs.", Log::Severity::ERR0R);
 
 			auto iter = from.m_data.begin();
 			return to.apply([&](Type &x) { x = arith(x, *iter++); });
@@ -123,7 +122,7 @@ namespace ctl
 		auto dotProduct(const Matrix &mat2) const
 		{
 			if (m_dim[0] != mat2.m_dim[1])
-				throw Log("Matrix: dotProduct: width not same as height.", Log::Severity::ERR0R);
+				throw err::Log("Matrix: dotProduct: width not same as height.", Log::Severity::ERR0R);
 
 			Matrix<Type, Allocator> mat({ mat2.m_dim[0], m_dim[1] }, 0);
 
@@ -169,7 +168,7 @@ namespace ctl
 		auto& emplace_back(const Type &ele)
 		{
 			if (m_data.size() == m_data.capacity())
-				throw Log("Matrix: emplace_back: reserved size reached", Log::Severity::ERR0R);
+				throw err::Log("Matrix: emplace_back: reserved size reached");
 
 			m_data.emplace_back(ele);
 
@@ -178,9 +177,9 @@ namespace ctl
 		auto& emplace_back(Type&& ele)
 		{
 			if (m_data.size() == m_data.capacity())
-				throw Log("Matrix: emplace_back: reserved size reached", Log::Severity::ERR0R);
+				throw err::Log("Matrix: emplace_back: reserved size reached");
 
-			m_data.emplace_back(ele);
+			m_data.emplace_back(std::move(ele));
 
 			return *this;
 		}

@@ -19,15 +19,12 @@
     <Filter Include="CustomLibrary\Include\Default">
       <UniqueIdentifier>{5f02ca78-a201-4ba7-b699-82cea4c9a790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Extensions">
+      <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
@@ -58,15 +55,6 @@
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\BasicTypes.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTags.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLTraits.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h">
@@ -145,6 +133,33 @@
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Traits.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\BasicTypes.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Circle.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Dim.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Line.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Point.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Rect.h">
+      <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Tags.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
   </ItemGroup>

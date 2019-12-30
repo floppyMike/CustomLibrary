@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SDLTraits.h"
 #include <SDL.h>
 #include <memory>
 #include <cassert>
@@ -34,10 +33,10 @@ namespace ctl
 				return *this;
 			}
 
-			Surface& colorKey(Uint32 key, SDL_bool enabled = SDL_TRUE)
+			Surface& color_key(Uint32 key, SDL_bool enabled = SDL_TRUE)
 			{
 				if (SDL_SetColorKey(m_surface.get(), enabled, key) != 0)
-					throw Log(SDL_GetError());
+					throw err::Log(SDL_GetError());
 				return *this;
 			}
 
@@ -70,7 +69,7 @@ namespace ctl
 		//public:
 		//	SurfaceLoader() noexcept = default;
 
-		//	ImplSurf& load(const Dim<int>& size)
+		//	ImplSurf& load(const mth::Dim<int>& size)
 		//	{
 
 		//	}

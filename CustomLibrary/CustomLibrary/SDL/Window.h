@@ -1,6 +1,8 @@
 #pragma once
 
-#include "BasicTypes.h"
+#include "../BasicTypes.h"
+#include "../Error.h"
+
 #include <cassert>
 
 namespace ctl::sdl
@@ -13,12 +15,12 @@ namespace ctl::sdl
 		}
 
 	public:
-		Window(const char* name, const Dim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
+		Window(const char* name, const mth::Dim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
 		{
 			m_window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 				dim.w, dim.h, windowFlags);
 			if (m_window == nullptr)
-				throw ctl::Log(SDL_GetError());
+				throw err::Log(SDL_GetError());
 
 			m_id = SDL_GetWindowID(m_window);
 		}
@@ -48,7 +50,7 @@ namespace ctl::sdl
 		auto dim() const noexcept 
 		{
 			_win_exist_();
-			Dim<int> size;
+			mth::Dim<int> size;
 			SDL_GetWindowSize(m_window, &size.w, &size.h);
 			return size;
 		}

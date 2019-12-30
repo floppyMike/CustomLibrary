@@ -8,33 +8,40 @@
 	using has_##method = decltype(std::declval<T&>().method(std::declval<Arg>()...)); 
 
 #define FORWARDING_MEMBER_FUNCTION(Inner, inner, function, qualifiers) \
-    template< \
-        typename... Args, \
-        typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
-    > \
-    constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
-        noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
-        ( \
-            std::is_reference<return_type>::value or \
-            std::is_nothrow_move_constructible<return_type>::value \
-        ) \
-    ) { \
-        return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
-    }
+	template< \
+		typename... Args, \
+		typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...)) \
+	> \
+	constexpr decltype(auto) function(Args && ... args) qualifiers noexcept( \
+		noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...)) and \
+		( \
+			std::is_reference<return_type>::value or \
+			std::is_nothrow_move_constructible<return_type>::value \
+		) \
+	) { \
+		return /*static_cast<Inner qualifiers>*/(inner).function(std::forward<Args>(args)...); \
+	}
 
 #define FORWARDING_MEMBER_FUNCTIONS_C(Inner, inner, function, reference) \
 	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference)
 
 #define FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
-    FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, volatile reference) \
+	FORWARDING_MEMBER_FUNCTION(Inner, inner, function, const volatile reference)
 
 #define FORWARDING_MEMBER_FUNCTIONS(Inner, inner, function) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
-    FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
+	FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &) \
+	FORWARDING_MEMBER_FUNCTIONS_CV(Inner, inner, function, &&)
+
+//#define ALIAS_TEMPLATE_FUNCTION(highLevelF, lowLevelF) \
+//template<typename... Args> \
+//inline auto highLevelF(Args&&... args) -> decltype(lowLevelF(std::forward<Args>(args)...)) \
+//{ \
+//    return lowLevelF(std::forward<Args>(args)...); \
+//}
 
 
 namespace ctl
@@ -49,6 +56,38 @@ namespace ctl
 		crtp() = default;
 		friend crtpType<T>;
 	};
+
+
+	//template<template<template<typename> class...> class Base, template<typename> class... Ex>
+	//struct Extendable : public Ex<Base<Ex...>>...
+	//{
+	//public:
+	//	Extendable() = default;
+
+	//	Extendable(const Extendable&) = default;
+	//	Extendable(Extendable&&) = default;
+
+	//	Extendable& operator=(const Extendable&) = default;
+	//	Extendable& operator=(Extendable&&) = default;
+
+	//	template<template<typename> class... T>
+	//	Extendable(T<Base<Ex...>>&&... arg)
+	//		: T<Base<Ex...>>(std::move(arg))...
+	//	{
+	//	}
+
+	//	template<template<typename> class... T>
+	//	Extendable(const Base<T...>& cast)
+	//		: T<Base<Ex...>>(static_cast<T<Base<Ex...>>>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
+	//	{
+	//	}
+
+	//	template<template<typename> class... T>
+	//	Extendable(Base<T...>&& cast)
+	//		: T<Base<Ex...>>(static_cast<T<Base<Ex...>>&&>(*reinterpret_cast<T<Base<Ex...>>*>(static_cast<T<Base<T...>>*>(&cast))))...
+	//	{
+	//	}
+	//};
 
 
 	namespace detail 
@@ -67,7 +106,7 @@ namespace ctl
 			using type = Default;
 		};
 
-		template <typename Default, template<typename...> typename Op, typename... Args>
+		template <typename Default, template<typename...> class Op, typename... Args>
 		struct Detector<Default, std::void_t<Op<Args...>>, Op, Args...> 
 		{
 			using value_t = std::true_type;
@@ -76,16 +115,16 @@ namespace ctl
 
 	}
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	using is_detected = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::value_t;
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	constexpr auto is_detected_v = is_detected<Op, Args...>::value;
 
-	template <template<typename...> typename Op, typename... Args>
+	template <template<typename...> class Op, typename... Args>
 	using detected_t = typename detail::Detector<detail::Nonesuch, void, Op, Args...>::type;
 
-	template <typename Default, template<typename...> typename Op, typename... Args>
+	template <typename Default, template<typename...> class Op, typename... Args>
 	using detected_or = detail::Detector<Default, void, Op, Args...>;
 
 

@@ -1,156 +1,84 @@
 #pragma once
 
-#include <CustomLibrary/Timer.h>
+#include "../Timer.h"
 #include "Texture.h"
-#include "BasicTypes.h"
+#include "../BasicTypes.h"
 
 #include <vector>
 
-namespace ctl
+namespace ctl::sdl
 {
-	namespace sdl
+	struct AniFrame
 	{
-		template<typename ImplTex, typename ImplRend>
-		class Animation
-		{
-		public:
-			using Frame = std::pair<Rect<int, int>, std::chrono::milliseconds>;
-
-			Animation()
-			{
-			}
-
-		private:
-			Timer m_time;
-			std::chrono::milliseconds m_tillNext = std::chrono::milliseconds(0);
-
-			std::vector<Frame> m_frames;
-			std::vector<Frame>::iterator m_currFrame = m_frames.begin();
-		};
-
-	}
-	class AnimationBase
-	{
-		virtual Rect* _passFrame_() = 0;
-
-	public:
-		AnimationBase() = default;
-		AnimationBase(const AnimationBase&) = default;
-		AnimationBase(AnimationBase&&) = default;
-
-		AnimationBase& operator=(const AnimationBase&) = default;
-		AnimationBase& operator=(AnimationBase&&) = default;
-
-		AnimationBase(BaseTexture* t)
-			: m_texture(t)
-		{
-		}
-
-		template<typename ...T>
-		void draw(const T& ... para) { m_texture->render(std::forward<const T&>(para)..., _passFrame_()); }
-
-		void unpause() noexcept;
-		void pause() noexcept;
-		bool isPaused() noexcept;
-
-	protected:
-		BaseTexture* m_texture;
-
-		Timer m_timer;
-		std::chrono::milliseconds m_tillNext = std::chrono::milliseconds(0);
+		mth::Rect<int, int> shape;
+		std::chrono::milliseconds step;
 	};
 
-	void AnimationBase::unpause() noexcept
+	template<typename Impl, typename... T>
+	class EAnimation
 	{
-		m_timer.unpause();
-	}
-
-	void AnimationBase::pause() noexcept
-	{
-		m_timer.pause();
-	}
-
-	bool AnimationBase::isPaused() noexcept
-	{
-		return m_timer.isPaused();
-	}
-
-
-
-
-
-	class Animation : public AnimationBase
-	{
-		Rect* _passFrame_();
+		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
+		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
-		using Frame = std::pair<Rect, std::chrono::milliseconds>;
+		EAnimation() = default;
 
-		using AnimationBase::AnimationBase;
-
-		Animation() = default;
-		Animation(const Animation&) = default;
-		Animation(Animation&&) = default;
-
-		Animation& operator=(const Animation&) = default;
-		Animation& operator=(Animation&&) = default;
-
-		Animation(BaseTexture* texture, const std::initializer_list<Frame>& frames)
-			: AnimationBase(texture)
-			, m_frames(frames)
+		void push_frame(AniFrame&& f)
 		{
+			m_frames.emplace_back(f);
+			m_curr_frame = m_frames.begin();
+		}
+		void assign_frames(std::initializer_list<AniFrame>&& frames)
+		{
+			m_frames.assign(frames);
+			m_curr_frame = m_frames.begin();
 		}
 
-		Animation& emplace(const std::vector<Frame>::const_iterator&, const Rect&, const std::chrono::milliseconds&);
-		Animation& remove(const std::vector<Frame>::const_iterator&);
-
-		template<typename Iter>
-		Animation& insert(std::vector<Frame>::const_iterator loc, const Iter& begin, const Iter& end)
+		void start_ani() noexcept
 		{
-			m_frames.insert(loc, begin, end);
-			m_currFrame = m_frames.begin();
-			return *this;
+			m_time.start();
+		}
+		void pause_ani() noexcept
+		{
+			m_time.pause();
+		}
+		void unpause_ani() noexcept
+		{
+			m_time.unpause();
+		}
+		bool is_ani_paused() noexcept
+		{
+			m_time.isPaused();
 		}
 
-		constexpr const auto& frames() const noexcept { return m_frames; }
+		const auto& blit_ani() noexcept
+		{
+			if (!m_time.isPaused() && !m_frames.empty())
+			{
+				m_till_next += m_time.ticks();
+
+				while (m_till_next >= m_curr_frame->step)
+				{
+					m_till_next -= m_curr_frame->step;
+					++m_curr_frame;
+
+					if (m_curr_frame == m_frames.end())
+						m_curr_frame = m_frames.begin();
+				}
+
+				m_time.start();
+			}
+
+			return m_curr_frame->shape;
+		}
+
+		constexpr auto frames_size() const noexcept { return m_frames.size(); }
 
 	private:
-		std::vector<Frame> m_frames;
-		std::vector<Frame>::iterator m_currFrame = m_frames.begin();
+		Timer m_time;
+		std::chrono::milliseconds m_till_next = std::chrono::milliseconds(0);
+
+		std::vector<AniFrame> m_frames;
+		std::vector<AniFrame>::iterator m_curr_frame = m_frames.begin();
 	};
-	
-	Rect* Animation::_passFrame_()
-	{
-		if (!m_timer.isPaused() && !m_frames.empty())
-		{
-			m_tillNext += m_timer.ticks();
-
-			while (m_tillNext >= m_currFrame->second)
-			{
-				m_tillNext -= m_currFrame->second;
-				++m_currFrame;
-
-				if (m_currFrame == m_frames.end())
-					m_currFrame = m_frames.begin();
-			}
-
-			m_timer.start();
-		}
-
-		return &m_currFrame->first;
-	}
-
-	Animation& Animation::emplace(const std::vector<Frame>::const_iterator& loc, const Rect& r, const std::chrono::milliseconds& mil)
-	{
-		m_frames.emplace(loc, r, mil);
-		m_currFrame = m_frames.begin();
-		return *this;
-	}
-
-	Animation& Animation::remove(const std::vector<Frame>::const_iterator& loc)
-	{
-		m_frames.erase(loc);
-		m_currFrame = m_frames.begin();
-		return *this;
-	}
 }
