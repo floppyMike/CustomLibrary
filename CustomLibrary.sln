@@ -7,10 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomLibrary", "CustomLibr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{D4F0F835-6560-4215-9317-231091DB225B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RNN_GPU", "RNN_GPU\RNN_GPU.vcxproj", "{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		CustomLibrary\CustomLibrary.vcxitems*{36375312-801a-4e9a-ab87-7f6012aeb695}*SharedItemsImports = 9
 		CustomLibrary\CustomLibrary.vcxitems*{d4f0f835-6560-4215-9317-231091db225b}*SharedItemsImports = 4
+		CustomLibrary\CustomLibrary.vcxitems*{e321e866-0c9a-4dce-8c8e-e038be9ed9d4}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +30,14 @@ Global
 		{D4F0F835-6560-4215-9317-231091DB225B}.Release|x64.Build.0 = Release|x64
 		{D4F0F835-6560-4215-9317-231091DB225B}.Release|x86.ActiveCfg = Release|Win32
 		{D4F0F835-6560-4215-9317-231091DB225B}.Release|x86.Build.0 = Release|Win32
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Debug|x64.ActiveCfg = Debug|x64
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Debug|x64.Build.0 = Debug|x64
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Debug|x86.ActiveCfg = Debug|Win32
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Debug|x86.Build.0 = Debug|Win32
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Release|x64.ActiveCfg = Release|x64
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Release|x64.Build.0 = Release|x64
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Release|x86.ActiveCfg = Release|Win32
+		{E321E866-0C9A-4DCE-8C8E-E038BE9ED9D4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

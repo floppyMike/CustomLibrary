@@ -93,7 +93,6 @@ namespace ctl::err
 	{
 	public:
 		static constexpr std::string_view DEFAULT_FILE = "log.txt";
-		enum class Sev { NOTE, WARNING, ERR };
 
 		/**
 		* @summary construct Log object
