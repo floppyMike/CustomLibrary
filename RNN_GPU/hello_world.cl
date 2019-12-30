@@ -1,4 +1,5 @@
-__kernel void HelloWorld(__global char* output) {
+__kernel void HelloWorld(__global char* output) 
+{
     output[0] = 'H';
     output[1] = 'e';
     output[2] = 'l';
