@@ -4,8 +4,10 @@
 #include <CustomLibrary/SDL/SDLWindow.h>
 #include <CustomLibrary/SDL/Sprite.h>
 
-namespace ctl
+namespace ctl::sdl
 {
+
+
 	class AnimationLite
 	{
 		Rect _passFrame_();

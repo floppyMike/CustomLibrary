@@ -1,8 +1,10 @@
 #pragma once
 
 #include "BasicTypes.h"
-#include "SDLTraits.h"
-#include <CustomLibrary/Traits.h>
+#include "SDLTags.h"
+#include "../Traits.h"
+
+#include <utility>
 
 namespace ctl::sdl
 {
@@ -143,38 +145,9 @@ namespace ctl::sdl
 	template<typename T1, typename T2>
 	constexpr auto collision(const T1& o1, const T2& o2) noexcept
 	{
-		static_assert(hasSDLTag_v<T1> && hasSDLTag_v<T2>, "Object has no tag.");
+		static_assert(contains_tag_v<T1> && contains_tag_v<T2>, "Object has no tag.");
 		return _impl_<typename T1::tag, typename T2::tag>::_(o1, o2);
 	}
-
-	template<typename Geo_T>
-	class Collider : public ReliesOn<Geo_T, Collider<Geo_T>>
-	{
-		static_assert(hasSDLTag_v<Geo_T>, "Type requires a \"using Tags\" alias");
-
-		using base1 = ReliesOn<Geo_T, Collider>;
-
-	public:
-		using value_t = Geo_T;
-
-		/**
-		* @summary constructs empty ptr
-		*/
-		Collider() noexcept = default;
-
-		/**
-		* @summary checks if object is inside this
-		* @param "col" other Collider
-		* @returns if "col" is inside this
-		*/
-		template<typename T>
-		constexpr bool inside(const Collider<T>& col) const noexcept
-		{
-			return collision(*this->get<Geo_T>(), *col.get<Geo_T>());
-		}
-
-		using base1::set;
-	};
 
 
 	/**********************************************************
@@ -200,8 +173,8 @@ namespace ctl::sdl
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<Tags::isRect, Tags::isCircle>::_(const U1& r, const U2& c) noexcept
 	{
-		const auto [halfWidth, halfHight] = std::pair(r.w / 2, r.h / 2);
-		const auto [distanceX, distanceY] = std::pair(std::abs(r.x + halfWidth - c.x), std::abs(r.y + halfHight - c.y));
+		const auto halfWidth = r.w / 2, halfHight = r.h / 2;
+		const auto distanceX = std::abs(r.x + halfWidth - c.x), distanceY = std::abs(r.y + halfHight - c.y);
 
 		if (distanceX > (halfWidth + c.r)) return false;
 		if (distanceY > (halfHight + c.r)) return false;
@@ -209,9 +182,7 @@ namespace ctl::sdl
 		if (distanceX <= halfWidth) return true;
 		if (distanceY <= halfHight) return true;
 
-		const auto cornerDistance_sq = power2(distanceX - halfWidth) + power2(distanceY - halfHight);
-
-		return (cornerDistance_sq <= power2(c.r));
+		return power2(distanceX - halfWidth) + power2(distanceY - halfHight) <= power2(c.r);
 	}
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<Tags::isRect, Tags::isRect>::_(const U1& r1, const U2& r2) noexcept
@@ -234,8 +205,7 @@ namespace ctl::sdl
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<Tags::isPoint, Tags::isCircle>::_(const U1& d, const U2& c) noexcept
 	{
-		const auto dx = std::abs(d.x - c.x);
-		const auto dy = std::abs(d.y - c.y);
+		const auto dx = std::abs(d.x - c.x), dy = std::abs(d.y - c.y);
 
 		if (dx > c.r || dy > c.r)
 			return false;

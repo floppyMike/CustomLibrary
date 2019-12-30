@@ -52,20 +52,20 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... Tag>
-	class ERender
+	class ETextureRender
 	{
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
-		void draw() const
+		void draw(const SDL_Rect* blit = nullptr) const
 		{
-			if (SDL_RenderCopy(pthis->renderer()->get(), pthis->texture(), nullptr, pthis->shape().rect_ptr()) < 0)
+			if (SDL_RenderCopy(pthis->renderer()->get(), pthis->texture(), blit, pthis->shape().rect_ptr()) < 0)
 				throw err::Log(SDL_GetError());
 		}
 
-		void draw(double angle, const Point<int>& center, SDL_RendererFlip flip) const
+		void draw(double angle, const Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
 		{
-			if (SDL_RenderCopyEx(pthis->renderer()->get(), pthis->texture(), nullptr, pthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
+			if (SDL_RenderCopyEx(pthis->renderer()->get(), pthis->texture(), blit, pthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 				throw err::Log(SDL_GetError());
 		}
 
@@ -123,7 +123,7 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... Tag>
-	class ELoader
+	class ETextureLoader
 	{
 		Impl* const pthis = static_cast<Impl*>(this);
 
@@ -146,7 +146,7 @@ namespace ctl::sdl
 
 
 
-	using Texture = TextureFrame<ELoader, ERender>;
+	using Texture = TextureFrame<ETextureLoader, ETextureRender>;
 
 }
 

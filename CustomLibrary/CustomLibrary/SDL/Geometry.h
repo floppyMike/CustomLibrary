@@ -25,13 +25,13 @@ namespace ctl::sdl
 		Frame& operator=(const Frame&) = default;
 		Frame& operator=(Frame&&) = default;
 
-		template<template<typename, typename> class... T>
+		template<template<typename, typename...> class... T>
 		Frame(T<Frame, tag_t>&&... arg)
 			: T<Frame, tag_t>(std::move(arg))...
 		{
 		}
 
-		template<template<typename, typename> class... T>
+		template<template<typename, typename...> class... T>
 		Frame(const Frame<Shape, T...>& cast)
 			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
 			, m_rend(cast.m_rend)
@@ -39,7 +39,7 @@ namespace ctl::sdl
 		{
 		}
 
-		template<template<typename, typename> class... T>
+		template<template<typename, typename...> class... T>
 		Frame(Frame<Shape, T...>&& cast)
 			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>&&>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
 			, m_rend(cast.m_rend)
@@ -249,7 +249,7 @@ namespace ctl::sdl
 	template<typename... Shapes>
 	class MultiShape
 	{
-		static_assert(std::conjunction_v<hasSDLTag<Shapes>...>, "Shapes must have the tag.");
+		static_assert(contains_tag_v<Shapes...>, "Shapes must have the tag.");
 
 		template<typename T>
 		void draw_handler(T& arg) const

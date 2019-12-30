@@ -22,13 +22,13 @@ namespace ctl::sdl
 		basicFont(basicFont&&) = default;
 		basicFont& operator=(basicFont&&) = default;
 
-		auto* get() noexcept
+		auto* font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		auto& reset(TTF_Font* f) noexcept
+		auto& font(TTF_Font* f) noexcept
 		{
 			m_ptr.reset(f);
 			return *this;
@@ -40,7 +40,7 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... Tag>
-	class EFontPathLoader
+	class EFontLoader
 	{
 		Impl* const pthis = static_cast<Impl*>(this);
 
@@ -50,7 +50,7 @@ namespace ctl::sdl
 			auto* temp = TTF_OpenFont(path, pt);
 			assert(temp != nullptr && "Nothing found at path.");
 
-			return pthis->reset(temp);
+			return pthis->font(temp);
 		}
 	};
 
@@ -63,25 +63,25 @@ namespace ctl::sdl
 	public:
 		auto& style(int style)
 		{
-			TTF_SetFontStyle(pthis->get(), style);
+			TTF_SetFontStyle(pthis->font(), style);
 			return this->_();
 		}
 
 		auto style()
 		{
-			return TTF_GetFontStyle(pthis->get());
+			return TTF_GetFontStyle(pthis->font());
 		}
 
-		auto hypoSize(const char* text)
+		auto hypo_size(const char* text)
 		{
 			Dim<int> temp;
-			TTF_SizeUTF8(pthis->get(), text, &temp.w, &temp.h);
+			TTF_SizeUTF8(pthis->font(), text, &temp.w, &temp.h);
 			return temp;
 		}
 	};
 
 
-	using Font = basicFont<EFontPathLoader, EFontAttrib>;
+	using Font = basicFont<EFontLoader, EFontAttrib>;
 
 
 	template<typename Impl, typename... Tag>
@@ -140,6 +140,6 @@ namespace ctl::sdl
 	};
 
 
-	using Text = TextureFrame<ETextLoader, ERender>;
+	using Text = TextureFrame<ETextLoader, ETextureRender>;
 
 }
