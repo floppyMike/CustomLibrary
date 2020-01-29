@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <chrono>
 
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/SDLWindow.h>
@@ -112,6 +113,46 @@ private:
 };
 
 
+class Window : public sdl::IWindow
+{
+public:
+	Window()
+		: m_win("Test", { 800, 800 })
+		, m_rend(&m_win)
+		, m_rect(&m_rend, { 20, 20, 200, 200 })
+	{
+		m_rend.color(sdl::BLUE);
+		m_rend.do_render(true);
+	}
+
+	~Window()
+	{
+	}
+
+	void render() override
+	{
+		if (m_rend.will_render())
+		{
+			m_rend.color(sdl::WHITE);
+			m_rend.fill();
+
+			m_rend.color(sdl::BLUE);
+			m_rect.draw_filled_rect();
+
+			m_rend.render();
+			m_rend.do_render(false);
+		}
+	}
+
+private:
+	sdl::Window m_win;
+	sdl::Renderer m_rend;
+
+	sdl::RectFrame<sdl::EDrawable> m_rect;
+};
+
+
+
 int main(int argc, char** argv)
 {
 	try
@@ -120,10 +161,12 @@ int main(int argc, char** argv)
 		sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
 			.initTTF();
 
-		sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		win.queue_state<State>(&win.renderer());
+		//sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		//win.queue_state<State>(&win.renderer());
 
-		sdl::RunLoop<> loop;
+		Window win;
+
+		sdl::RunLoop<sdl::IWindow> loop;
 		loop.add_window(&win);
 
 		loop.run(30);

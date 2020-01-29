@@ -3,6 +3,7 @@
 
 #include <random>
 #include <type_traits>
+#include <cassert>
 
 #include "Error.h"
 
@@ -33,7 +34,7 @@ namespace ctl::rnd
 		template<typename Iter/*, typename = typename std::enable_if_t<!std::is_same_v<typename std::iterator_traits<Iter>::type_value, void>>*/>
 		constexpr Iter rand_iter(Iter first, const Iter &last)
 		{
-			std::advance(first, randNumber<size_t>(0, std::distance(first, last) - 1));
+			std::advance(first, rand_number<size_t>(0, std::distance(first, last) - 1));
 			return first;
 		}
 	private:

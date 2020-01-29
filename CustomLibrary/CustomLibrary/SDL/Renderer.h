@@ -53,31 +53,35 @@ namespace ctl::sdl
 
 
 	template<typename Impl>
-	class ERendererDefault : public crtp<Impl, ERendererDefault>
+	class ERendererDefault
 	{
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
 		void logical_size(const mth::Dim<int>& dim)
 		{
-			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
-			SDL_RenderSetLogicalSize(this->_().get(), dim.w, dim.h);
+			assert(pthis->get() != nullptr && "Renderer isn't loaded.");
+			SDL_RenderSetLogicalSize(pthis->get(), dim.w, dim.h);
 		}
 
 		void color(const SDL_Color& col)
 		{
-			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
-			SDL_SetRenderDrawColor(this->_().get(), col.r, col.g, col.b, col.a);
+			assert(pthis->get() != nullptr && "Renderer isn't loaded.");
+			SDL_SetRenderDrawColor(pthis->get(), col.r, col.g, col.b, col.a);
 		}
 
 		void fill()
 		{
-			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
-			SDL_RenderClear(this->_().get());
+			assert(pthis->get() != nullptr && "Renderer isn't loaded.");
+			SDL_RenderClear(pthis->get());
 		}
 	};
 
 	template<typename Impl>
 	class ERendererRender : public crtp<Impl, ERendererRender>
 	{
+		Impl* const pthis = static_cast<Impl*>(this);
+
 	public:
 		void do_render(bool r)
 		{
@@ -91,8 +95,8 @@ namespace ctl::sdl
 
 		void render()
 		{
-			assert(this->_().get() != nullptr && "Renderer isn't loaded.");
-			SDL_RenderPresent(this->_().get());
+			assert(pthis->get() != nullptr && "Renderer isn't loaded.");
+			SDL_RenderPresent(pthis->get());
 			m_do_render = false;
 		}
 

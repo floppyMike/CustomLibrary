@@ -114,17 +114,21 @@ namespace ctl::sdl
 		template<typename Impl>
 		class _Drawable_<Impl, tag::isRect>
 		{
-			const Impl* const pthis = static_cast<const Impl*>(this);
+			//Impl* const pthis = static_cast<Impl*>(this);
 
 		public:
 			void draw_rect() const
 			{
+				const Impl* const pthis = static_cast<const Impl*>(this);
+
 				if (SDL_RenderDrawRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
 			}
 
 			void draw_filled_rect() const
 			{
+				const Impl* const pthis = static_cast<const Impl*>(this);
+
 				if (SDL_RenderFillRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
 			}
@@ -235,7 +239,8 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... Tag>
-	using EDrawable = _Drawable_<Impl, std::conditional_t<std::disjunction_v<std::is_same<tag::isRect, Tag>...>, tag::isRect,
+	using EDrawable = _Drawable_<Impl, 
+		std::conditional_t<std::disjunction_v<std::is_same<tag::isRect, Tag>...>, tag::isRect,
 		std::conditional_t<std::disjunction_v<std::is_same<tag::isPoint, Tag>...>, tag::isPoint,
 		std::conditional_t<std::disjunction_v<std::is_same<tag::isLine, Tag>...>, tag::isLine,
 		std::conditional_t<std::disjunction_v<std::is_same<tag::isCircle, Tag>...>, tag::isCircle,

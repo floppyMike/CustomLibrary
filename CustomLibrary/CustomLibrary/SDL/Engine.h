@@ -107,11 +107,11 @@ namespace ctl::sdl
 	class IWindow
 	{
 	public:
-		virtual void pre_pass() = 0;
-		virtual void event(const SDL_Event&) = 0;
-		virtual void update() = 0;
-		virtual void fixed_update() = 0;
-		virtual void render() = 0;
+		virtual void pre_pass() {};
+		virtual void event(const SDL_Event&) {};
+		virtual void update() {};
+		virtual void fixed_update() {};
+		virtual void render() {};
 	};
 
 
