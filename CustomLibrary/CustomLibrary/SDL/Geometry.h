@@ -114,21 +114,17 @@ namespace ctl::sdl
 		template<typename Impl>
 		class _Drawable_<Impl, tag::isRect>
 		{
-			//Impl* const pthis = static_cast<Impl*>(this);
+			const Impl* const pthis = static_cast<Impl*>(this);
 
 		public:
 			void draw_rect() const
 			{
-				const Impl* const pthis = static_cast<const Impl*>(this);
-
 				if (SDL_RenderDrawRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
 			}
 
 			void draw_filled_rect() const
 			{
-				const Impl* const pthis = static_cast<const Impl*>(this);
-
 				if (SDL_RenderFillRect(pthis->renderer()->get(), pthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
 			}

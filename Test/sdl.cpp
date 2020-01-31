@@ -1,3 +1,10 @@
+/*Ideas:
+- Event binders extension
+- Utility system for single function like getMousePos
+- Generate Circle extension
+*/
+
+
 #include <tuple>
 #include <iostream>
 #include <SDL.h>
@@ -161,10 +168,10 @@ int main(int argc, char** argv)
 		sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
 			.initTTF();
 
-		//sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		//win.queue_state<State>(&win.renderer());
+		sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		win.queue_state<State>(&win.renderer());
 
-		Window win;
+		//Window win;
 
 		sdl::RunLoop<sdl::IWindow> loop;
 		loop.add_window(&win);

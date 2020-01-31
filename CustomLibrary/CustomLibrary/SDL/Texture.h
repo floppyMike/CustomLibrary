@@ -55,18 +55,20 @@ namespace ctl::sdl
 	class ETextureRender
 	{
 		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
+
 		Impl* const pthis = static_cast<Impl*>(this);
+		const Impl* const cpthis = static_cast<Impl*>(this);
 
 	public:
 		void draw(const SDL_Rect* blit = nullptr) const
 		{
-			if (SDL_RenderCopy(pthis->renderer()->get(), pthis->texture(), blit, pthis->shape().rect_ptr()) < 0)
+			if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
 				throw err::Log(SDL_GetError());
 		}
 
 		void draw(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
 		{
-			if (SDL_RenderCopyEx(pthis->renderer()->get(), pthis->texture(), blit, pthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
+			if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 				throw err::Log(SDL_GetError());
 		}
 
@@ -81,7 +83,7 @@ namespace ctl::sdl
 		{
 			std::tuple<Uint8, Uint8, Uint8> c;
 
-			if (SDL_GetTextureColorMod(pthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
+			if (SDL_GetTextureColorMod(cpthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
 				throw err::Log(SDL_GetError());
 
 			return c;
@@ -98,7 +100,7 @@ namespace ctl::sdl
 		{
 			SDL_BlendMode b;
 
-			if (SDL_GetTextureBlendMode(pthis->texture(), &b) != 0)
+			if (SDL_GetTextureBlendMode(cpthis->texture(), &b) != 0)
 				throw err::Log(SDL_GetError());
 
 			return b;
@@ -115,7 +117,7 @@ namespace ctl::sdl
 		{
 			Uint8 a;
 
-			if (SDL_GetTextureAlphaMod(pthis->texture(), &a) == -1)
+			if (SDL_GetTextureAlphaMod(cpthis->texture(), &a) == -1)
 				throw err::Log(SDL_GetError());
 
 			return a;
