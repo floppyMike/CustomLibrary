@@ -105,19 +105,18 @@ namespace ctl::sdl
 	template<template<typename, typename...> class... Ex>
 	using PointFrame = Frame<mth::Point<int>, Ex...>;
 
-
 	namespace
 	{
 		template<typename, typename>
 		class _Drawable_ {};
 
 		template<typename Impl>
-		class _Drawable_<Impl, tag::isRect>
+		class _Drawable_<Impl, tag::isRect> : public crtp<Impl, _Drawable_, tag::isRect>
 		{
 		public:
 			void draw_rect() const
 			{
-				const Impl* const cpthis = static_cast<const Impl*>(this);
+				const Impl* const cpthis = this->underlying();
 
 				if (SDL_RenderDrawRect(cpthis->renderer()->get(), cpthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
@@ -125,7 +124,7 @@ namespace ctl::sdl
 
 			void draw_filled_rect() const
 			{
-				const Impl* const cpthis = static_cast<const Impl*>(this);
+				const Impl* const cpthis = this->underlying();
 
 				if (SDL_RenderFillRect(cpthis->renderer()->get(), cpthis->shape().rect_ptr()) != 0)
 					throw err::Log(SDL_GetError());
@@ -133,10 +132,8 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, tag::isCircle>
+		class _Drawable_<Impl, tag::isCircle> : public crtp<Impl, _Drawable_, tag::isCircle>
 		{
-			const Impl* const pthis = static_cast<const Impl*>(this);
-
 		public:
 			void draw_circle() const
 			{
@@ -150,6 +147,8 @@ namespace ctl::sdl
 
 			void draw_p(int pres) const
 			{
+				const Impl* const pthis = this->underlying();
+
 				std::vector<SDL_Point> ps;
 				ps.reserve(pres + 1);
 
@@ -168,6 +167,8 @@ namespace ctl::sdl
 		private:
 			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int)) const
 			{
+				const Impl* const pthis = this->underlying();
+
 				const auto d = pthis->shape().r * 2;
 
 				mth::Point<int> p(pthis->shape().r - 1, 0);
@@ -209,26 +210,26 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, tag::isLine>
+		class _Drawable_<Impl, tag::isLine> : public crtp<Impl, _Drawable_, tag::isLine>
 		{
-			const Impl* const pthis = static_cast<const Impl*>(this);
-
 		public:
 			void draw_line() const
 			{
+				const Impl* const pthis = this->underlying();
+
 				if (SDL_RenderDrawLine(pthis->renderer()->get(), pthis->shape().x1, pthis->shape().y1, pthis->shape().x2, pthis->shape().y2) != 0)
 					throw err::Log(SDL_GetError());
 			}
 		};
 
 		template<typename Impl>
-		class _Drawable_<Impl, tag::isPoint>
+		class _Drawable_<Impl, tag::isPoint> : public crtp<Impl, _Drawable_, tag::isPoint>
 		{
-			const Impl* const pthis = static_cast<const Impl*>(this);
-
 		public:
 			void draw_point() const
 			{
+				const Impl* const pthis = this->underlying();
+
 				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->shape().x, pthis->shape().y) != 0)
 					throw err::Log(SDL_GetError());
 			}

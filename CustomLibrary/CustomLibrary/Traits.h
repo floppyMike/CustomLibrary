@@ -49,14 +49,32 @@ namespace ctl
 	template<typename T, template<typename> class crtpType>
 	struct crtp
 	{
+		[[deprecated("Please use \"underlying\"")]]
 		T& _() noexcept { return static_cast<T&>(*this); }
+		[[deprecated("Please use \"underlying\"")]]
 		const T& _() const noexcept { return static_cast<const T&>(*this); }
+
+		T* underlying() noexcept { return static_cast<T*>(this); }
+		const T* underlying() const noexcept { return static_cast<const T*>(this); }
 
 	private:
 		crtp() = default;
 		friend crtpType<T>;
 	};
 
+	namespace sdl
+	{
+		template <typename T, template<typename, typename...> class crtp_t, typename... other_t>
+		struct crtp
+		{
+			T* underlying() noexcept { return static_cast<T*>(this); }
+			const T* underlying() const noexcept { return static_cast<const T*>(this); }
+
+		private:
+			crtp() {}
+			friend crtp_t<T, other_t...>;
+		};
+	}
 
 	//template<template<template<typename> class...> class Base, template<typename> class... Ex>
 	//struct Extendable : public Ex<Base<Ex...>>...

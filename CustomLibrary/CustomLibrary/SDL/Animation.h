@@ -15,10 +15,9 @@ namespace ctl::sdl
 	};
 
 	template<typename Impl, typename... T>
-	class EAnimation
+	class EAnimation : public crtp<Impl, EAnimation, T...>
 	{
 		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
-		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:
 		EAnimation() = default;
@@ -51,7 +50,33 @@ namespace ctl::sdl
 			m_time.isPaused();
 		}
 
-		const auto& blit_ani() noexcept
+		void draw_animated()
+		{
+			const Impl* const cpthis = this->underlying();
+
+			if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), _blit_ani_().rect_ptr(), cpthis->shape().rect_ptr()) < 0)
+				throw err::Log(SDL_GetError());
+		}
+
+		void draw_animated(double angle, const mth::Point<int>& center, SDL_RendererFlip flip)
+		{
+			const Impl* const cpthis = this->underlying();
+
+			if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), _blit_ani_().rect_ptr(), cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
+				throw err::Log(SDL_GetError());
+		}
+
+		constexpr auto frames_size() const noexcept { return m_frames.size(); }
+
+	private:
+		Timer m_time;
+		std::chrono::milliseconds m_till_next = std::chrono::milliseconds(0);
+
+		std::vector<AniFrame> m_frames;
+		std::vector<AniFrame>::iterator m_curr_frame = m_frames.begin();
+
+
+		const auto& _blit_ani_() noexcept
 		{
 			if (!m_time.isPaused() && !m_frames.empty())
 			{
@@ -71,14 +96,5 @@ namespace ctl::sdl
 
 			return m_curr_frame->shape;
 		}
-
-		constexpr auto frames_size() const noexcept { return m_frames.size(); }
-
-	private:
-		Timer m_time;
-		std::chrono::milliseconds m_till_next = std::chrono::milliseconds(0);
-
-		std::vector<AniFrame> m_frames;
-		std::vector<AniFrame>::iterator m_curr_frame = m_frames.begin();
 	};
 }

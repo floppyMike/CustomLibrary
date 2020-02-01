@@ -162,6 +162,7 @@ namespace ctl::sdl
 		return false;
 	}
 
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isPoint, tag::isRect>::_(const U1& d, const U2& r) noexcept
 	{
@@ -170,6 +171,7 @@ namespace ctl::sdl
 			d.y < r.y ||
 			d.y > r.y + r.h);
 	}
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isRect, tag::isCircle>::_(const U1& r, const U2& c) noexcept
 	{
@@ -184,6 +186,7 @@ namespace ctl::sdl
 
 		return power2(distanceX - halfWidth) + power2(distanceY - halfHight) <= power2(c.r);
 	}
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isRect, tag::isRect>::_(const U1& r1, const U2& r2) noexcept
 	{
@@ -192,16 +195,19 @@ namespace ctl::sdl
 			r1.x + r1.w <= r2.x ||
 			r1.x >= r2.x + r2.w);
 	}
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isCircle, tag::isCircle>::_(const U1& c1, const U2& c2) noexcept
 	{
 		return power2(c1.x - c2.x) + power2(c1.y - c2.y) < power2(c1.r + c2.r);
 	}
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isPoint, tag::isPoint>::_(const U1& d1, const U2& d2) noexcept
 	{
 		return d1 == d2;
 	}
+
 	template<typename U1, typename U2>
 	inline constexpr bool _impl_<tag::isPoint, tag::isCircle>::_(const U1& d, const U2& c) noexcept
 	{

@@ -97,7 +97,7 @@ struct State : sdl::IState
 		m_texture.draw();
 		m_text.draw();
 
-		m_ani.draw(m_ani.blit_ani().rect_ptr());
+		m_ani.draw_animated();
 	}
 
 private:
