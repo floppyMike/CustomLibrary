@@ -119,7 +119,7 @@ namespace ctl::sdl
 				const Impl* const cpthis = this->underlying();
 
 				if (SDL_RenderDrawRect(cpthis->renderer()->get(), cpthis->shape().rect_ptr()) != 0)
-					throw err::Log(SDL_GetError());
+					throw std::runtime_error(SDL_GetError());
 			}
 
 			void draw_filled_rect() const
@@ -127,7 +127,7 @@ namespace ctl::sdl
 				const Impl* const cpthis = this->underlying();
 
 				if (SDL_RenderFillRect(cpthis->renderer()->get(), cpthis->shape().rect_ptr()) != 0)
-					throw err::Log(SDL_GetError());
+					throw std::runtime_error(SDL_GetError());
 			}
 		};
 
@@ -161,7 +161,7 @@ namespace ctl::sdl
 				ps.back() = ps.front();
 
 				if (SDL_RenderDrawLines(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-					throw err::Log(SDL_GetError());
+					throw std::runtime_error(SDL_GetError());
 			}
 
 		private:
@@ -191,7 +191,7 @@ namespace ctl::sdl
 					};
 
 					if (func(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-						throw err::Log(SDL_GetError());
+						throw std::runtime_error(SDL_GetError());
 
 					if (err <= 0)
 					{
@@ -218,7 +218,7 @@ namespace ctl::sdl
 				const Impl* const pthis = this->underlying();
 
 				if (SDL_RenderDrawLine(pthis->renderer()->get(), pthis->shape().x1, pthis->shape().y1, pthis->shape().x2, pthis->shape().y2) != 0)
-					throw err::Log(SDL_GetError());
+					throw std::runtime_error(SDL_GetError());
 			}
 		};
 
@@ -231,7 +231,7 @@ namespace ctl::sdl
 				const Impl* const pthis = this->underlying();
 
 				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->shape().x, pthis->shape().y) != 0)
-					throw err::Log(SDL_GetError());
+					throw std::runtime_error(SDL_GetError());
 			}
 		};
 	}

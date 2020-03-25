@@ -37,12 +37,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Rect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ResourceManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\AnimationLite.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />

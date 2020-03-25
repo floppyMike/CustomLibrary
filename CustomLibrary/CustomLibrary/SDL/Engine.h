@@ -57,7 +57,7 @@ namespace ctl::sdl
 		auto& initIMG(const int& flags = IMG_INIT_PNG)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -75,7 +75,7 @@ namespace ctl::sdl
 		auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
-				throw err::err::Log(SDL_GetError());
+				throw err::std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -89,7 +89,7 @@ namespace ctl::sdl
 		auto& initTTF()
 		{
 			if (TTF_Init() == -1)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -147,7 +147,7 @@ namespace ctl::sdl
 	inline SDL::SDL(const Uint32& SDLFlags)
 	{
 		if (SDL_Init(SDLFlags) < 0)
-			throw err::Log(SDL_GetError());
+			throw std::runtime_error(SDL_GetError());
 	}
 
 	inline SDL& SDL::set_hint(const char* name, const char* value) noexcept

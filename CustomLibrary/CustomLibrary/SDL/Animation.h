@@ -55,7 +55,7 @@ namespace ctl::sdl
 			const Impl* const cpthis = this->underlying();
 
 			if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), _blit_ani_().rect_ptr(), cpthis->shape().rect_ptr()) < 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 		}
 
 		void draw_animated(double angle, const mth::Point<int>& center, SDL_RendererFlip flip)
@@ -63,7 +63,7 @@ namespace ctl::sdl
 			const Impl* const cpthis = this->underlying();
 
 			if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), _blit_ani_().rect_ptr(), cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 		}
 
 		constexpr auto frames_size() const noexcept { return m_frames.size(); }

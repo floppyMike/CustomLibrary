@@ -20,7 +20,7 @@ namespace ctl::sdl
 			m_window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 				dim.w, dim.h, windowFlags);
 			if (m_window == nullptr)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			m_id = SDL_GetWindowID(m_window);
 		}

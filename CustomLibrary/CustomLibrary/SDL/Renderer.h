@@ -36,7 +36,7 @@ namespace ctl::sdl
 		void create(ImplWin* win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
 			if ((m_renderer = SDL_CreateRenderer(win->get(), -1, rendererFlags)) == nullptr)
-				throw ctl::err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 		}
 
 		void destroy()

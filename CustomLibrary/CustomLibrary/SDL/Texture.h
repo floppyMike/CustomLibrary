@@ -37,7 +37,7 @@ namespace ctl::sdl
 		auto& reset_shape()
 		{
 			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 			return *this;
 		}
 		
@@ -62,7 +62,7 @@ namespace ctl::sdl
 			const Impl* const cpthis = this->underlying();
 
 			if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 		}
 
 		void draw(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
@@ -70,7 +70,7 @@ namespace ctl::sdl
 			const Impl* const cpthis = this->underlying();
 
 			if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 		}
 
 		auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
@@ -78,7 +78,7 @@ namespace ctl::sdl
 			Impl* const pthis = this->underlying();
 
 			if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -89,7 +89,7 @@ namespace ctl::sdl
 			std::tuple<Uint8, Uint8, Uint8> c;
 
 			if (SDL_GetTextureColorMod(cpthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return c;
 		}
@@ -99,7 +99,7 @@ namespace ctl::sdl
 			Impl* const pthis = this->underlying();
 
 			if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -110,7 +110,7 @@ namespace ctl::sdl
 			SDL_BlendMode b;
 
 			if (SDL_GetTextureBlendMode(cpthis->texture(), &b) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return b;
 		}
@@ -120,7 +120,7 @@ namespace ctl::sdl
 			Impl* const pthis = this->underlying();
 
 			if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -131,7 +131,7 @@ namespace ctl::sdl
 			Uint8 a;
 
 			if (SDL_GetTextureAlphaMod(cpthis->texture(), &a) == -1)
-				throw err::Log(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return a;
 		}
@@ -206,11 +206,11 @@ namespace ctl::sdl
 //		{
 //			SDL_Surface* f_s = SDL_ConvertSurfaceFormat(s, SDL_GetWindowPixelFormat(m_win->window()), 0);
 //			if (f_s == nullptr)
-//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_GetWindowPixelFormat(m_win->window()), SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h));
 //			if (!m_texture)
-//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			lock();
 //			memcpy(m_pixels, f_s->pixels, f_s->pitch * f_s->h);
@@ -230,7 +230,7 @@ namespace ctl::sdl
 //		{
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_PIXELFORMAT_RGBA8888, a, wh.w, wh.h));
 //			if (!m_texture)
-//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			m_dim = wh;
 //
@@ -243,7 +243,7 @@ namespace ctl::sdl
 //				Log::note("Texture is already locked.", Log::Sev::WARNING);
 //
 //			if (SDL_LockTexture(m_texture.get(), nullptr, &m_pixels, &m_pitch) != 0)
-//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R);
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //		}
 //
 //		void unlock()
@@ -259,7 +259,7 @@ namespace ctl::sdl
 //		auto& target() 
 //		{ 
 //			if (SDL_SetRenderTarget(m_win->renderer(), m_texture.get()) != 0) 
-//				throw ctl::err::Log(SDL_GetError(), Log::Sev::ERR0R); 
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R); 
 //
 //			return *this;
 //		}
