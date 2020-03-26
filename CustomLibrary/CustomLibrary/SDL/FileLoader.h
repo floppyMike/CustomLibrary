@@ -49,6 +49,26 @@ namespace ctl::sdl
 				return pthis->font(temp);
 			}
 		};
+
+#ifdef SDL_MIXER_H_
+		template<typename Impl>
+		class _Loader_<Impl, tag::isMusic> : public crtp<Impl, _Loader_, tag::isMusic>
+		{
+		public:
+			Impl& load_music(std::string_view path)
+			{
+				Impl* const pthis = this->underlying();
+
+				if (Mix_Music* temp = Mix_LoadMUS(path.data()); temp)
+					pthis->music(temp);
+				else
+					throw std::runtime_error(Mix_GetError());
+
+				return *pthis;
+			}
+		};
+#endif // SDL_MIXER_H_
+		
 	}
 
 	template<typename Impl, typename... T>
