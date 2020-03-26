@@ -7,7 +7,7 @@ For the library itself.
 ```
 git clone https://github.com/floppyMike/CustomLibrary.git
 ```
-The library requires the SDL2 library which can be found here: https://www.libsdl.org/download-2.0.php
+The library requires the SDL2 library which can be found here: https://www.libsdl.org/download-2.0.php.
 Optionaly for additional functionality you should consider these following libraries:
 1. [Image support](https://www.libsdl.org/projects/SDL_image/)
 2. [Text support](https://www.libsdl.org/projects/SDL_ttf/)
