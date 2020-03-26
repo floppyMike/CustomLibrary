@@ -20,6 +20,7 @@
 #include <CustomLibrary/SDL/Geometry.h>
 #include <CustomLibrary/SDL/Button.h>
 #include <CustomLibrary/SDL/Animation.h>
+#include <CustomLibrary/SDL/Drawable.h>
 
 using namespace std::chrono_literals;
 
@@ -101,6 +102,7 @@ struct State : sdl::IState
 		m_text.draw_texture();
 
 		m_ani.draw_animated();
+		m_ani.draw_rect();
 	}
 
 private:
