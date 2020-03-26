@@ -40,9 +40,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Drawable.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\FileLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

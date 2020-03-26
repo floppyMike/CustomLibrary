@@ -11,13 +11,13 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>, tag::isTexture, tag::isRect>...
+	class Texture : public RectFrame<>, public Ex<Texture<Ex...>, tag::isTexture, tag::isRect>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
 		using RectFrame<>::Frame;
-		TextureFrame() = default;
+		Texture() = default;
 
 		SDL_Texture* texture() const noexcept
 		{
@@ -40,101 +40,9 @@ namespace ctl::sdl
 				throw std::runtime_error(SDL_GetError());
 			return *this;
 		}
-		
-		using RectFrame<>::renderer;
-		using RectFrame<>::shape;
-		using RectFrame<>::translate;
-		using RectFrame<>::pos;
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
-	};
-
-
-	template<typename Impl, typename... T>
-	class ETextureRender : public crtp<Impl, ETextureRender, T...>
-	{
-		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
-
-	public:
-		void draw(const SDL_Rect* blit = nullptr) const
-		{
-			const Impl* const cpthis = this->underlying();
-
-			if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
-				throw std::runtime_error(SDL_GetError());
-		}
-
-		void draw(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
-		{
-			const Impl* const cpthis = this->underlying();
-
-			if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
-				throw std::runtime_error(SDL_GetError());
-		}
-
-		auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
-		{
-			Impl* const pthis = this->underlying();
-
-			if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return *this;
-		}
-		auto color_mod() const
-		{
-			const Impl* const cpthis = this->underlying();
-
-			std::tuple<Uint8, Uint8, Uint8> c;
-
-			if (SDL_GetTextureColorMod(cpthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return c;
-		}
-
-		auto& blend_mode(const SDL_BlendMode& b)
-		{
-			Impl* const pthis = this->underlying();
-
-			if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return *this;
-		}
-		SDL_BlendMode blend_mode() const
-		{
-			const Impl* const cpthis = this->underlying();
-
-			SDL_BlendMode b;
-
-			if (SDL_GetTextureBlendMode(cpthis->texture(), &b) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return b;
-		}
-
-		auto& alpha_mod(const Uint8& a)
-		{
-			Impl* const pthis = this->underlying();
-
-			if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return *this;
-		}
-		Uint8 alpha_mod() const
-		{
-			const Impl* const cpthis = this->underlying();
-
-			Uint8 a;
-
-			if (SDL_GetTextureAlphaMod(cpthis->texture(), &a) == -1)
-				throw std::runtime_error(SDL_GetError());
-
-			return a;
-		}
 	};
 
 
@@ -162,10 +70,6 @@ namespace ctl::sdl
 			return pthis->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
 		}
 	};
-
-
-
-	using Texture = TextureFrame<ETextureLoader, ETextureRender>;
 
 }
 

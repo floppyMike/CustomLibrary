@@ -20,6 +20,8 @@
 #include <CustomLibrary/SDL/Geometry.h>
 #include <CustomLibrary/SDL/Button.h>
 #include <CustomLibrary/SDL/Animation.h>
+#include <CustomLibrary/SDL/Drawable.h>
+#include <CustomLibrary/SDL/FileLoader.h>
 
 using namespace std::chrono_literals;
 
@@ -27,7 +29,7 @@ using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::Renderer* r)
+	State(sdl::DRenderer* r)
 		: m_rend(r)
 		, m_r(m_rend, { 10, 10, 40, 40 })
 		, m_c(m_rend, { 200, 100, 40 })
@@ -51,17 +53,17 @@ struct State : sdl::IState
 		m_multi.push(mth::Point(21, 401));
 		m_multi.push(mth::Point(19, 401));
 
-		m_texture.load("assets/ass.png");
+		m_texture.load_texture("assets/ass.png");
 		m_texture.shape({ 200, 20, m_texture.shape().w >> 2, m_texture.shape().h >> 2 });
 
-		m_font.load("assets/ass1.ttf", 40);
+		m_font.load_font("assets/ass1.ttf", 40);
 		m_text.font(m_font.font()).load_blended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 
 		m_r.func([] { std::cout << "Button Press!\n"; });
 
 		constexpr size_t LLAMA = 48;
-		m_ani.load("assets/llama.png").shape(mth::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
+		m_ani.load_texture("assets/llama.png").shape(mth::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
 		for (size_t y = 0; y < 3; ++y)
 			for (size_t x = 0; x < 2; ++x)
 				m_ani.push_frame({ mth::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
@@ -94,14 +96,20 @@ struct State : sdl::IState
 		m_rend->color({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
 
-		m_texture.draw();
-		m_text.draw();
+		m_texture.draw_texture();
+		m_rend->color(sdl::BLUE);
+		m_texture.draw_rect();
+
+		m_text.draw_texture();
+		m_text.draw_rect();
 
 		m_ani.draw_animated();
+		m_ani.draw_rect();
+		m_ani.draw_texture();
 	}
 
 private:
-	ctl::sdl::Renderer* m_rend;
+	sdl::DRenderer* m_rend;
 
 	sdl::RectFrame<sdl::EDrawable, sdl::EButton> m_r;
 	sdl::CircleFrame<sdl::EDrawable> m_c;
@@ -112,11 +120,11 @@ private:
 		mth::Line<int>,
 		mth::Point<int>> m_multi;
 
-	sdl::Texture m_texture;
-	sdl::TextureFrame<sdl::ETextureRender, sdl::ETextureLoader, sdl::EAnimation> m_ani;
+	sdl::Texture<sdl::ELoader, sdl::EDrawable> m_texture;
+	sdl::Texture<sdl::EDrawable, sdl::ELoader, sdl::EAnimation> m_ani;
 
-	sdl::Font m_font;
-	sdl::Text m_text;
+	sdl::Font<sdl::ELoader> m_font;
+	sdl::Texture<sdl::ETextureFromText, sdl::EDrawable> m_text;
 };
 
 
@@ -153,7 +161,7 @@ public:
 
 private:
 	sdl::Window m_win;
-	sdl::Renderer m_rend;
+	sdl::DRenderer m_rend;
 
 	sdl::RectFrame<sdl::EDrawable> m_rect;
 };

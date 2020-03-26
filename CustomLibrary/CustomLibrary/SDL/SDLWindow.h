@@ -45,7 +45,7 @@ namespace ctl::sdl
 
 	private:
 		Window m_win;
-		Renderer m_renderer;
+		DRenderer m_renderer;
 
 		Camera2D m_cam;
 
