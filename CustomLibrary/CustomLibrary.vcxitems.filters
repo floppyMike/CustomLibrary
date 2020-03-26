@@ -22,15 +22,18 @@
     <Filter Include="CustomLibrary\Include\SDL\Extensions">
       <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Texture">
+      <UniqueIdentifier>{8a2f7671-5bde-4799-b9c9-3fa5004253eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Sound">
+      <UniqueIdentifier>{df005cf8-bc0a-4dab-af3f-3b1300cfd1c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
@@ -40,12 +43,6 @@
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
@@ -120,9 +117,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
@@ -164,6 +158,21 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Drawable.h">
       <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h">
+      <Filter>CustomLibrary\Include\SDL\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h">
+      <Filter>CustomLibrary\Include\SDL\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h">
+      <Filter>CustomLibrary\Include\SDL\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h">
+      <Filter>CustomLibrary\Include\SDL\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Music.h">
+      <Filter>CustomLibrary\Include\SDL\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

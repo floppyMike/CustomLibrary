@@ -46,6 +46,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\FileLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Music.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <chrono>
 
 #include <CustomLibrary/SDL/Engine.h>
@@ -22,6 +23,7 @@
 #include <CustomLibrary/SDL/Animation.h>
 #include <CustomLibrary/SDL/Drawable.h>
 #include <CustomLibrary/SDL/FileLoader.h>
+#include <CustomLibrary/SDL/Music.h>
 
 using namespace std::chrono_literals;
 
@@ -60,7 +62,7 @@ struct State : sdl::IState
 		m_text.font(m_font.font()).load_blended("Hello There!");
 		m_text.shape({ 10, 200, m_text.shape().w, m_text.shape().h });
 
-		m_r.func([] { std::cout << "Button Press!\n"; });
+		m_r.func([] { if (sdl::Music<>::is_paused()) sdl::Music<>::unpause(); else sdl::Music<>::pause(); });
 
 		constexpr size_t LLAMA = 48;
 		m_ani.load_texture("assets/llama.png").shape(mth::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
@@ -68,6 +70,9 @@ struct State : sdl::IState
 			for (size_t x = 0; x < 2; ++x)
 				m_ani.push_frame({ mth::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
 		m_ani.start_ani();
+
+		m_mus.load_music("assets/x.wav");
+		m_mus.play(-1);
 	}
 
 	void event(const SDL_Event& e) override
@@ -125,6 +130,8 @@ private:
 
 	sdl::Font<sdl::ELoader> m_font;
 	sdl::Texture<sdl::ETextureFromText, sdl::EDrawable> m_text;
+
+	sdl::Music<sdl::ELoader, sdl::EPlayer> m_mus;
 };
 
 
@@ -172,8 +179,9 @@ int main(int argc, char** argv)
 	try
 	{
 		sdl::SDL sdl;
-		sdl.initIMG(IMG_INIT_JPG | IMG_INIT_PNG)
-			.initTTF();
+		sdl.init_IMG(IMG_INIT_JPG | IMG_INIT_PNG)
+			.init_TTF()
+			.init_Mix();
 
 		sdl::SDLWindow win("Test", { 640, 490 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		win.queue_state<State>(&win.renderer());

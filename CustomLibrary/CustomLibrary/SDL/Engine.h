@@ -54,7 +54,7 @@ namespace ctl::sdl
 		* @param "flags" flags for initializer
 		* @exception "Log" if initialization fails
 		*/
-		auto& initIMG(const int& flags = IMG_INIT_PNG)
+		auto& init_IMG(const int& flags = IMG_INIT_PNG)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
@@ -72,10 +72,10 @@ namespace ctl::sdl
 		* @param "chunksize" chunksize
 		* @exception "Log" if initialization fails
 		*/
-		auto& initMix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
+		auto& init_Mix(const int& feq = 44100, const Uint16 & format = MIX_DEFAULT_FORMAT, const int& channels = 2, const int& chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
-				throw err::std::runtime_error(SDL_GetError());
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
@@ -86,7 +86,7 @@ namespace ctl::sdl
 		* @summary init SDL_ttf
 		* @exception "Log" if initialization fails
 		*/
-		auto& initTTF()
+		auto& init_TTF()
 		{
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
