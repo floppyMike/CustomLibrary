@@ -34,55 +34,26 @@ namespace ctl::sdl
 			return *this;
 		}
 
-	private:
-		std::unique_ptr<TTF_Font, Unique_Deleter> m_ptr;
-	};
-
-
-	template<typename Impl, typename... Tag>
-	class EFontLoader : public crtp<Impl, EFontLoader, Tag...>
-	{
-		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
-
-	public:
-		auto& load(const char* path, int pt)
-		{
-			Impl* const pthis = this->underlying();
-
-			auto* temp = TTF_OpenFont(path, pt);
-			assert(temp != nullptr && "Nothing found at path.");
-
-			return pthis->font(temp);
-		}
-	};
-
-
-	template<typename Impl, typename... Tag>
-	class EFontAttrib : public crtp<Impl, EFontAttrib, Tag...>
-	{
-		static_assert(tag::has_tag_v<tag::isFont, Tag...>, "Parent must be a font.");
-
-	public:
 		auto& style(int style)
 		{
-			Impl* const pthis = this->underlying();
-			TTF_SetFontStyle(pthis->font(), style);
+			TTF_SetFontStyle(font(), style);
 			return this->_();
 		}
 
 		auto style()
 		{
-			Impl* const pthis = this->underlying();
-			return TTF_GetFontStyle(pthis->font());
+			return TTF_GetFontStyle(font());
 		}
 
 		auto hypo_size(const char* text)
 		{
-			Impl* const pthis = this->underlying();
 			mth::Dim<int> temp;
-			TTF_SizeUTF8(pthis->font(), text, &temp.w, &temp.h);
+			TTF_SizeUTF8(font(), text, &temp.w, &temp.h);
 			return temp;
 		}
+
+	private:
+		std::unique_ptr<TTF_Font, Unique_Deleter> m_ptr;
 	};
 
 

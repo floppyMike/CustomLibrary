@@ -11,7 +11,7 @@
 
 namespace ctl::sdl
 {
-	namespace
+	namespace detail
 	{
 		template<typename, typename>
 		class _Drawable_ {};
@@ -236,8 +236,8 @@ namespace ctl::sdl
 	//	void>>>>>;
 
 	template<typename Impl, typename... Tag>
-	struct EDrawable : _Drawable_<Impl, Tag>...
+	struct EDrawable : detail::_Drawable_<Impl, Tag>...
 	{
-		using _Drawable_<Impl, Tag>::_Drawable_...;
+		using detail::_Drawable_<Impl, Tag>::_Drawable_...;
 	};
 }

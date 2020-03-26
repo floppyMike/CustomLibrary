@@ -159,8 +159,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Tags.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\FileLoader.h">
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Drawable.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
+      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
