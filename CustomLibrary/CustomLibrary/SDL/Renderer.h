@@ -10,24 +10,24 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class basicRenderer : public Ex<basicRenderer<Ex...>, tag::isRenderer>...
+	class Renderer : public Ex<Renderer<Ex...>, tag::isRenderer>...
 	{
 	public:
 		template<typename ImplWin>
-		basicRenderer(ImplWin* win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
+		Renderer(ImplWin* win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
 			create(win, rendererFlags);
 		}
 
-		basicRenderer(const basicRenderer&) = delete;
+		Renderer(const Renderer&) = delete;
 
-		basicRenderer(basicRenderer&& r) noexcept
+		Renderer(Renderer&& r) noexcept
 			: m_renderer(r.m_renderer)
 		{
 			r.m_renderer = nullptr;
 		}
 
-		~basicRenderer()
+		~Renderer()
 		{
 			destroy();
 		}
@@ -125,5 +125,5 @@ namespace ctl::sdl
 	};
 
 
-	using Renderer = basicRenderer<ERendererSettings, ERendererRender>;
+	using DRenderer = Renderer<ERendererSettings, ERendererRender>;
 }

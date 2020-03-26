@@ -11,16 +11,16 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class basicFont : public Ex<basicFont<Ex...>, tag::isFont>...
+	class Font : public Ex<Font<Ex...>, tag::isFont>...
 	{
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 	public:
 		using tag = tag::isFont;
 
-		basicFont() = default;
-		basicFont(basicFont&&) = default;
-		basicFont& operator=(basicFont&&) = default;
+		Font() = default;
+		Font(Font&&) = default;
+		Font& operator=(Font&&) = default;
 
 		auto* font() noexcept
 		{
@@ -86,11 +86,8 @@ namespace ctl::sdl
 	};
 
 
-	using Font = basicFont<EFontLoader, EFontAttrib>;
-
-
 	template<typename Impl, typename... T>
-	class ETextLoader : public crtp<Impl, ETextLoader, T...>
+	class ETextureFromText : public crtp<Impl, ETextureFromText, T...>
 	{
 		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 
@@ -144,8 +141,5 @@ namespace ctl::sdl
 		TTF_Font* m_font = nullptr;
 		std::string m_text;
 	};
-
-
-	using Text = TextureFrame<ETextLoader, ETextureRender>;
 
 }

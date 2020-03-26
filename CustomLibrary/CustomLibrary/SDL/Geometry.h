@@ -47,12 +47,12 @@ namespace ctl::sdl
 		{
 		}
 
-		Frame(Renderer* rend)
+		Frame(DRenderer* rend)
 			: m_rend(rend)
 		{
 		}
 
-		Frame(Renderer* rend, const Shape& s)
+		Frame(DRenderer* rend, const Shape& s)
 			: m_rend(rend)
 			, m_shape(s)
 		{
@@ -68,7 +68,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
+		constexpr auto& renderer(sdl::DRenderer* const r) noexcept
 		{
 			m_rend = r;
 			return *this;
@@ -84,7 +84,7 @@ namespace ctl::sdl
 		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, translate)
 
 	protected:
-		Renderer* m_rend = nullptr;
+		DRenderer* m_rend = nullptr;
 		Shape m_shape;
 	};
 
@@ -234,16 +234,106 @@ namespace ctl::sdl
 					throw std::runtime_error(SDL_GetError());
 			}
 		};
+
+		template<typename Impl>
+		class _Drawable_<Impl, tag::isTexture> : public crtp<Impl, _Drawable_, tag::isTexture>
+		{
+		public:
+			void draw_texture(const SDL_Rect* blit = nullptr) const
+			{
+				const Impl* const cpthis = this->underlying();
+
+				if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
+					throw std::runtime_error(SDL_GetError());
+			}
+
+			void draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
+			{
+				const Impl* const cpthis = this->underlying();
+
+				if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
+					throw std::runtime_error(SDL_GetError());
+			}
+
+			auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
+			{
+				Impl* const pthis = this->underlying();
+
+				if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
+					throw std::runtime_error(SDL_GetError());
+
+				return *this;
+			}
+			auto color_mod() const
+			{
+				const Impl* const cpthis = this->underlying();
+
+				std::tuple<Uint8, Uint8, Uint8> c;
+
+				if (SDL_GetTextureColorMod(cpthis->texture(), &std::get<0>(c), &std::get<1>(c), &std::get<2>(c)) != 0)
+					throw std::runtime_error(SDL_GetError());
+
+				return c;
+			}
+
+			auto& blend_mode(const SDL_BlendMode& b)
+			{
+				Impl* const pthis = this->underlying();
+
+				if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
+					throw std::runtime_error(SDL_GetError());
+
+				return *this;
+			}
+			SDL_BlendMode blend_mode() const
+			{
+				const Impl* const cpthis = this->underlying();
+
+				SDL_BlendMode b;
+
+				if (SDL_GetTextureBlendMode(cpthis->texture(), &b) != 0)
+					throw std::runtime_error(SDL_GetError());
+
+				return b;
+			}
+
+			auto& alpha_mod(const Uint8& a)
+			{
+				Impl* const pthis = this->underlying();
+
+				if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
+					throw std::runtime_error(SDL_GetError());
+
+				return *this;
+			}
+			Uint8 alpha_mod() const
+			{
+				const Impl* const cpthis = this->underlying();
+
+				Uint8 a;
+
+				if (SDL_GetTextureAlphaMod(cpthis->texture(), &a) == -1)
+					throw std::runtime_error(SDL_GetError());
+
+				return a;
+			}
+		};
 	}
 
 
+	//template<typename Impl, typename... Tag>
+	//using EDrawable = _Drawable_<Impl, 
+	//	std::conditional_t<std::disjunction_v<std::is_same<tag::isRect, Tag>...>, tag::isRect,
+	//	std::conditional_t<std::disjunction_v<std::is_same<tag::isPoint, Tag>...>, tag::isPoint,
+	//	std::conditional_t<std::disjunction_v<std::is_same<tag::isLine, Tag>...>, tag::isLine,
+	//	std::conditional_t<std::disjunction_v<std::is_same<tag::isCircle, Tag>...>, tag::isCircle,
+	//	void>>>>>;
+
 	template<typename Impl, typename... Tag>
-	using EDrawable = _Drawable_<Impl, 
-		std::conditional_t<std::disjunction_v<std::is_same<tag::isRect, Tag>...>, tag::isRect,
-		std::conditional_t<std::disjunction_v<std::is_same<tag::isPoint, Tag>...>, tag::isPoint,
-		std::conditional_t<std::disjunction_v<std::is_same<tag::isLine, Tag>...>, tag::isLine,
-		std::conditional_t<std::disjunction_v<std::is_same<tag::isCircle, Tag>...>, tag::isCircle,
-		void>>>>>;
+	struct EDrawable : _Drawable_<Impl, Tag>...
+	{
+		using _Drawable_<Impl, Tag>::_Drawable_...;
+	};
 
 
 	//----------------------------------------------
@@ -275,7 +365,7 @@ namespace ctl::sdl
 		}
 
 	public:
-		MultiShape(sdl::Renderer* r) : m_rend(r) {}
+		MultiShape(sdl::DRenderer* r) : m_rend(r) {}
 
 		template<typename T>
 		auto& push(const T& arg)
@@ -294,7 +384,7 @@ namespace ctl::sdl
 				}, m_packs);
 		}
 
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
+		constexpr auto& renderer(sdl::DRenderer* const r) noexcept
 		{
 			m_rend = r;
 			return *this;
@@ -307,7 +397,7 @@ namespace ctl::sdl
 		}
 
 	private:
-		Renderer* m_rend = nullptr;
+		DRenderer* m_rend = nullptr;
 		std::tuple<std::vector<Shapes>...> m_packs;
 	};
 

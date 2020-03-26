@@ -19,7 +19,7 @@ namespace ctl::sdl
 		* @returns mth::Point of world coord
 		*/
 		template<typename T>
-		constexpr mth::Point<T> screenToWorld(const mth::Point<T>& loc) const noexcept;
+		constexpr mth::Point<T> screen_world(const mth::Point<T>& loc) const noexcept;
 
 		/**
 		* @summary translates world coord to screen coord
@@ -27,7 +27,7 @@ namespace ctl::sdl
 		* @returns mth::Point of screen coord
 		*/
 		template<typename T>
-		constexpr mth::Point<T> worldToScreen(mth::Point<T> loc) const noexcept;
+		constexpr mth::Point<T> world_screen(mth::Point<T> loc) const noexcept;
 
 		/**
 		* @summary moves mth::Point
@@ -53,13 +53,13 @@ namespace ctl::sdl
 	//----------------------------------------------
 
 	template<typename T>
-	constexpr mth::Point<T> Camera2D::screenToWorld(const mth::Point<T>& loc) const noexcept
+	constexpr mth::Point<T> Camera2D::screen_world(const mth::Point<T>& loc) const noexcept
 	{
 		return loc += m_camLoc;
 	}
 
 	template<typename T>
-	inline constexpr mth::Point<T> Camera2D::worldToScreen(mth::Point<T> loc) const noexcept
+	inline constexpr mth::Point<T> Camera2D::world_screen(mth::Point<T> loc) const noexcept
 	{
 		return loc -= m_camLoc;
 	}

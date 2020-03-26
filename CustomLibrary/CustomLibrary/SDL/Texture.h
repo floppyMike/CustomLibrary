@@ -11,13 +11,13 @@
 namespace ctl::sdl
 {
 	template<template<typename, typename...> class... Ex>
-	class TextureFrame : RectFrame<>, public Ex<TextureFrame<Ex...>, tag::isTexture, tag::isRect>...
+	class Texture : public RectFrame<>, public Ex<Texture<Ex...>, tag::isTexture, tag::isRect>...
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
 		using RectFrame<>::Frame;
-		TextureFrame() = default;
+		Texture() = default;
 
 		SDL_Texture* texture() const noexcept
 		{
@@ -40,11 +40,6 @@ namespace ctl::sdl
 				throw std::runtime_error(SDL_GetError());
 			return *this;
 		}
-		
-		using RectFrame<>::renderer;
-		using RectFrame<>::shape;
-		using RectFrame<>::translate;
-		using RectFrame<>::pos;
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
@@ -52,12 +47,12 @@ namespace ctl::sdl
 
 
 	template<typename Impl, typename... T>
-	class ETextureRender : public crtp<Impl, ETextureRender, T...>
+	class ETextureDrawer : public crtp<Impl, ETextureDrawer, T...>
 	{
 		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 
 	public:
-		void draw(const SDL_Rect* blit = nullptr) const
+		void draw_texture(const SDL_Rect* blit = nullptr) const
 		{
 			const Impl* const cpthis = this->underlying();
 
@@ -65,7 +60,7 @@ namespace ctl::sdl
 				throw std::runtime_error(SDL_GetError());
 		}
 
-		void draw(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
+		void draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr) const
 		{
 			const Impl* const cpthis = this->underlying();
 
@@ -162,10 +157,6 @@ namespace ctl::sdl
 			return pthis->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
 		}
 	};
-
-
-
-	using Texture = TextureFrame<ETextureLoader, ETextureRender>;
 
 }
 

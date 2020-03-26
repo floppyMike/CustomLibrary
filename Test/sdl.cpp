@@ -27,7 +27,7 @@ using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::Renderer* r)
+	State(sdl::DRenderer* r)
 		: m_rend(r)
 		, m_r(m_rend, { 10, 10, 40, 40 })
 		, m_c(m_rend, { 200, 100, 40 })
@@ -94,14 +94,17 @@ struct State : sdl::IState
 		m_rend->color({ 0, 0, 0xFF, 0xFF });
 		m_multi.draw();
 
-		m_texture.draw();
-		m_text.draw();
+		m_texture.draw_texture();
+		m_rend->color(sdl::BLUE);
+		m_texture.draw_rect();
+
+		m_text.draw_texture();
 
 		m_ani.draw_animated();
 	}
 
 private:
-	ctl::sdl::Renderer* m_rend;
+	sdl::DRenderer* m_rend;
 
 	sdl::RectFrame<sdl::EDrawable, sdl::EButton> m_r;
 	sdl::CircleFrame<sdl::EDrawable> m_c;
@@ -112,11 +115,11 @@ private:
 		mth::Line<int>,
 		mth::Point<int>> m_multi;
 
-	sdl::Texture m_texture;
-	sdl::TextureFrame<sdl::ETextureRender, sdl::ETextureLoader, sdl::EAnimation> m_ani;
+	sdl::Texture<sdl::ETextureLoader, sdl::EDrawable> m_texture;
+	sdl::Texture<sdl::EDrawable, sdl::ETextureLoader, sdl::EAnimation> m_ani;
 
-	sdl::Font m_font;
-	sdl::Text m_text;
+	sdl::Font<sdl::EFontLoader> m_font;
+	sdl::Texture<sdl::ETextureFromText, sdl::EDrawable> m_text;
 };
 
 
@@ -153,7 +156,7 @@ public:
 
 private:
 	sdl::Window m_win;
-	sdl::Renderer m_rend;
+	sdl::DRenderer m_rend;
 
 	sdl::RectFrame<sdl::EDrawable> m_rect;
 };
