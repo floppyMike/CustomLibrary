@@ -28,6 +28,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\GeneticAlgorithm.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Graph.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Line.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Logging.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Matrix.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\NeuralNet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Observer.h" />
