@@ -7,11 +7,11 @@ For the library itself.
 ```
 git clone https://github.com/floppyMike/CustomLibrary.git
 ```
-The library requires the SDL2 library which can be found here: https://www.libsdl.org/download-2.0.php
+The library requires the SDL2 library which can be found here: https://www.libsdl.org/download-2.0.php.
 Optionaly for additional functionality you should consider these following libraries:
 1. [Image support](https://www.libsdl.org/projects/SDL_image/)
 2. [Text support](https://www.libsdl.org/projects/SDL_ttf/)
-3. [(future) Music support](https://www.libsdl.org/projects/SDL_mixer/)
+3. [Music support](https://www.libsdl.org/projects/SDL_mixer/)
 
 ### Adding the Includes.
 In your project go to "Project/Properties/C++/General/Additional Include Directories" and add the include paths of this library, the SDL2 library and optionally the additional libraries.
