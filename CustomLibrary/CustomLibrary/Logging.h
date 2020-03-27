@@ -1,5 +1,10 @@
 #pragma once
-#include "Includes.h"
+
+#include <sstream>
+#include <fstream>
+#include <chrono>
+#include <ctime>
+#include <iostream>
 
 class Logger
 {
