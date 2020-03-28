@@ -20,7 +20,7 @@ namespace ctl::sdl
 			: m_win(name, dim, windowFlags)
 			, m_renderer(&m_win, rendererFlags)
 		{
-			m_renderer.logical_size(m_win.dim());
+			//m_renderer.logical_size(m_win.dim());
 		}
 
 		~SDLWindow()
@@ -45,7 +45,7 @@ namespace ctl::sdl
 
 	private:
 		Window m_win;
-		DRenderer m_renderer;
+		LDelayedRender<LColorer<Renderer>> m_renderer;
 
 		Camera2D m_cam;
 

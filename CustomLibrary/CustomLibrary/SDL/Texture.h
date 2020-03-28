@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_SDL2_TEXTURE_
+#define _CTL_SDL2_TEXTURE_
 
 #include "Surface.h"
 #include "Renderer.h"
@@ -10,18 +11,28 @@
 
 namespace ctl::sdl
 {
-	template<template<typename, typename...> class... Ex>
-	class Texture : public RectFrame<>, public Ex<Texture<Ex...>, tag::isTexture, tag::isRect>...
+	class Texture : public RectFrame
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
-		using RectFrame<>::Frame;
+		using tag_t = RectFrame::tag_t;
+		using base_t = RectFrame::base_t;
+
+		using RectFrame::Frame;
 		Texture() = default;
 
 		SDL_Texture* texture() const noexcept
 		{
 			return m_texture.get();
+		}
+
+		auto& reset_shape()
+		{
+			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
+				throw std::runtime_error(SDL_GetError());
+
+			return *this;
 		}
 
 		auto& texture(SDL_Texture* tex) noexcept
@@ -34,44 +45,14 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto& reset_shape()
-		{
-			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
-				throw std::runtime_error(SDL_GetError());
-			return *this;
-		}
-
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
 	};
 
-
-	template<typename Impl, typename... T>
-	class ETextureLoader : public crtp<Impl, ETextureLoader, T...>
-	{
-		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
-
-	public:
-		Impl& load(SDL_Surface* surface)
-		{
-			Impl* const pthis = this->underlying();
-			return pthis->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
-		}
-
-		Impl& load(const char* path)
-		{
-			Impl* const pthis = this->underlying();
-			return pthis->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
-		}
-
-		Impl& load(void* src, int size)
-		{
-			Impl* const pthis = this->underlying();
-			return pthis->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
-		}
-	};
-
 }
+
+#endif // !_CTL_SDL2_TEXTURE_
+
 
 
 

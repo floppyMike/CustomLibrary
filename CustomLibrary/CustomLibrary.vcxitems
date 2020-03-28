@@ -45,9 +45,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\FileLoader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Loader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Music.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Render.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -60,6 +61,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Surface.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Text.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Texture.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\TypeTraits.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SSLClient.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Tags.h" />

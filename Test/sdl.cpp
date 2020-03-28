@@ -31,7 +31,7 @@ using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::DRenderer* r)
+	State(sdl::Renderer* r)
 		: m_rend(r)
 		, m_r(m_rend, { 10, 10, 40, 40 })
 		, m_c(m_rend, { 200, 100, 40 })
@@ -114,7 +114,7 @@ struct State : sdl::IState
 	}
 
 private:
-	sdl::DRenderer* m_rend;
+	sdl::Renderer* m_rend;
 
 	sdl::RectFrame<sdl::EDrawable, sdl::EButton> m_r;
 	sdl::CircleFrame<sdl::EDrawable> m_c;
@@ -168,7 +168,7 @@ public:
 
 private:
 	sdl::Window m_win;
-	sdl::DRenderer m_rend;
+	sdl::Renderer m_rend;
 
 	sdl::RectFrame<sdl::EDrawable> m_rect;
 };

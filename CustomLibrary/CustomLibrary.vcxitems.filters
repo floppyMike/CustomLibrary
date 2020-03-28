@@ -19,14 +19,14 @@
     <Filter Include="CustomLibrary\Include\Default">
       <UniqueIdentifier>{5f02ca78-a201-4ba7-b699-82cea4c9a790}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CustomLibrary\Include\SDL\Extensions">
-      <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="CustomLibrary\Include\SDL\Texture">
       <UniqueIdentifier>{8a2f7671-5bde-4799-b9c9-3fa5004253eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="CustomLibrary\Include\SDL\Sound">
       <UniqueIdentifier>{df005cf8-bc0a-4dab-af3f-3b1300cfd1c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Function Classes">
+      <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,10 +127,10 @@
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Animation.h">
-      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Button.h">
-      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\BasicTypes.h">
       <Filter>CustomLibrary\Include\Default</Filter>
@@ -153,11 +153,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Tags.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\FileLoader.h">
-      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Drawable.h">
-      <Filter>CustomLibrary\Include\SDL\Extensions</Filter>
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Geometry.h">
       <Filter>CustomLibrary\Include\SDL\Texture</Filter>
@@ -176,6 +173,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Logging.h">
       <Filter>CustomLibrary\Include\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\TypeTraits.h">
+      <Filter>CustomLibrary\Include\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Render.h">
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Loader.h">
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

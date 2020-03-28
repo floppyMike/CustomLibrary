@@ -11,12 +11,13 @@
 
 namespace ctl::sdl
 {
-	template<typename Shape, template<typename, typename...> class... Ex>
-	class Frame : public Ex<Frame<Shape, Ex...>, typename Shape::tag>...
+	template<typename Shape>
+	class Frame
 	{
-		using tag_t = typename Shape::tag;
-
 	public:
+		using tag_t = typename Shape::tag;
+		using base_t = Frame;
+
 		Frame() = default;
 
 		Frame(const Frame&) = default;
@@ -25,34 +26,12 @@ namespace ctl::sdl
 		Frame& operator=(const Frame&) = default;
 		Frame& operator=(Frame&&) = default;
 
-		template<template<typename, typename...> class... T>
-		Frame(T<Frame, tag_t>&&... arg)
-			: T<Frame, tag_t>(std::move(arg))...
-		{
-		}
-
-		template<template<typename, typename...> class... T>
-		Frame(const Frame<Shape, T...>& cast)
-			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
-			, m_rend(cast.m_rend)
-			, m_shape(cast.m_shape)
-		{
-		}
-
-		template<template<typename, typename...> class... T>
-		Frame(Frame<Shape, T...>&& cast)
-			: T<Frame, tag_t>(static_cast<T<Frame, tag_t>&&>(*reinterpret_cast<T<Frame, tag_t>*>(static_cast<T<Frame<Shape, T...>, tag_t>*>(&cast))))...
-			, m_rend(cast.m_rend)
-			, m_shape(cast.m_shape)
-		{
-		}
-
-		Frame(DRenderer* rend)
+		Frame(Renderer* rend)
 			: m_rend(rend)
 		{
 		}
 
-		Frame(DRenderer* rend, const Shape& s)
+		Frame(Renderer* rend, const Shape& s)
 			: m_rend(rend)
 			, m_shape(s)
 		{
@@ -68,7 +47,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr auto& renderer(sdl::DRenderer* const r) noexcept
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
 			m_rend = r;
 			return *this;
@@ -84,21 +63,14 @@ namespace ctl::sdl
 		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, translate)
 
 	protected:
-		DRenderer* m_rend = nullptr;
+		Renderer* m_rend = nullptr;
 		Shape m_shape;
 	};
 
-	template<template<typename, typename...> class... Ex>
-	using RectFrame = Frame<mth::Rect<int, int>, Ex...>;
-
-	template<template<typename, typename...> class... Ex>
-	using CircleFrame = Frame<mth::Circle<int, unsigned int>, Ex...>;
-
-	template<template<typename, typename...> class... Ex>
-	using LineFrame = Frame<mth::Line<int>, Ex...>;
-
-	template<template<typename, typename...> class... Ex>
-	using PointFrame = Frame<mth::Point<int>, Ex...>;
+	using RectFrame = Frame<mth::Rect<int, int>>;
+	using CircleFrame = Frame<mth::Circle<int, unsigned int>>;
+	using LineFrame = Frame<mth::Line<int>>;
+	using PointFrame = Frame<mth::Point<int>>;
 
 
 	template<typename... Shapes>
@@ -126,7 +98,7 @@ namespace ctl::sdl
 		}
 
 	public:
-		MultiShape(sdl::DRenderer* r) : m_rend(r) {}
+		MultiShape(sdl::Renderer* r) : m_rend(r) {}
 
 		template<typename T>
 		auto& push(const T& arg)
@@ -145,7 +117,7 @@ namespace ctl::sdl
 				}, m_packs);
 		}
 
-		constexpr auto& renderer(sdl::DRenderer* const r) noexcept
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
 		{
 			m_rend = r;
 			return *this;
@@ -158,7 +130,7 @@ namespace ctl::sdl
 		}
 
 	private:
-		DRenderer* m_rend = nullptr;
+		Renderer* m_rend = nullptr;
 		std::tuple<std::vector<Shapes>...> m_packs;
 	};
 
