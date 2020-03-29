@@ -5,21 +5,23 @@
 #include "Renderer.h"
 
 #include "../Traits.h"
+#include "TypeTraits.h"
 #include "Geometry.h"
 
 #include <SDL_image.h>
 
 namespace ctl::sdl
 {
-	class Texture : public RectFrame
+	template<typename T>
+	class Texture : public T
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
-		using tag_t = RectFrame::tag_t;
-		using base_t = RectFrame::base_t;
+		using tag_t = tag::isTexture;
+		using base_t = typename T::base_t;
 
-		using RectFrame::Frame;
+		using T::T;
 		Texture() = default;
 
 		SDL_Texture* texture() const noexcept
@@ -29,7 +31,7 @@ namespace ctl::sdl
 
 		auto& reset_shape()
 		{
-			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->m_shape.w, &this->m_shape.h) != 0)
+			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
 				throw std::runtime_error(SDL_GetError());
 
 			return *this;

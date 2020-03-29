@@ -10,11 +10,6 @@ namespace ctl::tag
 	struct isCircle {};
 	struct isLine {};
 
-	struct isFont {};
-	struct isTexture {};
-	struct isRenderer {};
-	struct isMusic {};
-
 	template<typename Tag, typename... Tags>
 	constexpr bool has_tag_v = std::disjunction_v<std::is_same<Tag, Tags>...>;
 

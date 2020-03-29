@@ -6,6 +6,7 @@
 #include <SDL.h>
 
 #include "Engine.h"
+#include "TypeTraits.h"
 
 #include <cassert>
 
@@ -16,6 +17,9 @@ namespace ctl::sdl
 		struct Unique_Des { void operator()(SDL_Renderer* r) { SDL_DestroyRenderer(r); } };
 
 	public:
+		using base_t = Renderer;
+		using tag_t = tag::isRenderer;
+
 		template<typename ImplWin>
 		Renderer(ImplWin* win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
@@ -45,11 +49,6 @@ namespace ctl::sdl
 			return m_renderer.get(); 
 		}
 
-		void render()
-		{
-			SDL_RenderPresent(m_renderer.get());
-		}
-
 	private:
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};
@@ -58,6 +57,9 @@ namespace ctl::sdl
 	class LDelayedRender : public T
 	{
 	public:
+		using base_t = typename T::base_t;
+		using tag_t = typename tag::isRenderDelay;
+
 		using T::T;
 
 		void do_render(bool r)
@@ -70,39 +72,36 @@ namespace ctl::sdl
 			return m_do_render;
 		}
 
-		void render()
-		{
-			T::render();
-			m_do_render = false;
-		}
-
 	private:
 		bool m_do_render = true;
 	};
 
-	template<typename T>
-	class LColorer : public T
-	{
-	public:
-		using T::T;
+	//template<typename T>
+	//class LColorer : public T
+	//{
+	//public:
+	//	using base_t = typename T::base_t;
+	//	using tag_t = typename tag::isRenderColorer;
 
-		void color(const SDL_Color& col)
-		{
-			SDL_SetRenderDrawColor(this->get(), col.r, col.g, col.b, col.a);
-		}
+	//	using T::T;
 
-		void fill()
-		{
-			color(m_fill_col);
-			SDL_RenderClear(this->get());
-		}
+	//	//void color(const SDL_Color& col)
+	//	//{
+	//	//	SDL_SetRenderDrawColor(this->get(), col.r, col.g, col.b, col.a);
+	//	//}
 
-		void fill_color(const SDL_Color& col) noexcept { m_fill_col = col; }
-		const auto& fill_color() const noexcept { return m_fill_col; }
+	//	void fill()
+	//	{
+	//		color(m_fill_col);
+	//		SDL_RenderClear(this->get());
+	//	}
 
-	private:
-		SDL_Color m_fill_col = sdl::WHITE;
-	};
+	//	void fill_color(const SDL_Color& col) noexcept { m_fill_col = col; }
+	//	const auto& fill_color() const noexcept { return m_fill_col; }
+
+	//private:
+	//	SDL_Color m_fill_col = sdl::WHITE;
+	//};
 
 
 	//template<typename Impl, typename... tags_t>

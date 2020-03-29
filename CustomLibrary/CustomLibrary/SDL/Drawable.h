@@ -25,7 +25,7 @@ namespace ctl::sdl
 
 #ifdef _CTL_SDL2_TEXTURE_
 		template<typename Impl>
-		class _EDrawable_<Impl, Texture>
+		class _EDrawable_<Impl, tag::isTexture>
 		{
 			const Impl* const underlying() const noexcept { return static_cast<const Impl*>(this); }
 			Impl* const underlying() noexcept { return static_cast<Impl*>(this); }
@@ -35,17 +35,17 @@ namespace ctl::sdl
 
 			auto& draw_texture(const SDL_Rect* blit = nullptr)
 			{
-				Impl* const cpthis = this->underlying();
+				auto& cpthis = this->underlying()->ref();
 
-				if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
+				if (SDL_RenderCopy(cpthis.renderer()->get(), cpthis.texture(), blit, cpthis.shape().rect_ptr()) < 0)
 					throw std::runtime_error(SDL_GetError());
 
-				return *cpthis;
+				return *this->underlying();
 			}
 
 			auto& draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr)
 			{
-				Impl* const cpthis = this->underlying();
+				Impl* const cpthis = this->underlying()->ref();
 
 				if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 					throw std::runtime_error(SDL_GetError());
@@ -55,7 +55,7 @@ namespace ctl::sdl
 
 			auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
 			{
-				Impl* const pthis = this->underlying();
+				Impl* const pthis = this->underlying()->ref();
 
 				if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -64,7 +64,7 @@ namespace ctl::sdl
 			}
 			auto color_mod()
 			{
-				Impl* const cpthis = this->underlying();
+				Impl* const cpthis = this->underlying()->ref();
 
 				std::tuple<Uint8, Uint8, Uint8> c;
 
@@ -76,7 +76,7 @@ namespace ctl::sdl
 
 			auto& blend_mode(const SDL_BlendMode& b)
 			{
-				Impl* const pthis = this->underlying();
+				Impl* const pthis = this->underlying()->ref();
 
 				if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -85,7 +85,7 @@ namespace ctl::sdl
 			}
 			SDL_BlendMode blend_mode()
 			{
-				Impl* const cpthis = this->underlying();
+				Impl* const cpthis = this->underlying()->ref();
 
 				SDL_BlendMode b;
 
@@ -97,7 +97,7 @@ namespace ctl::sdl
 
 			auto& alpha_mod(const Uint8& a)
 			{
-				Impl* const pthis = this->underlying();
+				Impl* const pthis = this->underlying()->ref();
 
 				if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -106,7 +106,7 @@ namespace ctl::sdl
 			}
 			Uint8 alpha_mod()
 			{
-				Impl* const cpthis = this->underlying();
+				Impl* const cpthis = this->underlying()->ref();
 
 				Uint8 a;
 
@@ -120,16 +120,28 @@ namespace ctl::sdl
 
 
 
-		template<typename, typename>
-		class _Drawable_ {};
-
-		template<typename Real>
-		class _Drawable_<tag::isRect, Real> 
-			: public _Func_<Real, _Drawable_<tag::isRect, Real>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<tag::isRect, Real>, Real>
+		template<typename Real, typename Tag>
+		class _Drawable_
+			: public _Func_<Real, _Drawable_<Real, Tag>>
+			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, Tag>, Real>
 		{
 		public:
 			using _Func_<Real, _Drawable_>::_Func_;
+		};
+
+		template<typename Real>
+		class _Drawable_<Real, ctl::tag::isRect> 
+			: public _Func_<Real, _Drawable_<Real, ctl::tag::isRect>>
+			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isRect>, Real>
+		{
+		public:
+			using _Func_<Real, _Drawable_>::_Func_;
+
+			auto& color(const SDL_Color& col)
+			{
+				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				return *this;
+			}
 
 			auto& draw_rect()
 			{
@@ -149,12 +161,18 @@ namespace ctl::sdl
 		};
 
 		template<typename Real>
-		class _Drawable_<tag::isCircle, Real> 
-			: public _Func_<Real, _Drawable_<tag::isCircle, Real>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<tag::isCircle, Real>, Real>
+		class _Drawable_<Real, ctl::tag::isCircle> 
+			: public _Func_<Real, _Drawable_<Real, ctl::tag::isCircle>>
+			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isCircle>, Real>
 		{
 		public:
 			using _Func_<Real, _Drawable_>::_Func_;
+
+			auto& color(const SDL_Color& col)
+			{
+				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				return *this;
+			}
 
 			auto& draw_circle()
 			{
@@ -231,12 +249,18 @@ namespace ctl::sdl
 		};
 
 		template<typename Real>
-		class _Drawable_<tag::isLine, Real> 
-			: public _Func_<Real, _Drawable_<tag::isLine, Real>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<tag::isLine, Real>, Real>
+		class _Drawable_<Real, ctl::tag::isLine> 
+			: public _Func_<Real, _Drawable_<Real, ctl::tag::isLine>>
+			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isLine>, Real>
 		{
 		public:
 			using _Func_<Real, _Drawable_>::_Func_;
+
+			auto& color(const SDL_Color& col)
+			{
+				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				return *this;
+			}
 
 			void draw_line()
 			{
@@ -246,12 +270,18 @@ namespace ctl::sdl
 		};
 
 		template<typename Real>
-		class _Drawable_<tag::isPoint, Real> 
-			: public _Func_<Real, _Drawable_<tag::isPoint, Real>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<tag::isPoint, Real>, Real>
+		class _Drawable_<Real, ctl::tag::isPoint> 
+			: public _Func_<Real, _Drawable_<Real, ctl::tag::isPoint>>
+			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isPoint>, Real>
 		{
 		public:
 			using _Func_<Real, _Drawable_>::_Func_;
+
+			auto& color(const SDL_Color& col)
+			{
+				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				return *this;
+			}
 
 			void draw_point()
 			{
@@ -263,5 +293,5 @@ namespace ctl::sdl
 
 
 	template<typename T>
-	using Draw = detail::_Drawable_<typename T::tag_t, T>;
+	using Draw = detail::_Drawable_<T, typename T::base_t::tag_t>;
 }

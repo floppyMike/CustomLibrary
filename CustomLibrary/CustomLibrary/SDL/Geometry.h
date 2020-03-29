@@ -41,6 +41,12 @@ namespace ctl::sdl
 		{
 			return m_shape;
 		}
+
+		constexpr auto& shape() noexcept
+		{
+			return m_shape;
+		}
+
 		constexpr auto& shape(const Shape& s) noexcept
 		{
 			m_shape = s;
@@ -59,10 +65,7 @@ namespace ctl::sdl
 			return m_rend;
 		}
 
-		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, pos)
-		FORWARDING_MEMBER_FUNCTIONS(Shape, m_shape, translate)
-
-	protected:
+	private:
 		Renderer* m_rend = nullptr;
 		Shape m_shape;
 	};
@@ -83,13 +86,13 @@ namespace ctl::sdl
 		{
 			using tag_t = typename T::value_type::tag;
 
-			if constexpr (std::is_same_v<tag::isRect, tag_t>)
+			if constexpr (std::is_same_v<ctl::tag::isRect, tag_t>)
 				SDL_RenderDrawRects(m_rend->get(), arg.front().rect_ptr(), arg.size());
 
-			else if constexpr (std::is_same_v<tag::isLine, tag_t>)
+			else if constexpr (std::is_same_v<ctl::tag::isLine, tag_t>)
 				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size() << 1);
 
-			else if constexpr (std::is_same_v<tag::isPoint, tag_t>)
+			else if constexpr (std::is_same_v<ctl::tag::isPoint, tag_t>)
 				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size());
 
 			else

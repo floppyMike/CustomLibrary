@@ -11,7 +11,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... Tags>
 	class EButton
 	{
-		static_assert(tag::has_shape_v<Tags...>, "Parent doesn't support shapes.");
+		//static_assert(tag::has_shape_v<Tags...>, "Parent doesn't support shapes.");
 		Impl* const pthis = static_cast<Impl*>(this);
 
 	public:

@@ -6,11 +6,17 @@ namespace ctl::sdl
 {
 	namespace detail
 	{
+		struct _Fake_
+		{
+			using base_t = _Fake_;
+			_Fake_() = default;
+		};
+
 		template<template<typename> class Outer, typename Inner>
-		auto _peel_(Outer<Inner>)->std::tuple<Inner, Outer<void>>;
+		auto _peel_(Outer<Inner>) -> std::tuple<std::conditional_t<std::is_same_v<typename Inner::base_t, Inner>, void, Inner>, typename Outer<_Fake_>::tag_t>;
 
 		template<typename Inner>
-		auto _peel_(Inner)->std::tuple<void, Inner>;
+		auto _peel_(Inner) -> std::tuple<void, void>;
 
 		template<template<typename, typename> class Util, typename Impl, typename Outer>
 		struct _UnPeeler_
@@ -42,4 +48,34 @@ namespace ctl::sdl
 		};
 	}
 
+	namespace tag
+	{
+		struct isUnassigned {};
+
+		struct isFont {};
+		struct isTexture {};
+		struct isRenderer {};
+		struct isRenderDelay {};
+		struct isMusic {};
+
+		template<typename T, typename = void>
+		struct contains_tag : std::false_type {};
+
+		template<typename T>
+		struct contains_tag<T, std::void_t<typename T::tag>> : std::true_type {};
+
+		template<typename... T>
+		constexpr bool contains_tag_v = std::conjunction_v<contains_tag<T>...>;
+	}
+
+	template <typename T, template<typename, typename...> class crtp_t, typename... other_t>
+	struct crtp
+	{
+		T* underlying() noexcept { return static_cast<T*>(this); }
+		const T* underlying() const noexcept { return static_cast<const T*>(this); }
+
+	private:
+		crtp() {}
+		friend crtp_t<T, other_t...>;
+	};
 }

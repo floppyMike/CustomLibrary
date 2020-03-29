@@ -59,29 +59,34 @@ namespace ctl::mth
 		{
 			return { x, y };
 		}
-		constexpr auto& pos(const mth::Point<T1>& p) noexcept
+
+		constexpr void pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
-			return *this;
 		}
 
 		constexpr mth::Dim<T2> dim() const noexcept
 		{
 			return { w, h };
 		}
-		constexpr auto& dim(const mth::Dim<T2>& d) noexcept
+
+		constexpr void dim(const mth::Dim<T2>& d) noexcept
 		{
 			w = d.w;
 			h = d.h;
-			return *this;
 		}
 
-		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
+		constexpr void translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
-			return *this;
+		}
+
+		constexpr void resize(const mth::Dim<T2>& delta) noexcept
+		{
+			w += delta.w;
+			h += delta.h;
 		}
 
 		T1 x, y;
@@ -118,19 +123,22 @@ namespace ctl::mth
 		{
 		}
 
-		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
+		constexpr void translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
-			return *this;
 		}
 
-		constexpr auto& pos(const mth::Point<T1>& p) noexcept
+		constexpr void pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
+		}
 
-			return *this;
+		constexpr void resize(const mth::Dim<T2>& delta) noexcept
+		{
+			w += delta.w;
+			h += delta.h;
 		}
 
 		T1& x, & y;

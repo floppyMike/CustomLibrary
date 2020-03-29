@@ -3,6 +3,8 @@
 #include "../Tags.h"
 #include "../Traits.h"
 
+#include "TypeTraits.h"
+
 #include <SDL.h>
 
 namespace ctl::sdl
@@ -10,10 +12,11 @@ namespace ctl::sdl
 	namespace detail
 	{
 		template<typename, typename>
-		class _Loader_ {};
+		class _ELoader_
+		{};
 
 		template<typename Impl>
-		class _Loader_<Impl, tag::isTexture> : public crtp<Impl, _Loader_, tag::isTexture>
+		class _ELoader_<Impl, tag::isTexture> : public crtp<Impl, _ELoader_, tag::isTexture>
 		{
 		public:
 			Impl& load_texture(SDL_Surface* surface)
@@ -24,8 +27,9 @@ namespace ctl::sdl
 
 			Impl& load_texture(const char* path)
 			{
-				Impl* const pthis = this->underlying();
-				return pthis->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
+				auto& pthis = this->underlying()->ref();
+				pthis.texture(IMG_LoadTexture(pthis.renderer()->get(), path));
+				return *this->underlying();
 			}
 
 			Impl& load_texture(void* src, int size)
@@ -35,45 +39,57 @@ namespace ctl::sdl
 			}
 		};
 
-		template<typename Impl>
-		class _Loader_<Impl, tag::isFont> : public crtp<Impl, _Loader_, tag::isFont>
+		template<typename Real, typename Tag>
+		class _Loader_ 
+			: public _Func_<Real, _Loader_<Real, Tag>>
+			, public _UnPeeler_<_ELoader_, _Loader_<Real, Tag>, Real>
 		{
 		public:
-			Impl& load_font(const char* path, int pt)
-			{
-				Impl* const pthis = this->underlying();
+			using _Func_<Real, _Loader_>::_Func_;
+		};
 
+
+		template<typename Real>
+		class _Loader_<Real, tag::isFont>
+			: public _Func_<Real, _Loader_<Real, tag::isFont>>
+			, public _UnPeeler_<_Loader_, _Loader_<Real, tag::isFont>, Real>
+		{
+		public:
+			using _Func_<Real, _Loader_>::_Func_;
+
+			Real& load_font(const char* path, int pt)
+			{
 				auto* temp = TTF_OpenFont(path, pt);
 				assert(temp != nullptr && "Nothing found at path.");
+				this->m_o->font(temp);
 
-				return pthis->font(temp);
+				return *this;
 			}
 		};
 
 #ifdef SDL_MIXER_H_
-		template<typename Impl>
-		class _Loader_<Impl, tag::isMusic> : public crtp<Impl, _Loader_, tag::isMusic>
+		template<typename Real>
+		class _Loader_<Real, tag::isMusic>
+			: public _Func_<Real, _Loader_<Real, tag::isMusic>>
+			, public _UnPeeler_<_Loader_, _Loader_<Real, tag::isMusic>, Real>
 		{
 		public:
-			Impl& load_music(std::string_view path)
-			{
-				Impl* const pthis = this->underlying();
+			using _Func_<Real, _Loader_>::_Func_;
 
+			Real& load_music(std::string_view path)
+			{
 				if (Mix_Music* temp = Mix_LoadMUS(path.data()); temp)
-					pthis->music(temp);
+					this->m_o->music(temp);
 				else
 					throw std::runtime_error(Mix_GetError());
 
-				return *pthis;
+				return *this;
 			}
 		};
 #endif // SDL_MIXER_H_
 		
 	}
 
-	template<typename Impl, typename... T>
-	struct ELoader : detail::_Loader_<Impl, T>...
-	{
-		using detail::_Loader_<Impl, T>::_Loader_...;
-	};
+	template<typename T>
+	using Load = detail::_Loader_<T, typename T::base_t::tag_t>;
 }

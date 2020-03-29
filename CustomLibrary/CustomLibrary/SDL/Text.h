@@ -60,7 +60,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... T>
 	class ETextureFromText : public crtp<Impl, ETextureFromText, T...>
 	{
-		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
+		//static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 
 		auto& _load_(SDL_Surface* s, const char* text)
 		{

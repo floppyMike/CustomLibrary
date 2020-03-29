@@ -17,7 +17,7 @@ namespace ctl::sdl
 	template<typename Impl, typename... T>
 	class EAnimation : public crtp<Impl, EAnimation, T...>
 	{
-		static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
+		//static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
 
 	public:
 		EAnimation() = default;

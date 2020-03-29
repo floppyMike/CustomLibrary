@@ -47,17 +47,15 @@ namespace ctl::mth
 		}
 #endif // SDL_h_
 
-		constexpr auto& translate(const Point<T>& delta) noexcept
+		constexpr void translate(const Point<T>& delta) noexcept
 		{
-			return *this += delta;
+			*this += delta;
 		}
 
-		constexpr auto& pos(const Point<T>& p) noexcept
+		constexpr void pos(const Point<T>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
-
-			return *this;
 		}
 
 		/**

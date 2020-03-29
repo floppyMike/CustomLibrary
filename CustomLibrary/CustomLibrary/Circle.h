@@ -34,22 +34,36 @@ namespace ctl::mth
 		* @summary point accessors
 		* @returns reference to mth::Point
 		*/
-		constexpr const auto& pos() const noexcept
+		constexpr auto pos() const noexcept
 		{
 			return mth::Point<T1>(x, y);
 		}
-		constexpr auto& pos(const mth::Point<T1>& p) noexcept
+
+		constexpr void pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
-			return *this;
 		}
 
-		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
+		constexpr auto dim() const noexcept
+		{
+			return r;
+		}
+
+		constexpr void dim(T2 rad) noexcept
+		{
+			r = rad;
+		}
+
+		constexpr void translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
-			return *this;
+		}
+
+		constexpr void resize(T2 delta) noexcept
+		{
+			r += delta;
 		}
 
 		T1 x, y;
@@ -88,19 +102,21 @@ namespace ctl::mth
 		{
 		}
 
-		constexpr auto& translate(const mth::Point<T1>& delta) noexcept
+		constexpr void translate(const mth::Point<T1>& delta) noexcept
 		{
 			x += delta.x;
 			y += delta.y;
-			return *this;
 		}
 
-		constexpr auto& pos(const mth::Point<T1>& p) noexcept
+		constexpr void pos(const mth::Point<T1>& p) noexcept
 		{
 			x = p.x;
 			y = p.y;
+		}
 
-			return *this;
+		const void resize(T2 delta) noexcept
+		{
+			r += delta;
 		}
 
 		T1& x, & y;

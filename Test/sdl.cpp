@@ -22,7 +22,7 @@
 #include <CustomLibrary/SDL/Button.h>
 #include <CustomLibrary/SDL/Animation.h>
 #include <CustomLibrary/SDL/Drawable.h>
-#include <CustomLibrary/SDL/FileLoader.h>
+#include <CustomLibrary/SDL/Loader.h>
 #include <CustomLibrary/SDL/Music.h>
 
 using namespace std::chrono_literals;

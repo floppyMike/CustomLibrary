@@ -7,6 +7,7 @@
 #include "Renderer.h"
 #include "Camera2D.h"
 #include "State.h"
+#include "Render.h"
 
 namespace ctl::sdl
 {
@@ -45,7 +46,7 @@ namespace ctl::sdl
 
 	private:
 		Window m_win;
-		LDelayedRender<LColorer<Renderer>> m_renderer;
+		LDelayedRender<Renderer> m_renderer;
 
 		Camera2D m_cam;
 
@@ -80,12 +81,11 @@ namespace ctl::sdl
 		{
 			if (m_renderer.will_render())
 			{
-				m_renderer.color({ 0xFF, 0xFF, 0xFF, 0xFF });
-				m_renderer.fill();
+				Render<decltype(m_renderer)> rend(&m_renderer);
 
+				rend.fill(sdl::WHITE);
 				m_state->draw();
-
-				m_renderer.render();
+				rend.locking_render();
 			}
 		}
 	};

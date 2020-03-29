@@ -15,9 +15,7 @@ namespace ctl::mth
 		using tag = tag::isLine;
 
 		constexpr Line() noexcept = default;
-
 		constexpr Line(const Line&) noexcept = default;
-
 		constexpr Line& operator=(const Line& l) noexcept = default;
 
 		constexpr Line(const T& x1, const T& y1, const T& x2, const T& y2) noexcept
@@ -50,46 +48,42 @@ namespace ctl::mth
 		}
 #endif // SDL_h_
 
-
 		constexpr mth::Point<T> pos1() const noexcept
 		{
 			return { x1, y1 };
 		}
-		constexpr auto& pos1(const mth::Point<T>& p) noexcept
+
+		constexpr void pos1(const mth::Point<T>& p) noexcept
 		{
 			x1 = p.x;
 			y1 = p.y;
-			return *this;
 		}
 
 		constexpr mth::Point<T> pos2() const noexcept
 		{
 			return { x2, y2 };
 		}
-		constexpr auto& pos2(const mth::Point<T>& p) noexcept
+
+		constexpr void pos2(const mth::Point<T>& p) noexcept
 		{
 			x2 = p.x;
 			y2 = p.y;
-			return *this;
 		}
 
-		constexpr auto& translate(const mth::Point<T>& delta1, const mth::Point<T>& delta2) noexcept
+		constexpr void translate(const mth::Point<T>& delta1, const mth::Point<T>& delta2) noexcept
 		{
 			x1 += delta1.x;
 			y1 += delta1.y;
 			x2 += delta2.x;
 			y2 += delta2.y;
-			return *this;
 		}
 
-		constexpr auto& pos(const mth::Point<T>& p1, const mth::Point<T>& p2) noexcept
+		constexpr void pos(const mth::Point<T>& p1, const mth::Point<T>& p2) noexcept
 		{
 			x1 = p1.x;
 			y1 = p1.y;
 			x2 = p2.x;
 			y2 = p2.y;
-
-			return *this;
 		}
 
 		T x1, y1, x2, y2;
@@ -124,23 +118,20 @@ namespace ctl::mth
 		{
 		}
 
-		constexpr auto& translate(const mth::Point<T>& delta1, const mth::Point<T>& delta2) noexcept
+		constexpr void translate(const mth::Point<T>& delta1, const mth::Point<T>& delta2) noexcept
 		{
 			x1 += delta1.x;
 			y1 += delta1.y;
 			x2 += delta2.x;
 			y2 += delta2.y;
-			return *this;
 		}
 
-		constexpr auto& pos(const mth::Point<T>& p1, const mth::Point<T>& p2) noexcept
+		constexpr void pos(const mth::Point<T>& p1, const mth::Point<T>& p2) noexcept
 		{
 			x1 = p1.x;
 			y1 = p1.y;
 			x2 = p2.x;
 			y2 = p2.y;
-
-			return *this;
 		}
 
 		T& x1, & y1, & x2, & y2;
