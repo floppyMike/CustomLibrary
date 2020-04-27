@@ -18,26 +18,21 @@ namespace ctl::sdl
 	namespace detail
 	{
 		template<typename, typename>
-		struct _EDrawable_
+		class _Drawable_
 		{
 		};
 
-
 #ifdef _CTL_SDL2_TEXTURE_
 		template<typename Impl>
-		class _EDrawable_<Impl, tag::isTexture>
+		class _Drawable_<Impl, tag::isTexture>
+			: public crtp<Impl, _Drawable_, tag::isTexture>
 		{
-			const Impl* const underlying() const noexcept { return static_cast<const Impl*>(this); }
-			Impl* const underlying() noexcept { return static_cast<Impl*>(this); }
-
 		public:
-			_EDrawable_() = default;
-
 			auto& draw_texture(const SDL_Rect* blit = nullptr)
 			{
-				auto& cpthis = this->underlying()->ref();
+				auto* cpthis = this->underlying()->pthis();
 
-				if (SDL_RenderCopy(cpthis.renderer()->get(), cpthis.texture(), blit, cpthis.shape().rect_ptr()) < 0)
+				if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr()) < 0)
 					throw std::runtime_error(SDL_GetError());
 
 				return *this->underlying();
@@ -45,7 +40,7 @@ namespace ctl::sdl
 
 			auto& draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr)
 			{
-				Impl* const cpthis = this->underlying()->ref();
+				Impl* const cpthis = this->underlying()->pthis();
 
 				if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->texture(), blit, cpthis->shape().rect_ptr(), angle, center.point_ptr(), flip) < 0)
 					throw std::runtime_error(SDL_GetError());
@@ -55,7 +50,7 @@ namespace ctl::sdl
 
 			auto& color_mod(Uint8 r, Uint8 g, Uint8 b)
 			{
-				Impl* const pthis = this->underlying()->ref();
+				Impl* const pthis = this->underlying()->pthis();
 
 				if (SDL_SetTextureColorMod(pthis->texture(), r, g, b) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -64,7 +59,7 @@ namespace ctl::sdl
 			}
 			auto color_mod()
 			{
-				Impl* const cpthis = this->underlying()->ref();
+				Impl* const cpthis = this->underlying()->pthis();
 
 				std::tuple<Uint8, Uint8, Uint8> c;
 
@@ -76,7 +71,7 @@ namespace ctl::sdl
 
 			auto& blend_mode(const SDL_BlendMode& b)
 			{
-				Impl* const pthis = this->underlying()->ref();
+				Impl* const pthis = this->underlying()->pthis();
 
 				if (SDL_SetTextureBlendMode(pthis->texture(), b) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -85,7 +80,7 @@ namespace ctl::sdl
 			}
 			SDL_BlendMode blend_mode()
 			{
-				Impl* const cpthis = this->underlying()->ref();
+				Impl* const cpthis = this->underlying()->pthis();
 
 				SDL_BlendMode b;
 
@@ -97,7 +92,7 @@ namespace ctl::sdl
 
 			auto& alpha_mod(const Uint8& a)
 			{
-				Impl* const pthis = this->underlying()->ref();
+				Impl* const pthis = this->underlying()->pthis();
 
 				if (SDL_SetTextureAlphaMod(pthis->texture(), a) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -106,7 +101,7 @@ namespace ctl::sdl
 			}
 			Uint8 alpha_mod()
 			{
-				Impl* const cpthis = this->underlying()->ref();
+				Impl* const cpthis = this->underlying()->pthis();
 
 				Uint8 a;
 
@@ -119,33 +114,20 @@ namespace ctl::sdl
 #endif // _CTL_SDL2_TEXTURE_
 
 
-
-		template<typename Real, typename Tag>
-		class _Drawable_
-			: public _Func_<Real, _Drawable_<Real, Tag>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, Tag>, Real>
+		template<typename Impl>
+		class _Drawable_<Impl, ctl::tag::isRect>
+			: public crtp<Impl, _Drawable_, ctl::tag::isRect>
 		{
 		public:
-			using _Func_<Real, _Drawable_>::_Func_;
-		};
-
-		template<typename Real>
-		class _Drawable_<Real, ctl::tag::isRect> 
-			: public _Func_<Real, _Drawable_<Real, ctl::tag::isRect>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isRect>, Real>
-		{
-		public:
-			using _Func_<Real, _Drawable_>::_Func_;
-
 			auto& color(const SDL_Color& col)
 			{
-				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				SDL_SetRenderDrawColor(this->underlying()->pthis()->renderer()->get(), col.r, col.g, col.b, col.a);
 				return *this;
 			}
 
 			auto& draw_rect()
 			{
-				if (SDL_RenderDrawRect(this->m_o->renderer()->get(), this->m_o->shape().rect_ptr()) != 0)
+				if (SDL_RenderDrawRect(this->underlying()->pthis()->renderer()->get(), this->underlying()->pthis()->shape().rect_ptr()) != 0)
 					throw std::runtime_error(SDL_GetError());
 
 				return *this;
@@ -153,24 +135,21 @@ namespace ctl::sdl
 
 			auto& draw_filled_rect()
 			{
-				if (SDL_RenderFillRect(this->m_o->renderer()->get(), this->m_o->shape().rect_ptr()) != 0)
+				if (SDL_RenderFillRect(this->underlying()->pthis()->renderer()->get(), this->underlying()->pthis()->shape().rect_ptr()) != 0)
 					throw std::runtime_error(SDL_GetError());
 
 				return *this;
 			}
 		};
 
-		template<typename Real>
-		class _Drawable_<Real, ctl::tag::isCircle> 
-			: public _Func_<Real, _Drawable_<Real, ctl::tag::isCircle>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isCircle>, Real>
+		template<typename Impl>
+		class _Drawable_<Impl, ctl::tag::isCircle>
+			: public crtp<Impl, _Drawable_, ctl::tag::isCircle>
 		{
 		public:
-			using _Func_<Real, _Drawable_>::_Func_;
-
 			auto& color(const SDL_Color& col)
 			{
-				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				SDL_SetRenderDrawColor(this->underlying()->pthis()->renderer()->get(), col.r, col.g, col.b, col.a);
 				return *this;
 			}
 
@@ -188,18 +167,20 @@ namespace ctl::sdl
 
 			auto& draw_p(int pres)
 			{
+				auto* pthis = this->underlying()->pthis();
+
 				std::vector<SDL_Point> ps;
 				ps.reserve(pres + 1);
 
 				for (size_t i = 0; i < pres; ++i)
 				{
 					const auto x = to_radians(360.f / pres * (i + 1.f));
-					ps[i] = { static_cast<int>(this->m_o->shape().r * std::cos(x) + this->m_o->shape().x),
-						static_cast<int>(this->m_o->shape().r * std::sin(x) + this->m_o->shape().y) };
+					ps[i] = { static_cast<int>(pthis->shape().r * std::cos(x) + pthis->shape().x),
+						static_cast<int>(pthis->shape().r * std::sin(x) + pthis->shape().y) };
 				}
 				ps.back() = ps.front();
 
-				if (SDL_RenderDrawLines(this->m_o->renderer()->get(), ps.data(), ps.size()) != 0)
+				if (SDL_RenderDrawLines(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
 					throw std::runtime_error(SDL_GetError());
 
 				return *this;
@@ -208,9 +189,11 @@ namespace ctl::sdl
 		private:
 			void _draw_(int (*func)(SDL_Renderer*, const SDL_Point*, int))
 			{
-				const auto d = this->m_o->shape().r * 2;
+				auto* pthis = this->underlying()->pthis();
 
-				mth::Point<int> p(this->m_o->shape().r - 1, 0);
+				const auto d = pthis->shape().r * 2;
+
+				mth::Point<int> p(pthis->shape().r - 1, 0);
 				mth::Point<int> tp(1, 1);
 
 				int err = tp.x - d;
@@ -219,17 +202,17 @@ namespace ctl::sdl
 				{
 					const std::array<SDL_Point, 8> ps =
 					{ SDL_Point
-						{ this->m_o->shape().x + p.x, this->m_o->shape().y + p.y },
-						{ this->m_o->shape().x - p.x, this->m_o->shape().y + p.y },
-						{ this->m_o->shape().x + p.x, this->m_o->shape().y - p.y },
-						{ this->m_o->shape().x - p.x, this->m_o->shape().y - p.y },
-						{ this->m_o->shape().x + p.y, this->m_o->shape().y + p.x },
-						{ this->m_o->shape().x - p.y, this->m_o->shape().y + p.x },
-						{ this->m_o->shape().x + p.y, this->m_o->shape().y - p.x },
-						{ this->m_o->shape().x - p.y, this->m_o->shape().y - p.x }
+						{ pthis->shape().x + p.x, pthis->shape().y + p.y },
+						{ pthis->shape().x - p.x, pthis->shape().y + p.y },
+						{ pthis->shape().x + p.x, pthis->shape().y - p.y },
+						{ pthis->shape().x - p.x, pthis->shape().y - p.y },
+						{ pthis->shape().x + p.y, pthis->shape().y + p.x },
+						{ pthis->shape().x - p.y, pthis->shape().y + p.x },
+						{ pthis->shape().x + p.y, pthis->shape().y - p.x },
+						{ pthis->shape().x - p.y, pthis->shape().y - p.x }
 					};
 
-					if (func(this->m_o->renderer()->get(), ps.data(), ps.size()) != 0)
+					if (func(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
 						throw std::runtime_error(SDL_GetError());
 
 					if (err <= 0)
@@ -248,44 +231,38 @@ namespace ctl::sdl
 			}
 		};
 
-		template<typename Real>
-		class _Drawable_<Real, ctl::tag::isLine> 
-			: public _Func_<Real, _Drawable_<Real, ctl::tag::isLine>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isLine>, Real>
+		template<typename Impl>
+		class _Drawable_<Impl, ctl::tag::isLine>
+			: public crtp<Impl, _Drawable_, ctl::tag::isLine>
 		{
 		public:
-			using _Func_<Real, _Drawable_>::_Func_;
-
 			auto& color(const SDL_Color& col)
 			{
-				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				SDL_SetRenderDrawColor(this->underlying()->pthis()->renderer()->get(), col.r, col.g, col.b, col.a);
 				return *this;
 			}
 
 			void draw_line()
 			{
-				if (SDL_RenderDrawLine(this->m_o->renderer()->get(), this->m_o->shape().x1, this->m_o->shape().y1, this->m_o->shape().x2, this->m_o->shape().y2) != 0)
+				if (SDL_RenderDrawLine(this->underlying()->pthis()->renderer()->get(), this->underlying()->pthis()->shape().x1, this->underlying()->pthis()->shape().y1, this->underlying()->pthis()->shape().x2, this->underlying()->pthis()->shape().y2) != 0)
 					throw std::runtime_error(SDL_GetError());
 			}
 		};
 
-		template<typename Real>
-		class _Drawable_<Real, ctl::tag::isPoint> 
-			: public _Func_<Real, _Drawable_<Real, ctl::tag::isPoint>>
-			, public _UnPeeler_<_EDrawable_, _Drawable_<Real, ctl::tag::isPoint>, Real>
+		template<typename Impl>
+		class _Drawable_<Impl, ctl::tag::isPoint>
+			: public crtp<Impl, _Drawable_, ctl::tag::isPoint>
 		{
 		public:
-			using _Func_<Real, _Drawable_>::_Func_;
-
 			auto& color(const SDL_Color& col)
 			{
-				SDL_SetRenderDrawColor(this->m_o->renderer()->get(), col.r, col.g, col.b, col.a);
+				SDL_SetRenderDrawColor(this->underlying()->pthis()->renderer()->get(), col.r, col.g, col.b, col.a);
 				return *this;
 			}
 
 			void draw_point()
 			{
-				if (SDL_RenderDrawPoint(this->m_o->renderer()->get(), this->m_o->shape().x, this->m_o->shape().y) != 0)
+				if (SDL_RenderDrawPoint(this->underlying()->pthis()->renderer()->get(), this->underlying()->pthis()->shape().x, this->underlying()->pthis()->shape().y) != 0)
 					throw std::runtime_error(SDL_GetError());
 			}
 		};
@@ -293,5 +270,20 @@ namespace ctl::sdl
 
 
 	template<typename T>
-	using Draw = detail::_Drawable_<T, typename T::base_t::tag_t>;
+	class Draw
+		: public detail::_UnPeeler_<detail::_Drawable_, Draw<T>, T>
+	{
+	public:
+		Draw() = default;
+		Draw(T* o)
+			: m_o(o)
+		{
+		}
+
+		auto* pthis() noexcept { return m_o; }
+		auto& pthis(T* o) noexcept { m_o = o; return *this; }
+
+	private:
+		T* m_o;
+	};
 }

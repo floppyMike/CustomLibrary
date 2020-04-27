@@ -12,16 +12,15 @@
 
 namespace ctl::sdl
 {
-	template<typename T>
-	class Texture : public T
+	class Texture : public RectFrame
 	{
 		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
 
 	public:
 		using tag_t = tag::isTexture;
-		using base_t = typename T::base_t;
+		using base_t = RectFrame;
 
-		using T::T;
+		using RectFrame::RectFrame;
 		Texture() = default;
 
 		SDL_Texture* texture() const noexcept

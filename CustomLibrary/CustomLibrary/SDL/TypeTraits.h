@@ -6,22 +6,22 @@ namespace ctl::sdl
 {
 	namespace detail
 	{
-		struct _Fake_
-		{
-			using base_t = _Fake_;
-			_Fake_() = default;
-		};
+		//struct _Fake_
+		//{
+		//	using base_t = _Fake_;
+		//	_Fake_() = default;
+		//};
 
-		template<template<typename> class Outer, typename Inner>
-		auto _peel_(Outer<Inner>) -> std::tuple<std::conditional_t<std::is_same_v<typename Inner::base_t, Inner>, void, Inner>, typename Outer<_Fake_>::tag_t>;
+		//template<template<typename> class Outer, typename Inner>
+		//auto _peel_(Outer<Inner>) -> std::tuple<std::conditional_t<std::is_same_v<typename Inner::base_t, Inner>, void, Inner>, typename Outer<_Fake_>::tag_t>;
 
-		template<typename Inner>
-		auto _peel_(Inner) -> std::tuple<void, void>;
+		//template<typename Inner>
+		//auto _peel_(Inner) -> std::tuple<void, void>;
 
 		template<template<typename, typename> class Util, typename Impl, typename Outer>
 		struct _UnPeeler_
-			: Util<Impl, std::tuple_element_t<1, decltype(_peel_(std::declval<Outer>()))>>
-			, _UnPeeler_<Util, Impl, std::tuple_element_t<0, decltype(_peel_(std::declval<Outer>()))>>
+			: Util<Impl, typename Outer::tag_t>
+			, _UnPeeler_<Util, Impl, std::conditional_t<std::is_same_v<typename Outer::base_t, Outer>, void, typename Outer::base_t>>
 		{
 		};
 

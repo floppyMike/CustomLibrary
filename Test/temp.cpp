@@ -72,7 +72,7 @@ private:
 	sdl::CircleFrame m_c;
 	sdl::LineFrame m_l;
 
-	sdl::Texture<sdl::RectFrame> m_t;
+	sdl::Texture m_t;
 };
 
 

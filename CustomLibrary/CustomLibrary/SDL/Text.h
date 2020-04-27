@@ -10,19 +10,19 @@
 
 namespace ctl::sdl
 {
-	template<template<typename, typename...> class... Ex>
-	class Font : public Ex<Font<Ex...>, tag::isFont>...
+	class Font
 	{
 		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
 
 	public:
-		using tag = tag::isFont;
+		using base_t = Font;
+		using tag_t = tag::isFont;
 
 		Font() = default;
 		Font(Font&&) = default;
 		Font& operator=(Font&&) = default;
 
-		auto* font() noexcept
+		constexpr auto* font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
@@ -37,7 +37,7 @@ namespace ctl::sdl
 		auto& style(int style)
 		{
 			TTF_SetFontStyle(font(), style);
-			return this->_();
+			return *this;
 		}
 
 		auto style()
