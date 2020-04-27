@@ -4,6 +4,7 @@
 #include "../Traits.h"
 
 #include "TypeTraits.h"
+#include "Renderer.h"
 
 #include <SDL.h>
 
@@ -22,22 +23,22 @@ namespace ctl::sdl
 		public:
 			Impl& load_texture(SDL_Surface* surface)
 			{
-				auto* pthis = this->underlying()->pthis();
-				pthis->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
+				auto* pthis = this->underlying();
+				pthis->obj()->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
 				return *this->underlying();
 			}
 
 			Impl& load_texture(const char* path)
 			{
-				auto* pthis = this->underlying()->pthis();
-				pthis->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
+				auto* pthis = this->underlying();
+				pthis->obj()->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
 				return *this->underlying();
 			}
 
 			Impl& load_texture(void* src, int size)
 			{
-				auto* pthis = this->underlying()->pthis();
-				pthis->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
+				auto* pthis = this->underlying();
+				pthis->obj()->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
 				return *this->underlying();
 			}
 		};
@@ -51,7 +52,7 @@ namespace ctl::sdl
 			{
 				auto* temp = TTF_OpenFont(path, pt);
 				assert(temp != nullptr && "Nothing found at path.");
-				this->underlying()->pthis()->font(temp);
+				this->underlying()->obj()->font(temp);
 
 				return *this;
 			}
@@ -84,15 +85,29 @@ namespace ctl::sdl
 	{
 	public:
 		Load() = default;
-		Load(T* o)
-			: m_o(o)
+		Load(T* o, Renderer* r)
+			: m_r(r)
+			, m_o(o)
 		{
 		}
 
-		auto* pthis() noexcept { return m_o; }
-		auto& pthis(T* o) noexcept { m_o = o; return *this; }
+		auto* obj() noexcept { return m_o; }
+		auto& obj(T* o) noexcept { m_o = o; return *this; }
+
+		constexpr auto& renderer(sdl::Renderer* const r) noexcept
+		{
+			m_r = r;
+			return *this;
+		}
+
+		constexpr auto* renderer() const noexcept
+		{
+			assert(m_r != nullptr && "Renderer isn't assigned.");
+			return m_r;
+		}
 
 	private:
+		Renderer* m_r;
 		T* m_o;
 	};
 }

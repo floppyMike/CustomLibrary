@@ -33,12 +33,11 @@ struct State : sdl::IState
 {
 	State(sdl::LDelayedRender<sdl::Renderer>* r)
 		: m_rend(r)
-		, m_r(m_rend, { 10, 10, 40, 40 })
-		, m_c(m_rend, { 100, 100, 50 })
-		, m_l(m_rend, { 400, 300, 300, 400 })
-		, m_t(m_rend)
+		, m_r({ 10, 10, 40, 40 })
+		, m_c({ 100, 100, 50 })
+		, m_l({ 400, 300, 300, 400 })
 	{
-		sdl::Load<decltype(m_t)>(&m_t).load_texture("assets/ass.png");
+		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png");
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 	}
 
@@ -58,11 +57,11 @@ struct State : sdl::IState
 	}
 	void draw() override
 	{
-		sdl::Draw<decltype(m_c)>(&m_c).color(sdl::BLACK).draw_filled_circle();
-		sdl::Draw<decltype(m_r)>(&m_r).draw_rect();
-		sdl::Draw<decltype(m_l)>(&m_l).draw_line();
+		sdl::Draw<decltype(m_c)>(&m_c, m_rend).color(sdl::BLACK).draw_filled_circle();
+		sdl::Draw<decltype(m_r)>(&m_r, m_rend).draw_rect();
+		sdl::Draw<decltype(m_l)>(&m_l, m_rend).draw_line();
 
-		sdl::Draw<decltype(m_t)>(&m_t).draw_texture();
+		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture();
 	}
 
 private:

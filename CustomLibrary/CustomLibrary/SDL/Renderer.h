@@ -57,7 +57,7 @@ namespace ctl::sdl
 	class LDelayedRender : public T
 	{
 	public:
-		using base_t = typename T::base_t;
+		using base_t = T;
 		using tag_t = typename tag::isRenderDelay;
 
 		using T::T;

@@ -26,14 +26,8 @@ namespace ctl::sdl
 		Frame& operator=(const Frame&) = default;
 		Frame& operator=(Frame&&) = default;
 
-		Frame(Renderer* rend)
-			: m_rend(rend)
-		{
-		}
-
-		Frame(Renderer* rend, const Shape& s)
-			: m_rend(rend)
-			, m_shape(s)
+		Frame(const Shape& s)
+			: m_shape(s)
 		{
 		}
 		
@@ -53,20 +47,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
-		{
-			m_rend = r;
-			return *this;
-		}
-
-		constexpr auto* renderer() const noexcept
-		{
-			assert(m_rend != nullptr && "Renderer isn't assigned.");
-			return m_rend;
-		}
-
 	private:
-		Renderer* m_rend = nullptr;
 		Shape m_shape;
 	};
 
@@ -79,7 +60,7 @@ namespace ctl::sdl
 	template<typename... Shapes>
 	class MultiShape
 	{
-		static_assert(tag::contains_tag_v<Shapes...>, "Shapes must have the tag.");
+		static_assert(tag::contains_tag_v<Shapes...>, "Shapes must have a tag.");
 
 		template<typename T>
 		void draw_handler(T& arg) const
