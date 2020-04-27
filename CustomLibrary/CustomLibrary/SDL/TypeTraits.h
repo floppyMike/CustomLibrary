@@ -6,18 +6,6 @@ namespace ctl::sdl
 {
 	namespace detail
 	{
-		//struct _Fake_
-		//{
-		//	using base_t = _Fake_;
-		//	_Fake_() = default;
-		//};
-
-		//template<template<typename> class Outer, typename Inner>
-		//auto _peel_(Outer<Inner>) -> std::tuple<std::conditional_t<std::is_same_v<typename Inner::base_t, Inner>, void, Inner>, typename Outer<_Fake_>::tag_t>;
-
-		//template<typename Inner>
-		//auto _peel_(Inner) -> std::tuple<void, void>;
-
 		template<template<typename, typename> class Util, typename Impl, typename Outer>
 		struct _UnPeeler_
 			: Util<Impl, typename Outer::tag_t>
@@ -57,6 +45,7 @@ namespace ctl::sdl
 		struct isRenderer {};
 		struct isRenderDelay {};
 		struct isMusic {};
+		struct isMultiShape {};
 
 		template<typename T, typename = void>
 		struct contains_tag : std::false_type {};

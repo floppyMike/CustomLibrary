@@ -28,33 +28,12 @@
     <Filter Include="CustomLibrary\Include\SDL\Function Classes">
       <UniqueIdentifier>{7f2188cd-6e89-4f50-9114-4bf11e68294b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CustomLibrary\Include\SDL\Core">
+      <UniqueIdentifier>{f3997578-36ad-42e6-851c-2e029325a2fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h">
       <Filter>CustomLibrary\Include\SDL</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\AutoPointer.h">
@@ -117,9 +96,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Vector.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\ResourceManager.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
@@ -174,14 +150,41 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\Logging.h">
       <Filter>CustomLibrary\Include\Default</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\TypeTraits.h">
-      <Filter>CustomLibrary\Include\SDL</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Render.h">
       <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Loader.h">
       <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Camera2D.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Collider.h">
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Engine.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Event.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\EventWatch.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Renderer.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\SDLWindow.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\State.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\TypeTraits.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
+      <Filter>CustomLibrary\Include\SDL\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -265,6 +265,45 @@ namespace ctl::sdl
 					throw std::runtime_error(SDL_GetError());
 			}
 		};
+
+		template<typename Impl>
+		class _Drawable_<Impl, tag::isMultiShape>
+			: public crtp<Impl, _Drawable_, tag::isMultiShape>
+		{
+		public:
+			auto& draw_all() const
+			{
+				auto* pthis = this->underlying();
+
+				std::apply([this](auto&&... arg)
+					{
+						(this->_draw_handler_(arg), ...);
+					}, pthis->obj()->data());
+
+				return *pthis;
+			}
+
+		private:
+			template<typename T>
+			void _draw_handler_(T& arg) const
+			{
+				using tag_t = typename T::value_type::tag;
+				auto* pthis = this->underlying();
+
+				if constexpr (std::is_same_v<ctl::tag::isRect, tag_t>)
+					SDL_RenderDrawRects(pthis->renderer()->get(), arg.front().rect_ptr(), arg.size());
+
+				else if constexpr (std::is_same_v<ctl::tag::isLine, tag_t>)
+					SDL_RenderDrawLines(pthis->renderer()->get(), arg.front().point_ptr(), arg.size() << 1);
+
+				else if constexpr (std::is_same_v<ctl::tag::isPoint, tag_t>)
+					SDL_RenderDrawLines(pthis->renderer()->get(), arg.front().point_ptr(), arg.size());
+
+				else
+					assert(false && "Type is not supported for mass drawing.");
+				//static_assert(false, "Type is not supported for mass drawing.");
+			}
+		};
 	}
 
 	template<typename T>
@@ -279,7 +318,7 @@ namespace ctl::sdl
 		{
 		}
 
-		auto* obj() noexcept { return m_o; }
+		auto* obj() const noexcept { return m_o; }
 		auto& obj(T* o) noexcept { m_o = o; return *this; }
 
 		constexpr auto& renderer(sdl::Renderer* const r) noexcept

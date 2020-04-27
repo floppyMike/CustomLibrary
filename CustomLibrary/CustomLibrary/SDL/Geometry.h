@@ -62,59 +62,24 @@ namespace ctl::sdl
 	{
 		static_assert(tag::contains_tag_v<Shapes...>, "Shapes must have a tag.");
 
-		template<typename T>
-		void draw_handler(T& arg) const
-		{
-			using tag_t = typename T::value_type::tag;
-
-			if constexpr (std::is_same_v<ctl::tag::isRect, tag_t>)
-				SDL_RenderDrawRects(m_rend->get(), arg.front().rect_ptr(), arg.size());
-
-			else if constexpr (std::is_same_v<ctl::tag::isLine, tag_t>)
-				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size() << 1);
-
-			else if constexpr (std::is_same_v<ctl::tag::isPoint, tag_t>)
-				SDL_RenderDrawLines(m_rend->get(), arg.front().point_ptr(), arg.size());
-
-			else
-				assert(false && "Type is not supported for mass drawing.");
-				//static_assert(false, "Type is not supported for mass drawing.");
-		}
-
 	public:
-		MultiShape(sdl::Renderer* r) : m_rend(r) {}
+		using base_t = MultiShape;
+		using tag_t = tag::isMultiShape;
+
+		MultiShape() = default;
 
 		template<typename T>
 		auto& push(const T& arg)
 		{
 			static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
 			std::get<std::vector<T>>(m_packs).emplace_back(arg);
-
+			
 			return *this;
 		}
 
-		void draw() const
-		{
-			std::apply([this](auto&&... arg)
-				{
-					(this->draw_handler(arg), ...);
-				}, m_packs);
-		}
-
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
-		{
-			m_rend = r;
-			return *this;
-		}
-
-		constexpr auto* renderer() const noexcept
-		{
-			assert(m_rend != nullptr && "Renderer isn't assigned.");
-			return m_rend;
-		}
+		constexpr const auto& data() const noexcept { return m_packs; }
 
 	private:
-		Renderer* m_rend = nullptr;
 		std::tuple<std::vector<Shapes>...> m_packs;
 	};
 

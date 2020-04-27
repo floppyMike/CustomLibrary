@@ -39,6 +39,19 @@ struct State : sdl::IState
 	{
 		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png");
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
+
+		m_multi.push(mth::Rect(400, 400, 50, 50));
+		m_multi.push(mth::Rect(400, 300, 50, 50));
+
+		m_multi.push(mth::Line(400, 300, 50, 50));
+		m_multi.push(mth::Line(400, 300, 449, 449));
+		m_multi.push(mth::Line(50, 50, 449, 449));
+
+		m_multi.push(mth::Point(20, 400));
+		m_multi.push(mth::Point(20, 401));
+		m_multi.push(mth::Point(20, 402));
+		m_multi.push(mth::Point(21, 401));
+		m_multi.push(mth::Point(19, 401));
 	}
 
 	void event(const SDL_Event& e) override
@@ -62,6 +75,8 @@ struct State : sdl::IState
 		sdl::Draw<decltype(m_l)>(&m_l, m_rend).draw_line();
 
 		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture();
+
+		sdl::Draw<decltype(m_multi)>(&m_multi, m_rend).draw_all();
 	}
 
 private:
@@ -72,6 +87,10 @@ private:
 	sdl::LineFrame m_l;
 
 	sdl::Texture m_t;
+
+	sdl::MultiShape<mth::Rect<int, int>,
+		mth::Line<int>,
+		mth::Point<int>> m_multi;
 };
 
 
