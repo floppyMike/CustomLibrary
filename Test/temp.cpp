@@ -36,7 +36,9 @@ struct State : sdl::IState
 		, m_c({ 100, 100, 50 })
 		, m_l({ 400, 300, 300, 400 })
 	{
-		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png");
+		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png")
+			.obj(&m_ani).load_texture("assets/llama.png");
+
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 
 		sdl::Font f;
@@ -57,6 +59,13 @@ struct State : sdl::IState
 		m_multi.push(mth::Point(20, 402));
 		m_multi.push(mth::Point(21, 401));
 		m_multi.push(mth::Point(19, 401));
+
+		constexpr size_t LLAMA = 48;
+		m_ani.shape(mth::Rect<int, int>(500, 300, LLAMA * 2, LLAMA * 2));
+		for (size_t y = 0; y < 3; ++y)
+			for (size_t x = 0; x < 2; ++x)
+				m_ani.push_frame({ mth::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
+		m_ani.start_ani();
 	}
 
 	void event(const SDL_Event& e) override
@@ -82,6 +91,8 @@ struct State : sdl::IState
 		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture()
 			.obj(&m_text).draw_texture();
 
+		sdl::Draw<decltype(m_ani)>(&m_ani, m_rend).draw_animated();
+
 		sdl::Draw<decltype(m_multi)>(&m_multi, m_rend).draw_all();
 	}
 
@@ -94,6 +105,8 @@ private:
 
 	sdl::Texture m_t;
 	sdl::Text m_text;
+
+	sdl::Animation m_ani;
 
 	sdl::MultiShape<mth::Rect<int, int>,
 		mth::Line<int>,

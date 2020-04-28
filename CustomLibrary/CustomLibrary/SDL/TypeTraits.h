@@ -56,6 +56,7 @@ namespace ctl::sdl
 		struct isRenderDelay {};
 		struct isMusic {};
 		struct isMultiShape {};
+		struct isAnimation {};
 
 		template<typename T, typename = void>
 		struct contains_tag : std::false_type {};

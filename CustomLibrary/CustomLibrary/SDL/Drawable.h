@@ -29,7 +29,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, tag::isTexture>
 		{
 		public:
-			auto& draw_texture(const SDL_Rect* blit = nullptr)
+			auto& draw_texture(const SDL_Rect* const blit = nullptr)
 			{
 				auto* cpthis = this->underlying();
 
@@ -39,7 +39,7 @@ namespace ctl::sdl
 				return *this->underlying();
 			}
 
-			auto& draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* blit = nullptr)
+			auto& draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* const blit = nullptr)
 			{
 				Impl* const cpthis = this->underlying();
 
@@ -304,6 +304,25 @@ namespace ctl::sdl
 				//static_assert(false, "Type is not supported for mass drawing.");
 			}
 		};
+
+		template<typename Impl>
+		class _Drawable_<Impl, tag::isAnimation>
+			: public crtp<Impl, _Drawable_, tag::isAnimation>
+		{
+		public:
+			void draw_animated()
+			{
+				Impl* const cpthis = this->underlying();
+				cpthis->draw_texture(cpthis->obj()->blit_ani().rect_ptr());
+			}
+
+			void draw_animated(double angle, const mth::Point<int>& center, SDL_RendererFlip flip)
+			{
+				const Impl* const cpthis = this->underlying();
+				cpthis->draw_texture(angle, center, flip, &cpthis->obj()->blit_ani());
+			}
+		};
+
 	}
 
 	template<typename T>
