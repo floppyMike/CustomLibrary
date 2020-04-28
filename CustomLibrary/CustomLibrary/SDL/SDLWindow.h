@@ -46,7 +46,7 @@ namespace ctl::sdl
 
 	private:
 		Window m_win;
-		LDelayedRender<Renderer> m_renderer;
+		DelayedRenderer m_renderer;
 
 		Camera2D m_cam;
 

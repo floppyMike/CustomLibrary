@@ -153,7 +153,7 @@ namespace ctl::sdl
 	inline SDL& SDL::set_hint(const char* name, const char* value) noexcept
 	{
 		if (!SDL_SetHint(name, value))
-			err::g_log.write(std::string("SDL: setHint: ") + name + " failed with value " + value);
+			err::g_log.write(err::Logger::Catagory::WARN) << "SDL: set_hint: " << name << " failed with value " << value;
 
 		return *this;
 	}

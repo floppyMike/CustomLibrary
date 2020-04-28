@@ -53,14 +53,13 @@ namespace ctl::sdl
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};
 
-	template<typename T>
-	class LDelayedRender : public T
+	class DelayedRenderer : public Renderer
 	{
 	public:
-		using base_t = T;
+		using base_t = Renderer;
 		using tag_t = typename tag::isRenderDelay;
 
-		using T::T;
+		using Renderer::Renderer;
 
 		void do_render(bool r)
 		{

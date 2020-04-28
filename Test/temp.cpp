@@ -26,12 +26,11 @@
 #include <CustomLibrary/SDL/Music.h>
 
 using namespace std::chrono_literals;
-
 using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::LDelayedRender<sdl::Renderer>* r)
+	State(sdl::DelayedRenderer* r)
 		: m_rend(r)
 		, m_r({ 10, 10, 40, 40 })
 		, m_c({ 100, 100, 50 })
@@ -80,7 +79,7 @@ struct State : sdl::IState
 	}
 
 private:
-	sdl::LDelayedRender<sdl::Renderer>* m_rend;
+	sdl::DelayedRenderer* m_rend;
 
 	sdl::RectFrame m_r;
 	sdl::CircleFrame m_c;

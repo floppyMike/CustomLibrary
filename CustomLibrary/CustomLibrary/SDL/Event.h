@@ -28,7 +28,7 @@ namespace ctl::sdl
 		void push_event() noexcept
 		{
 			if (SDL_PushEvent(&m_event) < 0)
-				err::g_log.write(SDL_GetError());
+				err::g_log.write(err::Logger::Catagory::WARN, SDL_GetError());
 		}
 
 		/**
