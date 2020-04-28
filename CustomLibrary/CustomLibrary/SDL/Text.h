@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_SDL2_Text_
+#define _CTL_SDL2_Text_
 
 #include "../BasicTypes.h"
 #include "Texture.h"
@@ -56,61 +57,31 @@ namespace ctl::sdl
 		std::unique_ptr<TTF_Font, Unique_Deleter> m_ptr;
 	};
 
-
-	template<typename Impl, typename... T>
-	class ETextureFromText : public crtp<Impl, ETextureFromText, T...>
+	class Text : public Texture
 	{
-		//static_assert(tag::has_tag_v<tag::isTexture, T...>, "Parent must be a texture.");
-
-		auto& _load_(SDL_Surface* s, const char* text)
-		{
-			Impl* const pthis = this->underlying();
-			assert(s != nullptr && "Font isn't assigned.");
-
-			pthis->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), s));
-			SDL_FreeSurface(s);
-
-			m_text = text;
-			return *pthis;
-		}
-
 	public:
-		auto& font(TTF_Font* f) noexcept
-		{
-			m_font = f;
-			return *this->underlying();
-		}
-		auto* font() noexcept
-		{
-			assert(m_font && "Font no assigned.");
-			return m_font;
-		}
+		using base_t = Texture;
+		using tag_t = tag::isText;
 
-		Impl& load_solid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			return _load_(TTF_RenderUTF8_Solid(m_font, text, colour), text);
-		}
+		Text() = default;
 
-		Impl& load_shaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			return _load_(TTF_RenderUTF8_Shaded(m_font, text, colour, bg), text);
-		}
+		using Texture::Texture;
 
-		Impl& load_blended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+		auto& text(SDL_Texture* t, const char* text)
 		{
-			return _load_(TTF_RenderUTF8_Blended(m_font, text, colour), text);
-		}
+			assert(t != nullptr && "Texture shouldn't be a nullptr.");
+			this->texture(t);
+			m_text = text;
 
-		Impl& load_wrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-		{
-			return _load_(TTF_RenderUTF8_Blended_Wrapped(m_font, text, colour, wrapper), text);
+			return *this;
 		}
 
 		constexpr const auto& text() const noexcept { return m_text; }
 
 	private:
-		TTF_Font* m_font = nullptr;
 		std::string m_text;
 	};
 
 }
+
+#endif // !_CTL_SDL2_Text_

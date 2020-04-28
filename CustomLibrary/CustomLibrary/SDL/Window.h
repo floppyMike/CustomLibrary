@@ -21,8 +21,6 @@ namespace ctl::sdl
 				dim.w, dim.h, windowFlags);
 			if (m_window == nullptr)
 				throw std::runtime_error(SDL_GetError());
-
-			m_id = SDL_GetWindowID(m_window);
 		}
 
 		~Window()
@@ -42,10 +40,10 @@ namespace ctl::sdl
 			_win_exist_();
 			return m_window; 
 		}
-		constexpr auto ID() const noexcept 
+		auto ID() const noexcept 
 		{
 			_win_exist_();
-			return m_id;
+			return SDL_GetWindowID(m_window);
 		}
 		auto dim() const noexcept 
 		{
@@ -57,7 +55,6 @@ namespace ctl::sdl
 
 	private:
 		SDL_Window* m_window = nullptr;
-		Uint32 m_id;
 	};
 
 }

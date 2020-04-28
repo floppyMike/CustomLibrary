@@ -6,9 +6,18 @@ namespace ctl::sdl
 {
 	namespace detail
 	{
+		template<template<typename, typename> class Util, typename Impl, typename... T>
+		struct _Stick_ : Util<Impl, T>... {};
+
+		template<template<typename, typename> class Util, typename Impl, template<typename...> class Tuple, typename... _Types>
+		auto _peel_(Tuple<_Types...>) -> _Stick_<Util, Impl, _Types...>;
+
+		template<template<typename, typename> class Util, typename Impl, typename _Type>
+		auto _peel_(_Type) -> Util<Impl, _Type>;
+
 		template<template<typename, typename> class Util, typename Impl, typename Outer>
 		struct _UnPeeler_
-			: Util<Impl, typename Outer::tag_t>
+			: decltype(_peel_<Util, Impl>(std::declval<typename Outer::tag_t>()))
 			, _UnPeeler_<Util, Impl, std::conditional_t<std::is_same_v<typename Outer::base_t, Outer>, void, typename Outer::base_t>>
 		{
 		};
@@ -42,6 +51,7 @@ namespace ctl::sdl
 
 		struct isFont {};
 		struct isTexture {};
+		struct isText {};
 		struct isRenderer {};
 		struct isRenderDelay {};
 		struct isMusic {};

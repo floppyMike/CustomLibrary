@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_SDL2_MUSIC_
+#define _CTL_SDL2_MUSIC_
 
 #include "../Tags.h"
 #include "../Traits.h"
@@ -78,3 +79,5 @@ namespace ctl::sdl
 	};
 
 }
+
+#endif // !_CTL_SDL2_MUSIC_

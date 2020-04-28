@@ -16,6 +16,7 @@ namespace ctl::sdl
 		class _Loader_
 		{};
 
+#ifdef _CTL_SDL2_TEXTURE_
 		template<typename Impl>
 		class _Loader_<Impl, tag::isTexture>
 			: public crtp<Impl, _Loader_, tag::isTexture>
@@ -42,23 +43,10 @@ namespace ctl::sdl
 				return *this->underlying();
 			}
 		};
+#endif // _CTL_SDL2_TEXTURE_
 
-		template<typename Impl>
-		class _Loader_<Impl, tag::isFont>
-			: public crtp<Impl, _Loader_, tag::isFont>
-		{
-		public:
-			auto& load_font(const char* path, int pt)
-			{
-				auto* temp = TTF_OpenFont(path, pt);
-				assert(temp != nullptr && "Nothing found at path.");
-				this->underlying()->obj()->font(temp);
 
-				return *this;
-			}
-		};
-
-#ifdef SDL_MIXER_H_
+#ifdef _CTL_SDL2_MUSIC_
 		template<typename Impl>
 		class _Loader_<Impl, tag::isMusic>
 			: public crtp<Impl, _Loader_, tag::isMusic>
@@ -74,8 +62,75 @@ namespace ctl::sdl
 				return *this;
 			}
 		};
-#endif // SDL_MIXER_H_
-		
+#endif // _CTL_SDL2_MUSIC_
+
+
+#ifdef _CTL_SDL2_Text_
+		template<typename Impl>
+		class _Loader_<Impl, tag::isFont>
+			: public crtp<Impl, _Loader_, tag::isFont>
+		{
+		public:
+			auto& load_font(const char* path, int pt)
+			{
+				auto* temp = TTF_OpenFont(path, pt);
+				assert(temp != nullptr && "Nothing found at path.");
+				this->underlying()->obj()->font(temp);
+
+				return *this;
+			}
+		};
+
+		template<typename Impl>
+		class _Loader_<Impl, tag::isText>
+			: public crtp<Impl, _Loader_, tag::isText>
+		{
+			auto& _load_(SDL_Surface* s, const char* text)
+			{
+				auto* pthis = this->underlying();
+				pthis->obj()->text(SDL_CreateTextureFromSurface(pthis->renderer()->get(), s), text);
+				SDL_FreeSurface(s);
+
+				return *pthis;
+			}
+
+		public:
+			auto& font(TTF_Font* f) noexcept
+			{
+				m_font = f;
+				return *this->underlying();
+			}
+			auto* font() noexcept
+			{
+				assert(m_font && "Font no assigned.");
+				return m_font;
+			}
+
+			Impl& load_solid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			{
+				return _load_(TTF_RenderUTF8_Solid(m_font, text, colour), text);
+			}
+
+			Impl& load_shaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			{
+				return _load_(TTF_RenderUTF8_Shaded(m_font, text, colour, bg), text);
+			}
+
+			Impl& load_blended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			{
+				return _load_(TTF_RenderUTF8_Blended(m_font, text, colour), text);
+			}
+
+			Impl& load_wrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			{
+				return _load_(TTF_RenderUTF8_Blended_Wrapped(m_font, text, colour, wrapper), text);
+			}
+
+		private:
+			TTF_Font* m_font = nullptr;
+		};
+#endif // !_CTL_SDL2_Text_
+
 	}
 
 	template<typename T>
@@ -87,6 +142,10 @@ namespace ctl::sdl
 		Load(T* o, Renderer* r)
 			: m_r(r)
 			, m_o(o)
+		{
+		}
+		Load(T* o)
+			: m_o(o)
 		{
 		}
 
@@ -106,7 +165,7 @@ namespace ctl::sdl
 		}
 
 	private:
-		Renderer* m_r;
+		Renderer* m_r = nullptr;
 		T* m_o;
 	};
 }

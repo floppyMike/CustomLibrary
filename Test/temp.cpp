@@ -39,6 +39,12 @@ struct State : sdl::IState
 		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png");
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 
+		sdl::Font f;
+		sdl::Load<decltype(f)>(&f).load_font("assets/ass1.ttf", 40);
+
+		sdl::Load<decltype(m_text)>(&m_text, m_rend).font(f.font()).load_blended("Hello There!", sdl::BLUE);
+		m_text.shape().pos({ 300, 300 });
+
 		m_multi.push(mth::Rect(400, 400, 50, 50));
 		m_multi.push(mth::Rect(400, 300, 50, 50));
 
@@ -73,7 +79,8 @@ struct State : sdl::IState
 		sdl::Draw<decltype(m_r)>(&m_r, m_rend).draw_rect();
 		sdl::Draw<decltype(m_l)>(&m_l, m_rend).draw_line();
 
-		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture();
+		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture()
+			.obj(&m_text).draw_texture();
 
 		sdl::Draw<decltype(m_multi)>(&m_multi, m_rend).draw_all();
 	}
@@ -86,6 +93,7 @@ private:
 	sdl::LineFrame m_l;
 
 	sdl::Texture m_t;
+	sdl::Text m_text;
 
 	sdl::MultiShape<mth::Rect<int, int>,
 		mth::Line<int>,
