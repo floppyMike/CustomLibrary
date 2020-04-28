@@ -53,13 +53,14 @@ namespace ctl::sdl
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};
 
-	class DelayedRenderer : public Renderer
+	template<typename T>
+	class DelayedRenderer : public T
 	{
 	public:
-		using base_t = Renderer;
+		using base_t = T;
 		using tag_t = typename tag::isRenderDelay;
 
-		using Renderer::Renderer;
+		using T::T;
 
 		void do_render(bool r)
 		{
@@ -74,34 +75,6 @@ namespace ctl::sdl
 	private:
 		bool m_do_render = true;
 	};
-
-	//template<typename T>
-	//class LColorer : public T
-	//{
-	//public:
-	//	using base_t = typename T::base_t;
-	//	using tag_t = typename tag::isRenderColorer;
-
-	//	using T::T;
-
-	//	//void color(const SDL_Color& col)
-	//	//{
-	//	//	SDL_SetRenderDrawColor(this->get(), col.r, col.g, col.b, col.a);
-	//	//}
-
-	//	void fill()
-	//	{
-	//		color(m_fill_col);
-	//		SDL_RenderClear(this->get());
-	//	}
-
-	//	void fill_color(const SDL_Color& col) noexcept { m_fill_col = col; }
-	//	const auto& fill_color() const noexcept { return m_fill_col; }
-
-	//private:
-	//	SDL_Color m_fill_col = sdl::WHITE;
-	//};
-
 
 	//template<typename Impl, typename... tags_t>
 	//class ERendererSettings : public crtp<Impl, ERendererSettings, tags_t...>

@@ -78,7 +78,6 @@ namespace ctl::sdl
 		
 	}
 
-
 	template<typename T>
 	class Load
 		: public detail::_UnPeeler_<detail::_Loader_, Load<T>, T>

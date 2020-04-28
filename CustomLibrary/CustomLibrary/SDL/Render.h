@@ -11,9 +11,7 @@ namespace ctl::sdl
 	{
 		template<typename, typename>
 		class _Render_
-		{
-		public:
-			
+		{			
 		};
 
 		template<typename Impl>

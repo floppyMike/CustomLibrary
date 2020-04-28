@@ -30,7 +30,7 @@ using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::DelayedRenderer* r)
+	State(sdl::DelayedRenderer<sdl::Renderer>* r)
 		: m_rend(r)
 		, m_r({ 10, 10, 40, 40 })
 		, m_c({ 100, 100, 50 })
@@ -79,7 +79,7 @@ struct State : sdl::IState
 	}
 
 private:
-	sdl::DelayedRenderer* m_rend;
+	sdl::DelayedRenderer<sdl::Renderer>* m_rend;
 
 	sdl::RectFrame m_r;
 	sdl::CircleFrame m_c;
