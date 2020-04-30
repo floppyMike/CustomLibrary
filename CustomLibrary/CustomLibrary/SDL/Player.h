@@ -19,7 +19,7 @@ namespace ctl::sdl
 		{
 		public:
 			//(-1 forever)
-			void play(int loop)
+			void normal(int loop)
 			{
 				if (!Mix_PlayingMusic())
 					Mix_PlayMusic(this->underlying()->obj()->music(), loop);

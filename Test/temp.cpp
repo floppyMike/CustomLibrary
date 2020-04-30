@@ -70,7 +70,7 @@ struct State : sdl::IState
 		m_c.func([] { std::cout << "Hello There!\n"; });
 
 		m_song.load().file("assets/x.wav");
-		m_song.play().play(-1);
+		m_song.play().normal(-1);
 		sdl::Music::volume(10);
 	}
 
