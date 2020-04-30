@@ -98,7 +98,7 @@ namespace ctl::sdl
 			auto& file(std::string_view path)
 			{
 				if (Mix_Music* temp = Mix_LoadMUS(path.data()); temp)
-					this->m_o->music(temp);
+					this->underlying()->obj()->music(temp);
 				else
 					throw std::runtime_error(Mix_GetError());
 

@@ -66,6 +66,12 @@ struct State : sdl::IState
 			for (size_t x = 0; x < 2; ++x)
 				m_ani.push_frame({ mth::Rect<int, int>(x * LLAMA, y * LLAMA, LLAMA, LLAMA), 100ms });
 		m_ani.start_ani();
+
+		m_c.func([] { std::cout << "Hello There!\n"; });
+
+		m_song.load().file("assets/x.wav");
+		m_song.play().play(-1);
+		sdl::Music::volume(10);
 	}
 
 	void event(const SDL_Event& e) override
@@ -73,6 +79,7 @@ struct State : sdl::IState
 	}
 	void input(const SDL_Event& e) override
 	{
+		m_c.input(e);
 	}
 	void update() override
 	{
@@ -102,13 +109,15 @@ private:
 	sdl::LDelayedRenderer<sdl::Renderer>* m_rend;
 	
 	sdl::RectFrame m_r;
-	sdl::CircleFrame m_c;
+	sdl::LButton<sdl::CircleFrame> m_c;
 	sdl::LineFrame m_l;
 
 	sdl::Texture m_t;
 	sdl::Text m_text;
 
 	sdl::Animation m_ani;
+
+	sdl::Music m_song;
 
 	sdl::MultiShape<mth::Rect<int, int>,
 		mth::Line<int>,

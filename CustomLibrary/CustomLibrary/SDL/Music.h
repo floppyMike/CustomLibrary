@@ -6,22 +6,26 @@
 
 #include <SDL_mixer.h>
 
-#include <string>
-#include <stdexcept>
+#include <cassert>
 #include <memory>
+
+#include "TypeTraits.h"
+#include "Loader.h"
+#include "Player.h"
 
 namespace ctl::sdl
 {
-	template<template<typename, typename...> class... Ex>
-	class Music : public Ex<Music<Ex...>, tag::isMusic>...
+	class Music
 	{
 		struct Unique_Destructor { void operator()(Mix_Music* m) { Mix_FreeMusic(m); } };
 
 	public:
+		using base_t = Music;
+		using tag_t = tag::isMusic;
+
 		Music() = default;
 
-		Mix_Music* const music() const noexcept { return m_music.get(); }
-		Mix_Music* music() noexcept { return m_music.get(); }
+		Mix_Music* music() const noexcept { assert(m_music && "Mix_Music is a nullptr."); return m_music.get(); }
 
 		auto& music(Mix_Music* mus) noexcept
 		{
@@ -43,39 +47,11 @@ namespace ctl::sdl
 		static void volume(unsigned char vol) { Mix_VolumeMusic(vol); }
 		static void unpause() { Mix_ResumeMusic(); }
 
+		auto load() noexcept { return LoadO<std::decay_t<decltype(*this)>>(this); }
+		auto play() noexcept { return Player<std::decay_t<decltype(*this)>>(this); }
+
 	private:
-		std::unique_ptr<Mix_Music, Unique_Destructor> m_music = nullptr;
-	};
-
-	template<typename Impl, typename... T>
-	class EPlayer : public crtp<Impl, EPlayer, T...>
-	{
-	public:
-		EPlayer() = default;
-
-		//(-1 forever)
-		void play(const int& loop)
-		{
-			const Impl* pthis = this->underlying();
-
-			if (!Mix_PlayingMusic())
-				Mix_PlayMusic(pthis->music(), loop);
-
-			else if (Mix_PausedMusic())
-				Mix_ResumeMusic();
-		}
-
-		void play_fade(int loop, int ms)
-		{
-			const Impl* pthis = this->underlying();
-
-			if (!Mix_PlayingMusic())
-				Mix_FadeInMusic(pthis->music(), loop, ms);
-
-			else if (Mix_PausedMusic())
-				Mix_ResumeMusic();
-		}
-
+		std::unique_ptr<Mix_Music, Unique_Destructor> m_music;
 	};
 
 }

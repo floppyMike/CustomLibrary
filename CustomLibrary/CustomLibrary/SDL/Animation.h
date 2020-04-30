@@ -20,8 +20,6 @@ namespace ctl::sdl
 
 	class Animation : public Texture
 	{
-		friend Draw<Animation>;
-
 	public:
 		using base_t = Texture;
 		using tag_t = tag::isAnimation;

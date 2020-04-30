@@ -12,7 +12,9 @@ namespace ctl::sdl
 	class LButton : public T
 	{
 	public:
-		void event(const SDL_Event& e)
+		using T::T;
+
+		void input(const SDL_Event& e)
 		{
 			switch (e.type)
 			{
