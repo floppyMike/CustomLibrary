@@ -2,8 +2,11 @@
 #define _CTL_SDL2_Text_
 
 #include "../BasicTypes.h"
-#include "Texture.h"
 #include "../Error.h"
+
+#include "Texture.h"
+#include "Loader.h"
+#include "Options.h"
 
 #include <SDL_ttf.h>
 
@@ -35,23 +38,8 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto& style(int style)
-		{
-			TTF_SetFontStyle(font(), style);
-			return *this;
-		}
-
-		auto style()
-		{
-			return TTF_GetFontStyle(font());
-		}
-
-		auto hypo_size(const char* text)
-		{
-			mth::Dim<int> temp;
-			TTF_SizeUTF8(font(), text, &temp.w, &temp.h);
-			return temp;
-		}
+		auto option() { return Option<std::decay_t<decltype(*this)>>(this); }
+		auto load() { return LoadO<std::decay_t<decltype(*this)>>(this); }
 
 	private:
 		std::unique_ptr<TTF_Font, Unique_Deleter> m_ptr;
@@ -77,6 +65,8 @@ namespace ctl::sdl
 		}
 
 		constexpr const auto& text() const noexcept { return m_text; }
+
+		auto load(Renderer* r) noexcept { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
 
 	private:
 		std::string m_text;

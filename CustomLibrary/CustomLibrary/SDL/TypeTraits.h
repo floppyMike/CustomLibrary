@@ -26,23 +26,6 @@ namespace ctl::sdl
 		struct _UnPeeler_<Util, Impl, void>
 		{
 		};
-
-		template<typename Real, typename This>
-		class _Func_
-		{
-		public:
-			_Func_() = default;
-			_Func_(Real* o)
-				: m_o(o)
-			{
-			}
-
-			auto& ref() noexcept { return *m_o; }
-			auto& ref(Real* o) noexcept { m_o = o; return *static_cast<This*>(this); }
-
-		protected:
-			Real* m_o;
-		};
 	}
 
 	namespace tag
@@ -77,5 +60,61 @@ namespace ctl::sdl
 	private:
 		crtp() {}
 		friend crtp_t<T, other_t...>;
+	};
+
+	class Renderer;
+
+	template<typename T, template<typename, typename> class Func>
+	class FunctionalR
+		: public detail::_UnPeeler_<Func, FunctionalR<T, Func>, T>
+	{
+	public:
+		FunctionalR() = default;
+		FunctionalR(T* o, Renderer* r)
+			: m_r(r)
+			, m_o(o)
+		{
+		}
+		FunctionalR(T* o)
+			: m_o(o)
+		{
+		}
+
+		auto* obj() const noexcept { return m_o; }
+		auto& obj(T* o) noexcept { m_o = o; return *this; }
+
+		constexpr auto& renderer(Renderer* const r) noexcept
+		{
+			m_r = r;
+			return *this;
+		}
+
+		constexpr auto* renderer() const noexcept
+		{
+			assert(m_r != nullptr && "Renderer isn't assigned.");
+			return m_r;
+		}
+
+	private:
+		Renderer* m_r = nullptr;
+		T* m_o;
+	};
+
+	template<typename T, template<typename, typename> class Func>
+	class FunctionalO
+		: public detail::_UnPeeler_<Func, FunctionalO<T, Func>, T>
+	{
+	public:
+		FunctionalO() = default;
+		FunctionalO(T* o)
+			: m_o(o)
+		{
+		}
+
+		auto* obj() noexcept { return m_o; }
+		auto& obj(T* o) noexcept { m_o = o; return *this; }
+
+	private:
+		T* m_o;
 	};
 }

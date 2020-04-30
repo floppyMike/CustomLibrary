@@ -13,77 +13,42 @@ namespace ctl::sdl
 	namespace detail
 	{
 		template<typename, typename>
-		class _Loader_
+		class _LoaderR_
 		{};
 
-#ifdef _CTL_SDL2_TEXTURE_
+#ifdef SDL_IMAGE_H_
 		template<typename Impl>
-		class _Loader_<Impl, tag::isTexture>
-			: public crtp<Impl, _Loader_, tag::isTexture>
+		class _LoaderR_<Impl, tag::isTexture>
+			: public crtp<Impl, _LoaderR_, tag::isTexture>
 		{
 		public:
-			Impl& load_texture(SDL_Surface* surface)
+			Impl& surface(SDL_Surface* surface)
 			{
 				auto* pthis = this->underlying();
 				pthis->obj()->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
 				return *this->underlying();
 			}
 
-			Impl& load_texture(const char* path)
+			Impl& file(const char* path)
 			{
 				auto* pthis = this->underlying();
 				pthis->obj()->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
 				return *this->underlying();
 			}
 
-			Impl& load_texture(void* src, int size)
+			Impl& bytes(void* src, int size)
 			{
 				auto* pthis = this->underlying();
 				pthis->obj()->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
 				return *this->underlying();
 			}
 		};
-#endif // _CTL_SDL2_TEXTURE_
+#endif // SDL_IMAGE_H_
 
-
-#ifdef _CTL_SDL2_MUSIC_
+#ifdef SDL_TTF_H_
 		template<typename Impl>
-		class _Loader_<Impl, tag::isMusic>
-			: public crtp<Impl, _Loader_, tag::isMusic>
-		{
-		public:
-			auto& load_music(std::string_view path)
-			{
-				if (Mix_Music* temp = Mix_LoadMUS(path.data()); temp)
-					this->m_o->music(temp);
-				else
-					throw std::runtime_error(Mix_GetError());
-
-				return *this;
-			}
-		};
-#endif // _CTL_SDL2_MUSIC_
-
-
-#ifdef _CTL_SDL2_Text_
-		template<typename Impl>
-		class _Loader_<Impl, tag::isFont>
-			: public crtp<Impl, _Loader_, tag::isFont>
-		{
-		public:
-			auto& load_font(const char* path, int pt)
-			{
-				auto* temp = TTF_OpenFont(path, pt);
-				assert(temp != nullptr && "Nothing found at path.");
-				this->underlying()->obj()->font(temp);
-
-				return *this;
-			}
-		};
-
-		template<typename Impl>
-		class _Loader_<Impl, tag::isText>
-			: public crtp<Impl, _Loader_, tag::isText>
+		class _LoaderR_<Impl, tag::isText>
+			: public crtp<Impl, _LoaderR_, tag::isText>
 		{
 			auto& _load_(SDL_Surface* s, const char* text)
 			{
@@ -95,77 +60,76 @@ namespace ctl::sdl
 			}
 
 		public:
-			auto& font(TTF_Font* f) noexcept
+			Impl& solid(TTF_Font* f, const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				m_font = f;
-				return *this->underlying();
-			}
-			auto* font() noexcept
-			{
-				assert(m_font && "Font no assigned.");
-				return m_font;
+				return _load_(TTF_RenderUTF8_Solid(font, text, colour), text);
 			}
 
-			Impl& load_solid(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			Impl& shaded(TTF_Font* f, const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Solid(m_font, text, colour), text);
+				return _load_(TTF_RenderUTF8_Shaded(f, text, colour, bg), text);
 			}
 
-			Impl& load_shaded(const char* text, const SDL_Color& bg, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			Impl& blended(TTF_Font* f, const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Shaded(m_font, text, colour, bg), text);
+				return _load_(TTF_RenderUTF8_Blended(f, text, colour), text);
 			}
 
-			Impl& load_blended(const char* text, const SDL_Color& colour = { 0, 0, 0, 0xFF })
+			Impl& wrapped(TTF_Font* f, const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
 			{
-				return _load_(TTF_RenderUTF8_Blended(m_font, text, colour), text);
+				return _load_(TTF_RenderUTF8_Blended_Wrapped(f, text, colour, wrapper), text);
 			}
 
-			Impl& load_wrapped(const char* text, const Uint16& wrapper, const SDL_Color& colour = { 0, 0, 0, 0xFF })
-			{
-				return _load_(TTF_RenderUTF8_Blended_Wrapped(m_font, text, colour, wrapper), text);
-			}
-
-		private:
-			TTF_Font* m_font = nullptr;
 		};
-#endif // !_CTL_SDL2_Text_
+#endif // !SDL_TTF_H_
+
+
+
+		template<typename, typename>
+		class _LoaderO_
+		{};
+
+#ifdef SDL_MIXER_H_
+		template<typename Impl>
+		class _LoaderO_<Impl, tag::isMusic>
+			: public crtp<Impl, _LoaderO_, tag::isMusic>
+		{
+		public:
+			auto& file(std::string_view path)
+			{
+				if (Mix_Music* temp = Mix_LoadMUS(path.data()); temp)
+					this->m_o->music(temp);
+				else
+					throw std::runtime_error(Mix_GetError());
+
+				return *this;
+			}
+		};
+#endif // SDL_MIXER_H_
+
+
+#ifdef SDL_TTF_H_
+		template<typename Impl>
+		class _LoaderO_<Impl, tag::isFont>
+			: public crtp<Impl, _LoaderO_, tag::isFont>
+		{
+		public:
+			auto& file(const char* path, int pt)
+			{
+				auto* temp = TTF_OpenFont(path, pt);
+				assert(temp != nullptr && "Nothing found at path.");
+				this->underlying()->obj()->font(temp);
+
+				return *this;
+			}
+		};
+#endif // !SDL_TTF_H_
 
 	}
 
 	template<typename T>
-	class Load
-		: public detail::_UnPeeler_<detail::_Loader_, Load<T>, T>
-	{
-	public:
-		Load() = default;
-		Load(T* o, Renderer* r)
-			: m_r(r)
-			, m_o(o)
-		{
-		}
-		Load(T* o)
-			: m_o(o)
-		{
-		}
+	using LoadR = FunctionalR<T, detail::_LoaderR_>;
 
-		auto* obj() noexcept { return m_o; }
-		auto& obj(T* o) noexcept { m_o = o; return *this; }
-
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
-		{
-			m_r = r;
-			return *this;
-		}
-
-		constexpr auto* renderer() const noexcept
-		{
-			assert(m_r != nullptr && "Renderer isn't assigned.");
-			return m_r;
-		}
-
-	private:
-		Renderer* m_r = nullptr;
-		T* m_o;
-	};
+	template<typename T>
+	using LoadO = FunctionalR<T, detail::_LoaderO_>;
 }

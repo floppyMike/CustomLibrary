@@ -6,6 +6,7 @@
 
 #include "TypeTraits.h"
 #include "Texture.h"
+#include "Drawable.h"
 
 #include <vector>
 
@@ -19,6 +20,8 @@ namespace ctl::sdl
 
 	class Animation : public Texture
 	{
+		friend Draw<Animation>;
+
 	public:
 		using base_t = Texture;
 		using tag_t = tag::isAnimation;
@@ -76,6 +79,11 @@ namespace ctl::sdl
 		}
 
 		constexpr auto frames_size() const noexcept { return m_frames.size(); }
+
+		auto draw(Renderer* r)
+		{
+			return Draw<std::decay_t<decltype(*this)>>(this, r);
+		}
 
 	private:
 		Timer m_time;

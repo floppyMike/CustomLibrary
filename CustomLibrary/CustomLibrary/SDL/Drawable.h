@@ -29,7 +29,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, tag::isTexture>
 		{
 		public:
-			auto& draw_texture(const SDL_Rect* const blit = nullptr)
+			auto& texture(const SDL_Rect* const blit = nullptr)
 			{
 				auto* cpthis = this->underlying();
 
@@ -39,7 +39,7 @@ namespace ctl::sdl
 				return *this->underlying();
 			}
 
-			auto& draw_texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* const blit = nullptr)
+			auto& texture(double angle, const mth::Point<int>& center, SDL_RendererFlip flip, const SDL_Rect* const blit = nullptr)
 			{
 				Impl* const cpthis = this->underlying();
 
@@ -114,13 +114,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, ctl::tag::isRect>
 		{
 		public:
-			auto& color(const SDL_Color& col)
-			{
-				SDL_SetRenderDrawColor(this->underlying()->renderer()->get(), col.r, col.g, col.b, col.a);
-				return *this;
-			}
-
-			auto& draw_rect()
+			auto& rect()
 			{
 				if (SDL_RenderDrawRect(this->underlying()->renderer()->get(), this->underlying()->obj()->shape().rect_ptr()) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -128,7 +122,7 @@ namespace ctl::sdl
 				return *this;
 			}
 
-			auto& draw_filled_rect()
+			auto& filled_rect()
 			{
 				if (SDL_RenderFillRect(this->underlying()->renderer()->get(), this->underlying()->obj()->shape().rect_ptr()) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -142,19 +136,13 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, ctl::tag::isCircle>
 		{
 		public:
-			auto& color(const SDL_Color& col)
-			{
-				SDL_SetRenderDrawColor(this->underlying()->renderer()->get(), col.r, col.g, col.b, col.a);
-				return *this;
-			}
-
-			auto& draw_circle()
+			auto& circle()
 			{
 				_draw_(SDL_RenderDrawPoints);
 				return *this;
 			}
 
-			auto& draw_filled_circle()
+			auto& filled_circle()
 			{
 				_draw_(SDL_RenderDrawLines);
 				return *this;
@@ -231,13 +219,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, ctl::tag::isLine>
 		{
 		public:
-			auto& color(const SDL_Color& col)
-			{
-				SDL_SetRenderDrawColor(this->underlying()->renderer()->get(), col.r, col.g, col.b, col.a);
-				return *this;
-			}
-
-			void draw_line()
+			void line()
 			{
 				auto* pthis = this->underlying();
 
@@ -251,13 +233,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, ctl::tag::isPoint>
 		{
 		public:
-			auto& color(const SDL_Color& col)
-			{
-				SDL_SetRenderDrawColor(this->underlying()->renderer()->get(), col.r, col.g, col.b, col.a);
-				return *this;
-			}
-
-			void draw_point()
+			void point()
 			{
 				auto* pthis = this->underlying()
 
@@ -271,7 +247,7 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, tag::isMultiShape>
 		{
 		public:
-			auto& draw_all() const
+			auto& all() const
 			{
 				auto* pthis = this->underlying();
 
@@ -310,50 +286,21 @@ namespace ctl::sdl
 			: public crtp<Impl, _Drawable_, tag::isAnimation>
 		{
 		public:
-			void draw_animated()
+			void animated()
 			{
 				Impl* const cpthis = this->underlying();
-				cpthis->draw_texture(cpthis->obj()->blit_ani().rect_ptr());
+				cpthis->texture(cpthis->obj()->blit_ani().rect_ptr());
 			}
 
-			void draw_animated(double angle, const mth::Point<int>& center, SDL_RendererFlip flip)
+			void animated(double angle, const mth::Point<int>& center, SDL_RendererFlip flip)
 			{
 				const Impl* const cpthis = this->underlying();
-				cpthis->draw_texture(angle, center, flip, &cpthis->obj()->blit_ani());
+				cpthis->texture(angle, center, flip, &cpthis->obj()->blit_ani());
 			}
 		};
 
 	}
 
 	template<typename T>
-	class Draw
-		: public detail::_UnPeeler_<detail::_Drawable_, Draw<T>, T>
-	{
-	public:
-		Draw() = default;
-		Draw(T* o, Renderer* r)
-			: m_r(r)
-			, m_o(o)
-		{
-		}
-
-		auto* obj() const noexcept { return m_o; }
-		auto& obj(T* o) noexcept { m_o = o; return *this; }
-
-		constexpr auto& renderer(sdl::Renderer* const r) noexcept
-		{
-			m_r = r;
-			return *this;
-		}
-
-		constexpr auto* renderer() const noexcept
-		{
-			assert(m_r != nullptr && "Renderer isn't assigned.");
-			return m_r;
-		}
-
-	private:
-		Renderer* m_r;
-		T* m_o;
-	};
+	using Draw = FunctionalR<T, detail::_Drawable_>;
 }

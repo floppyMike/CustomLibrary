@@ -30,21 +30,21 @@ using namespace ctl;
 
 struct State : sdl::IState
 {
-	State(sdl::DelayedRenderer<sdl::Renderer>* r)
+	State(sdl::LDelayedRenderer<sdl::Renderer>* r)
 		: m_rend(r)
 		, m_r({ 10, 10, 40, 40 })
 		, m_c({ 100, 100, 50 })
 		, m_l({ 400, 300, 300, 400 })
 	{
-		sdl::Load<decltype(m_t)>(&m_t, m_rend).load_texture("assets/ass.png")
-			.obj(&m_ani).load_texture("assets/llama.png");
+		m_t.load(m_rend).file("assets/ass.png");
+		m_ani.load(m_rend).file("assets/llama.png");
 
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 
 		sdl::Font f;
-		sdl::Load<decltype(f)>(&f).load_font("assets/ass1.ttf", 40);
+		f.load().file("assets/ass1.ttf", 40);
 
-		sdl::Load<decltype(m_text)>(&m_text, m_rend).font(f.font()).load_blended("Hello There!", sdl::BLUE);
+		m_text.load(m_rend).blended(f.font(), "Hello There!", sdl::BLUE);
 		m_text.shape().pos({ 300, 300 });
 
 		m_multi.push(mth::Rect(400, 400, 50, 50));
@@ -84,21 +84,23 @@ struct State : sdl::IState
 	}
 	void draw() override
 	{
-		sdl::Draw<decltype(m_c)>(&m_c, m_rend).color(sdl::BLACK).draw_filled_circle();
-		sdl::Draw<decltype(m_r)>(&m_r, m_rend).draw_rect();
-		sdl::Draw<decltype(m_l)>(&m_l, m_rend).draw_line();
+		m_rend->option().color(sdl::BLACK);
 
-		sdl::Draw<decltype(m_t)>(&m_t, m_rend).draw_texture()
-			.obj(&m_text).draw_texture();
+		m_ani.draw(m_rend).animated();
 
-		sdl::Draw<decltype(m_ani)>(&m_ani, m_rend).draw_animated();
+		m_c.draw(m_rend).filled_circle();
+		m_r.draw(m_rend).rect();
+		m_l.draw(m_rend).line();
 
-		sdl::Draw<decltype(m_multi)>(&m_multi, m_rend).draw_all();
+		m_t.draw(m_rend).texture();
+		m_text.draw(m_rend).texture();
+
+		m_multi.draw(m_rend).all();
 	}
 
 private:
-	sdl::DelayedRenderer<sdl::Renderer>* m_rend;
-
+	sdl::LDelayedRenderer<sdl::Renderer>* m_rend;
+	
 	sdl::RectFrame m_r;
 	sdl::CircleFrame m_c;
 	sdl::LineFrame m_l;

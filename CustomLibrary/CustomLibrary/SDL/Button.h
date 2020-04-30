@@ -8,19 +8,16 @@
 
 namespace ctl::sdl
 {
-	template<typename Impl, typename... Tags>
-	class EButton
+	template<typename T>
+	class LButton : public T
 	{
-		//static_assert(tag::has_shape_v<Tags...>, "Parent doesn't support shapes.");
-		Impl* const pthis = static_cast<Impl*>(this);
-
 	public:
 		void event(const SDL_Event& e)
 		{
 			switch (e.type)
 			{
 			case SDL_MOUSEMOTION:
-				if (collision(mth::Point(e.motion.x, e.motion.y), pthis->shape()))
+				if (collision(mth::Point(e.motion.x, e.motion.y), this->shape()))
 				{
 					if (!m_is_inside)
 						m_is_inside = true;
@@ -39,10 +36,10 @@ namespace ctl::sdl
 			}
 		}
 
-		Impl& func(std::function<void()>&& f) noexcept 
+		auto& func(std::function<void()>&& f) noexcept 
 		{
 			m_func = std::move(f); 
-			return *pthis; 
+			return *this; 
 		}
 
 		bool is_inside() const noexcept { return m_is_inside; }

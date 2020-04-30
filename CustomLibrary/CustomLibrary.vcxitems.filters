@@ -186,6 +186,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Window.h">
       <Filter>CustomLibrary\Include\SDL\Core</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\Options.h">
+      <Filter>CustomLibrary\Include\SDL\Function Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CustomLibrary\SDL\ResourceManager.cpp">

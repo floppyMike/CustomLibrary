@@ -48,25 +48,8 @@ namespace ctl::sdl
 				SDL_RenderPresent(this->underlying()->obj()->get());
 			}
 		};
-
-
 	}
 
 	template<typename T>
-	class Render
-		: public detail::_UnPeeler_<detail::_Render_, Render<T>, T>
-	{
-	public:
-		Render() = default;
-		Render(T* o)
-			: m_o(o)
-		{
-		}
-
-		auto* obj() const noexcept { return m_o; }
-		auto& obj(T* o) noexcept { m_o = o; return *this; }
-
-	private:
-		T* m_o;
-	};
+	using Render = FunctionalO<T, detail::_Render_>;
 }

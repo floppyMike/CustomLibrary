@@ -127,7 +127,6 @@ namespace ctl::sdl
 		void run(size_t fps);
 
 		ImplWin& add_window(ImplWin* win);
-		//void removWindow(typename std::vector<ImplWin>::iterator iter);
 
 		constexpr const auto& fps() const noexcept { return m_fps; }
 		constexpr const auto& delta() const noexcept { return m_delta; }

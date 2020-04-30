@@ -5,8 +5,11 @@
 #include "Renderer.h"
 
 #include "../Traits.h"
+
 #include "TypeTraits.h"
 #include "Geometry.h"
+#include "Drawable.h"
+#include "Loader.h"
 
 #include <SDL_image.h>
 
@@ -45,6 +48,10 @@ namespace ctl::sdl
 
 			return *this;
 		}
+
+		auto load(Renderer* r) { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
+		auto option() { return Option<std::decay_t<decltype(*this)>>(this); }
+		auto draw(Renderer* r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;

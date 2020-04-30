@@ -5,6 +5,7 @@
 #include "../utility.h"
 #include "../BasicTypes.h"
 #include "Renderer.h"
+#include "Drawable.h"
 
 #include <vector>
 #include <type_traits>
@@ -47,6 +48,11 @@ namespace ctl::sdl
 			return *this;
 		}
 
+		auto draw(Renderer* r)
+		{
+			return Draw<std::decay_t<decltype(*this)>>(this, r);
+		}
+
 	private:
 		Shape m_shape;
 	};
@@ -78,6 +84,11 @@ namespace ctl::sdl
 		}
 
 		constexpr const auto& data() const noexcept { return m_packs; }
+
+		auto draw(Renderer* r)
+		{
+			return Draw<std::decay_t<decltype(*this)>>(this, r);
+		}
 
 	private:
 		std::tuple<std::vector<Shapes>...> m_packs;
