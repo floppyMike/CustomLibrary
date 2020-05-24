@@ -45,7 +45,7 @@ namespace ctl::sdl
 			m_renderer.reset();
 		}
 
-		constexpr auto* get() const noexcept
+		auto* get() const noexcept
 		{
 			assert(m_renderer && "Renderer isn't loaded.");
 			return m_renderer.get(); 

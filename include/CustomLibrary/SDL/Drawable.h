@@ -1,13 +1,14 @@
 #pragma once
 
+#include <SDL.h>
 #include "../Tags.h"
 #include "../Traits.h"
 #include "../BasicTypes.h"
+#include "../utility.h"
 
 #include "TypeTraits.h"
 #include "Renderer.h"
 
-#include <SDL.h>
 
 #include <tuple>
 #include <stdexcept>
@@ -235,7 +236,7 @@ namespace ctl::sdl
 		public:
 			void point()
 			{
-				auto* pthis = this->underlying()
+				auto* pthis = this->underlying();
 
 				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->obj()->shape().x, pthis->obj()->shape().y) != 0)
 					throw std::runtime_error(SDL_GetError());
@@ -254,7 +255,7 @@ namespace ctl::sdl
 				std::apply([this](auto&&... arg)
 					{
 						(this->_draw_handler_(arg), ...);
-					}, pthis->obj()->data());
+					}, pthis->obj()->tuple_data());
 
 				return *pthis;
 			}

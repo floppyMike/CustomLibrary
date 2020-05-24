@@ -1,33 +1,27 @@
 #pragma once
 
-#include <CustomLibrary/Error.h> 
-
-#include "Engine.h"
-#include "Window.h"
-#include "Renderer.h"
 #include "Camera2D.h"
-#include "State.h"
+#include "Engine.h"
 #include "Render.h"
+#include "Renderer.h"
+#include "State.h"
+#include "Window.h"
+#include <CustomLibrary/Error.h>
 
 namespace ctl::sdl
 {
 	class SDLWindow : public IWindow
 	{
 	public:
-		SDLWindow(const char* name,
-			const mth::Dim<int>& dim,
-			const Uint32& windowFlags = SDL_WINDOW_SHOWN,
-			const Uint32& rendererFlags = SDL_RENDERER_ACCELERATED)
+		SDLWindow(const char *name, const mth::Dim<int> &dim, const Uint32 &windowFlags = SDL_WINDOW_SHOWN,
+				  const Uint32 &rendererFlags = SDL_RENDERER_ACCELERATED)
 			: m_win(name, dim, windowFlags)
 			, m_renderer(&m_win, rendererFlags)
 		{
 			m_renderer.option().logical_size(m_win.dim());
 		}
 
-		~SDLWindow()
-		{
-			destroy();
-		}
+		~SDLWindow() { destroy(); }
 
 		void destroy()
 		{
@@ -35,30 +29,26 @@ namespace ctl::sdl
 			m_renderer.destroy();
 		}
 
-		template<typename State, typename ...Args>
-		void queue_state(Args&&... args)
+		template<typename State, typename... Args>
+		void queue_state(Args &&... args)
 		{
 			m_state.set<State>(std::forward<Args>(args)...);
 		}
 
-		constexpr auto& renderer() noexcept { return m_renderer; }
-		constexpr auto& window() noexcept { return m_win; }
+		constexpr auto &renderer() noexcept { return m_renderer; }
+		constexpr auto &window() noexcept { return m_win; }
 
 	private:
-		Window m_win;
+		Window								 m_win;
 		sdl::LDelayedRenderer<sdl::Renderer> m_renderer;
 
 		Camera2D m_cam;
 
 		StateManager<IState> m_state;
 
+		void pre_pass() override { m_state.update(); }
 
-		void pre_pass() override
-		{
-			m_state.update();
-		}
-
-		void event(const SDL_Event& e) override
+		void event(const SDL_Event &e) override
 		{
 			if (e.window.windowID == m_win.ID())
 			{
@@ -67,15 +57,9 @@ namespace ctl::sdl
 			}
 		}
 
-		void update() override
-		{
-			m_state->update();
-		}
+		void update() override { m_state->update(); }
 
-		void fixed_update() override
-		{
-			m_state->fixed_update();
-		}
+		void fixed_update() override { m_state->fixed_update(); }
 
 		void render() override
 		{
@@ -90,4 +74,4 @@ namespace ctl::sdl
 		}
 	};
 
-}
+} // namespace ctl::sdl

@@ -26,7 +26,7 @@ namespace ctl::sdl
 		Font(Font&&) = default;
 		Font& operator=(Font&&) = default;
 
-		constexpr auto* font() noexcept
+		auto* font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();

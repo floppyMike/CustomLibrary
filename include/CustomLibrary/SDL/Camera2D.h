@@ -11,7 +11,7 @@ namespace ctl::sdl
 		* @summary constructs collider from camera location and screen size ref
 		* @param "screen" ref to screen mth::Dim
 		*/
-		constexpr Camera2D() noexcept = default;
+		constexpr Camera2D() = default;
 
 		/**
 		* @summary translates screen coord to world coord
