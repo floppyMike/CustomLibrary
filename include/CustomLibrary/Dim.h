@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Tags.h"
-#include <SDL.h>
 
 namespace ctl::mth
 {

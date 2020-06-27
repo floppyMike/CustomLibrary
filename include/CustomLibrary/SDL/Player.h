@@ -1,7 +1,9 @@
 #ifndef _CTL_SDL2_PLAYER_
 #define _CTL_SDL2_PLAYER_
 
-#include <SDL_mixer.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
 #include "TypeTraits.h"
 
 namespace ctl::sdl
@@ -14,8 +16,7 @@ namespace ctl::sdl
 		};
 
 		template<typename Impl>
-		class _Player_<Impl, tag::isMusic>
-			: public crtp<Impl, _Player_, tag::isMusic>
+		class _Player_<Impl, tag::isMusic> : public crtp<Impl, _Player_, tag::isMusic>
 		{
 		public:
 			//(-1 forever)
@@ -38,10 +39,10 @@ namespace ctl::sdl
 			}
 		};
 
-	}
+	} // namespace detail
 
 	template<typename T>
 	using Player = FunctionalO<T, detail::_Player_>;
-}
+} // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_PLAYER_

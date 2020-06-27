@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "../BasicTypes.h"
 #include "../Error.h"
 
@@ -9,43 +11,36 @@ namespace ctl::sdl
 {
 	class Window
 	{
-		constexpr void _win_exist_() const noexcept
-		{
-			assert(m_window != nullptr && "Window isn't loaded.");
-		}
+		constexpr void _win_exist_() const noexcept { assert(m_window != nullptr && "Window isn't loaded."); }
 
 	public:
-		Window(const char* name, const mth::Dim<int>& dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
+		Window(const char *name, const mth::Dim<int> &dim, Uint32 windowFlags = SDL_WINDOW_SHOWN)
 		{
-			m_window = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-				dim.w, dim.h, windowFlags);
+			m_window =
+				SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dim.w, dim.h, windowFlags);
 			if (m_window == nullptr)
 				throw std::runtime_error(SDL_GetError());
 		}
 
-		~Window()
-		{
-			destroy();
-		}
+		~Window() { destroy(); }
 
 		void destroy() noexcept
 		{
 			if (m_window != nullptr)
-				SDL_DestroyWindow(m_window),
-				m_window = nullptr;
+				SDL_DestroyWindow(m_window), m_window = nullptr;
 		}
 
-		constexpr auto* get() noexcept 
-		{ 
+		constexpr auto *get() noexcept
+		{
 			_win_exist_();
-			return m_window; 
+			return m_window;
 		}
-		auto ID() const noexcept 
+		auto ID() const noexcept
 		{
 			_win_exist_();
 			return SDL_GetWindowID(m_window);
 		}
-		auto dim() const noexcept 
+		auto dim() const noexcept
 		{
 			_win_exist_();
 			mth::Dim<int> size;
@@ -54,7 +49,7 @@ namespace ctl::sdl
 		}
 
 	private:
-		SDL_Window* m_window = nullptr;
+		SDL_Window *m_window = nullptr;
 	};
 
-}
+} // namespace ctl::sdl

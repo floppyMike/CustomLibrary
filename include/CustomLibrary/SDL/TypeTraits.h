@@ -91,6 +91,18 @@ namespace ctl::sdl
 		friend crtp_t<T, other_t...>;
 	};
 
+	template<typename T, template<typename> class Ex1, template<typename> class... Ex>
+	struct MixBuilder
+	{
+		using type = Ex1<typename MixBuilder<T, Ex...>::type>;
+	};
+
+	template<typename T, template<typename> class Ex>
+	struct MixBuilder<T, Ex>
+	{
+		using type = Ex<T>;
+	};
+
 	class Renderer;
 
 	template<typename T, template<typename, typename> class Func>

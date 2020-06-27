@@ -1,6 +1,8 @@
 #ifndef _CTL_SDL2_ANIMATION_
 #define _CTL_SDL2_ANIMATION_
 
+#include <SDL2/SDL.h>
+
 #include "../BasicTypes.h"
 #include "../Timer.h"
 #include "Drawable.h"
@@ -26,7 +28,7 @@ namespace ctl::sdl
 
 		void push_frame(AniFrame &&f)
 		{
-			m_frames.emplace_back(std::move(f));
+			m_frames.emplace_back(f);
 			m_curr_frame = m_frames.begin();
 		}
 		template<typename Iter>
@@ -52,7 +54,8 @@ namespace ctl::sdl
 					m_till_next -= m_curr_frame->step;
 					++m_curr_frame;
 
-					if (m_curr_frame == m_frames.end()) m_curr_frame = m_frames.begin();
+					if (m_curr_frame == m_frames.end())
+						m_curr_frame = m_frames.begin();
 				}
 
 				m_time.start();

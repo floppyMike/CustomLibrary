@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "State.h"
 #include "Window.h"
-#include <CustomLibrary/Error.h>
+#include "../Error.h"
 
 namespace ctl::sdl
 {

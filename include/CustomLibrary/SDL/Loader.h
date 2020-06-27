@@ -1,10 +1,15 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "../Tags.h"
 #include "../Traits.h"
+
 #include "Renderer.h"
 #include "TypeTraits.h"
-#include <SDL.h>
 
 namespace ctl::sdl
 {
@@ -15,7 +20,6 @@ namespace ctl::sdl
 		{
 		};
 
-#ifdef SDL_IMAGE_H_
 		template<typename Impl>
 		class _LoaderR_<Impl, tag::isTexture> : public crtp<Impl, _LoaderR_, tag::isTexture>
 		{
@@ -41,9 +45,7 @@ namespace ctl::sdl
 				return *this->underlying();
 			}
 		};
-#endif // SDL_IMAGE_H_
 
-#ifdef SDL_TTF_H_
 		template<typename Impl>
 		class _LoaderR_<Impl, tag::isText> : public crtp<Impl, _LoaderR_, tag::isText>
 		{
@@ -79,14 +81,12 @@ namespace ctl::sdl
 				return _load_(TTF_RenderUTF8_Blended_Wrapped(f, text, colour, wrapper), text);
 			}
 		};
-#endif // !SDL_TTF_H_
 
 		template<typename, typename>
 		class _LoaderO_
 		{
 		};
 
-#ifdef SDL_MIXER_H_
 		template<typename Impl>
 		class _LoaderO_<Impl, tag::isMusic> : public crtp<Impl, _LoaderO_, tag::isMusic>
 		{
@@ -101,9 +101,7 @@ namespace ctl::sdl
 				return *this;
 			}
 		};
-#endif // SDL_MIXER_H_
 
-#ifdef SDL_TTF_H_
 		template<typename Impl>
 		class _LoaderO_<Impl, tag::isFont> : public crtp<Impl, _LoaderO_, tag::isFont>
 		{
@@ -117,7 +115,6 @@ namespace ctl::sdl
 				return *this;
 			}
 		};
-#endif // !SDL_TTF_H_
 
 	} // namespace detail
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include <utility>
 #include <functional>
 
@@ -14,7 +16,7 @@ namespace ctl::sdl
 	public:
 		using T::T;
 
-		void input(const SDL_Event& e)
+		void input(const SDL_Event &e)
 		{
 			switch (e.type)
 			{
@@ -33,21 +35,20 @@ namespace ctl::sdl
 					m_func();
 				break;
 
-			default:
-				break;
+			default: break;
 			}
 		}
 
-		auto& func(std::function<void()>&& f) noexcept 
+		auto &func(std::function<void()> &&f) noexcept
 		{
-			m_func = std::move(f); 
-			return *this; 
+			m_func = std::move(f);
+			return *this;
 		}
 
 		bool is_inside() const noexcept { return m_is_inside; }
 
 	private:
-		bool m_is_inside = false;
+		bool				  m_is_inside = false;
 		std::function<void()> m_func;
 	};
-}
+} // namespace ctl::sdl

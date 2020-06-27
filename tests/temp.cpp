@@ -4,10 +4,11 @@
 - Generate Circle extension
 */
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
+
 #include <CustomLibrary/SDL/Texture.h>
 #include <CustomLibrary/SDL/Animation.h>
 #include <CustomLibrary/SDL/Button.h>
@@ -19,10 +20,10 @@
 #include <CustomLibrary/SDL/SDLWindow.h>
 #include <CustomLibrary/SDL/State.h>
 #include <CustomLibrary/SDL/Text.h>
+
 #include <chrono>
 #include <iostream>
 #include <tuple>
-
 
 using namespace ctl;
 using namespace std::chrono_literals;

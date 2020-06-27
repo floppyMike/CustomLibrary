@@ -1,9 +1,13 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "../Error.h"
 #include "../Timer.h"
-#include "Window.h"
-#include <SDL.h>
+
 #include <string>
 #include <thread>
 #include <type_traits>
@@ -29,22 +33,12 @@ namespace ctl::sdl
 		 */
 		virtual ~SDL()
 		{
-#ifdef SDL_MIXER_H_
 			Mix_Quit();
-#endif // SDL_MIXER_H_
-
-#ifdef SDL_TTF_H_
 			TTF_Quit();
-#endif //_SDL_TTF_H
-
-#ifdef SDL_IMAGE_H_
 			IMG_Quit();
-#endif // SDL_IMAGE_H_
-
 			SDL_Quit();
 		}
 
-#ifdef SDL_IMAGE_H_
 		/**
 		 * @summary init SDL_image
 		 * @param "flags" flags for initializer
@@ -52,13 +46,12 @@ namespace ctl::sdl
 		 */
 		auto &init_IMG(const int &flags = IMG_INIT_PNG)
 		{
-			if ((IMG_Init(flags) & flags) != flags) throw std::runtime_error(SDL_GetError());
+			if ((IMG_Init(flags) & flags) != flags)
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
-#endif // SDL_IMAGE_H_
 
-#ifdef SDL_MIXER_H_
 		/**
 		 * @summary init SDL_mixer
 		 * @param "feq" frequency
@@ -70,24 +63,23 @@ namespace ctl::sdl
 		auto &init_Mix(const int &feq = 44100, const Uint16 &format = MIX_DEFAULT_FORMAT, const int &channels = 2,
 					   const int &chunksize = 2048)
 		{
-			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0) throw std::runtime_error(SDL_GetError());
+			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
-#endif // SDL_MIXER_H_
 
-#ifdef SDL_TTF_H_
 		/**
 		 * @summary init SDL_ttf
 		 * @exception "Log" if initialization fails
 		 */
 		auto &init_TTF()
 		{
-			if (TTF_Init() == -1) throw std::runtime_error(SDL_GetError());
+			if (TTF_Init() == -1)
+				throw std::runtime_error(SDL_GetError());
 
 			return *this;
 		}
-#endif // SDL_TTF_H_
 
 		/**
 		 * @summary sets a hint
@@ -136,7 +128,8 @@ namespace ctl::sdl
 
 	inline SDL::SDL(const Uint32 &SDLFlags)
 	{
-		if (SDL_Init(SDLFlags) < 0) throw std::runtime_error(SDL_GetError());
+		if (SDL_Init(SDLFlags) < 0)
+			throw std::runtime_error(SDL_GetError());
 	}
 
 	inline SDL &SDL::set_hint(const char *name, const char *value) noexcept
@@ -169,7 +162,8 @@ namespace ctl::sdl
 			lastTime		   = time;
 			lag += elapsed;
 
-			if (time >= std::chrono::seconds(1)) m_fps = frames / time.count();
+			if (time >= std::chrono::seconds(1))
+				m_fps = frames / time.count();
 
 			_invoke_(&ImplWin::pre_pass);
 
@@ -177,7 +171,8 @@ namespace ctl::sdl
 			while (SDL_PollEvent(&e) != 0)
 			{
 				_invoke_(&ImplWin::event, e);
-				if (e.type == SDL_QUIT) quit = true;
+				if (e.type == SDL_QUIT)
+					quit = true;
 			}
 
 			m_delta = elapsed.count();

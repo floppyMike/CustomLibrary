@@ -1,37 +1,38 @@
 #ifndef _CTL_SDL2_TEXTURE_
-#define _CTL_SDL2_TEXTURE_
+#	define _CTL_SDL2_TEXTURE_
 
-#include "Surface.h"
-#include "Renderer.h"
+#	include <SDL2/SDL.h>
+#	include <SDL2/SDL_image.h>
 
-#include "../Traits.h"
+#	include "Surface.h"
+#	include "Renderer.h"
 
-#include "TypeTraits.h"
-#include "Geometry.h"
-#include "Drawable.h"
-#include "Loader.h"
+#	include "../Traits.h"
 
-#include <SDL_image.h>
+#	include "TypeTraits.h"
+#	include "Geometry.h"
+#	include "Drawable.h"
+#	include "Loader.h"
 
 namespace ctl::sdl
 {
 	class Texture : public RectFrame
 	{
-		struct Unique_Destructor { void operator()(SDL_Texture* t) { SDL_DestroyTexture(t); } };
+		struct Unique_Destructor
+		{
+			void operator()(SDL_Texture *t) { SDL_DestroyTexture(t); }
+		};
 
 	public:
-		using tag_t = tag::isTexture;
+		using tag_t	 = tag::isTexture;
 		using base_t = RectFrame;
 
 		using RectFrame::RectFrame;
 		Texture() = default;
 
-		SDL_Texture* texture() const noexcept
-		{
-			return m_texture.get();
-		}
+		SDL_Texture *texture() const noexcept { return m_texture.get(); }
 
-		auto& reset_shape()
+		auto &reset_shape()
 		{
 			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
 				throw std::runtime_error(SDL_GetError());
@@ -39,7 +40,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto& texture(SDL_Texture* tex) noexcept
+		auto &texture(SDL_Texture *tex) noexcept
 		{
 			assert(tex && "SDL_Texture is a nullptr.");
 
@@ -49,40 +50,17 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto load(Renderer* r) { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
+		auto load(Renderer *r) { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
 		auto option() { return Option<std::decay_t<decltype(*this)>>(this); }
-		auto draw(Renderer* r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
+		auto draw(Renderer *r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
 
 	private:
 		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
 	};
 
-}
+} // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_TEXTURE_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //	class ModdedTexture : public BaseTexture
 //	{
@@ -101,9 +79,9 @@ namespace ctl::sdl
 //			if (f_s == nullptr)
 //				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
-//			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_GetWindowPixelFormat(m_win->window()), SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h));
-//			if (!m_texture)
-//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
+//			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_GetWindowPixelFormat(m_win->window()),
+//SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h)); 			if (!m_texture) 				throw ctl::std::runtime_error(SDL_GetError(),
+//Log::Sev::ERR0R);
 //
 //			lock();
 //			memcpy(m_pixels, f_s->pixels, f_s->pitch * f_s->h);
@@ -149,10 +127,10 @@ namespace ctl::sdl
 //			m_pitch = 0;
 //		}
 //
-//		auto& target() 
-//		{ 
-//			if (SDL_SetRenderTarget(m_win->renderer(), m_texture.get()) != 0) 
-//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R); 
+//		auto& target()
+//		{
+//			if (SDL_SetRenderTarget(m_win->renderer(), m_texture.get()) != 0)
+//				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			return *this;
 //		}
@@ -168,10 +146,10 @@ namespace ctl::sdl
 //		template<typename T = void*>
 //		constexpr auto pixels() { return static_cast<T>(m_pixels); }
 //		template<typename T = void*>
-//		constexpr auto pixel(const NumVec<Uint32, 2> &xy) 
-//		{ 
-//			const auto &p = static_cast<T>(m_pixels); 
-//			return p[(xy[0] * m_pitch / 4) + xy[1]]; 
+//		constexpr auto pixel(const NumVec<Uint32, 2> &xy)
+//		{
+//			const auto &p = static_cast<T>(m_pixels);
+//			return p[(xy[0] * m_pitch / 4) + xy[1]];
 //		}
 //
 //		constexpr const auto& pitch() const { return m_pitch; }

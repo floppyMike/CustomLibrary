@@ -1,15 +1,19 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #include "../utility.h"
 #include "../BasicTypes.h"
+
 #include "Renderer.h"
 #include "Drawable.h"
 
+#include <stdexcept>
+#include <tuple>
 #include <utility>
 #include <vector>
 #include <type_traits>
+#include <algorithm>
 
 namespace ctl::sdl
 {
@@ -83,20 +87,12 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		template<typename T>
-		constexpr auto &data() noexcept
-		{
-			return std::get<std::vector<T>>(m_packs);
-		}
-		template<typename T>
-		constexpr const auto &data() const noexcept
-		{
-			return std::get<std::vector<T>>(m_packs);
-		}
-
 		constexpr const auto &tuple_data() const noexcept { return m_packs; }
 
 		auto draw(Renderer *r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
+
+		auto begin() const noexcept { return m_packs.begin(); }
+		auto end() const noexcept { return m_packs.end(); }
 
 	private:
 		std::tuple<std::vector<Shapes>...> m_packs;

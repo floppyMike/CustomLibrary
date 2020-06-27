@@ -1,7 +1,9 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "../Error.h"
-#include <SDL.h>
+#include "../BasicTypes.h"
 
 namespace ctl::sdl
 {
@@ -26,7 +28,8 @@ namespace ctl::sdl
 		 */
 		void push_event() noexcept
 		{
-			if (SDL_PushEvent(&m_event) < 0) err::g_log.write(err::Logger::Catagory::WARN, SDL_GetError());
+			if (SDL_PushEvent(&m_event) < 0)
+				err::g_log.write(err::Logger::Catagory::WARN, SDL_GetError());
 		}
 
 		/**

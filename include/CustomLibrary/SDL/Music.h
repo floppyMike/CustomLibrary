@@ -1,10 +1,11 @@
 #ifndef _CTL_SDL2_MUSIC_
 #define _CTL_SDL2_MUSIC_
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
 #include "../Tags.h"
 #include "../Traits.h"
-
-#include <SDL_mixer.h>
 
 #include <cassert>
 #include <memory>
@@ -17,17 +18,24 @@ namespace ctl::sdl
 {
 	class Music
 	{
-		struct Unique_Destructor { void operator()(Mix_Music* m) { Mix_FreeMusic(m); } };
+		struct Unique_Destructor
+		{
+			void operator()(Mix_Music *m) { Mix_FreeMusic(m); }
+		};
 
 	public:
 		using base_t = Music;
-		using tag_t = tag::isMusic;
+		using tag_t	 = tag::isMusic;
 
 		Music() = default;
 
-		Mix_Music* music() const noexcept { assert(m_music && "Mix_Music is a nullptr."); return m_music.get(); }
+		Mix_Music *music() const noexcept
+		{
+			assert(m_music && "Mix_Music is a nullptr.");
+			return m_music.get();
+		}
 
-		auto& music(Mix_Music* mus) noexcept
+		auto &music(Mix_Music *mus) noexcept
 		{
 			assert(mus && "Mix_Music is a nullptr.");
 			m_music.reset(mus);
@@ -54,6 +62,6 @@ namespace ctl::sdl
 		std::unique_ptr<Mix_Music, Unique_Destructor> m_music;
 	};
 
-}
+} // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_MUSIC_

@@ -1,6 +1,9 @@
 #ifndef _CTL_SDL2_Text_
 #define _CTL_SDL2_Text_
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
 #include "../BasicTypes.h"
 #include "../Error.h"
 
@@ -8,31 +11,32 @@
 #include "Loader.h"
 #include "Options.h"
 
-#include <SDL_ttf.h>
-
 #include <cassert>
 
 namespace ctl::sdl
 {
 	class Font
 	{
-		struct Unique_Deleter { void operator()(TTF_Font* f) { TTF_CloseFont(f); } };
+		struct Unique_Deleter
+		{
+			void operator()(TTF_Font *f) { TTF_CloseFont(f); }
+		};
 
 	public:
 		using base_t = Font;
-		using tag_t = tag::isFont;
+		using tag_t	 = tag::isFont;
 
-		Font() = default;
-		Font(Font&&) = default;
-		Font& operator=(Font&&) = default;
+		Font()		  = default;
+		Font(Font &&) = default;
+		Font &operator=(Font &&) = default;
 
-		auto* font() noexcept
+		auto *font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		auto& font(TTF_Font* f) noexcept
+		auto &font(TTF_Font *f) noexcept
 		{
 			m_ptr.reset(f);
 			return *this;
@@ -49,13 +53,13 @@ namespace ctl::sdl
 	{
 	public:
 		using base_t = Texture;
-		using tag_t = tag::isText;
+		using tag_t	 = tag::isText;
 
 		Text() = default;
 
 		using Texture::Texture;
 
-		auto& text(SDL_Texture* t, const char* text)
+		auto &text(SDL_Texture *t, const char *text)
 		{
 			assert(t != nullptr && "Texture shouldn't be a nullptr.");
 			this->texture(t);
@@ -64,14 +68,14 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr const auto& text() const noexcept { return m_text; }
+		constexpr const auto &text() const noexcept { return m_text; }
 
-		auto load(Renderer* r) noexcept { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
+		auto load(Renderer *r) noexcept { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
 
 	private:
 		std::string m_text;
 	};
 
-}
+} // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_Text_
