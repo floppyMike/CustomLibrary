@@ -97,9 +97,9 @@ struct State : sdl::IState
 private:
 	sdl::LDelayedRenderer<sdl::Renderer> *m_rend;
 
-	sdl::RectFrame				   m_r;
-	sdl::LButton<sdl::CircleFrame> m_c;
-	sdl::LineFrame				   m_l;
+	sdl::ERectFrame<sdl::Drawable>				   m_r;
+	sdl::ECircleFrame<sdl::Drawable, sdl::LButton> m_c;
+	sdl::ELineFrame<sdl::Drawable>				   m_l;
 
 	sdl::Texture m_t;
 	sdl::Text	 m_text;

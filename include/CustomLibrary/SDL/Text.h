@@ -28,15 +28,15 @@ namespace ctl::sdl
 
 		Font()		  = default;
 		Font(Font &&) = default;
-		Font &operator=(Font &&) = default;
+		auto operator=(Font &&) -> Font & = default;
 
-		auto *font() noexcept
+		auto font() noexcept -> auto *
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		auto &font(TTF_Font *f) noexcept
+		auto font(TTF_Font *f) noexcept -> auto &
 		{
 			m_ptr.reset(f);
 			return *this;
@@ -59,7 +59,7 @@ namespace ctl::sdl
 
 		using Texture::Texture;
 
-		auto &text(SDL_Texture *t, const char *text)
+		auto text(SDL_Texture *t, const char *text) -> auto &
 		{
 			assert(t != nullptr && "Texture shouldn't be a nullptr.");
 			this->texture(t);
@@ -68,7 +68,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr const auto &text() const noexcept { return m_text; }
+		[[nodiscard]] constexpr auto text() const noexcept -> const auto & { return m_text; }
 
 		auto load(Renderer *r) noexcept { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
 

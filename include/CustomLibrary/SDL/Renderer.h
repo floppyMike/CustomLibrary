@@ -46,7 +46,7 @@ namespace ctl::sdl
 
 		void destroy() { m_renderer.reset(); }
 
-		auto *get() const noexcept
+		[[nodiscard]] auto get() const noexcept -> auto *
 		{
 			assert(m_renderer && "Renderer isn't loaded.");
 			return m_renderer.get();
@@ -69,12 +69,14 @@ namespace ctl::sdl
 		using T::T;
 
 		void do_render(bool r) { m_do_render = r; }
-
-		bool will_render() const noexcept { return m_do_render; }
-
+		auto will_render() const noexcept { return m_do_render; }
 		auto render() { return Render<std::decay_t<decltype(*this)>>(this); }
 
 	private:
 		bool m_do_render = true;
 	};
+
+	template<template<typename> class... Ex>
+	using LRenderer = MixBuilder<Renderer, Ex...>;
+
 } // namespace ctl::sdl

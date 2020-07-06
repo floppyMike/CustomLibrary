@@ -30,9 +30,9 @@ namespace ctl::sdl
 		using RectFrame::RectFrame;
 		Texture() = default;
 
-		SDL_Texture *texture() const noexcept { return m_texture.get(); }
+		[[nodiscard]] auto texture() const noexcept -> SDL_Texture * { return m_texture.get(); }
 
-		auto &reset_shape()
+		auto reset_shape() -> auto &
 		{
 			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
 				throw std::runtime_error(SDL_GetError());
@@ -40,7 +40,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto &texture(SDL_Texture *tex) noexcept
+		auto texture(SDL_Texture *tex) noexcept -> auto &
 		{
 			assert(tex && "SDL_Texture is a nullptr.");
 

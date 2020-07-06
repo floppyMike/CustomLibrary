@@ -14,6 +14,9 @@ namespace ctl::sdl
 	class LButton : public T
 	{
 	public:
+		using base_t = T;
+		using tag_t	 = tag::isUnassigned;
+
 		using T::T;
 
 		void input(const SDL_Event &e)
@@ -39,13 +42,13 @@ namespace ctl::sdl
 			}
 		}
 
-		auto &func(std::function<void()> &&f) noexcept
+		auto func(std::function<void()> &&f) noexcept -> auto &
 		{
 			m_func = std::move(f);
 			return *this;
 		}
 
-		bool is_inside() const noexcept { return m_is_inside; }
+		auto is_inside() const noexcept { return m_is_inside; }
 
 	private:
 		bool				  m_is_inside = false;

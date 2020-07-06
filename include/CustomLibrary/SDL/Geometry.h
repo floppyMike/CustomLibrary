@@ -5,6 +5,7 @@
 #include "../utility.h"
 #include "../BasicTypes.h"
 
+#include "CustomLibrary/SDL/TypeTraits.h"
 #include "Renderer.h"
 #include "Drawable.h"
 
@@ -26,28 +27,26 @@ namespace ctl::sdl
 
 		Frame() = default;
 
-		Frame(const Frame &) = default;
-		Frame(Frame &&)		 = default;
+		Frame(const Frame &)	 = default;
+		Frame(Frame &&) noexcept = default;
 
-		Frame &operator=(const Frame &) = default;
-		Frame &operator=(Frame &&) = default;
+		auto operator=(const Frame &) -> Frame & = default;
+		auto operator=(Frame &&) noexcept -> Frame & = default;
 
-		Frame(const Shape &s)
+		explicit Frame(const Shape &s)
 			: m_shape(s)
 		{
 		}
 
-		constexpr const auto &shape() const noexcept { return m_shape; }
-
-		constexpr auto &shape() noexcept { return m_shape; }
-
-		constexpr auto &shape(const Shape &s) noexcept
+		constexpr auto shape() const noexcept -> const auto & { return m_shape; }
+		constexpr auto shape() noexcept -> auto & { return m_shape; }
+		constexpr auto shape(const Shape &s) noexcept -> auto &
 		{
 			m_shape = s;
 			return *this;
 		}
 
-		auto draw(Renderer *r) const noexcept { return Draw<const Frame>(this, r); }
+		// auto draw(Renderer *r) const noexcept { return Draw<const Frame>(this, r); }
 
 	private:
 		Shape m_shape;
@@ -57,6 +56,15 @@ namespace ctl::sdl
 	using CircleFrame = Frame<mth::Circle<int, unsigned int>>;
 	using LineFrame	  = Frame<mth::Line<int>>;
 	using PointFrame  = Frame<mth::Point<int>>;
+
+	template<template<typename> class... Ex>
+	using ERectFrame = typename MixBuilder<RectFrame, Ex...>::type;
+	template<template<typename> class... Ex>
+	using ECircleFrame = typename MixBuilder<CircleFrame, Ex...>::type;
+	template<template<typename> class... Ex>
+	using ELineFrame = typename MixBuilder<LineFrame, Ex...>::type;
+	template<template<typename> class... Ex>
+	using EPointFrame = typename MixBuilder<PointFrame, Ex...>::type;
 
 	template<typename... Shapes>
 	class MultiShape
@@ -70,7 +78,7 @@ namespace ctl::sdl
 		MultiShape() = default;
 
 		template<typename T>
-		auto &push(const T &arg)
+		auto push(const T &arg) -> auto &
 		{
 			static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
 			std::get<std::vector<T>>(m_packs).push_back(arg);
@@ -79,7 +87,7 @@ namespace ctl::sdl
 		}
 
 		template<typename T, typename... Args>
-		auto &emplace(Args &&... arg)
+		auto emplace(Args &&... arg) -> auto &
 		{
 			static_assert(std::disjunction_v<std::is_same<Shapes, T>...>, "Type must be of pack.");
 			std::get<std::vector<T>>(m_packs).push_back(std::forward<Args>(arg)...);
@@ -87,7 +95,7 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		constexpr const auto &tuple_data() const noexcept { return m_packs; }
+		constexpr auto tuple_data() const noexcept -> const auto & { return m_packs; }
 
 		auto draw(Renderer *r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
 

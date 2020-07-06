@@ -314,6 +314,8 @@ namespace ctl::sdl
 		using base_t = T;
 		using tag_t	 = tag::isUnassigned;
 
+		using T::T;
+
 		auto draw(Renderer *r) const noexcept { return Draw<const Drawable>(this, r); }
 	};
 
