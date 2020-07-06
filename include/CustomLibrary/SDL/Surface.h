@@ -4,7 +4,7 @@
 
 #include <memory>
 #include <cassert>
-#include <exception>
+#include <stdexcept>
 
 namespace ctl::sdl
 {

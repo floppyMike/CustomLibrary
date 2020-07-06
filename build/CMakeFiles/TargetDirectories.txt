@@ -1,2 +1,0 @@
-/home/michaellu/source/repos/CT/CustomLibrary/build/CMakeFiles/rebuild_cache.dir
-/home/michaellu/source/repos/CT/CustomLibrary/build/CMakeFiles/edit_cache.dir
