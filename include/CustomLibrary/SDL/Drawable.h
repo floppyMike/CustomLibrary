@@ -311,7 +311,10 @@ namespace ctl::sdl
 	class Drawable : public T
 	{
 	public:
-		auto draw(Renderer *r) const noexcept { return Draw<const T>(this, r); }
+		using base_t = T;
+		using tag_t	 = tag::isUnassigned;
+
+		auto draw(Renderer *r) const noexcept { return Draw<const Drawable>(this, r); }
 	};
 
 } // namespace ctl::sdl
