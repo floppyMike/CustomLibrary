@@ -86,6 +86,6 @@ namespace ctl::sdl
 	};
 
 	template<template<typename> class... Ex>
-	using LRenderer = MixBuilder<Renderer, Ex...>;
+	using ERenderer = typename MixBuilder<Renderer, Ex...>::type;
 
 } // namespace ctl::sdl
