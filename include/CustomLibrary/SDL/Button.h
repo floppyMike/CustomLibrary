@@ -11,7 +11,7 @@
 namespace ctl::sdl
 {
 	template<typename T>
-	class LButton : public T
+	class Pressable : public T
 	{
 	public:
 		using base_t = T;
@@ -54,4 +54,5 @@ namespace ctl::sdl
 		bool				  m_is_inside = false;
 		std::function<void()> m_func;
 	};
+
 } // namespace ctl::sdl

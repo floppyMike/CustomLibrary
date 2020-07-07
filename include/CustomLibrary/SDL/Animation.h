@@ -10,6 +10,8 @@
 #include "TypeTraits.h"
 #include <vector>
 
+// DEPRECATED
+
 namespace ctl::sdl
 {
 	struct AniFrame
@@ -66,8 +68,6 @@ namespace ctl::sdl
 
 		auto frames_size() const noexcept { return m_frames.size(); }
 
-		auto draw(Renderer *r) { return Draw<std::decay_t<decltype(*this)>>(this, r); }
-
 	private:
 		Timer					  m_time;
 		std::chrono::milliseconds m_till_next = std::chrono::milliseconds(0);
@@ -75,5 +75,9 @@ namespace ctl::sdl
 		std::vector<AniFrame>			m_frames;
 		std::vector<AniFrame>::iterator m_curr_frame = m_frames.begin();
 	};
+
+	template<template<typename> class... Ex>
+	using EAnimation = typename MixBuilder<Animation, Ex...>::type;
+
 } // namespace ctl::sdl
 #endif // !_CTL_SDL2_ANIMATION_

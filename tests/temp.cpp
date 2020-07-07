@@ -38,17 +38,16 @@ struct State : sdl::IState
 	{
 		
 		m_t.load(m_rend).file("assets/ass.png");
-		//m_ani.load(m_rend).file("assets/llama.png");
+		m_ani.load(m_rend).file("assets/llama.png");
 
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 
-		sdl::Font f;
+		sdl::EFont<sdl::LoadableO> f;
 		f.load().file("assets/ass1.ttf", 40);
 
-/*
 		m_text.load(m_rend).blended(f.font(), "Hello There!", sdl::BLUE);
 		m_text.shape().pos({ 300, 300 });
-		*/
+		
 
 		m_multi.push(mth::Rect(400, 400, 50, 50));
 		m_multi.push(mth::Rect(400, 300, 50, 50));
@@ -92,7 +91,7 @@ struct State : sdl::IState
 		m_l.draw(m_rend).line();
 
 		m_t.draw(m_rend).texture();
-		//m_text.draw(m_rend).texture();
+		m_text.draw(m_rend).texture();
 
 		m_multi.draw(m_rend).all();
 	}
@@ -101,23 +100,23 @@ private:
 	sdl::LDelayedRenderer<sdl::Renderer> *m_rend;
 
 	sdl::ERectFrame<sdl::Drawable>				   m_r;
-	sdl::ECircleFrame<sdl::Drawable, sdl::LButton> m_c;
+	sdl::ECircleFrame<sdl::Drawable, sdl::Pressable> m_c;
 	sdl::ELineFrame<sdl::Drawable>				   m_l;
 
 	sdl::ETexture<sdl::Drawable, sdl::LoadableR> m_t;
-	//sdl::Text	 m_text;
+	sdl::EText<sdl::Drawable, sdl::LoadableR>	 m_text;
 
-	sdl::Animation m_ani;
+	sdl::EAnimation<sdl::Drawable, sdl::LoadableR> m_ani;
 
-	sdl::Music m_song;
+	sdl::EMusic<sdl::Playable, sdl::LoadableO> m_song;
 
 	sdl::MultiShape<mth::Rect<int, int>, mth::Line<int>, mth::Point<int>> m_multi;
 };
 
 int main(int argc, char **argv)
 {
-	try
-	{
+	//try
+	//{
 		sdl::SDL sdl;
 		sdl.init_IMG(IMG_INIT_JPG | IMG_INIT_PNG).init_TTF().init_Mix();
 
@@ -130,11 +129,11 @@ int main(int argc, char **argv)
 		loop.add_window(&win);
 
 		loop.run(30);
-	}
-	catch (const std::exception &err)
-	{
-		std::cerr << err.what();
-	}
+	//}
+	//catch (const std::exception &err)
+	//{
+	//	std::cerr << err.what();
+	//}
 
 	return 0;
 }

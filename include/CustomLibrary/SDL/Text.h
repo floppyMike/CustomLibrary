@@ -52,11 +52,12 @@ namespace ctl::sdl
 			return temp;
 		}
 
-		auto load() { return LoadO<std::decay_t<decltype(*this)>>(this); }
-
 	private:
 		std::unique_ptr<TTF_Font, Unique_Deleter> m_ptr;
 	};
+
+	template<template<typename> class... Ex>
+	using EFont = typename MixBuilder<Font, Ex...>::type;
 
 	class Text : public Texture
 	{
@@ -79,11 +80,12 @@ namespace ctl::sdl
 
 		[[nodiscard]] constexpr auto text() const noexcept -> const auto & { return m_text; }
 
-		auto load(Renderer *r) noexcept { return LoadR<std::decay_t<decltype(*this)>>(this, r); }
-
 	private:
 		std::string m_text;
 	};
+
+	template<template<typename> class... Ex>
+	using EText = typename MixBuilder<Text, Ex...>::type;
 
 } // namespace ctl::sdl
 

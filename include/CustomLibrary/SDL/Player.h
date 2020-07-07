@@ -43,6 +43,19 @@ namespace ctl::sdl
 
 	template<typename T>
 	using Player = FunctionalO<T, detail::_Player_>;
+
+	template<typename T>
+	class Playable : public T
+	{
+	public:
+		using base_t = T;
+		using tag_t = tag::isUnassigned;
+
+		using T::T;
+
+		auto play() noexcept { return Player<Playable>(this); }
+	};
+
 } // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_PLAYER_

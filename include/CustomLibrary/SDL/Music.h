@@ -55,12 +55,12 @@ namespace ctl::sdl
 		static void volume(unsigned char vol) { Mix_VolumeMusic(vol); }
 		static void unpause() { Mix_ResumeMusic(); }
 
-		auto load() noexcept { return LoadO<std::decay_t<decltype(*this)>>(this); }
-		auto play() noexcept { return Player<std::decay_t<decltype(*this)>>(this); }
-
 	private:
 		std::unique_ptr<Mix_Music, Unique_Destructor> m_music;
 	};
+
+	template<template<typename> class... Ex>
+	using EMusic = typename MixBuilder<Music, Ex...>::type;
 
 } // namespace ctl::sdl
 
