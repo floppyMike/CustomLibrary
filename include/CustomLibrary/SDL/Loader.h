@@ -133,7 +133,7 @@ namespace ctl::sdl
 
 		using T::T;
 
-		auto load(Renderer *r) const noexcept { return LoadR<const LoadableR>(this, r); }
+		auto load(Renderer *r) noexcept { return LoadR<LoadableR>(this, r); }
 	};
 
 	template<typename T>
@@ -145,6 +145,6 @@ namespace ctl::sdl
 
 		using T::T;
 
-		auto load() const noexcept { return LoadO<const LoadableO>(this); }
+		auto load() noexcept { return LoadO<LoadableO>(this); }
 	};
 } // namespace ctl::sdl
