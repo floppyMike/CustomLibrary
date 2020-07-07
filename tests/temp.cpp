@@ -36,16 +36,19 @@ struct State : sdl::IState
 		, m_c({ 100, 100, 50 })
 		, m_l({ 400, 300, 300, 400 })
 	{
+		
 		m_t.load(m_rend).file("assets/ass.png");
-		m_ani.load(m_rend).file("assets/llama.png");
+		//m_ani.load(m_rend).file("assets/llama.png");
 
 		m_t.shape(mth::Rect(300, 0, m_t.shape().w >> 2, m_t.shape().h >> 2));
 
 		sdl::Font f;
 		f.load().file("assets/ass1.ttf", 40);
 
+/*
 		m_text.load(m_rend).blended(f.font(), "Hello There!", sdl::BLUE);
 		m_text.shape().pos({ 300, 300 });
+		*/
 
 		m_multi.push(mth::Rect(400, 400, 50, 50));
 		m_multi.push(mth::Rect(400, 300, 50, 50));
@@ -80,7 +83,7 @@ struct State : sdl::IState
 	void fixed_update() override {}
 	void draw() override
 	{
-		m_rend->option().color(sdl::BLACK);
+		m_rend->color(sdl::BLACK);
 
 		m_ani.draw(m_rend).animated();
 
@@ -89,7 +92,7 @@ struct State : sdl::IState
 		m_l.draw(m_rend).line();
 
 		m_t.draw(m_rend).texture();
-		m_text.draw(m_rend).texture();
+		//m_text.draw(m_rend).texture();
 
 		m_multi.draw(m_rend).all();
 	}
@@ -101,8 +104,8 @@ private:
 	sdl::ECircleFrame<sdl::Drawable, sdl::LButton> m_c;
 	sdl::ELineFrame<sdl::Drawable>				   m_l;
 
-	sdl::Texture m_t;
-	sdl::Text	 m_text;
+	sdl::ETexture<sdl::Drawable, sdl::LoadableR> m_t;
+	//sdl::Text	 m_text;
 
 	sdl::Animation m_ani;
 

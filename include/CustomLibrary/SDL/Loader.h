@@ -122,5 +122,29 @@ namespace ctl::sdl
 	using LoadR = FunctionalR<T, detail::_LoaderR_>;
 
 	template<typename T>
-	using LoadO = FunctionalR<T, detail::_LoaderO_>;
+	using LoadO = FunctionalO<T, detail::_LoaderO_>;
+
+	template<typename T>
+	class LoadableR : public T
+	{
+	public:
+		using base_t = T;
+		using tag_t = tag::isUnassigned;
+
+		using T::T;
+
+		auto load(Renderer *r) const noexcept { return LoadR<const LoadableR>(this, r); }
+	};
+
+	template<typename T>
+	class LoadableO : public T
+	{
+	public:
+		using base_t = T;
+		using tag_t = tag::isUnassigned;
+
+		using T::T;
+
+		auto load() const noexcept { return LoadO<const LoadableO>(this); }
+	};
 } // namespace ctl::sdl

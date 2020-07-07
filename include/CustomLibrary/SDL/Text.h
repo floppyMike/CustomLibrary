@@ -9,7 +9,6 @@
 
 #include "Texture.h"
 #include "Loader.h"
-#include "Options.h"
 
 #include <cassert>
 
@@ -42,7 +41,17 @@ namespace ctl::sdl
 			return *this;
 		}
 
-		auto option() { return Option<std::decay_t<decltype(*this)>>(this); }
+		void style(int style) { TTF_SetFontStyle(font(), style); }
+
+		auto style() { return TTF_GetFontStyle(font()); }
+
+		auto hypo_size(const char *text)
+		{
+			mth::Dim<int> temp;
+			TTF_SizeUTF8(font(), text, &temp.w, &temp.h);
+			return temp;
+		}
+
 		auto load() { return LoadO<std::decay_t<decltype(*this)>>(this); }
 
 	private:

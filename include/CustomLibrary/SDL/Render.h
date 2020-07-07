@@ -47,4 +47,16 @@ namespace ctl::sdl
 
 	template<typename T>
 	using Render = FunctionalO<T, detail::_Render_>;
+
+	template<typename T>
+	class Renderable : public T
+	{
+	public:
+		using base_t = T;
+		using tag_t = tag::isUnassigned;
+
+		using T::T;
+
+		auto render() const noexcept { return Render<const Renderable>(this); }
+	};
 } // namespace ctl::sdl

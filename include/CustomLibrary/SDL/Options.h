@@ -55,6 +55,9 @@ namespace ctl::sdl
 	template<typename T>
 	using Option = FunctionalO<T, detail::_Option_>;
 
+	template<typename T>
+	class Modif
+
 } // namespace ctl::sdl
 
 #endif // !_CTL_SDL2_OPTIONS_

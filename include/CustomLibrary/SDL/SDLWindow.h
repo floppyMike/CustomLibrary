@@ -18,7 +18,7 @@ namespace ctl::sdl
 			: m_win(name, dim, windowFlags)
 			, m_renderer(&m_win, rendererFlags)
 		{
-			m_renderer.option().logical_size(m_win.dim());
+			m_renderer.logical_size(m_win.dim());
 		}
 
 		~SDLWindow() { destroy(); }

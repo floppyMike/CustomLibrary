@@ -8,7 +8,6 @@
 
 #include "Engine.h"
 #include "TypeTraits.h"
-#include "Options.h"
 #include "Render.h"
 
 #include <cassert>
@@ -51,8 +50,18 @@ namespace ctl::sdl
 			assert(m_renderer && "Renderer isn't loaded.");
 			return m_renderer.get();
 		}
+		
+		auto &color(const SDL_Color &col)
+		{
+			SDL_SetRenderDrawColor(m_renderer.get(), col.r, col.g, col.b, col.a);
+			return *this;
+		}
 
-		auto option() { return Option<std::decay_t<decltype(*this)>>(this); }
+		void logical_size(const mth::Dim<int> &dim)
+		{
+			SDL_RenderSetLogicalSize(m_renderer.get(), dim.w, dim.h);
+		}
+
 		auto render() { return Render<std::decay_t<decltype(*this)>>(this); }
 
 	private:
