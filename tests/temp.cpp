@@ -113,7 +113,7 @@ private:
 	sdl::MultiShape<mth::Rect<int, int>, mth::Line<int>, mth::Point<int>> m_multi;
 };
 
-int main(int argc, char **argv)
+auto main(int argc, char **argv) -> int
 {
 	//try
 	//{

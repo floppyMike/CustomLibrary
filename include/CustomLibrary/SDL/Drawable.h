@@ -317,6 +317,7 @@ namespace ctl::sdl
 		using T::T;
 
 		auto draw(Renderer *r) noexcept { return Draw<Drawable>(this, r); }
+		auto draw(Renderer *r) const noexcept { return Draw<Drawable>(this, r); }
 	};
 
 } // namespace ctl::sdl
