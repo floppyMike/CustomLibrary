@@ -30,7 +30,7 @@ namespace ctl::sdl
 		class _Drawable_<Impl, tag::isTexture> : public crtp<Impl, _Drawable_, tag::isTexture>
 		{
 		public:
-			auto &texture(const SDL_Rect *const blit = nullptr)
+			auto &texture(const SDL_Rect *const blit = nullptr) const
 			{
 				auto *cpthis = this->underlying();
 
@@ -43,7 +43,7 @@ namespace ctl::sdl
 			}
 
 			auto &texture(double angle, const mth::Point<int> &center, SDL_RendererFlip flip,
-						  const SDL_Rect *const blit = nullptr)
+						  const SDL_Rect *const blit = nullptr) const
 			{
 				Impl *const cpthis = this->underlying();
 
@@ -64,7 +64,7 @@ namespace ctl::sdl
 
 				return *pthis;
 			}
-			auto color_mod()
+			auto color_mod() const
 			{
 				std::tuple<Uint8, Uint8, Uint8> c;
 
@@ -85,7 +85,7 @@ namespace ctl::sdl
 
 				return *pthis;
 			}
-			SDL_BlendMode blend_mode()
+			SDL_BlendMode blend_mode() const
 			{
 				SDL_BlendMode b;
 
@@ -104,7 +104,7 @@ namespace ctl::sdl
 
 				return *pthis;
 			}
-			Uint8 alpha_mod()
+			Uint8 alpha_mod() const
 			{
 				Uint8 a;
 
@@ -119,7 +119,7 @@ namespace ctl::sdl
 		class _Drawable_<Impl, ctl::tag::isRect> : public crtp<Impl, _Drawable_, ctl::tag::isRect>
 		{
 		public:
-			auto &rect()
+			auto &rect() const
 			{
 				if (SDL_RenderDrawRect(this->underlying()->renderer()->get(),
 									   this->underlying()->obj()->shape().rect_ptr())
@@ -129,7 +129,7 @@ namespace ctl::sdl
 				return *this;
 			}
 
-			auto &filled_rect()
+			auto &filled_rect() const
 			{
 				if (SDL_RenderFillRect(this->underlying()->renderer()->get(),
 									   this->underlying()->obj()->shape().rect_ptr())
@@ -144,19 +144,19 @@ namespace ctl::sdl
 		class _Drawable_<Impl, ctl::tag::isCircle> : public crtp<Impl, _Drawable_, ctl::tag::isCircle>
 		{
 		public:
-			auto &circle()
+			auto &circle() const
 			{
 				_draw_(SDL_RenderDrawPoints);
 				return *this;
 			}
 
-			auto &filled_circle()
+			auto &filled_circle() const
 			{
 				_draw_(SDL_RenderDrawLines);
 				return *this;
 			}
 
-			auto &draw_p(int pres)
+			auto &draw_p(int pres) const
 			{
 				auto *pthis = this->underlying();
 
@@ -178,7 +178,7 @@ namespace ctl::sdl
 			}
 
 		private:
-			void _draw_(int (*func)(SDL_Renderer *, const SDL_Point *, int))
+			void _draw_(int (*func)(SDL_Renderer *, const SDL_Point *, int)) const
 			{
 				auto *pthis = this->underlying();
 
@@ -225,7 +225,7 @@ namespace ctl::sdl
 		class _Drawable_<Impl, ctl::tag::isLine> : public crtp<Impl, _Drawable_, ctl::tag::isLine>
 		{
 		public:
-			void line()
+			void line() const
 			{
 				auto *pthis = this->underlying();
 
@@ -240,7 +240,7 @@ namespace ctl::sdl
 		class _Drawable_<Impl, ctl::tag::isPoint> : public crtp<Impl, _Drawable_, ctl::tag::isPoint>
 		{
 		public:
-			void point()
+			void point() const
 			{
 				auto *pthis = this->underlying();
 
@@ -317,7 +317,7 @@ namespace ctl::sdl
 		using T::T;
 
 		auto draw(Renderer *r) noexcept { return Draw<Drawable>(this, r); }
-		auto draw(Renderer *r) const noexcept { return Draw<Drawable>(this, r); }
+		auto draw(Renderer *r) const noexcept { return Draw<const Drawable>(this, r); }
 	};
 
 } // namespace ctl::sdl

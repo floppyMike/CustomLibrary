@@ -124,11 +124,8 @@ namespace ctl
 		return ptr;
 	}
 
-	using char8_t  = unsigned char;
-	using u8string = std::basic_string<char8_t>;
-
 	template<class T>
-	constexpr auto &unmove(T &&t) noexcept
+	constexpr auto unmove(T &&t) noexcept -> auto &
 	{
 		return t;
 	}
