@@ -74,8 +74,8 @@ namespace ctl::mth
 
 		constexpr void pos2(T x, T y) noexcept
 		{
-			x1 = x;
-			y1 = y;
+			x2 = x;
+			y2 = y;
 		}
 
 		constexpr void translate(const mth::Point<T> &delta1, const mth::Point<T> &delta2) noexcept
