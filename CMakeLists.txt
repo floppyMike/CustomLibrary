@@ -10,13 +10,13 @@ if (UNIX AND NOT APPLE)
     find_package(SDL2_ttf REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 elseif(WIN32)
-	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/include")
+	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/include"  CACHE INTERNAL "SDL2_Includes")
 
 	# Support both 32 and 64 bit builds
 	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 		set(SDL2_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/lib/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/x64/SDL2main.lib")
 	else ()
-		set(SDL2_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2main.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_ttf.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_mixer.lib")
+		set(SDL2_LIBRARY "${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2main.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_ttf.lib;${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/lib/x86/SDL2_mixer.lib" CACHE INTERNAL "SDL2_Library")
 	endif ()
 
 	string(STRIP "${SDL2_LIBRARY}" SDL2_LIBRARY)
