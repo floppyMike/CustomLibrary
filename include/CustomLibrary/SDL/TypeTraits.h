@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Traits.h"
 #include <cassert>
 #include <tuple>
 #include <type_traits>
