@@ -8,53 +8,83 @@
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Predefinitions
+	// -----------------------------------------------------------------------------
+
+	class Music;
+
+	// -----------------------------------------------------------------------------
+	// Player Implementation
+	// -----------------------------------------------------------------------------
+
 	namespace detail
 	{
-		template<typename, typename>
-		class _Player_
-		{
-		};
+		template<typename, typename, typename>
+		class _Player_;
 
-		template<typename Impl>
-		class _Player_<Impl, tag::isMusic> : public crtp<Impl, _Player_, tag::isMusic>
+		/**
+		 * @brief Handles music playing
+		 */
+		template<typename Full, typename Impl>
+		class _Player_<Music, Full, Impl> : public Impl
 		{
 		public:
-			//(-1 forever)
+			using Impl::Impl;
+
+			/**
+			 * @brief Plays the music
+			 * @param loop How many times the music is played. -1 is looped forever.
+			 */
 			void normal(int loop)
 			{
-				if (!Mix_PlayingMusic())
-					Mix_PlayMusic(this->underlying()->obj()->music(), loop);
+				if (Mix_PlayingMusic() == 0)
+					Mix_PlayMusic(this->obj()->music(), loop);
 
-				else if (Mix_PausedMusic())
+				else if (Mix_PausedMusic() != 0)
 					Mix_ResumeMusic();
 			}
 
+			/**
+			 * @brief Plays the music faded
+			 *
+			 * @param loop How many times the music is played. -1 is looped forever.
+			 * @param ms Fade time
+			 */
 			void fade(int loop, int ms)
 			{
-				if (!Mix_PlayingMusic())
+				if (Mix_PlayingMusic() == 0)
 					Mix_FadeInMusic(this->underlying()->obj()->music(), loop, ms);
 
-				else if (Mix_PausedMusic())
+				else if (Mix_PausedMusic() != 0)
 					Mix_ResumeMusic();
 			}
 		};
 
 	} // namespace detail
 
-	template<typename T>
-	using Player = FunctionalO<T, detail::_Player_>;
+	// -----------------------------------------------------------------------------
+	// Playing Exension
+	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Type for playing type construction
+	 * @tparam T Object to play for type
+	 */
 	template<typename T>
-	class Playable : public T
+	using Player = typename Filter<detail::_Player_, FunctorO<T>, T>::type;
+
+	/**
+	 * @brief Shows playing options for object
+	 *
+	 * @param ptr ptr to object
+	 * @return Play type for further options
+	 */
+	template<typename _T>
+	auto play(_T* const ptr)
 	{
-	public:
-		using base_t = T;
-		using tag_t = tag::isUnassigned;
-
-		using T::T;
-
-		auto play() noexcept { return Player<Playable>(this); }
-	};
+		return Player<_T>(ptr);
+	}
 
 } // namespace ctl::sdl
 

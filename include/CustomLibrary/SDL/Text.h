@@ -14,6 +14,13 @@
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Font
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Manages a font object
+	 */
 	class Font
 	{
 		struct Unique_Deleter
@@ -22,29 +29,47 @@ namespace ctl::sdl
 		};
 
 	public:
-		using base_t = Font;
-		using tag_t	 = tag::isFont;
-
 		Font()		  = default;
 		Font(Font &&) = default;
 		auto operator=(Font &&) -> Font & = default;
 
-		auto font() noexcept -> auto *
+		Font(const Font &) noexcept = delete;
+		auto operator=(const Font &) noexcept = delete;
+
+		/**
+		 * @brief Get the managed font ptr
+		 * @return TTF_Font*
+		 */
+		auto font() noexcept
 		{
 			assert(m_ptr && "Font is not loaded.");
 			return m_ptr.get();
 		}
 
-		auto font(TTF_Font *f) noexcept -> auto &
-		{
-			m_ptr.reset(f);
-			return *this;
-		}
+		/**
+		 * @brief Change the managed font
+		 * @param f new font
+		 */
+		auto font(TTF_Font *f) noexcept { m_ptr.reset(f); }
 
+		/**
+		 * @brief Set a font stype
+		 * @param style Style to use https://www.libsdl.org/projects/SDL_ttf/docs/SDL_ttf_22.html
+		 */
 		void style(int style) { TTF_SetFontStyle(font(), style); }
 
+		/**
+		 * @brief Get the font stype used
+		 * @return Font Style
+		 */
 		auto style() { return TTF_GetFontStyle(font()); }
 
+		/**
+		 * @brief Get the hypertheoretical text dimension
+		 *
+		 * @param text Text to measure on
+		 * @return Dimension
+		 */
 		auto hypo_size(const char *text)
 		{
 			mth::Dim<int> temp;
@@ -59,25 +84,38 @@ namespace ctl::sdl
 	template<template<typename> class... Ex>
 	using EFont = typename MixBuilder<Font, Ex...>::type;
 
+	// -----------------------------------------------------------------------------
+	// Text
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Manages a text
+	 */
 	class Text : public Texture
 	{
 	public:
-		using base_t = Texture;
-		using tag_t	 = tag::isText;
+		using base = Texture;
 
 		Text() = default;
 
 		using Texture::Texture;
 
-		auto text(SDL_Texture *t, const char *text) -> auto &
+		/**
+		 * @brief Changes the texture with its associated text
+		 *
+		 * @param t Texture ptr
+		 * @param text Text
+		 */
+		auto text(SDL_Texture *t, const char *text)
 		{
-			assert(t != nullptr && "Texture shouldn't be a nullptr.");
 			this->texture(t);
 			m_text = text;
-
-			return *this;
 		}
 
+		/**
+		 * @brief Get the text
+		 * @return const char *
+		 */
 		[[nodiscard]] constexpr auto text() const noexcept -> const auto & { return m_text; }
 
 	private:

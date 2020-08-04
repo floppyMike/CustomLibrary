@@ -16,6 +16,9 @@
 
 namespace ctl::sdl
 {
+	/**
+	 * @brief Manages music to be played
+	 */
 	class Music
 	{
 		struct Unique_Destructor
@@ -24,35 +27,59 @@ namespace ctl::sdl
 		};
 
 	public:
-		using base_t = Music;
-		using tag_t	 = tag::isMusic;
-
 		Music() = default;
 
-		Mix_Music *music() const noexcept
+		/**
+		 * @brief Get the Mix_Music ptr
+		 * @return Mix_Music ptr
+		 */
+		[[nodiscard]] auto music() const noexcept
 		{
 			assert(m_music && "Mix_Music is a nullptr.");
 			return m_music.get();
 		}
 
-		auto &music(Mix_Music *mus) noexcept
-		{
-			assert(mus && "Mix_Music is a nullptr.");
-			m_music.reset(mus);
-			return *this;
-		}
+		/**
+		 * @brief Set the music
+		 * @param mus Mix_Music ptr
+		 */
+		auto music(Mix_Music *mus) noexcept { m_music.reset(mus); }
 
+		/**
+		 * @brief Pauses the Music
+		 */
 		static void pause()
 		{
-			if (!Mix_PausedMusic())
+			if (Mix_PausedMusic() == 0)
 				Mix_PauseMusic();
 		}
-
-		static bool is_paused() { return Mix_PausedMusic(); }
-		static bool playing() { return Mix_PlayingMusic(); }
+		/**
+		 * @brief Check if music is paused
+		 * @return bool
+		 */
+		static auto is_paused() { return Mix_PausedMusic() != 0; }
+		/**
+		 * @brief Check if music is playing
+		 * @return bool
+		 */
+		static auto playing() { return Mix_PlayingMusic() != 0; }
+		/**
+		 * @brief Stop the music
+		 */
 		static void stop() { Mix_HaltMusic(); }
+		/**
+		 * @brief Fade out the music
+		 * @param ms Time in ms till music fades out
+		 */
 		static void stop_fade(int ms) { Mix_FadeOutMusic(ms); }
+		/**
+		 * @brief Sets the volume of the music
+		 * @param vol Music volume from 0 till 255
+		 */
 		static void volume(unsigned char vol) { Mix_VolumeMusic(vol); }
+		/**
+		 * @brief Resume the music
+		 */
 		static void unpause() { Mix_ResumeMusic(); }
 
 	private:

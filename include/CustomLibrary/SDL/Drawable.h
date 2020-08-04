@@ -4,206 +4,162 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../Tags.h"
-#include "../Traits.h"
 #include "../BasicTypes.h"
+#include "../Error.h"
+#include "../Traits.h"
 #include "../utility.h"
 
-#include "TypeTraits.h"
 #include "Renderer.h"
+#include "TypeTraits.h"
 
-#include <tuple>
-#include <stdexcept>
-#include <vector>
-#include <cmath>
+#include <span>
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Predefinitions
+	// -----------------------------------------------------------------------------
+
+	class Texture;
+	class Animation;
+
+	template<typename T>
+	class Frame;
+
+	// -----------------------------------------------------------------------------
+	// Drawing implementations
+	// -----------------------------------------------------------------------------
+
 	namespace detail
 	{
-		template<typename, typename>
-		class _Drawable_
-		{
-		};
+		template<typename, typename, typename>
+		class _Drawable_;
 
-		template<typename Impl>
-		class _Drawable_<Impl, tag::isTexture> : public crtp<Impl, _Drawable_, tag::isTexture>
+		/**
+		 * @brief Handles drawing of textures
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Texture, Full, Impl> : public Impl
 		{
 		public:
-			auto &texture(const SDL_Rect *const blit = nullptr) const
+			using Impl::Impl;
+
+			/**
+			 * @brief Simple draw operation
+			 * Draws the texture onto the render buffer
+			 * @param blit Specifies a part of the texture to draw. Default is whole texture.
+			 */
+			auto texture(const mth::Rect<int, int> *const blit = nullptr) const -> void
 			{
-				auto *cpthis = this->underlying();
-
-				if (SDL_RenderCopy(cpthis->renderer()->get(), cpthis->obj()->texture(), blit,
-								   cpthis->obj()->shape().rect_ptr())
-					< 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *this->underlying();
+				const auto r = SDL_RenderCopy(this->renderer()->get(), this->obj()->texture(),
+											  reinterpret_cast<const SDL_Rect *>(blit),
+											  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
+				ASSERT(r == 0, SDL_GetError());
 			}
 
-			auto &texture(double angle, const mth::Point<int> &center, SDL_RendererFlip flip,
-						  const SDL_Rect *const blit = nullptr) const
+			/**
+			 * @brief Advanced draw operation
+			 * Draws the texture onto the render buffer
+			 * @param angle Rotation angle
+			 * @param center Rotation center
+			 * @param flip Flip texture https://wiki.libsdl.org/SDL_RendererFlip#Values
+			 * @param blit Specifies a part of the texture to draw. Default is whole texture.
+			 */
+			auto texture(double angle, const mth::Point<int> &center, SDL_RendererFlip flip,
+						 const mth::Rect<int, int> *const blit = nullptr) const -> void
 			{
-				Impl *const cpthis = this->underlying();
-
-				if (SDL_RenderCopyEx(cpthis->renderer()->get(), cpthis->obj()->texture(), blit,
-									 cpthis->obj()->shape().rect_ptr(), angle, center.point_ptr(), flip)
-					< 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *cpthis;
-			}
-
-			auto &color_mod(Uint8 r, Uint8 g, Uint8 b)
-			{
-				Impl *const pthis = this->underlying();
-
-				if (SDL_SetTextureColorMod(pthis->obj()->texture(), r, g, b) != 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *pthis;
-			}
-			auto color_mod() const
-			{
-				std::tuple<Uint8, Uint8, Uint8> c;
-
-				if (SDL_GetTextureColorMod(this->underlying()->obj()->texture(), &std::get<0>(c), &std::get<1>(c),
-										   &std::get<2>(c))
-					!= 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return c;
-			}
-
-			auto &blend_mode(const SDL_BlendMode &b)
-			{
-				Impl *const pthis = this->underlying();
-
-				if (SDL_SetTextureBlendMode(pthis->obj()->texture(), b) != 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *pthis;
-			}
-			SDL_BlendMode blend_mode() const
-			{
-				SDL_BlendMode b;
-
-				if (SDL_GetTextureBlendMode(this->underlying()->obj()->texture(), &b) != 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return b;
-			}
-
-			auto &alpha_mod(const Uint8 &a)
-			{
-				Impl *const pthis = this->underlying();
-
-				if (SDL_SetTextureAlphaMod(pthis->obj()->texture(), a) != 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *pthis;
-			}
-			Uint8 alpha_mod() const
-			{
-				Uint8 a;
-
-				if (SDL_GetTextureAlphaMod(this->underlying()->obj()->texture(), &a) == -1)
-					throw std::runtime_error(SDL_GetError());
-
-				return a;
+				const auto r = SDL_RenderCopyEx(this->renderer()->get(), this->obj()->texture(),
+												reinterpret_cast<const SDL_Rect *>(blit),
+												reinterpret_cast<const SDL_Rect *>(this->obj()->shape()), angle,
+												reinterpret_cast<const SDL_Point *>(&center), flip);
+				ASSERT(r == 0, SDL_GetError());
 			}
 		};
 
-		template<typename Impl>
-		class _Drawable_<Impl, ctl::tag::isRect> : public crtp<Impl, _Drawable_, ctl::tag::isRect>
+		/**
+		 * @brief Handles drawing of RectFrame
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Frame<mth::Rect<int, int>>, Full, Impl> : public Impl
 		{
 		public:
-			auto &rect() const
-			{
-				if (SDL_RenderDrawRect(this->underlying()->renderer()->get(),
-									   this->underlying()->obj()->shape().rect_ptr())
-					!= 0)
-					throw std::runtime_error(SDL_GetError());
+			using Impl::Impl;
 
-				return *this;
+			/**
+			 * @brief Draws rect onto render buffer
+			 */
+			auto rect() const -> void
+			{
+				const auto r = SDL_RenderDrawRect(this->renderer()->get(),
+												  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
+				ASSERT(r == 0, SDL_GetError());
 			}
 
-			auto &filled_rect() const
+			/**
+			 * @brief Draws filled rect onto render buffer
+			 */
+			auto filled_rect() const -> void
 			{
-				if (SDL_RenderFillRect(this->underlying()->renderer()->get(),
-									   this->underlying()->obj()->shape().rect_ptr())
-					!= 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *this;
+				const auto r = SDL_RenderFillRect(this->renderer()->get(),
+												  reinterpret_cast<const SDL_Rect *>(this->obj()->shape()));
+				ASSERT(r == 0, SDL_GetError());
 			}
 		};
 
-		template<typename Impl>
-		class _Drawable_<Impl, ctl::tag::isCircle> : public crtp<Impl, _Drawable_, ctl::tag::isCircle>
+		/**
+		 * @brief Handles drawing of CircleFrame
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Frame<mth::Circle<int, int>>, Full, Impl> : public Impl
 		{
 		public:
-			auto &circle() const
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws the generated circle
+			 */
+			auto circle() const -> void
 			{
-				_draw_(SDL_RenderDrawPoints);
-				return *this;
+				const auto r = SDL_RenderDrawPoints(this->renderer()->get(), m_cache.data(), m_cache.size());
+				ASSERT(r == 0, SDL_GetError());
 			}
-
-			auto &filled_circle() const
+			/**
+			 * @brief Draws the generated circle filled
+			 */
+			auto filled_circle() const -> void
 			{
-				_draw_(SDL_RenderDrawLines);
-				return *this;
+				const auto r = SDL_RenderDrawLines(this->renderer()->get(), m_cache.data(), m_cache.size());
+				ASSERT(r == 0, SDL_GetError());
 			}
+			/**
+			 * @brief Draws the generated presicion circle
+			 */
+			auto circle_p() const -> void { filled_circle(); }
 
-			auto &draw_p(int pres) const
+			/**
+			 * @brief Generate circle and store it into cache
+			 * @return this
+			 */
+			auto generate() -> auto &
 			{
-				auto *pthis = this->underlying();
+				const auto d = this->obj()->shape().r * 2;
 
-				std::vector<SDL_Point> ps;
-				ps.reserve(pres + 1);
-
-				for (size_t i = 0; i < pres; ++i)
-				{
-					const auto x = to_radians(360.f / pres * (i + 1.f));
-					ps[i]		 = { static_cast<int>(pthis->obj()->shape().r * std::cos(x) + pthis->obj()->shape().x),
-								 static_cast<int>(pthis->obj()->shape().r * std::sin(x) + pthis->obj()->shape().y) };
-				}
-				ps.back() = ps.front();
-
-				if (SDL_RenderDrawLines(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-					throw std::runtime_error(SDL_GetError());
-
-				return *this;
-			}
-
-		private:
-			void _draw_(int (*func)(SDL_Renderer *, const SDL_Point *, int)) const
-			{
-				auto *pthis = this->underlying();
-
-				const auto d = pthis->obj()->shape().r * 2;
-
-				mth::Point<int> p(pthis->obj()->shape().r - 1, 0);
+				mth::Point<int> p(this->obj()->shape().r - 1, 0);
 				mth::Point<int> tp(1, 1);
 
 				int err = tp.x - d;
 
 				while (p.x >= p.y)
 				{
-					const std::array<SDL_Point, 8> ps = {
-						SDL_Point{ pthis->obj()->shape().x + p.x, pthis->obj()->shape().y + p.y },
-						{ pthis->obj()->shape().x - p.x, pthis->obj()->shape().y + p.y },
-						{ pthis->obj()->shape().x + p.x, pthis->obj()->shape().y - p.y },
-						{ pthis->obj()->shape().x - p.x, pthis->obj()->shape().y - p.y },
-						{ pthis->obj()->shape().x + p.y, pthis->obj()->shape().y + p.x },
-						{ pthis->obj()->shape().x - p.y, pthis->obj()->shape().y + p.x },
-						{ pthis->obj()->shape().x + p.y, pthis->obj()->shape().y - p.x },
-						{ pthis->obj()->shape().x - p.y, pthis->obj()->shape().y - p.x }
-					};
-
-					if (func(pthis->renderer()->get(), ps.data(), ps.size()) != 0)
-						throw std::runtime_error(SDL_GetError());
+					m_cache.insert(m_cache.end(),
+								   { SDL_Point{ this->obj()->shape().x + p.x, this->obj()->shape().y + p.y },
+									 { this->obj()->shape().x - p.x, this->obj()->shape().y + p.y },
+									 { this->obj()->shape().x + p.x, this->obj()->shape().y - p.y },
+									 { this->obj()->shape().x - p.x, this->obj()->shape().y - p.y },
+									 { this->obj()->shape().x + p.y, this->obj()->shape().y + p.x },
+									 { this->obj()->shape().x - p.y, this->obj()->shape().y + p.x },
+									 { this->obj()->shape().x + p.y, this->obj()->shape().y - p.x },
+									 { this->obj()->shape().x - p.y, this->obj()->shape().y - p.x } });
 
 					if (err <= 0)
 					{
@@ -218,106 +174,190 @@ namespace ctl::sdl
 						err += tp.x - d;
 					}
 				}
+
+				return *this;
 			}
-		};
 
-		template<typename Impl>
-		class _Drawable_<Impl, ctl::tag::isLine> : public crtp<Impl, _Drawable_, ctl::tag::isLine>
-		{
-		public:
-			void line() const
+			/**
+			 * @brief Generate circle using a certain precision
+			 *
+			 * @param pres The number of edges the circle will have
+			 * @return this
+			 */
+			auto generate_p(int pres) -> auto &
 			{
-				auto *pthis = this->underlying();
+				m_cache.reserve(pres + 1);
 
-				if (SDL_RenderDrawLine(pthis->renderer()->get(), pthis->obj()->shape().x1, pthis->obj()->shape().y1,
-									   pthis->obj()->shape().x2, pthis->obj()->shape().y2)
-					!= 0)
-					throw std::runtime_error(SDL_GetError());
-			}
-		};
+				for (size_t i = 0; i < pres; ++i)
+				{
+					const auto x = deg_to_rad(360.f / pres * (i + 1.F));
+					m_cache[i]	 = { static_cast<int>(this->obj()->shape().r * std::cos(x) + this->obj()->shape().x),
+									 static_cast<int>(this->obj()->shape().r * std::sin(x) + this->obj()->shape().y) };
+				}
+				m_cache.back() = m_cache.front();
 
-		template<typename Impl>
-		class _Drawable_<Impl, ctl::tag::isPoint> : public crtp<Impl, _Drawable_, ctl::tag::isPoint>
-		{
-		public:
-			void point() const
-			{
-				auto *pthis = this->underlying();
-
-				if (SDL_RenderDrawPoint(pthis->renderer()->get(), pthis->obj()->shape().x, pthis->obj()->shape().y)
-					!= 0)
-					throw std::runtime_error(SDL_GetError());
-			}
-		};
-
-		template<typename Impl>
-		class _Drawable_<Impl, tag::isMultiShape> : public crtp<Impl, _Drawable_, tag::isMultiShape>
-		{
-		public:
-			auto &all() const
-			{
-				auto *pthis = this->underlying();
-
-				std::apply([this](auto &&... arg) { (this->_draw_handler_(arg), ...); }, pthis->obj()->tuple_data());
-
-				return *pthis;
+				return *this;
 			}
 
 		private:
-			template<typename T>
-			void _draw_handler_(T &arg) const
+			std::vector<SDL_Point> m_cache;
+		};
+
+		/**
+		 * @brief Handles drawing of LineFrame
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Frame<mth::Line<int>>, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws the line
+			 */
+			void line() const
 			{
-				using tag_t = typename T::value_type::tag;
-				auto *pthis = this->underlying();
-
-				if constexpr (std::is_same_v<ctl::tag::isRect, tag_t>)
-					SDL_RenderDrawRects(pthis->renderer()->get(), arg.front().rect_ptr(), arg.size());
-
-				else if constexpr (std::is_same_v<ctl::tag::isLine, tag_t>)
-					SDL_RenderDrawLines(pthis->renderer()->get(), arg.front().point_ptr(), arg.size() << 1);
-
-				else if constexpr (std::is_same_v<ctl::tag::isPoint, tag_t>)
-					SDL_RenderDrawLines(pthis->renderer()->get(), arg.front().point_ptr(), arg.size());
-
-				else
-					assert(false && "Type is not supported for mass drawing.");
-				// static_assert(false, "Type is not supported for mass drawing.");
+				const auto r =
+					SDL_RenderDrawLine(this->renderer()->get(), this->obj()->shape().x1, this->obj()->shape().y1,
+									   this->obj()->shape().x2, this->obj()->shape().y2);
+				ASSERT(r == 0, SDL_GetError());
 			}
 		};
 
-		template<typename Impl>
-		class _Drawable_<Impl, tag::isAnimation> : public crtp<Impl, _Drawable_, tag::isAnimation>
+		/**
+		 * @brief Handles drawing of PointFrame
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Frame<mth::Point<int>>, Full, Impl> : public Impl
 		{
 		public:
-			void animated()
+			/**
+			 * @brief Draws the point
+			 */
+			void point() const
 			{
-				Impl *const cpthis = this->underlying();
-				cpthis->texture(cpthis->obj()->blit_ani().rect_ptr());
+				const auto r =
+					SDL_RenderDrawPoint(this->renderer()->get(), this->obj()->shape().x, this->obj()->shape().y);
+				ASSERT(r == 0, SDL_GetError());
+			}
+		};
+
+		/**
+		 * @brief Handles mass drawing of Rectangles
+		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_Rect or Rect<int,
+		 * int>.
+		 */
+		template<typename Type, typename Full, typename Impl>
+			requires std::same_as<
+				Type,
+				SDL_Rect> || std::same_as<Type, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws rects
+			 */
+			auto rects() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawRects(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
 			}
 
-			void animated(double angle, const mth::Point<int> &center, SDL_RendererFlip flip)
+			/**
+			 * @brief Draws filled rects
+			 */
+			auto filled_rects() const -> void
 			{
-				const Impl *const cpthis = this->underlying();
-				cpthis->texture(angle, center, flip, &cpthis->obj()->blit_ani());
+				const auto r =
+					SDL_RenderFillRects(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_(const SDL_Rect *ptr) const { return ptr; }
+			auto _ptr_(const mth::Rect<int, int> *ptr) const { return reinterpret_cast<const SDL_Rect *>(ptr); }
+		};
+
+		/**
+		 * @brief Handles mass drawing of Points
+		 * This method of drawing is fast then drawing singular Points. Array is a std::span of SDL_Point or Point<int>.
+		 */
+		template<typename Type, typename Full, typename Impl>
+			requires std::same_as<
+				Type,
+				SDL_Point> || std::same_as<Type, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws Points
+			 */
+			auto points() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawPoints(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_(const SDL_Point *ptr) const { return ptr; }
+			auto _ptr_(const mth::Point<int> *ptr) const { return reinterpret_cast<const SDL_Point *>(ptr); }
+		};
+
+		/**
+		 * @brief Handles drawing of animations
+		 */
+		template<typename Full, typename Impl>
+		class _Drawable_<Animation, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws current animation frame
+			 */
+			void animated() const { this->texture(&this->obj()->blit_ani()); }
+
+			/**
+			 * @brief Draws current animation frame advanced
+			 *
+			 * @param angle Rotation angle
+			 * @param center Center of rotation
+			 * @param flip Texture flip https://wiki.libsdl.org/SDL_RendererFlip#Values
+			 */
+			void animated(double angle, const mth::Point<int> &center, SDL_RendererFlip flip) const
+			{
+				this->texture(angle, center, flip, &this->obj()->blit_ani());
 			}
 		};
 
 	} // namespace detail
 
-	template<typename T>
-	using Draw = FunctionalR<T, detail::_Drawable_>;
+	// -----------------------------------------------------------------------------
+	// Drawing Extension
+	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Type for drawing type construction
+	 * @tparam T Object to draw for type
+	 */
 	template<typename T>
-	class Drawable : public T
+	using Draw = typename Filter<detail::_Drawable_, FunctorR<T>, T>::type;
+
+	/**
+	 * @brief Shows drawing options for object
+	 *
+	 * @param ptr ptr to object
+	 * @param r ptr to renderer
+	 * @return Draw type for further options
+	 */
+	template<typename _T>
+	auto draw(_T *ptr, Renderer *r)
 	{
-	public:
-		using base_t = T;
-		using tag_t	 = tag::isUnassigned;
-
-		using T::T;
-
-		auto draw(Renderer *r) noexcept { return Draw<Drawable>(this, r); }
-		auto draw(Renderer *r) const noexcept { return Draw<const Drawable>(this, r); }
-	};
+		return Draw<_T>(ptr, r);
+	}
 
 } // namespace ctl::sdl

@@ -1,12 +1,21 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "../Traits.h"
+#include "../BasicTypes.h"
+
 #include <cassert>
 #include <tuple>
 #include <type_traits>
+#include <concepts>
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Functor CRTP using Tags
+	// -----------------------------------------------------------------------------
+
 	namespace detail
 	{
 		template<template<typename, typename> class Util, typename Impl, typename... T>
@@ -35,6 +44,10 @@ namespace ctl::sdl
 		{
 		};
 	} // namespace detail
+
+	// -----------------------------------------------------------------------------
+	// Tags
+	// -----------------------------------------------------------------------------
 
 	namespace tag
 	{
@@ -84,25 +97,17 @@ namespace ctl::sdl
 	template<typename T, template<typename, typename...> class crtp_t, typename... other_t>
 	struct crtp
 	{
-		T *		 underlying() noexcept { return static_cast<T *>(this); }
-		const T *underlying() const noexcept { return static_cast<const T *>(this); }
+		auto underlying() noexcept -> T * { return static_cast<T *>(this); }
+		auto underlying() const noexcept -> const T * { return static_cast<const T *>(this); }
 
 	private:
-		crtp() {}
+		crtp() = default;
 		friend crtp_t<T, other_t...>;
 	};
 
-	template<typename T, template<typename> class Ex1, template<typename> class... Ex>
-	struct MixBuilder
-	{
-		using type = Ex1<typename MixBuilder<T, Ex...>::type>;
-	};
-
-	template<typename T, template<typename> class Ex>
-	struct MixBuilder<T, Ex>
-	{
-		using type = Ex<T>;
-	};
+	// -----------------------------------------------------------------------------
+	// Functor Base
+	// -----------------------------------------------------------------------------
 
 	class Renderer;
 
@@ -116,25 +121,17 @@ namespace ctl::sdl
 			, m_o(o)
 		{
 		}
-		FunctionalR(T *o)
+		explicit FunctionalR(T *o)
 			: m_o(o)
 		{
 		}
 
-		auto *obj() const noexcept { return m_o; }
-		auto &obj(T *o) noexcept
-		{
-			m_o = o;
-			return *this;
-		}
+		auto obj() const noexcept { return m_o; }
+		auto obj(T *o) noexcept { m_o = o; }
 
-		constexpr auto &renderer(Renderer *const r) noexcept
-		{
-			m_r = r;
-			return *this;
-		}
+		constexpr auto renderer(Renderer *const r) noexcept { m_r = r; }
 
-		constexpr auto *renderer() const noexcept
+		constexpr auto renderer() const noexcept
 		{
 			assert(m_r != nullptr && "Renderer isn't assigned.");
 			return m_r;
@@ -150,16 +147,75 @@ namespace ctl::sdl
 	{
 	public:
 		FunctionalO() = default;
-		FunctionalO(T *o)
+		explicit FunctionalO(T *o)
 			: m_o(o)
 		{
 		}
 
-		auto *obj() noexcept { return m_o; }
-		auto &obj(T *o) noexcept
+		auto obj() const noexcept -> auto * { return m_o; }
+		auto obj(T *o) noexcept -> auto &
 		{
 			m_o = o;
 			return *this;
+		}
+
+	private:
+		T *m_o;
+	};
+
+	// -----------------------------------------------------------------------------
+	// Functor Base (Mixin)
+	// -----------------------------------------------------------------------------
+
+	template<typename T>
+	class FunctorR
+	{
+	public:
+		constexpr FunctorR() = default;
+		constexpr FunctorR(T *o, Renderer *r)
+			: m_r(r)
+			, m_o(o)
+		{
+		}
+		constexpr explicit FunctorR(T *o)
+			: m_o(o)
+		{
+		}
+
+		constexpr auto obj(T *o) noexcept { m_o = o; }
+		constexpr auto obj() const noexcept
+		{
+			assert(m_o != nullptr && "Object isn't assigned.");
+			return m_o;
+		}
+
+		constexpr auto renderer(Renderer *const r) noexcept { m_r = r; }
+		constexpr auto renderer() const noexcept
+		{
+			assert(m_r != nullptr && "Renderer isn't assigned.");
+			return m_r;
+		}
+
+	private:
+		Renderer *m_r = nullptr;
+		T *		  m_o;
+	};
+
+	template<typename T>
+	class FunctorO
+	{
+	public:
+		constexpr FunctorO() = default;
+		constexpr explicit FunctorO(T *o)
+			: m_o(o)
+		{
+		}
+
+		constexpr auto obj(T *o) noexcept { m_o = o; }
+		constexpr auto obj() noexcept
+		{
+			assert(m_o != nullptr && "Object isn't assigned.");
+			return m_o;
 		}
 
 	private:

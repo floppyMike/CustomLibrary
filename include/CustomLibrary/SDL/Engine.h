@@ -15,6 +15,10 @@
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// SDL predefined Colors
+	// -----------------------------------------------------------------------------
+
 	static constexpr SDL_Color BLACK  = { 0, 0, 0, 0xFF };
 	static constexpr SDL_Color WHITE  = { 0xFF, 0xFF, 0xFF, 0xFF };
 	static constexpr SDL_Color RED	  = { 0xFF, 0, 0, 0xFF };
@@ -23,13 +27,28 @@ namespace ctl::sdl
 	static constexpr SDL_Color YELLOW = { 0xFF, 0xFF, 0, 0xFF };
 	static constexpr SDL_Color ORANGE = { 0xFF, 0xFF >> 1, 0xFF >> 2, 0xFF };
 
+	// -----------------------------------------------------------------------------
+	// Core
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Handles initalization of SDL2 and its subsystems
+	 */
 	class SDL
 	{
 	public:
-		SDL(const Uint32 &SDLFlags = SDL_INIT_VIDEO);
+		/**
+		 * @brief Initialize SDL2
+		 * @param SDLFlags Flags used for initialization https://wiki.libsdl.org/SDL_Init#Remarks
+		 */
+		explicit SDL(const Uint32 &SDLFlags = SDL_INIT_VIDEO)
+		{
+			if (SDL_Init(SDLFlags) < 0)
+				throw std::runtime_error(SDL_GetError());
+		}
 
 		/**
-		 * @summary frees the subsystems
+		 * @brief frees the subsystems
 		 */
 		virtual ~SDL()
 		{
@@ -40,11 +59,11 @@ namespace ctl::sdl
 		}
 
 		/**
-		 * @summary init SDL_image
+		 * @brief init SDL_image
 		 * @param "flags" flags for initializer
 		 * @exception "Log" if initialization fails
 		 */
-		auto &init_IMG(const int &flags = IMG_INIT_PNG)
+		auto init_IMG(const int &flags = IMG_INIT_PNG) -> auto &
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
@@ -53,15 +72,15 @@ namespace ctl::sdl
 		}
 
 		/**
-		 * @summary init SDL_mixer
-		 * @param "feq" frequency
-		 * @param "format" format
-		 * @param "channels" channels
-		 * @param "chunksize" chunksize
+		 * @brief init SDL_mixer
+		 * @param feq frequency
+		 * @param format format
+		 * @param channels channels
+		 * @param chunksize chunksize
 		 * @exception "Log" if initialization fails
 		 */
-		auto &init_Mix(const int &feq = 44100, const Uint16 &format = MIX_DEFAULT_FORMAT, const int &channels = 2,
-					   const int &chunksize = 2048)
+		auto init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
+			-> auto &
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
 				throw std::runtime_error(SDL_GetError());
@@ -70,10 +89,10 @@ namespace ctl::sdl
 		}
 
 		/**
-		 * @summary init SDL_ttf
+		 * @brief init SDL_ttf
 		 * @exception "Log" if initialization fails
 		 */
-		auto &init_TTF()
+		auto init_TTF() -> auto &
 		{
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
@@ -82,23 +101,61 @@ namespace ctl::sdl
 		}
 
 		/**
-		 * @summary sets a hint
+		 * @brief sets a hint
 		 * @param "name" name of hint
 		 * @param "value" value to set the hint at
 		 */
-		SDL &set_hint(const char *name, const char *value) noexcept;
+		auto set_hint(const char *name, const char *value) noexcept -> SDL &
+		{
+			if (SDL_SetHint(name, value) == 0U)
+				err::g_log.write(err::Logger::Catagory::WARN)
+					<< "SDL: set_hint: " << name << " failed with value " << value;
+
+			return *this;
+		}
 	};
 
+	// -----------------------------------------------------------------------------
+	// Window Interface
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Window Interface for RunLoop
+	 */
 	class IWindow
 	{
 	public:
+		/**
+		 * @brief Takes place when a new iteration begins
+		 */
 		virtual void pre_pass(){};
-		virtual void event(const SDL_Event &){};
+		/**
+		 * @brief Takes place when a new event is caught
+		 * @param e New event
+		 */
+		virtual void event(const SDL_Event &e){};
+		/**
+		 * @brief Used for updating your stuff per iteration
+		 */
 		virtual void update(){};
+		/**
+		 * @brief Updates stuff like 'update' but it catches up when lag occures
+		 */
 		virtual void fixed_update(){};
+		/**
+		 * @brief Used to render the objects drawn to the buffer
+		 */
 		virtual void render(){};
 	};
 
+	// -----------------------------------------------------------------------------
+	// Runtime Loops
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Basic SDL2 runtime frame used by the application
+	 * @tparam ImplWin Window type -> Default: IWindow
+	 */
 	template<typename ImplWin = IWindow>
 	class RunLoop
 	{
@@ -108,11 +165,30 @@ namespace ctl::sdl
 	public:
 		RunLoop() = default;
 
+		/**
+		 * @brief Starts the runloop of the application
+		 * @param fps Hz of the amound of frames per second
+		 */
 		void run(size_t fps);
 
-		ImplWin &add_window(ImplWin *win);
+		/**
+		 * @brief Add a Window to be used
+		 * 
+		 * @param win Window ptr
+		 * @return Windows reference
+		 */
+		auto add_window(ImplWin *win) -> ImplWin &;
 
+		/**
+		 * @brief Get the frames per second in Hz
+		 * @return double 
+		 */
 		constexpr auto fps() const noexcept { return m_fps; }
+		/**
+		 * @brief Get the movment delta
+		 * This value is used to make object movment in update to be independant of the fps
+		 * @return double
+		 */
 		constexpr auto delta() const noexcept { return m_delta; }
 
 	private:
@@ -121,25 +197,6 @@ namespace ctl::sdl
 		double m_fps   = 0.;
 		double m_delta = 0.;
 	};
-
-	//----------------------------------------------
-	// Implementation
-	//----------------------------------------------
-
-	inline SDL::SDL(const Uint32 &SDLFlags)
-	{
-		if (SDL_Init(SDLFlags) < 0)
-			throw std::runtime_error(SDL_GetError());
-	}
-
-	inline SDL &SDL::set_hint(const char *name, const char *value) noexcept
-	{
-		if (!SDL_SetHint(name, value))
-			err::g_log.write(err::Logger::Catagory::WARN)
-				<< "SDL: set_hint: " << name << " failed with value " << value;
-
-		return *this;
-	}
 
 	template<typename ImplWin>
 	inline void RunLoop<ImplWin>::run(size_t fps)
@@ -191,16 +248,10 @@ namespace ctl::sdl
 	}
 
 	template<typename ImplWin>
-	inline ImplWin &RunLoop<ImplWin>::add_window(ImplWin *win)
+	inline auto RunLoop<ImplWin>::add_window(ImplWin *win) -> ImplWin &
 	{
 		return *m_windows.emplace_back(win);
 	}
-
-	// template<typename ImplWin>
-	// inline void RunLoop<ImplWin>::removWindow(typename std::vector<ImplWin>::iterator iter)
-	//{
-	//	m_windows.erase(iter);
-	//}
 
 	template<typename ImplWin>
 	template<typename... T>

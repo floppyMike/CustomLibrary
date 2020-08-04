@@ -5,7 +5,6 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "../Tags.h"
 #include "../Traits.h"
 
 #include "Renderer.h"
@@ -13,138 +12,199 @@
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Predefinitions
+	// -----------------------------------------------------------------------------
+
+	class Texture;
+	class Text;
+	class Music;
+	class Font;
+
+	// -----------------------------------------------------------------------------
+	// Loader Implementations
+	// -----------------------------------------------------------------------------
+
 	namespace detail
 	{
-		template<typename, typename>
-		class _LoaderR_
-		{
-		};
+		template<typename, typename, typename>
+		class _Loader_;
 
-		template<typename Impl>
-		class _LoaderR_<Impl, tag::isTexture> : public crtp<Impl, _LoaderR_, tag::isTexture>
+		/**
+		 * @brief Handles Texture Loading
+		 */
+		template<typename Full, typename Impl>
+		class _Loader_<Texture, Full, Impl> : public Impl
 		{
 		public:
-			Impl &surface(SDL_Surface *surface)
+			using Impl::Impl;
+
+			/**
+			 * @brief Loads Texture from Surface
+			 */
+			auto surface(SDL_Surface *surface) const -> void
 			{
-				auto *pthis = this->underlying();
-				pthis->obj()->texture(SDL_CreateTextureFromSurface(pthis->renderer()->get(), surface));
-				return *this->underlying();
+				this->obj()->texture(SDL_CreateTextureFromSurface(this->renderer()->get(), surface));
 			}
 
-			Impl &file(const char *path)
+			/**
+			 * @brief Loads Texture from a file
+			 * @param path Path to File
+			 */
+			auto file(const char *path) -> void
 			{
-				auto *pthis = this->underlying();
-				pthis->obj()->texture(IMG_LoadTexture(pthis->renderer()->get(), path));
-				return *this->underlying();
+				this->obj()->texture(IMG_LoadTexture(this->renderer()->get(), path));
 			}
 
-			Impl &bytes(void *src, int size)
+			/**
+			 * @brief Loads Texture from series of bytes
+			 *
+			 * @param src Byte start address
+			 * @param size Byte array size
+			 */
+			auto bytes(void *src, int size) -> void
 			{
-				auto *pthis = this->underlying();
-				pthis->obj()->texture(IMG_LoadTexture_RW(pthis->renderer()->get(), SDL_RWFromMem(src, size), 1));
-				return *this->underlying();
+				this->obj()->texture(IMG_LoadTexture_RW(this->renderer()->get(), SDL_RWFromMem(src, size), 1));
 			}
 		};
 
-		template<typename Impl>
-		class _LoaderR_<Impl, tag::isText> : public crtp<Impl, _LoaderR_, tag::isText>
+		/**
+		 * @brief Handles Text Loading
+		 */
+		template<typename Full, typename Impl>
+		class _Loader_<Text, Full, Impl> : public Impl
 		{
-			auto &_load_(SDL_Surface *s, const char *text)
+			auto _load_(SDL_Surface *s, const char *text) -> void
 			{
-				auto *pthis = this->underlying();
-				pthis->obj()->text(SDL_CreateTextureFromSurface(pthis->renderer()->get(), s), text);
+				this->obj()->text(SDL_CreateTextureFromSurface(this->renderer()->get(), s), text);
 				SDL_FreeSurface(s);
-
-				return *pthis;
 			}
 
 		public:
-			Impl &solid(TTF_Font *f, const char *text, const SDL_Color &colour = { 0, 0, 0, 0xFF })
+			using Impl::Impl;
+
+			/**
+			 * @brief Loads Text Fast
+			 *
+			 * @param f Font ptr
+			 * @param text Text to draw
+			 * @param color Color of the text -> Default: White
+			 */
+			auto solid(TTF_Font *f, const char *text, const SDL_Color &colour = { 0, 0, 0, 0xFF }) -> void
 			{
 				return _load_(TTF_RenderUTF8_Solid(f, text, colour), text);
 			}
 
-			Impl &shaded(TTF_Font *f, const char *text, const SDL_Color &bg,
-						 const SDL_Color &colour = { 0, 0, 0, 0xFF })
+			/**
+			 * @brief Loads Text with highlighting
+			 *
+			 * @param f Font to use
+			 * @param text Text to draw
+			 * @param bg Background color
+			 * @param colour Foreground color -> Default: White
+			 */
+			auto shaded(TTF_Font *f, const char *text, const SDL_Color &bg, const SDL_Color &colour = { 0, 0, 0, 0xFF })
+				-> void
 			{
 				return _load_(TTF_RenderUTF8_Shaded(f, text, colour, bg), text);
 			}
 
-			Impl &blended(TTF_Font *f, const char *text, const SDL_Color &colour = { 0, 0, 0, 0xFF })
+			/**
+			 * @brief Loads quality Text
+			 *
+			 * @param f Font to use
+			 * @param text Text to draw
+			 * @param colour Foreground color -> Default: White
+			 */
+			auto blended(TTF_Font *f, const char *text, const SDL_Color &colour = { 0, 0, 0, 0xFF }) -> void
 			{
 				return _load_(TTF_RenderUTF8_Blended(f, text, colour), text);
 			}
 
-			Impl &wrapped(TTF_Font *f, const char *text, const Uint16 &wrapper,
-						  const SDL_Color &colour = { 0, 0, 0, 0xFF })
+			/**
+			 * @brief Loads quality Text with newlines
+			 *
+			 * @param f Font to use
+			 * @param text Text to draw
+			 * @param wrapper Character limit till newline
+			 * @param colour Foreground color -> Default: White
+			 */
+			auto wrapped(TTF_Font *f, const char *text, const Uint16 &wrapper,
+						 const SDL_Color &colour = { 0, 0, 0, 0xFF }) -> void
 			{
 				return _load_(TTF_RenderUTF8_Blended_Wrapped(f, text, colour, wrapper), text);
 			}
 		};
 
-		template<typename, typename>
-		class _LoaderO_
-		{
-		};
-
-		template<typename Impl>
-		class _LoaderO_<Impl, tag::isMusic> : public crtp<Impl, _LoaderO_, tag::isMusic>
+		/**
+		 * @brief Handles Music Loading
+		 */
+		template<typename Full, typename Impl>
+		class _Loader_<Music, Full, Impl> : public Impl
 		{
 		public:
-			auto &file(std::string_view path)
-			{
-				if (Mix_Music *temp = Mix_LoadMUS(path.data()); temp)
-					this->underlying()->obj()->music(temp);
-				else
-					throw std::runtime_error(Mix_GetError());
+			using Impl::Impl;
 
-				return *this;
+			/**
+			 * @brief Loads music file
+			 * @param path Path to File
+			 */
+			auto file(std::string_view path) -> void
+			{
+				Mix_Music *temp = Mix_LoadMUS(path.data());
+				ASSERT(temp, Mix_GetError());
+
+				this->obj()->music(temp);
 			}
 		};
 
-		template<typename Impl>
-		class _LoaderO_<Impl, tag::isFont> : public crtp<Impl, _LoaderO_, tag::isFont>
+		/**
+		 * @brief Handles Font Loading
+		 */
+		template<typename Full, typename Impl>
+		class _Loader_<Font, Full, Impl> : public Impl
 		{
 		public:
-			auto &file(const char *path, int pt)
+			using Impl::Impl;
+
+			/**
+			 * @brief Loads font file
+			 *
+			 * @param path Path to find file
+			 * @param pt Font size in pixel
+			 */
+			auto file(const char *path, int pt) -> void
 			{
 				auto *temp = TTF_OpenFont(path, pt);
-				assert(temp != nullptr && "Nothing found at path.");
-				this->underlying()->obj()->font(temp);
-
-				return *this;
+				ASSERT(temp, TTF_GetError());
+				this->obj()->font(temp);
 			}
 		};
 
 	} // namespace detail
 
-	template<typename T>
-	using LoadR = FunctionalR<T, detail::_LoaderR_>;
+	// -----------------------------------------------------------------------------
+	// Loading Extension
+	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Type for loading type construction
+	 * @tparam T Object to load for type
+	 */
 	template<typename T>
-	using LoadO = FunctionalO<T, detail::_LoaderO_>;
+	using Load = typename Filter<detail::_Loader_, FunctorR<T>, T>::type;
 
-	template<typename T>
-	class LoadableR : public T
+	/**
+	 * @brief Shows loading options for object
+	 *
+	 * @param ptr ptr to object
+	 * @param r ptr to renderer
+	 * @return Load type for further options
+	 */
+	template<typename _T>
+	auto load(_T *const ptr, Renderer *r)
 	{
-	public:
-		using base_t = T;
-		using tag_t = tag::isUnassigned;
+		return Load<_T>(ptr, r);
+	}
 
-		using T::T;
-
-		auto load(Renderer *r) noexcept { return LoadR<LoadableR>(this, r); }
-	};
-
-	template<typename T>
-	class LoadableO : public T
-	{
-	public:
-		using base_t = T;
-		using tag_t = tag::isUnassigned;
-
-		using T::T;
-
-		auto load() noexcept { return LoadO<LoadableO>(this); }
-	};
 } // namespace ctl::sdl

@@ -1,31 +1,48 @@
 #pragma once
 
-#include "Tags.h"
+#include "Traits.h"
 
 namespace ctl::mth
 {
+	// -----------------------------------------------------------------------------
+	// Concept
+	// -----------------------------------------------------------------------------
+
 	template<typename T>
+	concept simple_dim = requires(const T d)
+	{
+		{
+			d.w
+		}
+		->arithmetic;
+		{
+			d.h
+		}
+		->arithmetic;
+	};
+
+	// -----------------------------------------------------------------------------
+	// Dim
+	// -----------------------------------------------------------------------------
+
+	template<arithmetic T>
 	class Dim
 	{
-		static_assert(std::is_arithmetic_v<T>, "Type must be arithmetic");
-
 	public:
-		using num_t1 = T;
-		using tag = tag::isDim;
+		constexpr Dim()			   = default;
+		constexpr Dim(const Dim &) = default;
 
-		constexpr Dim() = default;
-		constexpr Dim(const Dim&) = default;
-
-		constexpr Dim& operator=(const Dim&) = default;
+		constexpr auto operator=(const Dim &) -> Dim & = default;
 
 		/**
-		* @summary construct from width and height
-		*/
-		constexpr Dim(const T& pw, const T& ph) noexcept
-			: w(pw), h(ph)
+		 * @summary construct from width and height
+		 */
+		constexpr Dim(const T &pw, const T &ph) noexcept
+			: w(pw)
+			, h(ph)
 		{
 		}
 
 		T w, h;
 	};
-}
+} // namespace ctl::mth

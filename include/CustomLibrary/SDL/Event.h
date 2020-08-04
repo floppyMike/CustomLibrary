@@ -7,12 +7,15 @@
 
 namespace ctl::sdl
 {
+	/**
+	 * @brief Manages a custom event
+	 */
 	class UserEvent
 	{
 	public:
 		/**
-		 * @summary construct SDL_Event and register type
-		 * @exception "Log" failure at registering event
+		 * @brief construct SDL_Event and register type
+		 * @exception std::runtime_error failure at registering event
 		 */
 		UserEvent()
 		{
@@ -20,59 +23,75 @@ namespace ctl::sdl
 
 			m_event.type = SDL_RegisterEvents(1);
 			if (m_event.type == std::numeric_limits<Uint32>::max())
-				throw std::runtime_error("UserEvent: event not registered.");
+				throw std::runtime_error("Event not registered.");
 		}
 
 		/**
-		 * @summary pushes event onto SDL event queue
+		 * @brief pushes event onto SDL event queue
 		 */
 		void push_event() noexcept
 		{
 			if (SDL_PushEvent(&m_event) < 0)
-				err::g_log.write(err::Logger::Catagory::WARN, SDL_GetError());
+				std::cerr << SDL_GetError() << std::endl;
 		}
 
 		/**
-		 * @summary const access for event type
+		 * @brief access event type
+		 * @return Uint32
 		 */
-		constexpr Uint32 type() const noexcept { return m_event.type; }
+		[[nodiscard]] constexpr auto type() const noexcept { return m_event.type; }
 
-		constexpr Uint32 user_type() const noexcept { return m_event.user.type; }
-		constexpr auto & user_type(Uint32 t) noexcept
+		/**
+		 * @brief Get the user type
+		 * @return Uint32
+		 */
+		[[nodiscard]] constexpr auto user_type() const noexcept { return m_event.user.type; }
+		/**
+		 * @brief Set the user type
+		 * @param t new user type
+		 */
+		constexpr auto user_type(Uint32 t) noexcept { m_event.user.type = t; }
+
+		/**
+		 * @brief Get user event code
+		 */
+		[[nodiscard]] constexpr auto code() const noexcept { return m_event.user.code; }
+		/**
+		 * @brief Set user event code
+		 * @param code Code to use
+		 */
+		constexpr auto code(const Sint32 &code) noexcept -> void { m_event.user.code = code; }
+
+		/**
+		 * @brief Get set user data
+		 * @return std::pair<void *, void *>
+		 */
+		[[nodiscard]] constexpr auto data() const noexcept -> std::pair<void *, void *>
 		{
-			m_event.user.type = t;
-			return *this;
+			return { m_event.user.data1, m_event.user.data2 };
 		}
-
 		/**
-		 * @summary access for code of event
+		 * @brief Set user data
 		 */
-		constexpr Sint32	 code() const noexcept { return m_event.user.code; }
-		constexpr UserEvent &code(const Sint32 &code) noexcept
-		{
-			m_event.user.code = code;
-			return *this;
-		}
-
-		/**
-		 * @summary access for data pointer of event
-		 */
-		constexpr std::pair<void *, void *> data() const noexcept { return { m_event.user.data1, m_event.user.data2 }; }
-		constexpr UserEvent &				data(void *data1, void *data2) noexcept
+		constexpr auto data(void *data1, void *data2) noexcept
 		{
 			m_event.user.data1 = data1;
 			m_event.user.data2 = data2;
-			return *this;
 		}
 
 	private:
 		SDL_Event m_event;
 	};
 
+	/**
+	 * @brief Request to mouse position
+	 * @return Point
+	 */
 	auto mouse_position()
 	{
 		mth::Point<int> pos;
 		SDL_GetMouseState(&pos.x, &pos.y);
 		return pos;
 	}
+
 } // namespace ctl::sdl

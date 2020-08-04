@@ -30,17 +30,17 @@ namespace ctl::sdl
 				SDL_DestroyWindow(m_window), m_window = nullptr;
 		}
 
-		constexpr auto *get() noexcept
+		constexpr auto get() noexcept
 		{
 			_win_exist_();
 			return m_window;
 		}
-		auto ID() const noexcept
+		[[nodiscard]] auto ID() const noexcept
 		{
 			_win_exist_();
 			return SDL_GetWindowID(m_window);
 		}
-		auto dim() const noexcept
+		[[nodiscard]] auto dim() const noexcept
 		{
 			_win_exist_();
 			mth::Dim<int> size;

@@ -7,56 +7,90 @@
 
 namespace ctl::sdl
 {
+	// -----------------------------------------------------------------------------
+	// Predefinitions
+	// -----------------------------------------------------------------------------
+
+	class Renderer;
+
+	template<typename>
+	class Delayed;
+
+	// -----------------------------------------------------------------------------
+	// Render Implementation
+	// -----------------------------------------------------------------------------
+
 	namespace detail
 	{
-		template<typename, typename>
-		class _Render_
-		{
-		};
+		template<typename, typename, typename>
+		class _Render_;
 
-		template<typename Impl>
-		class _Render_<Impl, tag::isRenderDelay> : public crtp<Impl, _Render_, tag::isRenderDelay>
+		/**
+		 * @brief Handles rendering of delayed renderer
+		 */
+		template<typename Full, typename Impl>
+		class _Render_<Delayed<Nonesuch>, Full, Impl> : public Impl
 		{
 		public:
-			_Render_() = default;
+			using Impl::Impl;
 
+			/**
+			 * @brief Render object and automatically lock it
+			 */
 			void locking_render()
 			{
-				auto *const pthis = this->underlying();
-
-				pthis->render();
-				pthis->obj()->do_render(false);
+				this->render();
+				this->obj()->do_render(false);
 			}
 		};
 
-		template<typename Impl>
-		class _Render_<Impl, tag::isRenderer> : public crtp<Impl, _Render_, tag::isRenderer>
+		/**
+		 * @brief Handles rendering of renderer
+		 */
+		template<typename Full, typename Impl>
+		class _Render_<Renderer, Full, Impl> : public Impl
 		{
 		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Fill the buffer with a color
+			 * @param col color to use
+			 */
 			void fill(const SDL_Color &col)
 			{
-				auto *pthis = this->underlying();
-
-				SDL_SetRenderDrawColor(pthis->obj()->get(), col.r, col.g, col.b, col.a);
-				SDL_RenderClear(pthis->obj()->get());
+				SDL_SetRenderDrawColor(this->obj()->get(), col.r, col.g, col.b, col.a);
+				SDL_RenderClear(this->obj()->get());
 			}
 
-			void render() { SDL_RenderPresent(this->underlying()->obj()->get()); }
+			/**
+			 * @brief Renders the buffer
+			 */
+			void render() { SDL_RenderPresent(this->obj()->get()); }
 		};
 	} // namespace detail
 
-	template<typename T>
-	using Render = FunctionalO<T, detail::_Render_>;
+	// -----------------------------------------------------------------------------
+	// Render Extension
+	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Type for rendering type construction
+	 * @tparam T Object to Render for type
+	 */
 	template<typename T>
-	class Renderable : public T
+	using Render = typename Filter<detail::_Render_, FunctorO<T>, T>::type;
+
+	/**
+	 * @brief Shows rendering options for object
+	 *
+	 * @param ptr ptr to object
+	 * @return Render type for further options
+	 */
+	template<typename _T>
+	auto render(_T *const ptr)
 	{
-	public:
-		using base_t = T;
-		using tag_t = tag::isUnassigned;
+		return Render<_T>(ptr);
+	}
 
-		using T::T;
-
-		auto render() const noexcept { return Render<const Renderable>(this); }
-	};
 } // namespace ctl::sdl
