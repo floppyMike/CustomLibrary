@@ -41,7 +41,7 @@ namespace ctl::sdl
 		 * @brief Initialize SDL2
 		 * @param SDLFlags Flags used for initialization https://wiki.libsdl.org/SDL_Init#Remarks
 		 */
-		explicit SDL(const Uint32 &SDLFlags = SDL_INIT_VIDEO)
+		explicit SDL(Uint32 SDLFlags = SDL_INIT_VIDEO)
 		{
 			if (SDL_Init(SDLFlags) < 0)
 				throw std::runtime_error(SDL_GetError());
@@ -61,9 +61,9 @@ namespace ctl::sdl
 		/**
 		 * @brief init SDL_image
 		 * @param "flags" flags for initializer
-		 * @exception "Log" if initialization fails
+		 * @exception std::runtime_error if initialization fails
 		 */
-		auto init_IMG(const int &flags = IMG_INIT_PNG) -> auto &
+		auto init_IMG(int flags = IMG_INIT_PNG) -> auto &
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
