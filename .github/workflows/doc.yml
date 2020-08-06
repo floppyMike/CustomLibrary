@@ -1,0 +1,42 @@
+name: Docs
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  
+jobs:
+  build:
+
+    runs-on: ubuntu-lastest
+
+    steps:
+	- name: Build Doxygen
+	  run: cd ~
+	  	&& sudo apt install clang-10 libclang-10-dev flex bison libclang-3.8-dev libc++-dev git
+	  	&& git clone https://github.com/doxygen/doxygen.git
+		&& mkdir doxygen/build
+		&& cd doxygen/build
+		&& cmake -G "Unix Makefiles" -Duse_libclang=ON ..
+		&& make
+		
+    - name: Requirements
+      run: sudo apt install python3-sphinx
+        && sudo pip3 install sphinx-rtd-theme breathe sphinx-sitemap exhale
+		
+    - name: Checkout repo
+      uses: actions/checkout@1.0.0
+	  
+    - name: Build docs
+      run: cd doc
+        && make html
+        && cd _build/html
+        && touch .nojekyll
+		
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: cmake-proj
+        FOLDER: doc/_build/html
