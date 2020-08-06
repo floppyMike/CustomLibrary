@@ -13,7 +13,8 @@ jobs:
     steps:
         - name: Build Doxygen
           run: cd ~
-            && sudo apt-add-repository "deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 InRelease" 
+            && sudo wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -
+            && sudo apt-add-repository "deb http://llvm.org/apt/trusty/ llvm-toolchain-trusty-3.4 main" 
             && sudo apt update
             && sudo apt install clang-10 libclang-10-dev flex bison libc++-dev git libclang-3.4-dev
             && git clone https://github.com/doxygen/doxygen.git
