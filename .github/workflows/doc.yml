@@ -13,7 +13,8 @@ jobs:
     steps:
         - name: Build Doxygen
           run: sudo apt update && cd ~
-            && sudo apt install clang-10 libclang-10-dev flex bison libclang-3.9-dev libc++-dev git
+            && sudo apt install clang-10 libclang-10-dev flex bison libc++-dev git
+            && sudo cp -R /usr/lib/llvm-10/include/clang-c /usr/include
             && git clone https://github.com/doxygen/doxygen.git
             && mkdir doxygen/build
             && cd doxygen/build
