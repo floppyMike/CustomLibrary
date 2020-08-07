@@ -15,8 +15,7 @@ help:
 .PHONY: help Makefile clean
 
 clean:
-	rm -rf _build/xml/ api/
-	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	rm -rf _build/xml/ _build/doctrees/ api/
 
 .PHONY: help Makefile
 

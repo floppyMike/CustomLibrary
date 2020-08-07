@@ -2,7 +2,8 @@
 build/
 .clangd/
 .clang-tidy
-_build/
+xml/
+doctrees/
 _static/
 _templates/
 api/
