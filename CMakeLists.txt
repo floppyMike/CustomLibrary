@@ -39,4 +39,4 @@ target_include_directories(CustomLibrary INTERFACE ./include)
 # Add additional tasks
 
 add_subdirectory("tests")
-add_subdirectory("doc")
+add_subdirectory("doc_gen")
