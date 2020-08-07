@@ -1,0 +1,13 @@
+.. _exhale_typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264:
+
+Typedef ctl::sdl::Load
+======================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Loader.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::Load

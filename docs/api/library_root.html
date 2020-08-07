@@ -1,0 +1,1319 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Library API &mdash; CustomLibrary v3.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace ctl" href="namespace_ctl.html" />
+    <link rel="prev" title="Welcome to CustomLibrary’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> CustomLibrary
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Library API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#full-api">Full API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="namespace_ctl.html">Namespace ctl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_ctl__sdl.html">Namespace ctl::sdl</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_ctl__sdl__detail.html">Namespace ctl::sdl::detail</a></li>
+<li class="toctree-l4"><a class="reference internal" href="namespace_ctl__sdl__tag.html">Namespace ctl::sdl::tag</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1AniFrame.html">Struct AniFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1crtp.html">Template Struct crtp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__Stick__.html">Template Struct _Stick_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html">Template Struct _UnPeeler_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4.html">Template Struct _UnPeeler_&lt; Util, Impl, void &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1Font_1_1Unique__Deleter.html">Struct Font::Unique_Deleter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1Music_1_1Unique__Destructor.html">Struct Music::Unique_Destructor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1Renderer_1_1Unique__Des.html">Struct Renderer::Unique_Des</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.html">Struct Surface::Unique_Destructor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag.html">Template Struct contains_tag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html">Template Struct contains_tag&lt; T, std::void_t&lt; typename T::tag &gt; &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isAnimation.html">Struct isAnimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isFont.html">Struct isFont</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMultiShape.html">Struct isMultiShape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMusic.html">Struct isMusic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderDelay.html">Struct isRenderDelay</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderer.html">Struct isRenderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isText.html">Struct isText</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isTexture.html">Struct isTexture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isUnassigned.html">Struct isUnassigned</a></li>
+<li class="toctree-l4"><a class="reference internal" href="structctl_1_1sdl_1_1Texture_1_1Unique__Destructor.html">Struct Texture::Unique_Destructor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Animation.html">Class Animation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Camera2D.html">Class Camera2D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Delayed.html">Template Class Delayed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable__.html">Template Class _Drawable_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Animation, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Circle&lt; int, int &gt; &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Line&lt; int &gt; &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Point&lt; int &gt; &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Rect&lt; int, int &gt; &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; std::span&lt; Type &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Texture, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader__.html">Template Class _Loader_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Font, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Music, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Text, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Texture, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player__.html">Template Class _Player_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html">Template Class _Player_&lt; Music, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render__.html">Template Class _Render_</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Render_&lt; Delayed&lt; Nonesuch &gt;, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html">Template Class _Render_&lt; Renderer, Full, Impl &gt;</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Font.html">Class Font</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Frame.html">Template Class Frame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalO.html">Template Class FunctionalO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalR.html">Template Class FunctionalR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorO.html">Template Class FunctorO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorR.html">Template Class FunctorR</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1IState.html">Class IState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1IWindow.html">Class IWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Music.html">Class Music</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Pressable.html">Template Class Pressable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Renderer.html">Class Renderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1RunLoop.html">Template Class RunLoop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1SDL.html">Class SDL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1SDLWindow.html">Class SDLWindow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1StateManager.html">Template Class StateManager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Surface.html">Class Surface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Text.html">Class Text</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html">Class Texture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1UserEvent.html">Class UserEvent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="classctl_1_1sdl_1_1Window.html">Class Window</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="function_TypeTraits_8h_1a2c4ccb353805e3b527615c8b2db47aba.html">Template Function ctl::sdl::detail::_peel_(Tuple&lt;_Types…&gt;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954.html">Template Function ctl::sdl::detail::_peel_(_Type)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8.html">Template Function ctl::sdl::draw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732.html">Template Function ctl::sdl::load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_Event_8h_1a95f8a298afdb3dea811979bde77575b2.html">Function ctl::sdl::mouse_position</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_Player_8h_1a1d5d5dd18942e213462825dc4fad6a9c.html">Template Function ctl::sdl::play</a></li>
+<li class="toctree-l4"><a class="reference internal" href="function_Render_8h_1a2855e9a737668952b12e573c510c0547.html">Template Function ctl::sdl::render</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="variable_Animation_8h_1a8fc4c27af370cd42c4434a33c26337c2.html">Variable ctl::sdl::animation_iter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1aa01ea01fdaf83249af9699b048118da1.html">Variable ctl::sdl::BLACK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1a9a9d269cc2ce7f529da5d3835c777486.html">Variable ctl::sdl::BLUE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1a0125a09315f6870a962d7f2e3e8f72f6.html">Variable ctl::sdl::GREEN</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1a424b14e79116139031fe39ae7423312d.html">Variable ctl::sdl::ORANGE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1af5e35938d2f7738c2371ab48ab534ad9.html">Variable ctl::sdl::RED</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194.html">Variable ctl::sdl::tag::contains_tag_v</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1a5c15189ce50aa565b226ac0ad0ec9a97.html">Variable ctl::sdl::WHITE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_Engine_8h_1abe792eabca02be724eaa569cf4240038.html">Variable ctl::sdl::YELLOW</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a.html">Typedef ctl::sdl::CircleFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063.html">Typedef ctl::sdl::Draw</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Animation_8h_1a1a529d3a0e3b791d4a259dae73b798a8.html">Typedef ctl::sdl::EAnimation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1af84a33b9b956a1a5d37fd913c9a93f6a.html">Typedef ctl::sdl::ECircleFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Text_8h_1a5e9b25376feb4d4b0a473453d928ca44.html">Typedef ctl::sdl::EFont</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1a8be4149437a0a770097279472dc173df.html">Typedef ctl::sdl::ELineFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Music_8h_1abade68e8e2a579d39a4cbc9dffcece40.html">Typedef ctl::sdl::EMusic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1ab6bb7dc7af51c81675c75d043965760f.html">Typedef ctl::sdl::EPointFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1a48f6975f63260efc0144a3d423675c2d.html">Typedef ctl::sdl::ERectFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Renderer_8h_1a4b5a22ceabbc8995fc369fa7ffae6169.html">Typedef ctl::sdl::ERenderer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Text_8h_1abedb50f010ab9a9f2f06e9c9ddbd0333.html">Typedef ctl::sdl::EText</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Texture_8h_1aaa37d512602e509fd96d970bc81008f0.html">Typedef ctl::sdl::ETexture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b.html">Typedef ctl::sdl::LineFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264.html">Typedef ctl::sdl::Load</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Player_8h_1a5877a803cee7ff68062c9697dc98800c.html">Typedef ctl::sdl::Player</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1aeeef586721b0d9dfc42e805f45405f08.html">Typedef ctl::sdl::PointFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9.html">Typedef ctl::sdl::RectFrame</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51.html">Typedef ctl::sdl::Render</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CustomLibrary</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Library API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/library_root.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="library-api">
+<h1>Library API<a class="headerlink" href="#library-api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="class-hierarchy">
+<h2>Class Hierarchy<a class="headerlink" href="#class-hierarchy" title="Permalink to this headline">¶</a></h2>
+<ul class="treeView" id="class-treeView">
+  <li>
+    <ul class="collapsibleList">
+      <li class="lastChild">Namespace <a href="namespace_ctl.html#namespace-ctl">ctl</a><ul><li class="lastChild">Namespace <a href="namespace_ctl__sdl.html#namespace-ctl-sdl">ctl::sdl</a><ul><li>Namespace <a href="namespace_ctl__sdl__detail.html#namespace-ctl-sdl-detail">ctl::sdl::detail</a><ul><li>Template Struct <a href="structctl_1_1sdl_1_1detail_1_1__Stick__.html#exhale-struct-structctl-1-1sdl-1-1detail-1-1-Stick-">_Stick_</a></li><li>Template Struct <a href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html#exhale-struct-structctl-1-1sdl-1-1detail-1-1-UnPeeler-">_UnPeeler_</a></li><li>Template Struct <a href="structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4.html#exhale-struct-structctl-1-1sdl-1-1detail-1-1-UnPeeler--3-01Util-00-01Impl-00-01void-01-4">_UnPeeler_&lt; Util, Impl, void &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable__.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable-">_Drawable_</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Animation-00-01Full-00-01Impl-01-4">_Drawable_&lt; Animation, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Frame-3-01mth-1-1Circle-3-01int-00-01int-01-4-01-4-00-01Full-00-01Impl-01-4">_Drawable_&lt; Frame&lt; mth::Circle&lt; int, int &gt; &gt;, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Frame-3-01mth-1-1Line-3-01int-01-4-01-4-00-01Full-00-01Impl-01-4">_Drawable_&lt; Frame&lt; mth::Line&lt; int &gt; &gt;, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Frame-3-01mth-1-1Point-3-01int-01-4-01-4-00-01Full-00-01Impl-01-4">_Drawable_&lt; Frame&lt; mth::Point&lt; int &gt; &gt;, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Frame-3-01mth-1-1Rect-3-01int-00-01int-01-4-01-4-00-01Full-00-01Impl-01-4">_Drawable_&lt; Frame&lt; mth::Rect&lt; int, int &gt; &gt;, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01std-1-1span-3-01Type-01-4-00-01Full-00-01Impl-01-4">_Drawable_&lt; std::span&lt; Type &gt;, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Drawable--3-01Texture-00-01Full-00-01Impl-01-4">_Drawable_&lt; Texture, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Loader__.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Loader-">_Loader_</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Loader--3-01Font-00-01Full-00-01Impl-01-4">_Loader_&lt; Font, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Loader--3-01Music-00-01Full-00-01Impl-01-4">_Loader_&lt; Music, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Loader--3-01Text-00-01Full-00-01Impl-01-4">_Loader_&lt; Text, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Loader--3-01Texture-00-01Full-00-01Impl-01-4">_Loader_&lt; Texture, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Player__.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Player-">_Player_</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Player--3-01Music-00-01Full-00-01Impl-01-4">_Player_&lt; Music, Full, Impl &gt;</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Render__.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Render-">_Render_</a></li><li>Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Render--3-01Delayed-3-01Nonesuch-01-4-00-01Full-00-01Impl-01-4">_Render_&lt; Delayed&lt; Nonesuch &gt;, Full, Impl &gt;</a></li><li class="lastChild">Template Class <a href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html#exhale-class-classctl-1-1sdl-1-1detail-1-1-Render--3-01Renderer-00-01Full-00-01Impl-01-4">_Render_&lt; Renderer, Full, Impl &gt;</a></li></ul></li><li>Namespace <a href="namespace_ctl__sdl__tag.html#namespace-ctl-sdl-tag">ctl::sdl::tag</a><ul><li>Template Struct <a href="structctl_1_1sdl_1_1tag_1_1contains__tag.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1contains-tag">contains_tag</a></li><li>Template Struct <a href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1contains-tag-3-01T-00-01std-1-1void-t-3-01typename-01T-1-1tag-01-4-01-4">contains_tag&lt; T, std::void_t&lt; typename T::tag &gt; &gt;</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isAnimation.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isAnimation">isAnimation</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isFont.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isFont">isFont</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isMultiShape.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isMultiShape">isMultiShape</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isMusic.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isMusic">isMusic</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isRenderDelay.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isRenderDelay">isRenderDelay</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isRenderer.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isRenderer">isRenderer</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isText.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isText">isText</a></li><li>Struct <a href="structctl_1_1sdl_1_1tag_1_1isTexture.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isTexture">isTexture</a></li><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1tag_1_1isUnassigned.html#exhale-struct-structctl-1-1sdl-1-1tag-1-1isUnassigned">isUnassigned</a></li></ul></li><li>Struct <a href="structctl_1_1sdl_1_1AniFrame.html#exhale-struct-structctl-1-1sdl-1-1AniFrame">AniFrame</a></li><li>Template Struct <a href="structctl_1_1sdl_1_1crtp.html#exhale-struct-structctl-1-1sdl-1-1crtp">crtp</a></li><li>Class <a href="classctl_1_1sdl_1_1Animation.html#exhale-class-classctl-1-1sdl-1-1Animation">Animation</a></li><li>Class <a href="classctl_1_1sdl_1_1Camera2D.html#exhale-class-classctl-1-1sdl-1-1Camera2D">Camera2D</a></li><li>Template Class <a href="classctl_1_1sdl_1_1Delayed.html#exhale-class-classctl-1-1sdl-1-1Delayed">Delayed</a></li><li>Class <a href="classctl_1_1sdl_1_1Font.html#exhale-class-classctl-1-1sdl-1-1Font">Font</a><ul><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1Font_1_1Unique__Deleter.html#exhale-struct-structctl-1-1sdl-1-1Font-1-1Unique-Deleter">Font::Unique_Deleter</a></li></ul></li><li>Template Class <a href="classctl_1_1sdl_1_1Frame.html#exhale-class-classctl-1-1sdl-1-1Frame">Frame</a></li><li>Template Class <a href="classctl_1_1sdl_1_1FunctionalO.html#exhale-class-classctl-1-1sdl-1-1FunctionalO">FunctionalO</a></li><li>Template Class <a href="classctl_1_1sdl_1_1FunctionalR.html#exhale-class-classctl-1-1sdl-1-1FunctionalR">FunctionalR</a></li><li>Template Class <a href="classctl_1_1sdl_1_1FunctorO.html#exhale-class-classctl-1-1sdl-1-1FunctorO">FunctorO</a></li><li>Template Class <a href="classctl_1_1sdl_1_1FunctorR.html#exhale-class-classctl-1-1sdl-1-1FunctorR">FunctorR</a></li><li>Class <a href="classctl_1_1sdl_1_1IState.html#exhale-class-classctl-1-1sdl-1-1IState">IState</a></li><li>Class <a href="classctl_1_1sdl_1_1IWindow.html#exhale-class-classctl-1-1sdl-1-1IWindow">IWindow</a></li><li>Class <a href="classctl_1_1sdl_1_1Music.html#exhale-class-classctl-1-1sdl-1-1Music">Music</a><ul><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1Music_1_1Unique__Destructor.html#exhale-struct-structctl-1-1sdl-1-1Music-1-1Unique-Destructor">Music::Unique_Destructor</a></li></ul></li><li>Template Class <a href="classctl_1_1sdl_1_1Pressable.html#exhale-class-classctl-1-1sdl-1-1Pressable">Pressable</a></li><li>Class <a href="classctl_1_1sdl_1_1Renderer.html#exhale-class-classctl-1-1sdl-1-1Renderer">Renderer</a><ul><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1Renderer_1_1Unique__Des.html#exhale-struct-structctl-1-1sdl-1-1Renderer-1-1Unique-Des">Renderer::Unique_Des</a></li></ul></li><li>Template Class <a href="classctl_1_1sdl_1_1RunLoop.html#exhale-class-classctl-1-1sdl-1-1RunLoop">RunLoop</a></li><li>Class <a href="classctl_1_1sdl_1_1SDL.html#exhale-class-classctl-1-1sdl-1-1SDL">SDL</a></li><li>Class <a href="classctl_1_1sdl_1_1SDLWindow.html#exhale-class-classctl-1-1sdl-1-1SDLWindow">SDLWindow</a></li><li>Template Class <a href="classctl_1_1sdl_1_1StateManager.html#exhale-class-classctl-1-1sdl-1-1StateManager">StateManager</a></li><li>Class <a href="classctl_1_1sdl_1_1Surface.html#exhale-class-classctl-1-1sdl-1-1Surface">Surface</a><ul><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.html#exhale-struct-structctl-1-1sdl-1-1Surface-1-1Unique-Destructor">Surface::Unique_Destructor</a></li></ul></li><li>Class <a href="classctl_1_1sdl_1_1Text.html#exhale-class-classctl-1-1sdl-1-1Text">Text</a></li><li>Class <a href="classctl_1_1sdl_1_1Texture.html#exhale-class-classctl-1-1sdl-1-1Texture">Texture</a><ul><li class="lastChild">Struct <a href="structctl_1_1sdl_1_1Texture_1_1Unique__Destructor.html#exhale-struct-structctl-1-1sdl-1-1Texture-1-1Unique-Destructor">Texture::Unique_Destructor</a></li></ul></li><li>Class <a href="classctl_1_1sdl_1_1UserEvent.html#exhale-class-classctl-1-1sdl-1-1UserEvent">UserEvent</a></li><li class="lastChild">Class <a href="classctl_1_1sdl_1_1Window.html#exhale-class-classctl-1-1sdl-1-1Window">Window</a></li></ul></li></ul></li>
+    </ul>
+  </li><!-- only tree view element -->
+</ul><!-- /treeView class-treeView --></div>
+<div class="section" id="file-hierarchy">
+<h2>File Hierarchy<a class="headerlink" href="#file-hierarchy" title="Permalink to this headline">¶</a></h2>
+<ul class="treeView" id="file-treeView">
+  <li>
+    <ul class="collapsibleList">
+      <li>File <a href="file_include_CustomLibrary_SDL_Animation.h.html#file-include-CustomLibrary-SDL-Animation.h">Animation.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Button.h.html#file-include-CustomLibrary-SDL-Button.h">Button.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Camera2D.h.html#file-include-CustomLibrary-SDL-Camera2D.h">Camera2D.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Drawable.h.html#file-include-CustomLibrary-SDL-Drawable.h">Drawable.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Engine.h.html#file-include-CustomLibrary-SDL-Engine.h">Engine.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Event.h.html#file-include-CustomLibrary-SDL-Event.h">Event.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Geometry.h.html#file-include-CustomLibrary-SDL-Geometry.h">Geometry.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Loader.h.html#file-include-CustomLibrary-SDL-Loader.h">Loader.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Music.h.html#file-include-CustomLibrary-SDL-Music.h">Music.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Player.h.html#file-include-CustomLibrary-SDL-Player.h">Player.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Render.h.html#file-include-CustomLibrary-SDL-Render.h">Render.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Renderer.h.html#file-include-CustomLibrary-SDL-Renderer.h">Renderer.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_SDLWindow.h.html#file-include-CustomLibrary-SDL-SDLWindow.h">SDLWindow.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_State.h.html#file-include-CustomLibrary-SDL-State.h">State.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Surface.h.html#file-include-CustomLibrary-SDL-Surface.h">Surface.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Text.h.html#file-include-CustomLibrary-SDL-Text.h">Text.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_Texture.h.html#file-include-CustomLibrary-SDL-Texture.h">Texture.h</a></li><li>File <a href="file_include_CustomLibrary_SDL_TypeTraits.h.html#file-include-CustomLibrary-SDL-TypeTraits.h">TypeTraits.h</a></li><li class="lastChild">File <a href="file_include_CustomLibrary_SDL_Window.h.html#file-include-CustomLibrary-SDL-Window.h">Window.h</a></li>
+    </ul>
+  </li><!-- only tree view element -->
+</ul><!-- /treeView file-treeView --></div>
+<div class="section" id="full-api">
+<h2>Full API<a class="headerlink" href="#full-api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="namespaces">
+<h3>Namespaces<a class="headerlink" href="#namespaces" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_ctl.html">Namespace ctl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl.html#namespaces">Namespaces</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_ctl__sdl.html">Namespace ctl::sdl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl.html#namespaces">Namespaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl.html#functions">Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl.html#typedefs">Typedefs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl.html#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_ctl__sdl__detail.html">Namespace ctl::sdl::detail</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl__detail.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl__detail.html#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="namespace_ctl__sdl__tag.html">Namespace ctl::sdl::tag</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl__tag.html#classes">Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="namespace_ctl__sdl__tag.html#variables">Variables</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="classes-and-structs">
+<h3>Classes and Structs<a class="headerlink" href="#classes-and-structs" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1AniFrame.html">Struct AniFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1AniFrame.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1crtp.html">Template Struct crtp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1crtp.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__Stick__.html">Template Struct _Stick_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__Stick__.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__Stick__.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__Stick__.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html">Template Struct _UnPeeler_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler__.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4.html">Template Struct _UnPeeler_&lt; Util, Impl, void &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1Font_1_1Unique__Deleter.html">Struct Font::Unique_Deleter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Font_1_1Unique__Deleter.html#nested-relationships">Nested Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Font_1_1Unique__Deleter.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1Music_1_1Unique__Destructor.html">Struct Music::Unique_Destructor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Music_1_1Unique__Destructor.html#nested-relationships">Nested Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Music_1_1Unique__Destructor.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1Renderer_1_1Unique__Des.html">Struct Renderer::Unique_Des</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Renderer_1_1Unique__Des.html#nested-relationships">Nested Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Renderer_1_1Unique__Des.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.html">Struct Surface::Unique_Destructor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.html#nested-relationships">Nested Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag.html">Template Struct contains_tag</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html">Template Struct contains_tag&lt; T, std::void_t&lt; typename T::tag &gt; &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isAnimation.html">Struct isAnimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isAnimation.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isFont.html">Struct isFont</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isFont.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMultiShape.html">Struct isMultiShape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMultiShape.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMusic.html">Struct isMusic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isMusic.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderDelay.html">Struct isRenderDelay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderDelay.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderer.html">Struct isRenderer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isRenderer.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isText.html">Struct isText</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isText.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isTexture.html">Struct isTexture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isTexture.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isUnassigned.html">Struct isUnassigned</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1tag_1_1isUnassigned.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="structctl_1_1sdl_1_1Texture_1_1Unique__Destructor.html">Struct Texture::Unique_Destructor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Texture_1_1Unique__Destructor.html#nested-relationships">Nested Relationships</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structctl_1_1sdl_1_1Texture_1_1Unique__Destructor.html#struct-documentation">Struct Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Animation.html">Class Animation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Animation.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Animation.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Animation.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Camera2D.html">Class Camera2D</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Camera2D.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Camera2D.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Camera2D.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Delayed.html">Template Class Delayed</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Delayed.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable__.html">Template Class _Drawable_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable__.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Animation, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Circle&lt; int, int &gt; &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Line&lt; int &gt; &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Point&lt; int &gt; &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Frame&lt; mth::Rect&lt; int, int &gt; &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; std::span&lt; Type &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html">Template Class _Drawable_&lt; Texture, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader__.html">Template Class _Loader_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader__.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Font, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Music, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Text, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html">Template Class _Loader_&lt; Texture, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player__.html">Template Class _Player_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player__.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html">Template Class _Player_&lt; Music, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Player___3_01Music_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render__.html">Template Class _Render_</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render__.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html">Template Class _Render_&lt; Delayed&lt; Nonesuch &gt;, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html">Template Class _Render_&lt; Renderer, Full, Impl &gt;</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Font.html">Class Font</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Font.html#nested-relationships">Nested Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Font.html#nested-types">Nested Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Font.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Frame.html">Template Class Frame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Frame.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Frame.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Frame.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalO.html">Template Class FunctionalO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalO.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalO.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalO.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalR.html">Template Class FunctionalR</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalR.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalR.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctionalR.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorO.html">Template Class FunctorO</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorO.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorR.html">Template Class FunctorR</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1FunctorR.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1IState.html">Class IState</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1IState.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1IWindow.html">Class IWindow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1IWindow.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1IWindow.html#derived-type">Derived Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1IWindow.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Music.html">Class Music</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Music.html#nested-relationships">Nested Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Music.html#nested-types">Nested Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Music.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Pressable.html">Template Class Pressable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Pressable.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Pressable.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Pressable.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Renderer.html">Class Renderer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Renderer.html#nested-relationships">Nested Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Renderer.html#nested-types">Nested Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Renderer.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1RunLoop.html">Template Class RunLoop</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1RunLoop.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1SDL.html">Class SDL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1SDL.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1SDLWindow.html">Class SDLWindow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1SDLWindow.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1SDLWindow.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1SDLWindow.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1StateManager.html">Template Class StateManager</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1StateManager.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Surface.html">Class Surface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Surface.html#nested-relationships">Nested Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Surface.html#nested-types">Nested Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Surface.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Text.html">Class Text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Text.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Text.html#base-type">Base Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Text.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html">Class Texture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#nested-relationships">Nested Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#nested-types">Nested Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#inheritance-relationships">Inheritance Relationships</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#base-type">Base Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#derived-types">Derived Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Texture.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1UserEvent.html">Class UserEvent</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1UserEvent.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="classctl_1_1sdl_1_1Window.html">Class Window</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="classctl_1_1sdl_1_1Window.html#class-documentation">Class Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_TypeTraits_8h_1a2c4ccb353805e3b527615c8b2db47aba.html">Template Function ctl::sdl::detail::_peel_(Tuple&lt;_Types…&gt;)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_TypeTraits_8h_1a2c4ccb353805e3b527615c8b2db47aba.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954.html">Template Function ctl::sdl::detail::_peel_(_Type)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8.html">Template Function ctl::sdl::draw</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732.html">Template Function ctl::sdl::load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_Event_8h_1a95f8a298afdb3dea811979bde77575b2.html">Function ctl::sdl::mouse_position</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_Event_8h_1a95f8a298afdb3dea811979bde77575b2.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_Player_8h_1a1d5d5dd18942e213462825dc4fad6a9c.html">Template Function ctl::sdl::play</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_Player_8h_1a1d5d5dd18942e213462825dc4fad6a9c.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="function_Render_8h_1a2855e9a737668952b12e573c510c0547.html">Template Function ctl::sdl::render</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="function_Render_8h_1a2855e9a737668952b12e573c510c0547.html#function-documentation">Function Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="variables">
+<h3>Variables<a class="headerlink" href="#variables" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Animation_8h_1a8fc4c27af370cd42c4434a33c26337c2.html">Variable ctl::sdl::animation_iter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Animation_8h_1a8fc4c27af370cd42c4434a33c26337c2.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1aa01ea01fdaf83249af9699b048118da1.html">Variable ctl::sdl::BLACK</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1aa01ea01fdaf83249af9699b048118da1.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1a9a9d269cc2ce7f529da5d3835c777486.html">Variable ctl::sdl::BLUE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1a9a9d269cc2ce7f529da5d3835c777486.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1a0125a09315f6870a962d7f2e3e8f72f6.html">Variable ctl::sdl::GREEN</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1a0125a09315f6870a962d7f2e3e8f72f6.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1a424b14e79116139031fe39ae7423312d.html">Variable ctl::sdl::ORANGE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1a424b14e79116139031fe39ae7423312d.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1af5e35938d2f7738c2371ab48ab534ad9.html">Variable ctl::sdl::RED</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1af5e35938d2f7738c2371ab48ab534ad9.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194.html">Variable ctl::sdl::tag::contains_tag_v</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1a5c15189ce50aa565b226ac0ad0ec9a97.html">Variable ctl::sdl::WHITE</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1a5c15189ce50aa565b226ac0ad0ec9a97.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="variable_Engine_8h_1abe792eabca02be724eaa569cf4240038.html">Variable ctl::sdl::YELLOW</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="variable_Engine_8h_1abe792eabca02be724eaa569cf4240038.html#variable-documentation">Variable Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="typedefs">
+<h3>Typedefs<a class="headerlink" href="#typedefs" title="Permalink to this headline">¶</a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a.html">Typedef ctl::sdl::CircleFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063.html">Typedef ctl::sdl::Draw</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Animation_8h_1a1a529d3a0e3b791d4a259dae73b798a8.html">Typedef ctl::sdl::EAnimation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Animation_8h_1a1a529d3a0e3b791d4a259dae73b798a8.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1af84a33b9b956a1a5d37fd913c9a93f6a.html">Typedef ctl::sdl::ECircleFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1af84a33b9b956a1a5d37fd913c9a93f6a.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Text_8h_1a5e9b25376feb4d4b0a473453d928ca44.html">Typedef ctl::sdl::EFont</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Text_8h_1a5e9b25376feb4d4b0a473453d928ca44.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1a8be4149437a0a770097279472dc173df.html">Typedef ctl::sdl::ELineFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1a8be4149437a0a770097279472dc173df.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Music_8h_1abade68e8e2a579d39a4cbc9dffcece40.html">Typedef ctl::sdl::EMusic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Music_8h_1abade68e8e2a579d39a4cbc9dffcece40.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1ab6bb7dc7af51c81675c75d043965760f.html">Typedef ctl::sdl::EPointFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1ab6bb7dc7af51c81675c75d043965760f.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1a48f6975f63260efc0144a3d423675c2d.html">Typedef ctl::sdl::ERectFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1a48f6975f63260efc0144a3d423675c2d.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Renderer_8h_1a4b5a22ceabbc8995fc369fa7ffae6169.html">Typedef ctl::sdl::ERenderer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Renderer_8h_1a4b5a22ceabbc8995fc369fa7ffae6169.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Text_8h_1abedb50f010ab9a9f2f06e9c9ddbd0333.html">Typedef ctl::sdl::EText</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Text_8h_1abedb50f010ab9a9f2f06e9c9ddbd0333.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Texture_8h_1aaa37d512602e509fd96d970bc81008f0.html">Typedef ctl::sdl::ETexture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Texture_8h_1aaa37d512602e509fd96d970bc81008f0.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b.html">Typedef ctl::sdl::LineFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264.html">Typedef ctl::sdl::Load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Player_8h_1a5877a803cee7ff68062c9697dc98800c.html">Typedef ctl::sdl::Player</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Player_8h_1a5877a803cee7ff68062c9697dc98800c.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1aeeef586721b0d9dfc42e805f45405f08.html">Typedef ctl::sdl::PointFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1aeeef586721b0d9dfc42e805f45405f08.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9.html">Typedef ctl::sdl::RectFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51.html">Typedef ctl::sdl::Render</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51.html#typedef-documentation">Typedef Documentation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="namespace_ctl.html" class="btn btn-neutral float-right" title="Namespace ctl" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to CustomLibrary’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Michaellu
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

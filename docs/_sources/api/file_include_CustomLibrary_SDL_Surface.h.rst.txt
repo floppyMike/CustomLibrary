@@ -1,0 +1,65 @@
+
+.. _file_include_CustomLibrary_SDL_Surface.h:
+
+File Surface.h
+==============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Surface.h``)
+----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Surface.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../Error.h``
+
+- ``SDL2/SDL.h``
+
+- ``cassert``
+
+- ``memory``
+
+- ``stdexcept``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Texture.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1Surface_1_1Unique__Destructor`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Surface`
+

@@ -1,0 +1,65 @@
+
+.. _program_listing_file_include_CustomLibrary_SDL_Button.h:
+
+Program Listing for File Button.h
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_CustomLibrary_SDL_Button.h>` (``include/CustomLibrary/SDL/Button.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   
+   #include <SDL2/SDL.h>
+   
+   #include <utility>
+   #include <functional>
+   
+   #include "../Collider.h"
+   #include "Geometry.h"
+   
+   namespace ctl::sdl
+   {
+       template<typename T>
+       class Pressable : public T
+       {
+       public:
+           using base = T;
+   
+           using T::T;
+   
+           void input(const SDL_Event &e)
+           {
+               switch (e.type)
+               {
+               case SDL_MOUSEMOTION:
+                   if (collision(mth::Point(e.motion.x, e.motion.y), this->shape()))
+                   {
+                       if (!m_is_inside)
+                           m_is_inside = true;
+                   }
+                   else if (m_is_inside)
+                       m_is_inside = false;
+                   break;
+   
+               case SDL_MOUSEBUTTONDOWN:
+                   if (m_is_inside)
+                       m_func();
+                   break;
+   
+               default: break;
+               }
+           }
+   
+           auto func(std::function<void()> &&f) noexcept -> void { m_func = std::move(f); }
+   
+           auto is_inside() const noexcept { return m_is_inside; }
+   
+       private:
+           bool                  m_is_inside = false;
+           std::function<void()> m_func;
+       };
+   
+   } // namespace ctl::sdl

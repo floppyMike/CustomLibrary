@@ -1,0 +1,13 @@
+.. _exhale_typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9:
+
+Typedef ctl::sdl::RectFrame
+===========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::RectFrame

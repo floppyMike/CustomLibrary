@@ -1,0 +1,20 @@
+
+.. _namespace_ctl:
+
+Namespace ctl
+=============
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl__sdl`

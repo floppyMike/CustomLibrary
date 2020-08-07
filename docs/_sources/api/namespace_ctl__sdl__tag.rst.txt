@@ -1,0 +1,47 @@
+
+.. _namespace_ctl__sdl__tag:
+
+Namespace ctl::sdl::tag
+=======================
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1contains__tag`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isAnimation`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isFont`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isMultiShape`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isMusic`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isRenderDelay`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isRenderer`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isText`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isTexture`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isUnassigned`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194`

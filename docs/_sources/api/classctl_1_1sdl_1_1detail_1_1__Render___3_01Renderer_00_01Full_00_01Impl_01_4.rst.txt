@@ -1,0 +1,25 @@
+.. _exhale_class_classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4:
+
+Template Class _Render_< Renderer, Full, Impl >
+===============================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Render.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Impl``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::detail::_Render_< Renderer, Full, Impl >
+   :members:
+   :protected-members:
+   :undoc-members:

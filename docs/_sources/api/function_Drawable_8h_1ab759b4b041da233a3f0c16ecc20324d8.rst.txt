@@ -1,0 +1,13 @@
+.. _exhale_function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8:
+
+Template Function ctl::sdl::draw
+================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Drawable.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::draw(_T *, Renderer *)

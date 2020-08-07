@@ -1,0 +1,78 @@
+
+.. _file_include_CustomLibrary_SDL_Texture.h:
+
+File Texture.h
+==============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Texture.h``)
+----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Texture.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../Dim.h``
+
+- ``Geometry.h`` (:ref:`file_include_CustomLibrary_SDL_Geometry.h`)
+
+- ``Renderer.h`` (:ref:`file_include_CustomLibrary_SDL_Renderer.h`)
+
+- ``SDL2/SDL.h``
+
+- ``SDL2/SDL_image.h``
+
+- ``Surface.h`` (:ref:`file_include_CustomLibrary_SDL_Surface.h`)
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Animation.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Text.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1Texture_1_1Unique__Destructor`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Texture`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Texture_8h_1aaa37d512602e509fd96d970bc81008f0`
+

@@ -1,0 +1,123 @@
+:orphan:
+
+
+Full API
+========
+
+Directories
+***********
+
+
+.. toctree::
+   :maxdepth: 5
+
+   dir__mnt_d_Users_Michal_source_CustomLibrary_include_CustomLibrary.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir__mnt_d_Users_Michal_source_CustomLibrary_include_CustomLibrary_SDL.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   dir_include.rst
+
+Files
+*****
+
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Animation.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Button.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Camera2D.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Drawable.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Engine.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Event.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Geometry.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Loader.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Music.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Player.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Render.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Renderer.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_SDLWindow.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_State.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Surface.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Text.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Texture.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_TypeTraits.h.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   file_include_CustomLibrary_SDL_Window.h.rst

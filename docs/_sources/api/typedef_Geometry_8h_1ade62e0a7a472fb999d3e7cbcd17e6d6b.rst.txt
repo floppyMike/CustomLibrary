@@ -1,0 +1,13 @@
+.. _exhale_typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b:
+
+Typedef ctl::sdl::LineFrame
+===========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::LineFrame

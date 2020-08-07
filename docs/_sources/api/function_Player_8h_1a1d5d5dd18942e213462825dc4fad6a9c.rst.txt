@@ -1,0 +1,13 @@
+.. _exhale_function_Player_8h_1a1d5d5dd18942e213462825dc4fad6a9c:
+
+Template Function ctl::sdl::play
+================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Player.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::play(_T *const)

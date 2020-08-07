@@ -1,0 +1,25 @@
+.. _exhale_class_classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4:
+
+Template Class _Render_< Delayed< Nonesuch >, Full, Impl >
+==========================================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Render.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Impl``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::detail::_Render_< Delayed< Nonesuch >, Full, Impl >
+   :members:
+   :protected-members:
+   :undoc-members:

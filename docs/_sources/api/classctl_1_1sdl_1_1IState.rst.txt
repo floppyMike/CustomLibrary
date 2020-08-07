@@ -1,0 +1,16 @@
+.. _exhale_class_classctl_1_1sdl_1_1IState:
+
+Class IState
+============
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_State.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::IState
+   :members:
+   :protected-members:
+   :undoc-members:

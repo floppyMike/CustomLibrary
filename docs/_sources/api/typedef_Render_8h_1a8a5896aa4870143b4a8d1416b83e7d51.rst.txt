@@ -1,0 +1,13 @@
+.. _exhale_typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51:
+
+Typedef ctl::sdl::Render
+========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Render.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::Render

@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Program Listing for File Texture.h &mdash; CustomLibrary v3.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/collapsible-lists/css/tree_view.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> CustomLibrary
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">Library API</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CustomLibrary</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Program Listing for File Texture.h</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/program_listing_file_include_CustomLibrary_SDL_Texture.h.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="program-listing-for-file-texture-h">
+<span id="program-listing-file-include-customlibrary-sdl-texture-h"></span><h1>Program Listing for File Texture.h<a class="headerlink" href="#program-listing-for-file-texture-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_include_CustomLibrary_SDL_Texture.h.html#file-include-customlibrary-sdl-texture-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/CustomLibrary/SDL/Texture.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef _CTL_SDL2_TEXTURE_</span>
+<span class="cp">#   define _CTL_SDL2_TEXTURE_</span>
+
+<span class="cp">#   include &lt;SDL2/SDL.h&gt;</span>
+<span class="cp">#   include &lt;SDL2/SDL_image.h&gt;</span>
+
+<span class="cp">#   include &quot;../Dim.h&quot;</span>
+
+<span class="cp">#   include &quot;Surface.h&quot;</span>
+<span class="cp">#   include &quot;Renderer.h&quot;</span>
+<span class="cp">#   include &quot;TypeTraits.h&quot;</span>
+<span class="cp">#   include &quot;Geometry.h&quot;</span>
+
+<span class="k">namespace</span> <span class="n">ctl</span><span class="o">::</span><span class="n">sdl</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Texture</span> <span class="o">:</span> <span class="k">public</span> <span class="n">RectFrame</span>
+    <span class="p">{</span>
+        <span class="k">struct</span> <span class="n">Unique_Destructor</span>
+        <span class="p">{</span>
+            <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="n">SDL_Texture</span> <span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span> <span class="n">SDL_DestroyTexture</span><span class="p">(</span><span class="n">t</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">using</span> <span class="n">base</span> <span class="o">=</span> <span class="n">RectFrame</span><span class="p">;</span>
+
+        <span class="k">using</span> <span class="n">RectFrame</span><span class="o">::</span><span class="n">RectFrame</span><span class="p">;</span>
+
+        <span class="n">Texture</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+
+        <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">texture</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>
+        <span class="p">{</span>
+            <span class="n">assert</span><span class="p">(</span><span class="n">m_texture</span> <span class="o">&amp;&amp;</span> <span class="s">&quot;SDL_Texture is a nullptr.&quot;</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">m_texture</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">auto</span> <span class="n">texture</span><span class="p">(</span><span class="n">SDL_Texture</span> <span class="o">*</span><span class="n">tex</span><span class="p">)</span> <span class="k">noexcept</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+        <span class="p">{</span>
+            <span class="n">assert</span><span class="p">(</span><span class="n">tex</span> <span class="o">&amp;&amp;</span> <span class="s">&quot;SDL_Texture is a nullptr.&quot;</span><span class="p">);</span>
+
+            <span class="n">m_texture</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">tex</span><span class="p">);</span>
+            <span class="n">reset_shape</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="n">reset_shape</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">SDL_QueryTexture</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">().</span><span class="n">w</span><span class="p">,</span> <span class="o">&amp;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">shape</span><span class="p">().</span><span class="n">h</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="n">SDL_GetError</span><span class="p">());</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="n">color_mod</span><span class="p">(</span><span class="k">const</span> <span class="n">SDL_Color</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">re</span> <span class="o">=</span> <span class="n">SDL_SetTextureColorMod</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="n">c</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="n">g</span><span class="p">,</span> <span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">SDL_SetTextureAlphaMod</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="n">c</span><span class="p">.</span><span class="n">a</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">re</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">color_mod</span><span class="p">()</span> <span class="k">const</span>
+        <span class="p">{</span>
+            <span class="n">SDL_Color</span> <span class="n">c</span><span class="p">;</span>
+
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span>
+                <span class="n">SDL_GetTextureColorMod</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">.</span><span class="n">g</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">SDL_GetTextureAlphaMod</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">.</span><span class="n">a</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+
+            <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="n">blend_mode</span><span class="p">(</span><span class="k">const</span> <span class="n">SDL_BlendMode</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">SDL_SetTextureBlendMode</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="n">b</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">blend_mode</span><span class="p">()</span> <span class="k">const</span>
+        <span class="p">{</span>
+            <span class="n">SDL_BlendMode</span> <span class="n">b</span><span class="p">;</span>
+
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">SDL_GetTextureBlendMode</span><span class="p">(</span><span class="n">texture</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+
+            <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">SDL_Texture</span><span class="p">,</span> <span class="n">Unique_Destructor</span><span class="o">&gt;</span> <span class="n">m_texture</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="o">&gt;</span> <span class="n">class</span><span class="p">...</span> <span class="n">Ex</span><span class="o">&gt;</span>
+    <span class="k">using</span> <span class="n">ETexture</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">MixBuilder</span><span class="o">&lt;</span><span class="n">Texture</span><span class="p">,</span> <span class="n">Ex</span><span class="p">...</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+
+<span class="p">}</span> <span class="c1">// namespace ctl::sdl</span>
+
+<span class="cp">#endif </span><span class="c1">// !_CTL_SDL2_TEXTURE_</span>
+
+<span class="c1">//  class ModdedTexture : public BaseTexture</span>
+<span class="c1">//  {</span>
+<span class="c1">//  public:</span>
+<span class="c1">//      ModdedTexture(SDLWindow *engine)</span>
+<span class="c1">//          : BaseTexture(engine) {}</span>
+<span class="c1">//      ModdedTexture(ModdedTexture&amp;&amp; x) = default;</span>
+<span class="c1">//      ModdedTexture(const ModdedTexture&amp; x) = default;</span>
+<span class="c1">//      ModdedTexture&amp; operator=(ModdedTexture&amp;&amp; x) = default;</span>
+<span class="c1">//      ModdedTexture&amp; operator=(const ModdedTexture&amp; x) = default;</span>
+<span class="c1">//</span>
+<span class="c1">//      //Exception: Fail on surface convert or texture creation</span>
+<span class="c1">//      auto&amp; load(SDL_Surface* s)</span>
+<span class="c1">//      {</span>
+<span class="c1">//          SDL_Surface* f_s = SDL_ConvertSurfaceFormat(s, SDL_GetWindowPixelFormat(m_win-&gt;window()), 0);</span>
+<span class="c1">//          if (f_s == nullptr)</span>
+<span class="c1">//              throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);</span>
+<span class="c1">//</span>
+<span class="c1">//          m_texture.reset(SDL_CreateTexture(m_win-&gt;renderer(), SDL_GetWindowPixelFormat(m_win-&gt;window()),</span>
+<span class="c1">// SDL_TEXTUREACCESS_STREAMING, f_s-&gt;w, f_s-&gt;h));           if (!m_texture)                 throw</span>
+<span class="c1">// ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);</span>
+<span class="c1">//</span>
+<span class="c1">//          lock();</span>
+<span class="c1">//          memcpy(m_pixels, f_s-&gt;pixels, f_s-&gt;pitch * f_s-&gt;h);</span>
+<span class="c1">//          unlock();</span>
+<span class="c1">//</span>
+<span class="c1">//          m_pixels = nullptr;</span>
+<span class="c1">//</span>
+<span class="c1">//          m_dim = { f_s-&gt;w, f_s-&gt;h };</span>
+<span class="c1">//</span>
+<span class="c1">//          SDL_FreeSurface(f_s);</span>
+<span class="c1">//          SDL_FreeSurface(s);</span>
+<span class="c1">//</span>
+<span class="c1">//          return *this;</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      auto&amp; load(const mth::Dim &amp;wh, const SDL_TextureAccess &amp;a)</span>
+<span class="c1">//      {</span>
+<span class="c1">//          m_texture.reset(SDL_CreateTexture(m_win-&gt;renderer(), SDL_PIXELFORMAT_RGBA8888, a, wh.w, wh.h));</span>
+<span class="c1">//          if (!m_texture)</span>
+<span class="c1">//              throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);</span>
+<span class="c1">//</span>
+<span class="c1">//          m_dim = wh;</span>
+<span class="c1">//</span>
+<span class="c1">//          return *this;</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      void lock()</span>
+<span class="c1">//      {</span>
+<span class="c1">//          if (m_pixels != nullptr)</span>
+<span class="c1">//              Log::note(&quot;Texture is already locked.&quot;, Log::Sev::WARNING);</span>
+<span class="c1">//</span>
+<span class="c1">//          if (SDL_LockTexture(m_texture.get(), nullptr, &amp;m_pixels, &amp;m_pitch) != 0)</span>
+<span class="c1">//              throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      void unlock()</span>
+<span class="c1">//      {</span>
+<span class="c1">//          if (m_pixels == nullptr)</span>
+<span class="c1">//              Log::note(&quot;Texture is already unlocked.&quot;, Log::Sev::WARNING);</span>
+<span class="c1">//</span>
+<span class="c1">//          SDL_UnlockTexture(m_texture.get());</span>
+<span class="c1">//          m_pixels = nullptr;</span>
+<span class="c1">//          m_pitch = 0;</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      auto&amp; target()</span>
+<span class="c1">//      {</span>
+<span class="c1">//          if (SDL_SetRenderTarget(m_win-&gt;renderer(), m_texture.get()) != 0)</span>
+<span class="c1">//              throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);</span>
+<span class="c1">//</span>
+<span class="c1">//          return *this;</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      auto&amp; cpyPixel(void* p)</span>
+<span class="c1">//      {</span>
+<span class="c1">//          if (m_pixels != nullptr)</span>
+<span class="c1">//              memcpy(m_pixels, p, m_pitch * m_dim.h);</span>
+<span class="c1">//</span>
+<span class="c1">//          return *this;</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      template&lt;typename T = void*&gt;</span>
+<span class="c1">//      constexpr auto pixels() { return static_cast&lt;T&gt;(m_pixels); }</span>
+<span class="c1">//      template&lt;typename T = void*&gt;</span>
+<span class="c1">//      constexpr auto pixel(const NumVec&lt;Uint32, 2&gt; &amp;xy)</span>
+<span class="c1">//      {</span>
+<span class="c1">//          const auto &amp;p = static_cast&lt;T&gt;(m_pixels);</span>
+<span class="c1">//          return p[(xy[0] * m_pitch / 4) + xy[1]];</span>
+<span class="c1">//      }</span>
+<span class="c1">//</span>
+<span class="c1">//      constexpr const auto&amp; pitch() const { return m_pitch; }</span>
+<span class="c1">//      constexpr auto&amp; pitch() { return m_pitch; }</span>
+<span class="c1">//      constexpr auto pixelCount() const { return m_pitch / 4 * m_dim.h; }</span>
+<span class="c1">//</span>
+<span class="c1">//  private:</span>
+<span class="c1">//      void *m_pixels = nullptr;</span>
+<span class="c1">//      int m_pitch = 0;</span>
+<span class="c1">//  };</span>
+<span class="c1">//}</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Michaellu
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

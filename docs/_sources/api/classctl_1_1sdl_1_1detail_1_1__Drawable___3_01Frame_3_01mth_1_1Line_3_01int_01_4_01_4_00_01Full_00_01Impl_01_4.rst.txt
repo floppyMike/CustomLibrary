@@ -1,0 +1,25 @@
+.. _exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4:
+
+Template Class _Drawable_< Frame< mth::Line< int > >, Full, Impl >
+==================================================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Drawable.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Impl``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::detail::_Drawable_< Frame< mth::Line< int > >, Full, Impl >
+   :members:
+   :protected-members:
+   :undoc-members:

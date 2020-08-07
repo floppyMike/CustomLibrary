@@ -1,0 +1,37 @@
+
+.. _program_listing_file_include_CustomLibrary_SDL_Camera2D.h:
+
+Program Listing for File Camera2D.h
+===================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_CustomLibrary_SDL_Camera2D.h>` (``include/CustomLibrary/SDL/Camera2D.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   
+   #include "../BasicTypes.h"
+   
+   namespace ctl::sdl
+   {
+       class Camera2D : public mth::Point<int>
+       {
+       public:
+           using mth::Point<int>::Point;
+   
+           template<typename T>
+           constexpr auto screen_world(const mth::Point<T> &loc) const noexcept -> mth::Point<T>
+           {
+               return loc += *this;
+           }
+   
+           template<typename T>
+           constexpr auto world_screen(mth::Point<T> loc) const noexcept -> mth::Point<T>
+           {
+               return loc -= *this;
+           }
+       };
+   
+   } // namespace ctl::sdl

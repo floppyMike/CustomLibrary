@@ -1,0 +1,139 @@
+
+.. _file_include_CustomLibrary_SDL_TypeTraits.h:
+
+File TypeTraits.h
+=================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/TypeTraits.h``)
+-------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_TypeTraits.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../BasicTypes.h``
+
+- ``../Traits.h``
+
+- ``SDL2/SDL.h``
+
+- ``cassert``
+
+- ``concepts``
+
+- ``tuple``
+
+- ``type_traits``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Animation.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Drawable.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Loader.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Music.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Player.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Render.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Renderer.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Texture.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+- :ref:`namespace_ctl__sdl__detail`
+
+- :ref:`namespace_ctl__sdl__tag`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1crtp`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1detail_1_1__Stick__`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1detail_1_1__UnPeeler__`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1contains__tag`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isAnimation`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isFont`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isMultiShape`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isMusic`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isRenderDelay`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isRenderer`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isText`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isTexture`
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1tag_1_1isUnassigned`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1FunctionalO`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1FunctionalR`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1FunctorO`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1FunctorR`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954`
+
+- :ref:`exhale_function_TypeTraits_8h_1a2c4ccb353805e3b527615c8b2db47aba`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194`
+

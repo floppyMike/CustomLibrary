@@ -1,0 +1,84 @@
+
+.. _file_include_CustomLibrary_SDL_Geometry.h:
+
+File Geometry.h
+===============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Geometry.h``)
+-----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Geometry.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../BasicTypes.h``
+
+- ``../utility.h``
+
+- ``SDL2/SDL.h``
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Button.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Texture.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Frame`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a`
+
+- :ref:`exhale_typedef_Geometry_8h_1af84a33b9b956a1a5d37fd913c9a93f6a`
+
+- :ref:`exhale_typedef_Geometry_8h_1a8be4149437a0a770097279472dc173df`
+
+- :ref:`exhale_typedef_Geometry_8h_1ab6bb7dc7af51c81675c75d043965760f`
+
+- :ref:`exhale_typedef_Geometry_8h_1a48f6975f63260efc0144a3d423675c2d`
+
+- :ref:`exhale_typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b`
+
+- :ref:`exhale_typedef_Geometry_8h_1aeeef586721b0d9dfc42e805f45405f08`
+
+- :ref:`exhale_typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9`
+

@@ -1,0 +1,91 @@
+
+.. _file_include_CustomLibrary_SDL_Loader.h:
+
+File Loader.h
+=============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Loader.h``)
+---------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Loader.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../Traits.h``
+
+- ``Renderer.h`` (:ref:`file_include_CustomLibrary_SDL_Renderer.h`)
+
+- ``SDL2/SDL.h``
+
+- ``SDL2/SDL_image.h``
+
+- ``SDL2/SDL_mixer.h``
+
+- ``SDL2/SDL_ttf.h``
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Music.h`
+
+- :ref:`file_include_CustomLibrary_SDL_Text.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+- :ref:`namespace_ctl__sdl__detail`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Loader___3_01Font_00_01Full_00_01Impl_01_4`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Loader___3_01Music_00_01Full_00_01Impl_01_4`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Loader___3_01Text_00_01Full_00_01Impl_01_4`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Loader___3_01Texture_00_01Full_00_01Impl_01_4`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264`
+

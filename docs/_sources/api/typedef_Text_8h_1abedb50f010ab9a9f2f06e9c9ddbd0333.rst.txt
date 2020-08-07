@@ -1,0 +1,13 @@
+.. _exhale_typedef_Text_8h_1abedb50f010ab9a9f2f06e9c9ddbd0333:
+
+Typedef ctl::sdl::EText
+=======================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Text.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::EText

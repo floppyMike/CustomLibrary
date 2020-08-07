@@ -1,0 +1,15 @@
+.. _dir__mnt_d_Users_Michal_source_CustomLibrary_include_CustomLibrary_SDL:
+
+
+Directory SDL
+=============
+
+
+|exhale_lsh| :ref:`Parent directory <dir__mnt_d_Users_Michal_source_CustomLibrary_include_CustomLibrary>` (``/mnt/d/Users/Michal/source/CustomLibrary/include/CustomLibrary``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+*Directory path:* ``/mnt/d/Users/Michal/source/CustomLibrary/include/CustomLibrary/SDL``
+
+
+

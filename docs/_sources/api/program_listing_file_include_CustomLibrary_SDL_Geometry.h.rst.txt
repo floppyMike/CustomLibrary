@@ -1,0 +1,61 @@
+
+.. _program_listing_file_include_CustomLibrary_SDL_Geometry.h:
+
+Program Listing for File Geometry.h
+===================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_CustomLibrary_SDL_Geometry.h>` (``include/CustomLibrary/SDL/Geometry.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   
+   #include <SDL2/SDL.h>
+   #include "../BasicTypes.h"
+   #include "../utility.h"
+   #include "TypeTraits.h"
+   
+   namespace ctl::sdl
+   {
+       template<typename Shape>
+       class Frame
+       {
+       public:
+           constexpr Frame() = default;
+   
+           constexpr Frame(const Frame &)     = default;
+           constexpr Frame(Frame &&) noexcept = default;
+   
+           constexpr auto operator=(const Frame &) -> Frame & = default;
+           constexpr auto operator=(Frame &&) noexcept -> Frame & = default;
+   
+           constexpr explicit Frame(const Shape &s)
+               : m_shape(s)
+           {
+           }
+   
+           constexpr auto shape() const noexcept -> const auto & { return m_shape; }
+           constexpr auto shape() noexcept -> auto & { return m_shape; }
+           constexpr auto shape(const Shape &s) noexcept -> void { m_shape = s; }
+   
+       private:
+           Shape m_shape;
+       };
+   
+       using RectFrame = Frame<mth::Rect<int, int>>;
+       using CircleFrame = Frame<mth::Circle<int, int>>;
+       using LineFrame = Frame<mth::Line<int>>;
+       using PointFrame = Frame<mth::Point<int>>;
+   
+       template<template<typename> class... Ex>
+       using ERectFrame = typename MixBuilder<RectFrame, Ex...>::type;
+       template<template<typename> class... Ex>
+       using ECircleFrame = typename MixBuilder<CircleFrame, Ex...>::type;
+       template<template<typename> class... Ex>
+       using ELineFrame = typename MixBuilder<LineFrame, Ex...>::type;
+       template<template<typename> class... Ex>
+       using EPointFrame = typename MixBuilder<PointFrame, Ex...>::type;
+   
+   } // namespace ctl::sdl

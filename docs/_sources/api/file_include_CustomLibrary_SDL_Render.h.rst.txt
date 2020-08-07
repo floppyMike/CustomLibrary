@@ -1,0 +1,79 @@
+
+.. _file_include_CustomLibrary_SDL_Render.h:
+
+File Render.h
+=============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Render.h``)
+---------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Render.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../Traits.h``
+
+- ``SDL2/SDL.h``
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_Renderer.h`
+
+- :ref:`file_include_CustomLibrary_SDL_SDLWindow.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+- :ref:`namespace_ctl__sdl__detail`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Render___3_01Delayed_3_01Nonesuch_01_4_00_01Full_00_01Impl_01_4`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Render___3_01Renderer_00_01Full_00_01Impl_01_4`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_Render_8h_1a2855e9a737668952b12e573c510c0547`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51`
+

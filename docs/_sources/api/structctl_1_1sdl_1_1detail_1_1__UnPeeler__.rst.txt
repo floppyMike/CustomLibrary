@@ -1,0 +1,25 @@
+.. _exhale_struct_structctl_1_1sdl_1_1detail_1_1__UnPeeler__:
+
+Template Struct _UnPeeler_
+==========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public decltype_peel_std::declval< Outer::tag_t >``
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::detail::_UnPeeler_
+   :members:
+   :protected-members:
+   :undoc-members:

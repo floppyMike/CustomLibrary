@@ -1,0 +1,16 @@
+.. _exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable__:
+
+Template Class _Drawable_
+=========================
+
+.. did not find file this was defined in
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::detail::_Drawable_
+   :members:
+   :protected-members:
+   :undoc-members:

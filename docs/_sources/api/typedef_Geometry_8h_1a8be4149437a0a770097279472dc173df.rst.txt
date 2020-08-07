@@ -1,0 +1,13 @@
+.. _exhale_typedef_Geometry_8h_1a8be4149437a0a770097279472dc173df:
+
+Typedef ctl::sdl::ELineFrame
+============================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::ELineFrame

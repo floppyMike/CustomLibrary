@@ -1,0 +1,13 @@
+.. _exhale_function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954:
+
+Template Function ctl::sdl::detail::_peel_(_Type)
+=================================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::detail::_peel_(_Type)

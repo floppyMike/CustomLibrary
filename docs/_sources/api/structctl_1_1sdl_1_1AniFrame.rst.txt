@@ -1,0 +1,16 @@
+.. _exhale_struct_structctl_1_1sdl_1_1AniFrame:
+
+Struct AniFrame
+===============
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Animation.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::AniFrame
+   :members:
+   :protected-members:
+   :undoc-members:

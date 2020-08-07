@@ -1,0 +1,16 @@
+.. _exhale_class_classctl_1_1sdl_1_1UserEvent:
+
+Class UserEvent
+===============
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Event.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::UserEvent
+   :members:
+   :protected-members:
+   :undoc-members:

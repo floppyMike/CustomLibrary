@@ -1,0 +1,77 @@
+
+.. _file_include_CustomLibrary_SDL_Animation.h:
+
+File Animation.h
+================
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Animation.h``)
+------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Animation.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../BasicTypes.h``
+
+- ``../Timer.h``
+
+- ``Drawable.h`` (:ref:`file_include_CustomLibrary_SDL_Drawable.h`)
+
+- ``SDL2/SDL.h``
+
+- ``Texture.h`` (:ref:`file_include_CustomLibrary_SDL_Texture.h`)
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+- ``vector``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1AniFrame`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Animation`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Animation_8h_1a1a529d3a0e3b791d4a259dae73b798a8`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_Animation_8h_1a8fc4c27af370cd42c4434a33c26337c2`
+

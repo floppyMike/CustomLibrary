@@ -1,0 +1,13 @@
+.. _exhale_function_Render_8h_1a2855e9a737668952b12e573c510c0547:
+
+Template Function ctl::sdl::render
+==================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Render.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::render(_T *const)

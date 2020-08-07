@@ -1,0 +1,25 @@
+.. _exhale_class_classctl_1_1sdl_1_1FunctionalR:
+
+Template Class FunctionalR
+==========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public ctl::sdl::detail::_UnPeeler_< Func, FunctionalR< T, Func >, std::remove_cv_t< T > >`` (:ref:`exhale_struct_structctl_1_1sdl_1_1detail_1_1__UnPeeler__`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::FunctionalR
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,69 @@
+
+.. _program_listing_file_include_CustomLibrary_SDL_Event.h:
+
+Program Listing for File Event.h
+================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_CustomLibrary_SDL_Event.h>` (``include/CustomLibrary/SDL/Event.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   
+   #include <SDL2/SDL.h>
+   
+   #include "../Error.h"
+   #include "../BasicTypes.h"
+   
+   namespace ctl::sdl
+   {
+       class UserEvent
+       {
+       public:
+           UserEvent()
+           {
+               SDL_zero(m_event);
+   
+               m_event.type = SDL_RegisterEvents(1);
+               if (m_event.type == std::numeric_limits<Uint32>::max())
+                   throw std::runtime_error("Event not registered.");
+           }
+   
+           void push_event() noexcept
+           {
+               if (SDL_PushEvent(&m_event) < 0)
+                   std::cerr << SDL_GetError() << std::endl;
+           }
+   
+           [[nodiscard]] constexpr auto type() const noexcept { return m_event.type; }
+   
+           [[nodiscard]] constexpr auto user_type() const noexcept { return m_event.user.type; }
+           constexpr auto user_type(Uint32 t) noexcept { m_event.user.type = t; }
+   
+           [[nodiscard]] constexpr auto code() const noexcept { return m_event.user.code; }
+           constexpr auto code(const Sint32 &code) noexcept -> void { m_event.user.code = code; }
+   
+           [[nodiscard]] constexpr auto data() const noexcept -> std::pair<void *, void *>
+           {
+               return { m_event.user.data1, m_event.user.data2 };
+           }
+           constexpr auto data(void *data1, void *data2) noexcept
+           {
+               m_event.user.data1 = data1;
+               m_event.user.data2 = data2;
+           }
+   
+       private:
+           SDL_Event m_event;
+       };
+   
+       auto mouse_position()
+       {
+           mth::Point<int> pos;
+           SDL_GetMouseState(&pos.x, &pos.y);
+           return pos;
+       }
+   
+   } // namespace ctl::sdl

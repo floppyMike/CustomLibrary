@@ -1,0 +1,25 @@
+.. _exhale_class_classctl_1_1sdl_1_1Frame:
+
+Template Class Frame
+====================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Derived Type
+************
+
+- ``public ctl::sdl::Texture`` (:ref:`exhale_class_classctl_1_1sdl_1_1Texture`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::Frame
+   :members:
+   :protected-members:
+   :undoc-members:

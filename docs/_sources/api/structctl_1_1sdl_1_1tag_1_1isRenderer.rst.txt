@@ -1,0 +1,16 @@
+.. _exhale_struct_structctl_1_1sdl_1_1tag_1_1isRenderer:
+
+Struct isRenderer
+=================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::tag::isRenderer
+   :members:
+   :protected-members:
+   :undoc-members:

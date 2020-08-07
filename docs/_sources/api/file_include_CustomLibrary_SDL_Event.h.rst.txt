@@ -1,0 +1,60 @@
+
+.. _file_include_CustomLibrary_SDL_Event.h:
+
+File Event.h
+============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Event.h``)
+--------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Event.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../BasicTypes.h``
+
+- ``../Error.h``
+
+- ``SDL2/SDL.h``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1UserEvent`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_Event_8h_1a95f8a298afdb3dea811979bde77575b2`
+

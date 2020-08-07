@@ -1,0 +1,100 @@
+
+.. _program_listing_file_include_CustomLibrary_SDL_Renderer.h:
+
+Program Listing for File Renderer.h
+===================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_CustomLibrary_SDL_Renderer.h>` (``include/CustomLibrary/SDL/Renderer.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   
+   #include <SDL2/SDL.h>
+   
+   #include "../Error.h"
+   #include "../Traits.h"
+   #include "../Dim.h"
+   
+   #include "Engine.h"
+   #include "TypeTraits.h"
+   #include "Render.h"
+   
+   #include <cassert>
+   
+   namespace ctl::sdl
+   {
+       // -----------------------------------------------------------------------------
+       // Renderer
+       // -----------------------------------------------------------------------------
+   
+       class Renderer
+       {
+           struct Unique_Des
+           {
+               void operator()(SDL_Renderer *r) { SDL_DestroyRenderer(r); }
+           };
+   
+       public:
+           template<typename ImplWin>
+           explicit Renderer(ImplWin *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
+           {
+               create(win, rendererFlags);
+           }
+   
+           Renderer(const Renderer &)      = delete;
+           Renderer(Renderer &&r) noexcept = default;
+   
+           template<typename ImplWin>
+           void create(ImplWin *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
+           {
+               if (auto *const r = SDL_CreateRenderer(win->get(), -1, rendererFlags); r)
+                   m_renderer.reset(r);
+               else
+                   throw std::runtime_error(SDL_GetError());
+           }
+   
+           void destroy() { m_renderer.reset(); }
+   
+           [[nodiscard]] auto get() const noexcept
+           {
+               assert(m_renderer && "Renderer isn't loaded.");
+               return m_renderer.get();
+           }
+   
+           auto color(const SDL_Color &col) -> void
+           {
+               SDL_SetRenderDrawColor(m_renderer.get(), col.r, col.g, col.b, col.a);
+           }
+   
+           void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(m_renderer.get(), dim.w, dim.h); }
+   
+       private:
+           std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
+       };
+   
+       // -----------------------------------------------------------------------------
+       // Delayed Renderer Extension
+       // -----------------------------------------------------------------------------
+   
+       template<typename T>
+       class Delayed : public T
+       {
+       public:
+           using base = T;
+   
+           using T::T;
+   
+           void do_render(bool r) { m_do_render = r; }
+           auto will_render() const noexcept { return m_do_render; }
+   
+       private:
+           bool m_do_render = true;
+       };
+   
+       template<template<typename> class... Ex>
+       using ERenderer = typename MixBuilder<Renderer, Ex...>::type;
+   
+   } // namespace ctl::sdl

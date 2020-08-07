@@ -1,0 +1,13 @@
+.. _exhale_typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a:
+
+Typedef ctl::sdl::CircleFrame
+=============================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Geometry.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::CircleFrame

@@ -1,0 +1,13 @@
+.. _exhale_variable_Engine_8h_1aa01ea01fdaf83249af9699b048118da1:
+
+Variable ctl::sdl::BLACK
+========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Engine.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: ctl::sdl::BLACK

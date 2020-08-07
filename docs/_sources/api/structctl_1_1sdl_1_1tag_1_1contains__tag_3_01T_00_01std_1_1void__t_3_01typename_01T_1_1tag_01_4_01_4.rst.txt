@@ -1,0 +1,25 @@
+.. _exhale_struct_structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4:
+
+Template Struct contains_tag< T, std::void_t< typename T::tag > >
+=================================================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public true_type``
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::tag::contains_tag< T, std::void_t< typename T::tag > >
+   :members:
+   :protected-members:
+   :undoc-members:

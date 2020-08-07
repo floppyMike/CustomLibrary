@@ -1,0 +1,42 @@
+.. _exhale_class_classctl_1_1sdl_1_1Texture:
+
+Class Texture
+=============
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Texture.h`
+
+
+Nested Relationships
+--------------------
+
+
+Nested Types
+************
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1Texture_1_1Unique__Destructor`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public ctl::sdl::Frame< int, int > >`` (:ref:`exhale_class_classctl_1_1sdl_1_1Frame`)
+
+
+Derived Types
+*************
+
+- ``public ctl::sdl::Animation`` (:ref:`exhale_class_classctl_1_1sdl_1_1Animation`)
+- ``public ctl::sdl::Text`` (:ref:`exhale_class_classctl_1_1sdl_1_1Text`)
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::Texture
+   :members:
+   :protected-members:
+   :undoc-members:

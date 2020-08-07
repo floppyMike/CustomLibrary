@@ -1,0 +1,16 @@
+.. _exhale_class_classctl_1_1sdl_1_1FunctorR:
+
+Template Class FunctorR
+=======================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: ctl::sdl::FunctorR
+   :members:
+   :protected-members:
+   :undoc-members:

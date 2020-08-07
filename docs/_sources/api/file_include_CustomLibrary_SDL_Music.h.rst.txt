@@ -1,0 +1,74 @@
+
+.. _file_include_CustomLibrary_SDL_Music.h:
+
+File Music.h
+============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Music.h``)
+--------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Music.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../Tags.h``
+
+- ``../Traits.h``
+
+- ``Loader.h`` (:ref:`file_include_CustomLibrary_SDL_Loader.h`)
+
+- ``Player.h`` (:ref:`file_include_CustomLibrary_SDL_Player.h`)
+
+- ``SDL2/SDL.h``
+
+- ``SDL2/SDL_mixer.h``
+
+- ``TypeTraits.h`` (:ref:`file_include_CustomLibrary_SDL_TypeTraits.h`)
+
+- ``cassert``
+
+- ``memory``
+
+
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structctl_1_1sdl_1_1Music_1_1Unique__Destructor`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Music`
+
+
+Typedefs
+--------
+
+
+- :ref:`exhale_typedef_Music_8h_1abade68e8e2a579d39a4cbc9dffcece40`
+

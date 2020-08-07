@@ -1,0 +1,22 @@
+.. _exhale_struct_structctl_1_1sdl_1_1Renderer_1_1Unique__Des:
+
+Struct Renderer::Unique_Des
+===========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Renderer.h`
+
+
+Nested Relationships
+--------------------
+
+This struct is a nested type of :ref:`exhale_class_classctl_1_1sdl_1_1Renderer`.
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::Renderer::Unique_Des
+   :members:
+   :protected-members:
+   :undoc-members:

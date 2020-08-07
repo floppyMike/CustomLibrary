@@ -1,0 +1,13 @@
+.. _exhale_typedef_Texture_8h_1aaa37d512602e509fd96d970bc81008f0:
+
+Typedef ctl::sdl::ETexture
+==========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Texture.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::ETexture

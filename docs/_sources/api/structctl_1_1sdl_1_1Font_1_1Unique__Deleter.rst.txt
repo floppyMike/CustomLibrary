@@ -1,0 +1,22 @@
+.. _exhale_struct_structctl_1_1sdl_1_1Font_1_1Unique__Deleter:
+
+Struct Font::Unique_Deleter
+===========================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Text.h`
+
+
+Nested Relationships
+--------------------
+
+This struct is a nested type of :ref:`exhale_class_classctl_1_1sdl_1_1Font`.
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: ctl::sdl::Font::Unique_Deleter
+   :members:
+   :protected-members:
+   :undoc-members:

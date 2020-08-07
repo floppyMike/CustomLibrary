@@ -1,0 +1,55 @@
+
+.. _file_include_CustomLibrary_SDL_Camera2D.h:
+
+File Camera2D.h
+===============
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/CustomLibrary/SDL/Camera2D.h``)
+-----------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_CustomLibrary_SDL_Camera2D.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``../BasicTypes.h``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_CustomLibrary_SDL_SDLWindow.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_ctl`
+
+- :ref:`namespace_ctl__sdl`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1Camera2D`
+
