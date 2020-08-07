@@ -2,12 +2,17 @@
 
 #include <SDL2/SDL.h>
 
+#include "../Error.h"
+
 #include <memory>
 #include <cassert>
 #include <stdexcept>
 
 namespace ctl::sdl
 {
+	/**
+	 * @brief Manages a Surface texture
+	 */
 	class Surface
 	{
 		struct Unique_Destructor
@@ -18,31 +23,54 @@ namespace ctl::sdl
 	public:
 		Surface() noexcept			 = default;
 		Surface(Surface &&) noexcept = default;
-		Surface &operator=(Surface &&) noexcept = default;
+		auto operator=(Surface &&) noexcept -> Surface & = default;
 
-		Surface(SDL_Surface *s) noexcept
+		Surface(const Surface &) noexcept = delete;
+		auto operator=(const Surface &) noexcept = delete;
+
+		/**
+		 * @brief Adapts surface from ptr
+		 * @param s New surface to use
+		 */
+		explicit Surface(SDL_Surface *s) noexcept
 			: m_surface(s)
 		{
 		}
 
-		SDL_Surface *surface() noexcept { return m_surface.get(); }
+		/**
+		 * @brief Gets the SDL_Surface ptr
+		 * @return SDL_Surface*
+		 */
+		[[nodiscard]] auto surface() const noexcept { return m_surface.get(); }
 
-		Surface &surface(SDL_Surface *s) noexcept
+		/**
+		 * @brief Adapts surface from ptr
+		 * @param s New surface to use
+		 */
+		auto surface(SDL_Surface *s) noexcept -> void { m_surface.reset(s); }
+
+		/**
+		 * @brief Changes the color key for the surface
+		 * The color key defines what pixels are treated as transparent.
+		 * @param key Color to use
+		 * @param enabled If transparent
+		 */
+		auto color_key(Uint32 key, SDL_bool enabled = SDL_TRUE) -> void
 		{
-			m_surface.reset(s);
-			return *this;
+			const auto r = SDL_SetColorKey(m_surface.get(), enabled, key);
+			ASSERT(r == 0, SDL_GetError());
 		}
 
-		Surface &color_key(Uint32 key, SDL_bool enabled = SDL_TRUE)
+		/**
+		 * @brief Resizes the surface to a new dim
+		 *
+		 * @param x new x dim -> nullptr if should scale
+		 * @param y new y dim -> nullptr if should scale
+		 */
+		auto resize(const int *const x, const int *const y) -> void
 		{
-			if (SDL_SetColorKey(m_surface.get(), enabled, key) != 0)
-				throw std::runtime_error(SDL_GetError());
-			return *this;
-		}
-
-		Surface &resize(const int *const x, const int *const y)
-		{
-			assert(x == nullptr && y == nullptr && "Both x and y shouldn't be nullptrs.");
+			if (x == nullptr && y == nullptr)
+				return;
 
 			SDL_Surface *temp = SDL_CreateRGBSurface(
 				0, x == nullptr ? static_cast<int>(static_cast<double>(*y) / m_surface->h * m_surface->w) : *x,
@@ -53,7 +81,6 @@ namespace ctl::sdl
 			SDL_BlitScaled(m_surface.get(), nullptr, temp, nullptr);
 
 			m_surface.reset(temp);
-			return *this;
 		}
 
 	private:

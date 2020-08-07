@@ -5,20 +5,28 @@
 #include <utility>
 #include <functional>
 
-#include "Collider.h"
+#include "../Collider.h"
 #include "Geometry.h"
 
 namespace ctl::sdl
 {
+	/**
+	 * @brief Enables object to be pressable
+	 * @tparam T base must have shape() method
+	 */
 	template<typename T>
 	class Pressable : public T
 	{
 	public:
-		using base_t = T;
-		using tag_t	 = tag::isUnassigned;
+		using base = T;
 
 		using T::T;
 
+		/**
+		 * @brief Handle input
+		 * Checks if mouse is inside button and if button was pressed.
+		 * @param e SDL_Event
+		 */
 		void input(const SDL_Event &e)
 		{
 			switch (e.type)
@@ -42,12 +50,16 @@ namespace ctl::sdl
 			}
 		}
 
-		auto func(std::function<void()> &&f) noexcept -> auto &
-		{
-			m_func = std::move(f);
-			return *this;
-		}
+		/**
+		 * @brief Change the function that gets called at button press
+		 * @param f New function
+		 */
+		auto func(std::function<void()> &&f) noexcept -> void { m_func = std::move(f); }
 
+		/**
+		 * @brief Check if button is inside the button
+		 * @return bool
+		 */
 		auto is_inside() const noexcept { return m_is_inside; }
 
 	private:

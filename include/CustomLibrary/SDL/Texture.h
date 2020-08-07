@@ -4,52 +4,116 @@
 #	include <SDL2/SDL.h>
 #	include <SDL2/SDL_image.h>
 
+#	include "../Dim.h"
+
 #	include "Surface.h"
 #	include "Renderer.h"
-
-#	include "../Traits.h"
-
 #	include "TypeTraits.h"
 #	include "Geometry.h"
 
 namespace ctl::sdl
 {
+	/**
+	 * @brief Container class for managing Textures
+	 */
 	class Texture : public RectFrame
 	{
+		/**
+		 * @brief Handles deallocation of the Texture
+		 */
 		struct Unique_Destructor
 		{
 			void operator()(SDL_Texture *t) { SDL_DestroyTexture(t); }
 		};
 
 	public:
-		using tag_t	 = tag::isTexture;
-		using base_t = RectFrame;
+		using base = RectFrame;
 
 		using RectFrame::RectFrame;
+
 		Texture() = default;
 
-		[[nodiscard]] auto texture() const noexcept -> SDL_Texture * { return m_texture.get(); }
-
-		auto reset_shape() -> auto &
+		/**
+		 * @brief Gives the Texture
+		 * @return Texture ptr
+		 */
+		[[nodiscard]] auto texture() const noexcept
 		{
-			if (SDL_QueryTexture(m_texture.get(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
-				throw std::runtime_error(SDL_GetError());
-
-			return *this;
+			assert(m_texture && "SDL_Texture is a nullptr.");
+			return m_texture.get();
 		}
-
-		auto texture(SDL_Texture *tex) noexcept -> auto &
+		/**
+		 * @brief Sets the Texture
+		 * @param tex New Texture
+		 */
+		auto texture(SDL_Texture *tex) noexcept -> void
 		{
 			assert(tex && "SDL_Texture is a nullptr.");
 
 			m_texture.reset(tex);
 			reset_shape();
+		}
 
-			return *this;
+		/**
+		 * @brief Resets the width and height to default
+		 */
+		auto reset_shape() -> void
+		{
+			if (SDL_QueryTexture(texture(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
+				throw std::runtime_error(SDL_GetError());
+		}
+
+		/**
+		 * @brief Sets the color modulation affecting render operations
+		 * Color modulation affects the coloration of the outputted texture. Color / 255. * TextureColor = Output.
+		 * @param c Color to modulate with
+		 */
+		auto color_mod(const SDL_Color &c) const -> void
+		{
+			const auto re = SDL_SetTextureColorMod(texture(), c.r, c.g, c.b) + SDL_SetTextureAlphaMod(texture(), c.a);
+			ASSERT(re == 0, SDL_GetError());
+		}
+		/**
+		 * @brief Gets the color modulation used
+		 * @return SDL_Color
+		 */
+		[[nodiscard]] auto color_mod() const
+		{
+			SDL_Color c;
+
+			const auto r =
+				SDL_GetTextureColorMod(texture(), &c.r, &c.g, &c.b) + SDL_GetTextureAlphaMod(texture(), &c.a);
+			ASSERT(r == 0, SDL_GetError());
+
+			return c;
+		}
+
+		/**
+		 * @brief Sets the blending used while rendering
+		 * Blending indicates how the colors are displayed on the screen.
+		 * @param b Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
+		 */
+		auto blend_mode(const SDL_BlendMode &b) const -> void
+		{
+			const auto r = SDL_SetTextureBlendMode(texture(), b);
+			ASSERT(r == 0, SDL_GetError());
+		}
+		/**
+		 * @brief Gets the blending used
+		 * @return SDL_BlendMode
+		 */
+		[[nodiscard]] auto blend_mode() const
+		{
+			SDL_BlendMode b;
+
+			const auto r = SDL_GetTextureBlendMode(texture(), &b);
+			ASSERT(r == 0, SDL_GetError());
+
+			return b;
 		}
 
 	private:
-		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture;
+		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture = nullptr;
 	};
 
 	template<template<typename> class... Ex>
@@ -77,8 +141,8 @@ namespace ctl::sdl
 //				throw ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			m_texture.reset(SDL_CreateTexture(m_win->renderer(), SDL_GetWindowPixelFormat(m_win->window()),
-//SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h)); 			if (!m_texture) 				throw ctl::std::runtime_error(SDL_GetError(),
-//Log::Sev::ERR0R);
+// SDL_TEXTUREACCESS_STREAMING, f_s->w, f_s->h)); 			if (!m_texture) 				throw
+// ctl::std::runtime_error(SDL_GetError(), Log::Sev::ERR0R);
 //
 //			lock();
 //			memcpy(m_pixels, f_s->pixels, f_s->pitch * f_s->h);
