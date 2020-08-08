@@ -102,7 +102,7 @@ namespace ctl::sdl
 
 		/**
 		 * @brief sets a hint
-		 * @param "name" name of hint
+		 * @param "name" name of hint https://wiki.libsdl.org/CategoryHints#Hints
 		 * @param "value" value to set the hint at
 		 */
 		auto set_hint(const char *name, const char *value) noexcept -> SDL &
