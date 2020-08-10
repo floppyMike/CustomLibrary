@@ -101,7 +101,7 @@ namespace ctl::sdl
 			auto filled_rect() const -> void
 			{
 				const auto r = SDL_RenderFillRect(this->renderer()->get(),
-												  reinterpret_cast<const SDL_Rect *>(this->obj()->shape()));
+												  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};

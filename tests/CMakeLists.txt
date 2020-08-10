@@ -9,7 +9,7 @@ include(CTest)
 
 find_package(Catch2 REQUIRED)
 
-add_executable(MainTest Tests.cpp)
+add_executable(MainTest SDLTests.cpp)
 target_link_libraries(MainTest PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary Catch2::Catch2)
 
 include(Catch)
