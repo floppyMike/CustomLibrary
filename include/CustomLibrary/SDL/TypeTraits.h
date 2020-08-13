@@ -164,29 +164,19 @@ namespace ctl::sdl
 	};
 
 	// -----------------------------------------------------------------------------
-	// Functor Base (Mixin)
+	// Functor Extension (Mixin)
 	// -----------------------------------------------------------------------------
 
-	template<typename T>
-	class FunctorR
+	template<typename T, typename Renderer>
+	class FunctorR : public Functor<T>
 	{
 	public:
+        using Functor<T>::Functor;
+
 		constexpr FunctorR() = default;
 		constexpr FunctorR(T *o, Renderer *r)
-			: m_r(r)
-			, m_o(o)
+			: Functor<T>(o), m_r(r)
 		{
-		}
-		constexpr explicit FunctorR(T *o)
-			: m_o(o)
-		{
-		}
-
-		constexpr auto obj(T *o) noexcept { m_o = o; }
-		constexpr auto obj() const noexcept
-		{
-			assert(m_o != nullptr && "Object isn't assigned.");
-			return m_o;
 		}
 
 		constexpr auto renderer(Renderer *const r) noexcept { m_r = r; }
@@ -198,27 +188,6 @@ namespace ctl::sdl
 
 	private:
 		Renderer *m_r = nullptr;
-		T *		  m_o;
 	};
 
-	template<typename T>
-	class FunctorO
-	{
-	public:
-		constexpr FunctorO() = default;
-		constexpr explicit FunctorO(T *o)
-			: m_o(o)
-		{
-		}
-
-		constexpr auto obj(T *o) noexcept { m_o = o; }
-		constexpr auto obj() noexcept
-		{
-			assert(m_o != nullptr && "Object isn't assigned.");
-			return m_o;
-		}
-
-	private:
-		T *m_o;
-	};
 } // namespace ctl::sdl

@@ -202,4 +202,33 @@ namespace ctl
 		using type = Base;
 	};
 
+	// -----------------------------------------------------------------------------
+	// Functor base
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Default Functor for Mixins construction
+	 * @tparam Object Type
+	 */
+	template<typename T>
+	class Functor
+	{
+	public:
+		constexpr Functor() = default;
+		constexpr explicit Functor(T *o)
+			: m_o(o)
+		{
+		}
+
+		constexpr auto obj(T *o) noexcept { m_o = o; }
+		constexpr auto obj() noexcept
+		{
+			assert(m_o != nullptr && "Object isn't assigned.");
+			return m_o;
+		}
+
+	private:
+		T *m_o;
+	};
+
 } // namespace ctl
