@@ -79,7 +79,7 @@ namespace ctl::sdl
 	 * @tparam T Object to Render for type
 	 */
 	template<typename T>
-	using Render = typename Filter<detail::_Render_, FunctorO<T>, T>::type;
+	using Render = typename Filter<detail::_Render_, Functor<T>, T>::type;
 
 	/**
 	 * @brief Shows rendering options for object

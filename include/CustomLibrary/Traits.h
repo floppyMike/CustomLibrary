@@ -2,6 +2,7 @@
 
 #include <type_traits>
 #include <utility>
+#include <cassert>
 
 // -----------------------------------------------------------------------------
 // Method Detection Preperation
@@ -166,7 +167,7 @@ namespace ctl
 	{
 		typename _T<_U, _Z...>::base;
 	}
-	auto seperate(_T<_U, _Z...>) -> std::pair<_T<Nonesuch>, typename _T<_U, _Z...>::base>;
+	auto seperate(_T<_U, _Z...>) -> std::pair<_T<Nonesuch, _Z...>, typename _T<_U, _Z...>::base>;
 
 	template<typename _T>
 	requires requires()

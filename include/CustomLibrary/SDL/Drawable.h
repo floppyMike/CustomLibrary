@@ -38,7 +38,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of textures
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Texture, Full, Impl> : public Impl
 		{
 		public:
@@ -79,7 +79,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of RectFrame
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Frame<mth::Rect<int, int>>, Full, Impl> : public Impl
 		{
 		public:
@@ -109,7 +109,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of CircleFrame
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Frame<mth::Circle<int, int>>, Full, Impl> : public Impl
 		{
 		public:
@@ -206,7 +206,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of LineFrame
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Frame<mth::Line<int>>, Full, Impl> : public Impl
 		{
 		public:
@@ -227,7 +227,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of PointFrame
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Frame<mth::Point<int>>, Full, Impl> : public Impl
 		{
 		public:
@@ -247,9 +247,8 @@ namespace ctl::sdl
 		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_Rect or Rect<int,
 		 * int>.
 		 */
-		template<typename Type, typename Full, typename Impl>
-		requires matches<Type, SDL_Rect, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl>
-			: public Impl
+		template<matches<SDL_Rect, mth::Rect<int, int>> Type, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -284,9 +283,8 @@ namespace ctl::sdl
 		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_FRect or Rect<float,
 		 * float>.
 		 */
-		template<typename Type, typename Full, typename Impl>
-		requires matches<Type, SDL_FRect, mth::Rect<float, float>> class _Drawable_<std::span<Type>, Full, Impl>
-			: public Impl
+		template<matches<SDL_FRect, mth::Rect<float, float>> Type, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -321,8 +319,8 @@ namespace ctl::sdl
 		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
 		 * Point<int>.
 		 */
-		template<typename Type, typename Full, typename Impl>
-		requires matches<Type, SDL_Point, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		template<matches<SDL_Point, mth::Point<int>> Type, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -347,9 +345,8 @@ namespace ctl::sdl
 		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
 		 * Point<float>.
 		 */
-		template<typename Type, typename Full, typename Impl>
-		requires matches<Type, SDL_FPoint, mth::Point<float>> class _Drawable_<std::span<Type>, Full, Impl>
-			: public Impl
+		template<matches<SDL_FPoint, mth::Point<float>> Type, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -372,7 +369,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles drawing of animations
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Drawable_<Animation, Full, Impl> : public Impl
 		{
 		public:
@@ -406,8 +403,8 @@ namespace ctl::sdl
 	 * @brief Type for drawing type construction
 	 * @tparam T Object to draw for type
 	 */
-	template<typename T>
-	using Draw = typename Filter<detail::_Drawable_, FunctorR<T>, T>::type;
+	template<typename T, typename Renderer>
+	using Draw = typename Filter<detail::_Drawable_, FunctorR<T, Renderer>, T>::type;
 
 	/**
 	 * @brief Shows drawing options for object
@@ -416,10 +413,10 @@ namespace ctl::sdl
 	 * @param r ptr to renderer
 	 * @return Draw type for further options
 	 */
-	template<typename _T>
-	auto draw(_T *ptr, Renderer *r)
+	template<typename _T, typename _Renderer>
+	auto draw(_T *const ptr, _Renderer *const r)
 	{
-		return Draw<_T>(ptr, r);
+		return Draw<_T, _Renderer>(ptr, r);
 	}
 
 } // namespace ctl::sdl

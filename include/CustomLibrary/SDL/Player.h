@@ -72,7 +72,7 @@ namespace ctl::sdl
 	 * @tparam T Object to play for type
 	 */
 	template<typename T>
-	using Player = typename Filter<detail::_Player_, FunctorO<T>, T>::type;
+	using Player = typename Filter<detail::_Player_, Functor<T>, T>::type;
 
 	/**
 	 * @brief Shows playing options for object

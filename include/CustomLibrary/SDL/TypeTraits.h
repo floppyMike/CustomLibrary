@@ -3,28 +3,41 @@
 #include <SDL2/SDL.h>
 
 #include "../Traits.h"
-#include "../BasicTypes.h"
 
 #include <cassert>
-#include <tuple>
-#include <type_traits>
-#include <concepts>
 
 namespace ctl::sdl
 {
+	class Renderer;
+
+	template<typename T>
+	concept uses_sdl_renderer = requires(T t)
+	{
+		{
+			t.renderer()->get()
+		}
+		->std::same_as<SDL_Renderer *>;
+	};
+
 	// -----------------------------------------------------------------------------
 	// Functor Extension (Mixin)
 	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Additionaly provides a renderer ptr to the base
+	 * @tparam T Object type
+	 * @tparam Renderer Renderer type
+	 */
 	template<typename T, typename Renderer>
 	class FunctorR : public Functor<T>
 	{
 	public:
-        using Functor<T>::Functor;
+		using Functor<T>::Functor;
 
 		constexpr FunctorR() = default;
 		constexpr FunctorR(T *o, Renderer *r)
-			: Functor<T>(o), m_r(r)
+			: Functor<T>(o)
+			, m_r(r)
 		{
 		}
 
