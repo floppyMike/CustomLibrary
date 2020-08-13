@@ -80,10 +80,7 @@ namespace ctl::sdl
 		 * @brief Set the draw color
 		 * @param col new Color
 		 */
-		auto color(const SDL_Color &col) -> void
-		{
-			SDL_SetRenderDrawColor(m_renderer.get(), col.r, col.g, col.b, col.a);
-		}
+		auto color(const SDL_Color &col) -> void { SDL_SetRenderDrawColor(get(), col.r, col.g, col.b, col.a); }
 
 		/**
 		 * @brief Set the logical size of the rendering
@@ -91,7 +88,32 @@ namespace ctl::sdl
 		 * automaticaly scales based on Windows dimensions.
 		 * @param dim Dimension to render on
 		 */
-		void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(m_renderer.get(), dim.w, dim.h); }
+		void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
+
+		/**
+		 * @brief Sets the blending used for drawing
+		 * Blending indicates how the colors are displayed on the screen.
+		 * @return Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
+		 */
+		auto blend_mode(const SDL_BlendMode &b)
+		{
+			const auto r = SDL_SetRenderDrawBlendMode(get(), b);
+			ASSERT(r == 0, SDL_GetError());
+		}
+
+		/**
+		 * @brief Gets the blending used for drawing
+		 * Blending indicates how the colors are displayed on the screen.
+		 * @return Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
+		 */
+		auto blend_mode()
+		{
+			SDL_BlendMode b;
+			const auto	  r = SDL_GetRenderDrawBlendMode(get(), &b);
+			ASSERT(r == 0, SDL_GetError());
+
+			return b;
+		}
 
 	private:
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;

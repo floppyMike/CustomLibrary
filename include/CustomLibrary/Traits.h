@@ -77,6 +77,9 @@ namespace ctl
 	template<typename T, typename U>
 	concept aligned_with = std::alignment_of_v<T> == std::alignment_of_v<U>;
 
+	template<typename T, typename... EqualTypes>
+	concept matches = std::disjunction_v<std::is_same<std::remove_cv_t<T>, EqualTypes>...>;
+
 	// -----------------------------------------------------------------------------
 	// CRTP
 	// -----------------------------------------------------------------------------

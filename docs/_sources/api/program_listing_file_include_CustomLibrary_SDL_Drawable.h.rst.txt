@@ -88,7 +88,7 @@ Program Listing for File Drawable.h
                auto filled_rect() const -> void
                {
                    const auto r = SDL_RenderFillRect(this->renderer()->get(),
-                                                     reinterpret_cast<const SDL_Rect *>(this->obj()->shape()));
+                                                     reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
                    ASSERT(r == 0, SDL_GetError());
                }
            };
@@ -196,9 +196,8 @@ Program Listing for File Drawable.h
            };
    
            template<typename Type, typename Full, typename Impl>
-               requires std::same_as<
-                   Type,
-                   SDL_Rect> || std::same_as<Type, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+           requires matches<Type, SDL_Rect, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl>
+               : public Impl
            {
            public:
                using Impl::Impl;
@@ -223,9 +222,33 @@ Program Listing for File Drawable.h
            };
    
            template<typename Type, typename Full, typename Impl>
-               requires std::same_as<
-                   Type,
-                   SDL_Point> || std::same_as<Type, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+           requires matches<Type, SDL_FRect, mth::Rect<float, float>> class _Drawable_<std::span<Type>, Full, Impl>
+               : public Impl
+           {
+           public:
+               using Impl::Impl;
+   
+               auto rects() const -> void
+               {
+                   const auto r =
+                       SDL_RenderDrawRectsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+                   ASSERT(r == 0, SDL_GetError());
+               }
+   
+               auto filled_rects() const -> void
+               {
+                   const auto r =
+                       SDL_RenderFillRectsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+                   ASSERT(r == 0, SDL_GetError());
+               }
+   
+           private:
+               auto _ptr_(const SDL_FRect *ptr) const { return ptr; }
+               auto _ptr_(const mth::Rect<float, float> *ptr) const { return reinterpret_cast<const SDL_FRect *>(ptr); }
+           };
+   
+           template<typename Type, typename Full, typename Impl>
+           requires matches<Type, SDL_Point, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
            {
            public:
                using Impl::Impl;
@@ -240,6 +263,25 @@ Program Listing for File Drawable.h
            private:
                auto _ptr_(const SDL_Point *ptr) const { return ptr; }
                auto _ptr_(const mth::Point<int> *ptr) const { return reinterpret_cast<const SDL_Point *>(ptr); }
+           };
+   
+           template<typename Type, typename Full, typename Impl>
+           requires matches<Type, SDL_FPoint, mth::Point<float>> class _Drawable_<std::span<Type>, Full, Impl>
+               : public Impl
+           {
+           public:
+               using Impl::Impl;
+   
+               auto points() const -> void
+               {
+                   const auto r =
+                       SDL_RenderDrawPointsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+                   ASSERT(r == 0, SDL_GetError());
+               }
+   
+           private:
+               auto _ptr_(const SDL_FPoint *ptr) const { return ptr; }
+               auto _ptr_(const mth::Point<float> *ptr) const { return reinterpret_cast<const SDL_FPoint *>(ptr); }
            };
    
            template<typename Full, typename Impl>

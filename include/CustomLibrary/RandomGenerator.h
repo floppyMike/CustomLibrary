@@ -5,25 +5,44 @@
 #include <type_traits>
 #include <cassert>
 
-#include "Error.h"
+#include "Traits.h"
 
 namespace ctl::rnd
 {
 	using Mersenne = std::mt19937;
-	using Linear = std::minstd_rand;
-	using SubWCar = std::ranlux24_base;
+	using Linear   = std::minstd_rand;
+	using SubWCar  = std::ranlux24_base;
 
-	//Gen::
-	template<typename G, typename = typename std::enable_if_t<std::is_same_v<Mersenne, G> || std::is_same_v<Linear, G> || std::is_same_v<SubWCar, G>>>
-	class RandomGen
+	template<typename T>
+	concept random_generator = std::same_as<T, Mersenne> || std::same_as<T, Linear> || std::same_as<T, SubWCar>;
+
+	/**
+	 * @brief Manages a random generator device
+	 * @tparam Random generator to use
+	 */
+	template<random_generator G>
+	class Random
 	{
 	public:
-		RandomGen() : m_gen{ rd() } {}
-
-		template<typename Type, typename = typename std::enable_if<std::is_arithmetic<Type>::value, Type>::type>
-		constexpr Type rand_number(const Type &min, const Type &max)
+		Random() noexcept
+			: m_gen{ rd() }
 		{
-			assert(min < max && "RandomGenerator: min is larger or equal to max.");
+		}
+
+		/**
+		 * @brief Generate a random arithmetic number
+		 * 
+		 * @param min Arithmetic minium value
+		 * @param max Arithmetic maximum value
+		 * @return Generated value 
+		 */
+		template<arithmetic Type>
+		constexpr auto rand_number(Type min, Type max) -> Type
+		{
+			assert(min < max && "Random: min is larger or equal to max.");
+
+			if (min == max)
+				return min;
 
 			if constexpr (std::is_floating_point_v<Type>)
 				return static_cast<Type>(std::uniform_real_distribution<>(min, max)(m_gen));
@@ -31,15 +50,17 @@ namespace ctl::rnd
 				return static_cast<Type>(std::uniform_int_distribution<>(min, max)(m_gen));
 		}
 
-		template<typename Iter/*, typename = typename std::enable_if_t<!std::is_same_v<typename std::iterator_traits<Iter>::type_value, void>>*/>
-		constexpr Iter rand_iter(Iter first, const Iter &last)
-		{
-			std::advance(first, rand_number<size_t>(0, std::distance(first, last) - 1));
-			return first;
-		}
+		// IN PROGRESS
+		// template<typename Iter/*, typename = typename std::enable_if_t<!std::is_same_v<typename std::iterator_traits<Iter>::type_value, void>>*/>
+		// constexpr auto rand_iter(Iter first, const Iter &last) -> Iter
+		// {
+		// 	std::advance(first, rand_number<size_t>(0, std::distance(first, last) - 1));
+		// 	return first;
+		// }
+
 	private:
 		std::random_device rd;
-		G m_gen;
+		G				   m_gen;
 	};
-}
+} // namespace ctl::rnd
 #endif // !RANDOMGEN

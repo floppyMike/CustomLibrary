@@ -14,7 +14,7 @@
 		{                                                                                                  \
 			if (!(cond))                                                                                   \
 			{                                                                                              \
-				std::cerr << "Assertion \"" << #cond << "failed in " << __FILE__ << " using the function " \
+				std::cerr << "Assertion \"" << #cond << " failed in " << __FILE__ << " using the function " \
 						  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;          \
 				std::terminate();                                                                          \
 			}                                                                                              \

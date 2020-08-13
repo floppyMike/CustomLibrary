@@ -64,12 +64,24 @@ Program Listing for File Renderer.h
                return m_renderer.get();
            }
    
-           auto color(const SDL_Color &col) -> void
+           auto color(const SDL_Color &col) -> void { SDL_SetRenderDrawColor(get(), col.r, col.g, col.b, col.a); }
+   
+           void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
+   
+           auto blend_mode(const SDL_BlendMode &b)
            {
-               SDL_SetRenderDrawColor(m_renderer.get(), col.r, col.g, col.b, col.a);
+               const auto r = SDL_SetRenderDrawBlendMode(get(), b);
+               ASSERT(r == 0, SDL_GetError());
            }
    
-           void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(m_renderer.get(), dim.w, dim.h); }
+           auto blend_mode()
+           {
+               SDL_BlendMode b;
+               const auto    r = SDL_GetRenderDrawBlendMode(get(), &b);
+               ASSERT(r == 0, SDL_GetError());
+   
+               return b;
+           }
    
        private:
            std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;

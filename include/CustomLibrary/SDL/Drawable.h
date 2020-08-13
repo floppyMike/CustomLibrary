@@ -248,9 +248,8 @@ namespace ctl::sdl
 		 * int>.
 		 */
 		template<typename Type, typename Full, typename Impl>
-			requires std::same_as<
-				Type,
-				SDL_Rect> || std::same_as<Type, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		requires matches<Type, SDL_Rect, mth::Rect<int, int>> class _Drawable_<std::span<Type>, Full, Impl>
+			: public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -281,13 +280,49 @@ namespace ctl::sdl
 		};
 
 		/**
-		 * @brief Handles mass drawing of Points
-		 * This method of drawing is fast then drawing singular Points. Array is a std::span of SDL_Point or Point<int>.
+		 * @brief Handles mass drawing of Rectangles of type float
+		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_FRect or Rect<float,
+		 * float>.
 		 */
 		template<typename Type, typename Full, typename Impl>
-			requires std::same_as<
-				Type,
-				SDL_Point> || std::same_as<Type, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		requires matches<Type, SDL_FRect, mth::Rect<float, float>> class _Drawable_<std::span<Type>, Full, Impl>
+			: public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws rects
+			 */
+			auto rects() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawRectsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+			/**
+			 * @brief Draws filled rects
+			 */
+			auto filled_rects() const -> void
+			{
+				const auto r =
+					SDL_RenderFillRectsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_(const SDL_FRect *ptr) const { return ptr; }
+			auto _ptr_(const mth::Rect<float, float> *ptr) const { return reinterpret_cast<const SDL_FRect *>(ptr); }
+		};
+
+		/**
+		 * @brief Handles mass drawing of Points
+		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
+		 * Point<int>.
+		 */
+		template<typename Type, typename Full, typename Impl>
+		requires matches<Type, SDL_Point, mth::Point<int>> class _Drawable_<std::span<Type>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -305,6 +340,33 @@ namespace ctl::sdl
 		private:
 			auto _ptr_(const SDL_Point *ptr) const { return ptr; }
 			auto _ptr_(const mth::Point<int> *ptr) const { return reinterpret_cast<const SDL_Point *>(ptr); }
+		};
+
+		/**
+		 * @brief Handles mass drawing of Points for floats
+		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
+		 * Point<float>.
+		 */
+		template<typename Type, typename Full, typename Impl>
+		requires matches<Type, SDL_FPoint, mth::Point<float>> class _Drawable_<std::span<Type>, Full, Impl>
+			: public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws Points
+			 */
+			auto points() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawPointsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_(const SDL_FPoint *ptr) const { return ptr; }
+			auto _ptr_(const mth::Point<float> *ptr) const { return reinterpret_cast<const SDL_FPoint *>(ptr); }
 		};
 
 		/**
