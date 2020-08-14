@@ -81,6 +81,9 @@ namespace ctl
 	template<typename T, typename... EqualTypes>
 	concept matches = std::disjunction_v<std::is_same<std::remove_cv_t<T>, EqualTypes>...>;
 
+	template<typename T>
+	using strip_t = std::remove_cv_t<std::decay_t<T>>;
+
 	// -----------------------------------------------------------------------------
 	// CRTP
 	// -----------------------------------------------------------------------------

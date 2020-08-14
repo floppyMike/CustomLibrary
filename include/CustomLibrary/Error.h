@@ -10,14 +10,14 @@
 
 #ifndef NDEBUG
 #	include <iostream>
-#	define ASSERT(cond, msg)                                                                              \
-		{                                                                                                  \
-			if (!(cond))                                                                                   \
-			{                                                                                              \
+#	define ASSERT(cond, msg)                                                                               \
+		{                                                                                                   \
+			if (!(cond))                                                                                    \
+			{                                                                                               \
 				std::cerr << "Assertion \"" << #cond << " failed in " << __FILE__ << " using the function " \
-						  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;          \
-				std::terminate();                                                                          \
-			}                                                                                              \
+						  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;           \
+				std::terminate();                                                                           \
+			}                                                                                               \
 		}
 #else
 #	define ASSERT(cond, msg)
@@ -160,7 +160,8 @@ namespace ctl::err
 			}
 #endif // _IOSTREAM_
 
-			if (m_out_file.tellp() >= std::numeric_limits<unsigned short>::max()) m_out_file.seekp(0);
+			if (m_out_file.tellp() >= std::numeric_limits<unsigned short>::max())
+				m_out_file.seekp(0);
 		}
 	};
 

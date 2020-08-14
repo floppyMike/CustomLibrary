@@ -77,10 +77,11 @@ namespace ctl::sdl
 		};
 
 		/**
-		 * @brief Handles drawing of RectFrame
+		 * @brief Handles drawing of Rect Objects
 		 */
-		template<typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<Frame<mth::Rect<int, int>>, Full, Impl> : public Impl
+		template<matches<SDL_Rect, mth::Rect<int, int>, Frame<mth::Rect<int, int>>> Type, typename Full,
+				 uses_sdl_renderer													Impl>
+		class _Drawable_<Type, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -90,8 +91,7 @@ namespace ctl::sdl
 			 */
 			auto rect() const -> void
 			{
-				const auto r = SDL_RenderDrawRect(this->renderer()->get(),
-												  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
+				const auto r = SDL_RenderDrawRect(this->renderer()->get(), _ptr_(&this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -100,17 +100,28 @@ namespace ctl::sdl
 			 */
 			auto filled_rect() const -> void
 			{
-				const auto r = SDL_RenderFillRect(this->renderer()->get(),
-												  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
+				const auto r = SDL_RenderFillRect(this->renderer()->get(), _ptr_(&this->obj()));
 				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_()
+			{
+				using T = strip_t<decltype(this->obj())>;
+
+				if constexpr (std::is_same_v<T, SDL_Rect> || std::is_same_v<T, mth::Rect<int, int>>)
+					return this->obj();
+				else
+					return &this->obj()->shape();
 			}
 		};
 
 		/**
-		 * @brief Handles drawing of CircleFrame
+		 * @brief Handles drawing of Circle Objects
 		 */
-		template<typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<Frame<mth::Circle<int, int>>, Full, Impl> : public Impl
+		template<matches<mth::Circle<int, int>, Frame<mth::Circle<int, int>>> Type, typename Full,
+				 uses_sdl_renderer											  Impl>
+		class _Drawable_<Type, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -142,9 +153,9 @@ namespace ctl::sdl
 			 */
 			auto generate() -> auto &
 			{
-				const auto d = this->obj()->shape().r * 2;
+				const auto d = _ptr_()->r * 2;
 
-				mth::Point<int> p(this->obj()->shape().r - 1, 0);
+				mth::Point<int> p(_ptr_()->r - 1, 0);
 				mth::Point<int> tp(1, 1);
 
 				int err = tp.x - d;
@@ -152,14 +163,14 @@ namespace ctl::sdl
 				while (p.x >= p.y)
 				{
 					m_cache.insert(m_cache.end(),
-								   { SDL_Point{ this->obj()->shape().x + p.x, this->obj()->shape().y + p.y },
-									 { this->obj()->shape().x - p.x, this->obj()->shape().y + p.y },
-									 { this->obj()->shape().x + p.x, this->obj()->shape().y - p.y },
-									 { this->obj()->shape().x - p.x, this->obj()->shape().y - p.y },
-									 { this->obj()->shape().x + p.y, this->obj()->shape().y + p.x },
-									 { this->obj()->shape().x - p.y, this->obj()->shape().y + p.x },
-									 { this->obj()->shape().x + p.y, this->obj()->shape().y - p.x },
-									 { this->obj()->shape().x - p.y, this->obj()->shape().y - p.x } });
+								   { SDL_Point{ _ptr_()->x + p.x, _ptr_()->y + p.y },
+									 { _ptr_()->x - p.x, _ptr_()->y + p.y },
+									 { _ptr_()->x + p.x, _ptr_()->y - p.y },
+									 { _ptr_()->x - p.x, _ptr_()->y - p.y },
+									 { _ptr_()->x + p.y, _ptr_()->y + p.x },
+									 { _ptr_()->x - p.y, _ptr_()->y + p.x },
+									 { _ptr_()->x + p.y, _ptr_()->y - p.x },
+									 { _ptr_()->x - p.y, _ptr_()->y - p.x } });
 
 					if (err <= 0)
 					{
@@ -191,8 +202,8 @@ namespace ctl::sdl
 				for (size_t i = 0; i < pres; ++i)
 				{
 					const auto x = deg_to_rad(360.f / pres * (i + 1.F));
-					m_cache[i]	 = { static_cast<int>(this->obj()->shape().r * std::cos(x) + this->obj()->shape().x),
-									 static_cast<int>(this->obj()->shape().r * std::sin(x) + this->obj()->shape().y) };
+					m_cache[i]	 = { static_cast<int>(_ptr_()->r * std::cos(x) + _ptr_()->x),
+									 static_cast<int>(_ptr_()->r * std::sin(x) + _ptr_()->y) };
 				}
 				m_cache.back() = m_cache.front();
 
@@ -201,13 +212,23 @@ namespace ctl::sdl
 
 		private:
 			std::vector<SDL_Point> m_cache;
+
+			auto _ptr_() const noexcept
+			{
+				using T = strip_t<decltype(this->obj())>;
+
+				if constexpr (std::is_same_v<T, mth::Circle<int, int>>)
+					return this->obj();
+				else
+					return &this->obj()->shape();
+			}
 		};
 
 		/**
-		 * @brief Handles drawing of LineFrame
+		 * @brief Handles drawing of Line Objects
 		 */
-		template<typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<Frame<mth::Line<int>>, Full, Impl> : public Impl
+		template<matches<mth::Line<int>, Frame<mth::Line<int>>> Type, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<Type, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -218,17 +239,28 @@ namespace ctl::sdl
 			void line() const
 			{
 				const auto r =
-					SDL_RenderDrawLine(this->renderer()->get(), this->obj()->shape().x1, this->obj()->shape().y1,
-									   this->obj()->shape().x2, this->obj()->shape().y2);
+					SDL_RenderDrawLine(this->renderer()->get(), _ptr_()->x1, _ptr_()->y1, _ptr_()->x2, _ptr_()->y2);
 				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_() const noexcept
+			{
+				using T = strip_t<decltype(this->obj())>;
+
+				if constexpr (std::is_same_v<T, mth::Line<int>>)
+					return this->obj();
+				else
+					return &this->obj()->shape();
 			}
 		};
 
 		/**
-		 * @brief Handles drawing of PointFrame
+		 * @brief Handles drawing of Point Objects
 		 */
-		template<typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<Frame<mth::Point<int>>, Full, Impl> : public Impl
+		template<matches<SDL_Point, mth::Point<int>, Frame<mth::Point<int>>> Type, typename Full,
+				 uses_sdl_renderer											 Impl>
+		class _Drawable_<Type, Full, Impl> : public Impl
 		{
 		public:
 			/**
@@ -236,9 +268,19 @@ namespace ctl::sdl
 			 */
 			void point() const
 			{
-				const auto r =
-					SDL_RenderDrawPoint(this->renderer()->get(), this->obj()->shape().x, this->obj()->shape().y);
+				const auto r = SDL_RenderDrawPoint(this->renderer()->get(), _ptr_()->x, _ptr_()->y);
 				ASSERT(r == 0, SDL_GetError());
+			}
+
+		private:
+			auto _ptr_() const noexcept
+			{
+				using T = strip_t<decltype(this->obj())>;
+
+				if constexpr (std::is_same_v<T, SDL_Point> || std::is_same_v<T, mth::Point<int>>)
+					return this->obj();
+				else
+					return &this->obj()->shape();
 			}
 		};
 
@@ -247,8 +289,8 @@ namespace ctl::sdl
 		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_Rect or Rect<int,
 		 * int>.
 		 */
-		template<matches<SDL_Rect, mth::Rect<int, int>> Type, typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		template<matches<SDL_Rect, mth::Rect<int, int>> Type, size_t Size, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type, Size>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -283,8 +325,8 @@ namespace ctl::sdl
 		 * This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_FRect or Rect<float,
 		 * float>.
 		 */
-		template<matches<SDL_FRect, mth::Rect<float, float>> Type, typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		template<matches<SDL_FRect, mth::Rect<float, float>> Type, size_t Size, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type, Size>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -319,8 +361,8 @@ namespace ctl::sdl
 		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
 		 * Point<int>.
 		 */
-		template<matches<SDL_Point, mth::Point<int>> Type, typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		template<matches<SDL_Point, mth::Point<int>> Type, size_t Size, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type, Size>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -335,6 +377,16 @@ namespace ctl::sdl
 				ASSERT(r == 0, SDL_GetError());
 			}
 
+			/**
+			 * @brief Draws connected Lines
+			 */
+			auto lines() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawLines(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
 		private:
 			auto _ptr_(const SDL_Point *ptr) const { return ptr; }
 			auto _ptr_(const mth::Point<int> *ptr) const { return reinterpret_cast<const SDL_Point *>(ptr); }
@@ -345,8 +397,8 @@ namespace ctl::sdl
 		 * This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or
 		 * Point<float>.
 		 */
-		template<matches<SDL_FPoint, mth::Point<float>> Type, typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<std::span<Type>, Full, Impl> : public Impl
+		template<matches<SDL_FPoint, mth::Point<float>> Type, size_t Size, typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<std::span<Type, Size>, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
@@ -358,6 +410,16 @@ namespace ctl::sdl
 			{
 				const auto r =
 					SDL_RenderDrawPointsF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
+				ASSERT(r == 0, SDL_GetError());
+			}
+
+			/**
+			 * @brief Draws connected Lines
+			 */
+			auto lines() const -> void
+			{
+				const auto r =
+					SDL_RenderDrawLinesF(this->renderer()->get(), _ptr_(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -393,7 +455,7 @@ namespace ctl::sdl
 			}
 		};
 
-	} // namespace detail
+	}; // namespace detail
 
 	// -----------------------------------------------------------------------------
 	// Drawing Extension
