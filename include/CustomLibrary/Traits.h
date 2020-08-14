@@ -222,7 +222,7 @@ namespace ctl
 		}
 
 		constexpr auto obj(T *o) noexcept { m_o = o; }
-		constexpr auto obj() noexcept
+		constexpr auto obj() const noexcept
 		{
 			assert(m_o != nullptr && "Object isn't assigned.");
 			return m_o;
