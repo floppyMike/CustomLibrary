@@ -91,7 +91,7 @@ namespace ctl::sdl
 			 */
 			auto rect() const -> void
 			{
-				const auto r = SDL_RenderDrawRect(this->renderer()->get(), _ptr_(&this->obj()));
+				const auto r = SDL_RenderDrawRect(this->renderer()->get(), _ptr_());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -100,19 +100,21 @@ namespace ctl::sdl
 			 */
 			auto filled_rect() const -> void
 			{
-				const auto r = SDL_RenderFillRect(this->renderer()->get(), _ptr_(&this->obj()));
+				const auto r = SDL_RenderFillRect(this->renderer()->get(), _ptr_());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
 		private:
-			auto _ptr_()
+			auto _ptr_() const noexcept
 			{
 				using T = strip_t<decltype(this->obj())>;
 
-				if constexpr (std::is_same_v<T, SDL_Rect> || std::is_same_v<T, mth::Rect<int, int>>)
+				if constexpr (std::is_same_v<T, SDL_Rect>)
 					return this->obj();
+				else if constexpr (std::is_same_v<T, mth::Rect<int, int>>)
+					return reinterpret_cast<const SDL_Rect *>(this->obj());
 				else
-					return &this->obj()->shape();
+					return reinterpret_cast<const SDL_Rect *>(&this->obj()->shape());
 			}
 		};
 

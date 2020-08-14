@@ -57,8 +57,6 @@ namespace ctl
 		Nonesuch(Nonesuch &&)	   = delete;
 		Nonesuch(const Nonesuch &) = delete;
 
-		~Nonesuch() = delete;
-
 		void operator=(const Nonesuch &) = delete;
 		void operator=(Nonesuch &&) = delete;
 	};
@@ -82,7 +80,7 @@ namespace ctl
 	concept matches = std::disjunction_v<std::is_same<std::remove_cv_t<T>, EqualTypes>...>;
 
 	template<typename T>
-	using strip_t = std::remove_cv_t<std::decay_t<T>>;
+	using strip_t = std::remove_cv_t<std::remove_pointer_t<std::decay_t<T>>>;
 
 	// -----------------------------------------------------------------------------
 	// CRTP
