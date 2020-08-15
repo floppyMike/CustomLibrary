@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iterator>
 #include <type_traits>
 #include <utility>
 #include <cassert>
@@ -232,5 +233,38 @@ namespace ctl
 	private:
 		T *m_o;
 	};
+
+	// -----------------------------------------------------------------------------
+	// Unify C-Arrays and Containers
+	// -----------------------------------------------------------------------------
+
+	namespace detail
+	{
+		template<typename T, std::size_t n>
+		constexpr auto _value_type_(const T[n]) -> T;
+
+		template<typename T>
+		requires requires(T)
+		{
+			typename T::value_type;
+		}
+		constexpr auto _value_type_(T) -> typename T::value_type;
+
+		template<typename T, std::size_t n>
+		constexpr auto _iterator_cat_(const T[n]) -> std::random_access_iterator_tag;
+
+		template<typename T>
+		requires requires(T)
+		{
+			typename T::iterator::iterator_category;
+		}
+		constexpr auto _iterator_cat_(T) -> typename T::iterator::iterator_category;
+	} // namespace detail
+
+	template<typename T>
+	using array_value_t = decltype(detail::_iterator_cat_(std::declval<T>()));
+
+	template<typename T>
+	using array_iter_cat_t = decltype(detail::_iterator_cat_(std::declval<T>()));
 
 } // namespace ctl
