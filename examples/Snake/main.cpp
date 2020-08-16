@@ -103,7 +103,7 @@ public:
 
 		const auto crash =
 			std::find_if(m_body.begin(), m_body.end(),
-						 [this](const mth::Rect<int, int> &r) { return m_tail->x == r.x && m_tail->y == r.y; })
+						 [this](const mth::Rect<int, int> &r) { return &r != &*m_tail && m_tail->x == r.x && m_tail->y == r.y; })
 			== m_body.end();
 
 		if (++m_tail == m_body.rend())
@@ -251,7 +251,8 @@ public:
 		if (m_tick.ticks<std::chrono::milliseconds>() >= TICK_DUR)
 		{
 			m_r.do_render(true);
-			m_s.mov();
+			if (!m_s.mov())
+				std::cerr << "Crash!\n";
 			m_tick.start();
 
 			if (mth::collision(m_a.loc(), m_s.head_loc()))
