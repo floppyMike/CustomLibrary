@@ -1,7 +1,10 @@
+#include <iostream>
+
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/Window.h>
 #include <CustomLibrary/SDL/Renderer.h>
 #include <CustomLibrary/SDL/Drawable.h>
+#include <Customlibrary/SDL/Event.h>
 
 #include <CustomLibrary/Collider.h>
 #include <CustomLibrary/RandomGenerator.h>
@@ -101,26 +104,16 @@ public:
 
 		m_tail->pos(Field::grid_to_coord(m_loc));
 
-		const auto crash =
-			std::find_if(m_body.begin(), m_body.end(),
-						 [this](const mth::Rect<int, int> &r) { return &r != &*m_tail && m_tail->x == r.x && m_tail->y == r.y; })
+		const auto crash = std::find_if(m_body.begin(), m_body.end(),
+										[this](const mth::Rect<int, int> &r) {
+											return &r != &*m_tail && m_tail->x == r.x && m_tail->y == r.y;
+										})
 			== m_body.end();
 
 		if (++m_tail == m_body.rend())
 			m_tail = m_body.rbegin();
 
 		return crash;
-
-		// *m_tail = m_body.front();
-
-		// m_tail = m_tail == m_body.begin() + 1 ? m_body.end() - 1 : m_tail - 1;
-
-		// m_body.front().pos(Field::grid_to_coord(m_loc));
-
-		// return std::find_if(
-		// 		   m_body.begin() + 1, m_body.end(),
-		// 		   [this](const mth::Rect<int, int> &r) { return m_body.front().x == r.x && m_body.front().y == r.y; })
-		// 	== m_body.end();
 	}
 
 	auto direction(Direction d) noexcept
@@ -146,7 +139,7 @@ public:
 		}
 	}
 
-	auto increase_size() { m_tail = std::reverse_iterator(m_body.insert(m_tail.base(), m_body.back())); }
+	auto increase_size() { m_tail = std::reverse_iterator(m_body.insert(m_tail.base(), m_body.back())) - 1; }
 
 	[[nodiscard]] auto head_loc() const noexcept -> const auto & { return m_loc; }
 	[[nodiscard]] auto body() const noexcept -> const auto & { return m_body; }
@@ -252,11 +245,18 @@ public:
 		{
 			m_r.do_render(true);
 			if (!m_s.mov())
-				std::cerr << "Crash!\n";
+			{
+				auto e = sdl::create_exit_event(m_win.ID());
+				SDL_PushEvent(&e);
+				std::cerr << "Crash!\n"
+						  << "Finished with score: " << m_score << std::endl;
+			}
 			m_tick.start();
 
 			if (mth::collision(m_a.loc(), m_s.head_loc()))
 			{
+				std::cout << "New score: " << ++m_score << std::endl;
+
 				m_s.increase_size();
 				m_a.respawn(m_s);
 			}
@@ -286,6 +286,8 @@ private:
 	ctl::Timer m_tick;
 	Snake	   m_s;
 	Apple	   m_a;
+
+	uint32_t m_score = 0;
 };
 
 auto main(int argc, char **argv) -> int
@@ -297,5 +299,6 @@ auto main(int argc, char **argv) -> int
 	r.add_window(&a);
 	r.run(60);
 
+	::getchar();
 	return 0;
 }
