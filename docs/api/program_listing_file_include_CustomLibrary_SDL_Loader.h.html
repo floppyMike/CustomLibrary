@@ -187,7 +187,7 @@
         <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="p">,</span> <span class="k">typename</span><span class="o">&gt;</span>
         <span class="k">class</span> <span class="nc">_Loader_</span><span class="p">;</span>
 
-        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Full</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Impl</span><span class="o">&gt;</span>
+        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Full</span><span class="p">,</span> <span class="n">uses_sdl_renderer</span> <span class="n">Impl</span><span class="o">&gt;</span>
         <span class="k">class</span> <span class="nc">_Loader_</span><span class="o">&lt;</span><span class="n">Texture</span><span class="p">,</span> <span class="n">Full</span><span class="p">,</span> <span class="n">Impl</span><span class="o">&gt;</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Impl</span>
         <span class="p">{</span>
         <span class="k">public</span><span class="o">:</span>
@@ -209,7 +209,7 @@
             <span class="p">}</span>
         <span class="p">};</span>
 
-        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Full</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Impl</span><span class="o">&gt;</span>
+        <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">Full</span><span class="p">,</span> <span class="n">uses_sdl_renderer</span> <span class="n">Impl</span><span class="o">&gt;</span>
         <span class="k">class</span> <span class="nc">_Loader_</span><span class="o">&lt;</span><span class="n">Text</span><span class="p">,</span> <span class="n">Full</span><span class="p">,</span> <span class="n">Impl</span><span class="o">&gt;</span> <span class="o">:</span> <span class="k">public</span> <span class="n">Impl</span>
         <span class="p">{</span>
             <span class="k">auto</span> <span class="n">_load_</span><span class="p">(</span><span class="n">SDL_Surface</span> <span class="o">*</span><span class="n">s</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">text</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
@@ -280,12 +280,21 @@
     <span class="c1">// -----------------------------------------------------------------------------</span>
 
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-    <span class="k">using</span> <span class="n">Load</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">Filter</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">_Loader_</span><span class="p">,</span> <span class="n">FunctorR</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+    <span class="k">using</span> <span class="n">Load</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">Filter</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">_Loader_</span><span class="p">,</span> <span class="n">Functor</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">Renderer</span><span class="o">&gt;</span>
+    <span class="k">using</span> <span class="n">LoadR</span> <span class="o">=</span> <span class="k">typename</span> <span class="n">Filter</span><span class="o">&lt;</span><span class="n">detail</span><span class="o">::</span><span class="n">_Loader_</span><span class="p">,</span> <span class="n">FunctorR</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span> <span class="n">Renderer</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">T</span><span class="o">&gt;::</span><span class="n">type</span><span class="p">;</span>
 
     <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_T</span><span class="o">&gt;</span>
-    <span class="k">auto</span> <span class="n">load</span><span class="p">(</span><span class="n">_T</span> <span class="o">*</span><span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="n">Renderer</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>
+    <span class="k">auto</span> <span class="n">load</span><span class="p">(</span><span class="n">_T</span> <span class="o">*</span><span class="k">const</span> <span class="n">ptr</span><span class="p">)</span>
     <span class="p">{</span>
-        <span class="k">return</span> <span class="n">Load</span><span class="o">&lt;</span><span class="n">_T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">Load</span><span class="o">&lt;</span><span class="n">_T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">_T</span><span class="p">,</span> <span class="k">typename</span> <span class="n">_Renderer</span><span class="o">&gt;</span>
+    <span class="k">auto</span> <span class="n">load</span><span class="p">(</span><span class="n">_T</span> <span class="o">*</span><span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="n">_Renderer</span> <span class="o">*</span><span class="n">r</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">LoadR</span><span class="o">&lt;</span><span class="n">_T</span><span class="p">,</span> <span class="n">_Renderer</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ptr</span><span class="p">,</span> <span class="n">r</span><span class="p">);</span>
     <span class="p">}</span>
 
 <span class="p">}</span> <span class="c1">// namespace ctl::sdl</span>

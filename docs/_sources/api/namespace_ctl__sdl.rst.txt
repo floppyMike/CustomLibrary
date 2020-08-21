@@ -19,16 +19,12 @@ Namespaces
 
 - :ref:`namespace_ctl__sdl__detail`
 
-- :ref:`namespace_ctl__sdl__tag`
-
 
 Classes
 -------
 
 
 - :ref:`exhale_struct_structctl_1_1sdl_1_1AniFrame`
-
-- :ref:`exhale_struct_structctl_1_1sdl_1_1crtp`
 
 - :ref:`exhale_struct_structctl_1_1sdl_1_1Font_1_1Unique__Deleter`
 
@@ -49,12 +45,6 @@ Classes
 - :ref:`exhale_class_classctl_1_1sdl_1_1Font`
 
 - :ref:`exhale_class_classctl_1_1sdl_1_1Frame`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1FunctionalO`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1FunctionalR`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1FunctorO`
 
 - :ref:`exhale_class_classctl_1_1sdl_1_1FunctorR`
 
@@ -91,9 +81,13 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8`
+- :ref:`exhale_function_Event_8h_1abbd7804c8b41738b8fadd2be07c85ab0`
 
-- :ref:`exhale_function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732`
+- :ref:`exhale_function_Drawable_8h_1a8b709ba026a779ab39aaca97e15f3af8`
+
+- :ref:`exhale_function_Loader_8h_1a78e1995820561853d47b36629a354fc9`
+
+- :ref:`exhale_function_Loader_8h_1a306495f3c27423e3c27f324146894d92`
 
 - :ref:`exhale_function_Event_8h_1a95f8a298afdb3dea811979bde77575b2`
 
@@ -108,7 +102,7 @@ Typedefs
 
 - :ref:`exhale_typedef_Geometry_8h_1a8188dd7599f9738f12bdd21a63c3279a`
 
-- :ref:`exhale_typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063`
+- :ref:`exhale_typedef_Drawable_8h_1a92b132e673a5a3373240411c64c0bf7b`
 
 - :ref:`exhale_typedef_Animation_8h_1a1a529d3a0e3b791d4a259dae73b798a8`
 
@@ -132,15 +126,17 @@ Typedefs
 
 - :ref:`exhale_typedef_Geometry_8h_1ade62e0a7a472fb999d3e7cbcd17e6d6b`
 
-- :ref:`exhale_typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264`
+- :ref:`exhale_typedef_Loader_8h_1a34475cf4506c69a135f5d31c1b56acff`
 
-- :ref:`exhale_typedef_Player_8h_1a5877a803cee7ff68062c9697dc98800c`
+- :ref:`exhale_typedef_Loader_8h_1ad11497e809519351547099a4a757fc28`
+
+- :ref:`exhale_typedef_Player_8h_1a438459fe609ccbfd787a6eca3df21521`
 
 - :ref:`exhale_typedef_Geometry_8h_1aeeef586721b0d9dfc42e805f45405f08`
 
 - :ref:`exhale_typedef_Geometry_8h_1a48a6c72482d108a2ed829646edd00fa9`
 
-- :ref:`exhale_typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51`
+- :ref:`exhale_typedef_Render_8h_1aacd19d1d9db7b351e5288959ac33bedf`
 
 
 Variables
@@ -158,6 +154,8 @@ Variables
 - :ref:`exhale_variable_Engine_8h_1a424b14e79116139031fe39ae7423312d`
 
 - :ref:`exhale_variable_Engine_8h_1af5e35938d2f7738c2371ab48ab534ad9`
+
+- :ref:`exhale_variable_TypeTraits_8h_1a097d5cc071185b7fa127d4e42abd35fe`
 
 - :ref:`exhale_variable_Engine_8h_1a5c15189ce50aa565b226ac0ad0ec9a97`
 

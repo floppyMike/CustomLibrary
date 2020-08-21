@@ -73,29 +73,23 @@ Classes
 
 - :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Animation_00_01Full_00_01Impl_01_4`
 
-- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4`
-
-- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4`
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_00_01Size_01_4_00_01Full_00_01Impl_01_4`
 
 - :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4`
+
+- :ref:`exhale_class_classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Type_00_01Full_00_01Impl_01_4`
 
 
 Functions
 ---------
 
 
-- :ref:`exhale_function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8`
+- :ref:`exhale_function_Drawable_8h_1a8b709ba026a779ab39aaca97e15f3af8`
 
 
 Typedefs
 --------
 
 
-- :ref:`exhale_typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063`
+- :ref:`exhale_typedef_Drawable_8h_1a92b132e673a5a3373240411c64c0bf7b`
 

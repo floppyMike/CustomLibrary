@@ -21,11 +21,6 @@ Namespaces
 
    namespace_ctl__sdl__detail.rst
 
-.. toctree::
-   :maxdepth: 5
-
-   namespace_ctl__sdl__tag.rst
-
 Classes and Structs
 *******************
 
@@ -34,26 +29,6 @@ Classes and Structs
    :maxdepth: 5
 
    structctl_1_1sdl_1_1AniFrame.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1crtp.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1detail_1_1__Stick__.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1detail_1_1__UnPeeler__.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1detail_1_1__UnPeeler___3_01Util_00_01Impl_00_01void_01_4.rst
 
 .. toctree::
    :maxdepth: 5
@@ -74,61 +49,6 @@ Classes and Structs
    :maxdepth: 5
 
    structctl_1_1sdl_1_1Surface_1_1Unique__Destructor.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1contains__tag.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1contains__tag_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1tag_01_4_01_4.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isAnimation.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isFont.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isMultiShape.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isMusic.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isRenderDelay.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isRenderer.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isText.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isTexture.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   structctl_1_1sdl_1_1tag_1_1isUnassigned.rst
 
 .. toctree::
    :maxdepth: 5
@@ -163,32 +83,17 @@ Classes and Structs
 .. toctree::
    :maxdepth: 5
 
-   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Circle_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Line_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Point_3_01int_01_4_01_4_00_01Full_00_01Impl_01_4.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Frame_3_01mth_1_1Rect_3_01int_00_01int_01_4_01_4_00_01Full_00_01Impl_01_4.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4.rst
+   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_00_01Size_01_4_00_01Full_00_01Impl_01_4.rst
 
 .. toctree::
    :maxdepth: 5
 
    classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Texture_00_01Full_00_01Impl_01_4.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   classctl_1_1sdl_1_1detail_1_1__Drawable___3_01Type_00_01Full_00_01Impl_01_4.rst
 
 .. toctree::
    :maxdepth: 5
@@ -249,21 +154,6 @@ Classes and Structs
    :maxdepth: 5
 
    classctl_1_1sdl_1_1Frame.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1FunctionalO.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1FunctionalR.rst
-
-.. toctree::
-   :maxdepth: 5
-
-   classctl_1_1sdl_1_1FunctorO.rst
 
 .. toctree::
    :maxdepth: 5
@@ -347,22 +237,22 @@ Functions
 .. toctree::
    :maxdepth: 5
 
-   function_TypeTraits_8h_1a2c4ccb353805e3b527615c8b2db47aba.rst
+   function_Event_8h_1abbd7804c8b41738b8fadd2be07c85ab0.rst
 
 .. toctree::
    :maxdepth: 5
 
-   function_TypeTraits_8h_1a1c346a55a609c65bd30ab3ba5be01954.rst
+   function_Drawable_8h_1a8b709ba026a779ab39aaca97e15f3af8.rst
 
 .. toctree::
    :maxdepth: 5
 
-   function_Drawable_8h_1ab759b4b041da233a3f0c16ecc20324d8.rst
+   function_Loader_8h_1a78e1995820561853d47b36629a354fc9.rst
 
 .. toctree::
    :maxdepth: 5
 
-   function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732.rst
+   function_Loader_8h_1a306495f3c27423e3c27f324146894d92.rst
 
 .. toctree::
    :maxdepth: 5
@@ -416,7 +306,7 @@ Variables
 .. toctree::
    :maxdepth: 5
 
-   variable_TypeTraits_8h_1aed8aae1a06d286d372ef30b31b93c194.rst
+   variable_TypeTraits_8h_1a097d5cc071185b7fa127d4e42abd35fe.rst
 
 .. toctree::
    :maxdepth: 5
@@ -440,7 +330,7 @@ Typedefs
 .. toctree::
    :maxdepth: 5
 
-   typedef_Drawable_8h_1abba12f58ed9ad7cb82a936e7761a7063.rst
+   typedef_Drawable_8h_1a92b132e673a5a3373240411c64c0bf7b.rst
 
 .. toctree::
    :maxdepth: 5
@@ -500,12 +390,17 @@ Typedefs
 .. toctree::
    :maxdepth: 5
 
-   typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264.rst
+   typedef_Loader_8h_1a34475cf4506c69a135f5d31c1b56acff.rst
 
 .. toctree::
    :maxdepth: 5
 
-   typedef_Player_8h_1a5877a803cee7ff68062c9697dc98800c.rst
+   typedef_Loader_8h_1ad11497e809519351547099a4a757fc28.rst
+
+.. toctree::
+   :maxdepth: 5
+
+   typedef_Player_8h_1a438459fe609ccbfd787a6eca3df21521.rst
 
 .. toctree::
    :maxdepth: 5
@@ -520,4 +415,4 @@ Typedefs
 .. toctree::
    :maxdepth: 5
 
-   typedef_Render_8h_1a8a5896aa4870143b4a8d1416b83e7d51.rst
+   typedef_Render_8h_1aacd19d1d9db7b351e5288959ac33bedf.rst

@@ -56,5 +56,7 @@ Functions
 ---------
 
 
+- :ref:`exhale_function_Event_8h_1abbd7804c8b41738b8fadd2be07c85ab0`
+
 - :ref:`exhale_function_Event_8h_1a95f8a298afdb3dea811979bde77575b2`
 

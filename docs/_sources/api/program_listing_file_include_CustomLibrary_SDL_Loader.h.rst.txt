@@ -42,7 +42,7 @@ Program Listing for File Loader.h
            template<typename, typename, typename>
            class _Loader_;
    
-           template<typename Full, typename Impl>
+           template<typename Full, uses_sdl_renderer Impl>
            class _Loader_<Texture, Full, Impl> : public Impl
            {
            public:
@@ -64,7 +64,7 @@ Program Listing for File Loader.h
                }
            };
    
-           template<typename Full, typename Impl>
+           template<typename Full, uses_sdl_renderer Impl>
            class _Loader_<Text, Full, Impl> : public Impl
            {
                auto _load_(SDL_Surface *s, const char *text) -> void
@@ -135,12 +135,21 @@ Program Listing for File Loader.h
        // -----------------------------------------------------------------------------
    
        template<typename T>
-       using Load = typename Filter<detail::_Loader_, FunctorR<T>, T>::type;
+       using Load = typename Filter<detail::_Loader_, Functor<T>, T>::type;
+   
+       template<typename T, typename Renderer>
+       using LoadR = typename Filter<detail::_Loader_, FunctorR<T, Renderer>, T>::type;
    
        template<typename _T>
-       auto load(_T *const ptr, Renderer *r)
+       auto load(_T *const ptr)
        {
-           return Load<_T>(ptr, r);
+           return Load<_T>(ptr);
+       }
+   
+       template<typename _T, typename _Renderer>
+       auto load(_T *const ptr, _Renderer *r)
+       {
+           return LoadR<_T, _Renderer>(ptr, r);
        }
    
    } // namespace ctl::sdl

@@ -176,11 +176,14 @@
                 <span class="k">throw</span> <span class="n">std</span><span class="o">::</span><span class="n">runtime_error</span><span class="p">(</span><span class="s">&quot;Event not registered.&quot;</span><span class="p">);</span>
         <span class="p">}</span>
 
-        <span class="kt">void</span> <span class="n">push_event</span><span class="p">()</span> <span class="k">noexcept</span>
-        <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">SDL_PushEvent</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_event</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-                <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">SDL_GetError</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span class="c1">// /**</span>
+        <span class="c1">//  * @brief pushes event onto SDL event queue</span>
+        <span class="c1">//  */</span>
+        <span class="c1">// void push_event() noexcept</span>
+        <span class="c1">// {</span>
+        <span class="c1">//  if (SDL_PushEvent(&amp;m_event) &lt; 0)</span>
+        <span class="c1">//      std::cerr &lt;&lt; SDL_GetError() &lt;&lt; std::endl;</span>
+        <span class="c1">// }</span>
 
         <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">constexpr</span> <span class="k">auto</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event</span><span class="p">.</span><span class="n">type</span><span class="p">;</span> <span class="p">}</span>
 
@@ -203,6 +206,17 @@
     <span class="k">private</span><span class="o">:</span>
         <span class="n">SDL_Event</span> <span class="n">m_event</span><span class="p">;</span>
     <span class="p">};</span>
+
+    <span class="k">auto</span> <span class="nf">create_exit_event</span><span class="p">(</span><span class="n">Uint32</span> <span class="n">win_id</span><span class="p">)</span> <span class="k">noexcept</span>
+    <span class="p">{</span>
+        <span class="n">SDL_Event</span> <span class="n">e</span><span class="p">;</span>
+        <span class="n">SDL_zero</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+
+        <span class="n">e</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">SDL_QUIT</span><span class="p">;</span>
+        <span class="n">e</span><span class="p">.</span><span class="n">window</span><span class="p">.</span><span class="n">windowID</span> <span class="o">=</span> <span class="n">win_id</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">e</span><span class="p">;</span>
+    <span class="p">}</span>
 
     <span class="k">auto</span> <span class="nf">mouse_position</span><span class="p">()</span>
     <span class="p">{</span>

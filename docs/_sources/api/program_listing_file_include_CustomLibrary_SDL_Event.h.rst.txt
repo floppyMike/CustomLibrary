@@ -31,11 +31,14 @@ Program Listing for File Event.h
                    throw std::runtime_error("Event not registered.");
            }
    
-           void push_event() noexcept
-           {
-               if (SDL_PushEvent(&m_event) < 0)
-                   std::cerr << SDL_GetError() << std::endl;
-           }
+           // /**
+           //  * @brief pushes event onto SDL event queue
+           //  */
+           // void push_event() noexcept
+           // {
+           //  if (SDL_PushEvent(&m_event) < 0)
+           //      std::cerr << SDL_GetError() << std::endl;
+           // }
    
            [[nodiscard]] constexpr auto type() const noexcept { return m_event.type; }
    
@@ -58,6 +61,17 @@ Program Listing for File Event.h
        private:
            SDL_Event m_event;
        };
+   
+       auto create_exit_event(Uint32 win_id) noexcept
+       {
+           SDL_Event e;
+           SDL_zero(e);
+   
+           e.type = SDL_QUIT;
+           e.window.windowID = win_id;
+   
+           return e;
+       }
    
        auto mouse_position()
        {
