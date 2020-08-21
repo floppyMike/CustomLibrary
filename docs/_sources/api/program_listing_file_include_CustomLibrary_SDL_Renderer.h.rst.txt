@@ -16,7 +16,7 @@ Program Listing for File Renderer.h
    
    #include "../Error.h"
    #include "../Traits.h"
-   #include "../Dim.h"
+   #include "../BasicTypes.h"
    
    #include "Engine.h"
    #include "TypeTraits.h"
@@ -64,12 +64,38 @@ Program Listing for File Renderer.h
                return m_renderer.get();
            }
    
-           auto color(const SDL_Color &col) -> void
+           auto color(const SDL_Color &col) const noexcept { SDL_SetRenderDrawColor(get(), col.r, col.g, col.b, col.a); }
+   
+           void logical_size(const mth::Dim<int> &dim) const noexcept { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
+   
+           auto blend_mode(const SDL_BlendMode &b) const noexcept
            {
-               SDL_SetRenderDrawColor(m_renderer.get(), col.r, col.g, col.b, col.a);
+               const auto r = SDL_SetRenderDrawBlendMode(get(), b);
+               ASSERT(r == 0, SDL_GetError());
            }
    
-           void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(m_renderer.get(), dim.w, dim.h); }
+           [[nodiscard]] auto blend_mode() const noexcept
+           {
+               SDL_BlendMode b;
+               const auto    r = SDL_GetRenderDrawBlendMode(get(), &b);
+               ASSERT(r == 0, SDL_GetError());
+   
+               return b;
+           }
+   
+           auto viewport(const mth::Rect<int, int> &rect) const noexcept
+           {
+               const auto r = SDL_RenderSetViewport(get(), reinterpret_cast<const SDL_Rect *>(&rect));
+               ASSERT(r == 0, SDL_GetError());
+           }
+   
+           [[nodiscard]] auto viewport() const noexcept
+           {
+               mth::Rect<int, int> rect;
+               SDL_RenderGetViewport(get(), reinterpret_cast<SDL_Rect *>(&rect));
+   
+               return rect;
+           }
    
        private:
            std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;

@@ -80,12 +80,16 @@ Functions
 ---------
 
 
-- :ref:`exhale_function_Loader_8h_1ad22e9df389b5ad1d5c1bb085c060f732`
+- :ref:`exhale_function_Loader_8h_1a78e1995820561853d47b36629a354fc9`
+
+- :ref:`exhale_function_Loader_8h_1a306495f3c27423e3c27f324146894d92`
 
 
 Typedefs
 --------
 
 
-- :ref:`exhale_typedef_Loader_8h_1a2bfae8dcdc23346f8c5d92c65a535264`
+- :ref:`exhale_typedef_Loader_8h_1a34475cf4506c69a135f5d31c1b56acff`
+
+- :ref:`exhale_typedef_Loader_8h_1ad11497e809519351547099a4a757fc28`
 

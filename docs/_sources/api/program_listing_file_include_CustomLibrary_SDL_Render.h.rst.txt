@@ -71,7 +71,7 @@ Program Listing for File Render.h
        // -----------------------------------------------------------------------------
    
        template<typename T>
-       using Render = typename Filter<detail::_Render_, FunctorO<T>, T>::type;
+       using Render = typename Filter<detail::_Render_, Functor<T>, T>::type;
    
        template<typename _T>
        auto render(_T *const ptr)

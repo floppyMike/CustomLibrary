@@ -26,14 +26,14 @@ namespace ctl::sdl
 				throw std::runtime_error("Event not registered.");
 		}
 
-		/**
-		 * @brief pushes event onto SDL event queue
-		 */
-		void push_event() noexcept
-		{
-			if (SDL_PushEvent(&m_event) < 0)
-				std::cerr << SDL_GetError() << std::endl;
-		}
+		// /**
+		//  * @brief pushes event onto SDL event queue
+		//  */
+		// void push_event() noexcept
+		// {
+		// 	if (SDL_PushEvent(&m_event) < 0)
+		// 		std::cerr << SDL_GetError() << std::endl;
+		// }
 
 		/**
 		 * @brief access event type
@@ -82,6 +82,23 @@ namespace ctl::sdl
 	private:
 		SDL_Event m_event;
 	};
+
+    /**
+     * @brief Create a exit event object
+     * 
+     * @param win_id window id to use
+     * @return window event 
+     */
+    auto create_exit_event(Uint32 win_id) noexcept
+    {
+        SDL_Event e;
+        SDL_zero(e);
+
+        e.type = SDL_QUIT;
+        e.window.windowID = win_id;
+
+        return e;
+    }
 
 	/**
 	 * @brief Request to mouse position

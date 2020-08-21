@@ -161,7 +161,7 @@
 
 <span class="cp">#include</span> <span class="cpf">&quot;../Error.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;../Traits.h&quot;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&quot;../Dim.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;../BasicTypes.h&quot;</span><span class="cp"></span>
 
 <span class="cp">#include</span> <span class="cpf">&quot;Engine.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&quot;TypeTraits.h&quot;</span><span class="cp"></span>
@@ -209,12 +209,38 @@
             <span class="k">return</span> <span class="n">m_renderer</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
         <span class="p">}</span>
 
-        <span class="k">auto</span> <span class="n">color</span><span class="p">(</span><span class="k">const</span> <span class="n">SDL_Color</span> <span class="o">&amp;</span><span class="n">col</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">void</span>
+        <span class="k">auto</span> <span class="n">color</span><span class="p">(</span><span class="k">const</span> <span class="n">SDL_Color</span> <span class="o">&amp;</span><span class="n">col</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">SDL_SetRenderDrawColor</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">b</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">a</span><span class="p">);</span> <span class="p">}</span>
+
+        <span class="kt">void</span> <span class="n">logical_size</span><span class="p">(</span><span class="k">const</span> <span class="n">mth</span><span class="o">::</span><span class="n">Dim</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dim</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span> <span class="p">{</span> <span class="n">SDL_RenderSetLogicalSize</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="n">dim</span><span class="p">.</span><span class="n">w</span><span class="p">,</span> <span class="n">dim</span><span class="p">.</span><span class="n">h</span><span class="p">);</span> <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="n">blend_mode</span><span class="p">(</span><span class="k">const</span> <span class="n">SDL_BlendMode</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
         <span class="p">{</span>
-            <span class="n">SDL_SetRenderDrawColor</span><span class="p">(</span><span class="n">m_renderer</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">col</span><span class="p">.</span><span class="n">r</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">g</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">b</span><span class="p">,</span> <span class="n">col</span><span class="p">.</span><span class="n">a</span><span class="p">);</span>
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">SDL_SetRenderDrawBlendMode</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="n">b</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
         <span class="p">}</span>
 
-        <span class="kt">void</span> <span class="n">logical_size</span><span class="p">(</span><span class="k">const</span> <span class="n">mth</span><span class="o">::</span><span class="n">Dim</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dim</span><span class="p">)</span> <span class="p">{</span> <span class="n">SDL_RenderSetLogicalSize</span><span class="p">(</span><span class="n">m_renderer</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">dim</span><span class="p">.</span><span class="n">w</span><span class="p">,</span> <span class="n">dim</span><span class="p">.</span><span class="n">h</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">blend_mode</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>
+        <span class="p">{</span>
+            <span class="n">SDL_BlendMode</span> <span class="n">b</span><span class="p">;</span>
+            <span class="k">const</span> <span class="k">auto</span>    <span class="n">r</span> <span class="o">=</span> <span class="n">SDL_GetRenderDrawBlendMode</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+
+            <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">auto</span> <span class="n">viewport</span><span class="p">(</span><span class="k">const</span> <span class="n">mth</span><span class="o">::</span><span class="n">Rect</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">rect</span><span class="p">)</span> <span class="k">const</span> <span class="k">noexcept</span>
+        <span class="p">{</span>
+            <span class="k">const</span> <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="n">SDL_RenderSetViewport</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">SDL_Rect</span> <span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rect</span><span class="p">));</span>
+            <span class="n">ASSERT</span><span class="p">(</span><span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SDL_GetError</span><span class="p">());</span>
+        <span class="p">}</span>
+
+        <span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span> <span class="k">auto</span> <span class="n">viewport</span><span class="p">()</span> <span class="k">const</span> <span class="k">noexcept</span>
+        <span class="p">{</span>
+            <span class="n">mth</span><span class="o">::</span><span class="n">Rect</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">rect</span><span class="p">;</span>
+            <span class="n">SDL_RenderGetViewport</span><span class="p">(</span><span class="n">get</span><span class="p">(),</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">SDL_Rect</span> <span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rect</span><span class="p">));</span>
+
+            <span class="k">return</span> <span class="n">rect</span><span class="p">;</span>
+        <span class="p">}</span>
 
     <span class="k">private</span><span class="o">:</span>
         <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">SDL_Renderer</span><span class="p">,</span> <span class="n">Unique_Des</span><span class="o">&gt;</span> <span class="n">m_renderer</span><span class="p">;</span>

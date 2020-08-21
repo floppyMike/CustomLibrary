@@ -33,7 +33,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles Texture Loading
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Loader_<Texture, Full, Impl> : public Impl
 		{
 		public:
@@ -71,7 +71,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Handles Text Loading
 		 */
-		template<typename Full, typename Impl>
+		template<typename Full, uses_sdl_renderer Impl>
 		class _Loader_<Text, Full, Impl> : public Impl
 		{
 			auto _load_(SDL_Surface *s, const char *text) -> void
@@ -192,19 +192,38 @@ namespace ctl::sdl
 	 * @tparam T Object to load for type
 	 */
 	template<typename T>
-	using Load = typename Filter<detail::_Loader_, FunctorR<T>, T>::type;
+	using Load = typename Filter<detail::_Loader_, Functor<T>, T>::type;
+
+	/**
+	 * @brief Type for loading type with renderer construction
+	 * @tparam T Object to load for type
+	 */
+	template<typename T, typename Renderer>
+	using LoadR = typename Filter<detail::_Loader_, FunctorR<T, Renderer>, T>::type;
 
 	/**
 	 * @brief Shows loading options for object
 	 *
 	 * @param ptr ptr to object
-	 * @param r ptr to renderer
 	 * @return Load type for further options
 	 */
 	template<typename _T>
-	auto load(_T *const ptr, Renderer *r)
+	auto load(_T *const ptr)
 	{
-		return Load<_T>(ptr, r);
+		return Load<_T>(ptr);
+	}
+
+	/**
+	 * @brief Shows loading options using renderer for object
+	 *
+	 * @param ptr ptr to object
+	 * @param r ptr to renderer
+	 * @return Load type for further options
+	 */
+	template<typename _T, typename _Renderer>
+	auto load(_T *const ptr, _Renderer *r)
+	{
+		return LoadR<_T, _Renderer>(ptr, r);
 	}
 
 } // namespace ctl::sdl

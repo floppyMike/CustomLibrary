@@ -6,6 +6,15 @@ Template Class FunctorR
 - Defined in :ref:`file_include_CustomLibrary_SDL_TypeTraits.h`
 
 
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public Functor< T >``
+
+
 Class Documentation
 -------------------
 

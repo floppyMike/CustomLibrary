@@ -1,0 +1,13 @@
+.. _exhale_typedef_Drawable_8h_1a92b132e673a5a3373240411c64c0bf7b:
+
+Typedef ctl::sdl::Draw
+======================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Drawable.h`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: ctl::sdl::Draw

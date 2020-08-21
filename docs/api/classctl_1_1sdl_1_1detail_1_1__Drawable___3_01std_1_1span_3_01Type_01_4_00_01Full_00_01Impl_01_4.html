@@ -176,7 +176,9 @@
 <dt id="_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE">
 <span id="_CPPv3I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE"></span><span id="_CPPv2I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE"></span>template&lt;typename <code class="sig-name descname">Type</code>, typename <code class="sig-name descname">Full</code>, typename <code class="sig-name descname">Impl</code>&gt;<br /><span class="target" id="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4"></span><em class="property">class </em><code class="sig-prename descclassname">ctl::sdl::detail<code class="sig-prename descclassname">::</code></code><code class="sig-name descname">_Drawable_</code>&lt;std::span&lt;<a class="reference internal" href="#_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE" title="ctl::sdl::detail::_Drawable_&lt;std::span&lt;Type&gt;, Full, Impl&gt;::Type">Type</a>&gt;, <a class="reference internal" href="#_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE" title="ctl::sdl::detail::_Drawable_&lt;std::span&lt;Type&gt;, Full, Impl&gt;::Full">Full</a>, <a class="reference internal" href="#_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE" title="ctl::sdl::detail::_Drawable_&lt;std::span&lt;Type&gt;, Full, Impl&gt;::Impl">Impl</a>&gt; : <em class="property">public</em> <a class="reference internal" href="#_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE" title="ctl::sdl::detail::_Drawable_&lt;std::span&lt;Type&gt;, Full, Impl&gt;::Impl">Impl</a><a class="headerlink" href="#_CPPv4I000EN3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplEE" title="Permalink to this definition">¶</a><br /></dt>
 <dd><p>Handles mass drawing of Rectangles This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_Rect or Rect&lt;int, int&gt;. </p>
-<p>Handles mass drawing of Points This method of drawing is fast then drawing singular Points. Array is a std::span of SDL_Point or Point&lt;int&gt;. </p>
+<p>Handles mass drawing of Points for floats This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or Point&lt;float&gt;.</p>
+<p>Handles mass drawing of Points This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or Point&lt;int&gt;.</p>
+<p>Handles mass drawing of Rectangles of type float This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_FRect or Rect&lt;float, float&gt;. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric">Public Functions</p>
 <dl class="cpp function">
@@ -192,8 +194,26 @@
 </dd></dl>
 
 <dl class="cpp function">
+<dt id="_CPPv4NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE5rectsEv">
+<span id="_CPPv3NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE5rectsEv"></span><span id="_CPPv2NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE5rectsEv"></span><span class="target" id="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4_1a4d979f68803f18b6feffd421c12abbe2"></span>auto <code class="sig-name descname">rects</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> -&gt; void<br /></dt>
+<dd><p>Draws rects. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE12filled_rectsEv">
+<span id="_CPPv3NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE12filled_rectsEv"></span><span id="_CPPv2NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE12filled_rectsEv"></span><span class="target" id="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4_1a31fa68babf41bf2b34cfb5e30205b124"></span>auto <code class="sig-name descname">filled_rects</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> -&gt; void<br /></dt>
+<dd><p>Draws filled rects. </p>
+</dd></dl>
+
+<dl class="cpp function">
 <dt id="_CPPv4NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv">
 <span id="_CPPv3NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv"></span><span id="_CPPv2NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv"></span><span id="ctl::sdl::detail::_Drawable_:std::span:Type:.Full.Impl:::pointsC"></span><span class="target" id="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4_1ae9e4609e55a40a5cae65f18a5f842496"></span>auto <code class="sig-name descname">points</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> -&gt; void<a class="headerlink" href="#_CPPv4NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv" title="Permalink to this definition">¶</a><br /></dt>
+<dd><p>Draws Points. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt id="_CPPv4NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv">
+<span id="_CPPv3NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv"></span><span id="_CPPv2NK3ctl3sdl6detail10_Drawable_INSt4spanI4TypeEE4Full4ImplE6pointsEv"></span><span class="target" id="classctl_1_1sdl_1_1detail_1_1__Drawable___3_01std_1_1span_3_01Type_01_4_00_01Full_00_01Impl_01_4_1ae9e4609e55a40a5cae65f18a5f842496"></span>auto <code class="sig-name descname">points</code><span class="sig-paren">(</span><span class="sig-paren">)</span> <em class="property">const</em> -&gt; void<br /></dt>
 <dd><p>Draws Points. </p>
 </dd></dl>
 

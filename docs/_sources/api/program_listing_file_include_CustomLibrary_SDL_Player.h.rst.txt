@@ -67,7 +67,7 @@ Program Listing for File Player.h
        // -----------------------------------------------------------------------------
    
        template<typename T>
-       using Player = typename Filter<detail::_Player_, FunctorO<T>, T>::type;
+       using Player = typename Filter<detail::_Player_, Functor<T>, T>::type;
    
        template<typename _T>
        auto play(_T* const ptr)

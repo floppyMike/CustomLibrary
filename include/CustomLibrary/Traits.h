@@ -1,7 +1,9 @@
 #pragma once
 
+#include <iterator>
 #include <type_traits>
 #include <utility>
+#include <cassert>
 
 // -----------------------------------------------------------------------------
 // Method Detection Preperation
@@ -56,8 +58,6 @@ namespace ctl
 		Nonesuch(Nonesuch &&)	   = delete;
 		Nonesuch(const Nonesuch &) = delete;
 
-		~Nonesuch() = delete;
-
 		void operator=(const Nonesuch &) = delete;
 		void operator=(Nonesuch &&) = delete;
 	};
@@ -76,6 +76,12 @@ namespace ctl
 
 	template<typename T, typename U>
 	concept aligned_with = std::alignment_of_v<T> == std::alignment_of_v<U>;
+
+	template<typename T, typename... EqualTypes>
+	concept matches = std::disjunction_v<std::is_same<std::remove_cv_t<T>, EqualTypes>...>;
+
+	template<typename T>
+	using strip_t = std::remove_cv_t<std::remove_pointer_t<std::decay_t<T>>>;
 
 	// -----------------------------------------------------------------------------
 	// CRTP
@@ -163,7 +169,7 @@ namespace ctl
 	{
 		typename _T<_U, _Z...>::base;
 	}
-	auto seperate(_T<_U, _Z...>) -> std::pair<_T<Nonesuch>, typename _T<_U, _Z...>::base>;
+	auto seperate(_T<_U, _Z...>) -> std::pair<_T<Nonesuch, _Z...>, typename _T<_U, _Z...>::base>;
 
 	template<typename _T>
 	requires requires()
@@ -198,5 +204,67 @@ namespace ctl
 	{
 		using type = Base;
 	};
+
+	// -----------------------------------------------------------------------------
+	// Functor base
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Default Functor for Mixins construction
+	 * @tparam Object Type
+	 */
+	template<typename T>
+	class Functor
+	{
+	public:
+		constexpr Functor() = default;
+		constexpr explicit Functor(T *o)
+			: m_o(o)
+		{
+		}
+
+		constexpr auto obj(T *o) noexcept { m_o = o; }
+		constexpr auto obj() const noexcept
+		{
+			assert(m_o != nullptr && "Object isn't assigned.");
+			return m_o;
+		}
+
+	private:
+		T *m_o;
+	};
+
+	// -----------------------------------------------------------------------------
+	// Unify C-Arrays and Containers
+	// -----------------------------------------------------------------------------
+
+	namespace detail
+	{
+		template<typename T, std::size_t n>
+		constexpr auto _value_type_(const T[n]) -> T;
+
+		template<typename T>
+		requires requires(T)
+		{
+			typename T::value_type;
+		}
+		constexpr auto _value_type_(T) -> typename T::value_type;
+
+		template<typename T, std::size_t n>
+		constexpr auto _iterator_cat_(const T[n]) -> std::random_access_iterator_tag;
+
+		template<typename T>
+		requires requires(T)
+		{
+			typename T::iterator::iterator_category;
+		}
+		constexpr auto _iterator_cat_(T) -> typename T::iterator::iterator_category;
+	} // namespace detail
+
+	template<typename T>
+	using array_value_t = decltype(detail::_iterator_cat_(std::declval<T>()));
+
+	template<typename T>
+	using array_iter_cat_t = decltype(detail::_iterator_cat_(std::declval<T>()));
 
 } // namespace ctl

@@ -11,6 +11,7 @@ if (UNIX AND NOT APPLE)
     find_package(SDL2_image REQUIRED)
     find_package(SDL2_ttf REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+    find_package(Vulkan REQUIRED)
 elseif(WIN32)
 	set(SDL2_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/extern/SDL2All/include" CACHE INTERNAL "SDL2_Includes")
 
@@ -38,5 +39,8 @@ target_include_directories(CustomLibrary INTERFACE ./include)
 
 # Add additional tasks
 
-add_subdirectory("tests")
-add_subdirectory("doc_gen")
+if (UNIX AND NOT APPLE)
+	add_subdirectory("tests")
+endif()
+
+add_subdirectory("examples")

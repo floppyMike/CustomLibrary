@@ -1,0 +1,13 @@
+.. _exhale_function_Loader_8h_1a78e1995820561853d47b36629a354fc9:
+
+Template Function ctl::sdl::load(_T \*const)
+============================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Loader.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::load(_T *const)

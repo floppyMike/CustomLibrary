@@ -1,0 +1,13 @@
+.. _exhale_function_Event_8h_1abbd7804c8b41738b8fadd2be07c85ab0:
+
+Function ctl::sdl::create_exit_event
+====================================
+
+- Defined in :ref:`file_include_CustomLibrary_SDL_Event.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ctl::sdl::create_exit_event(Uint32)
