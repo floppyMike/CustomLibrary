@@ -4,7 +4,7 @@
 
 #include "../Error.h"
 #include "../Traits.h"
-#include "../Dim.h"
+#include "../BasicTypes.h"
 
 #include "Engine.h"
 #include "TypeTraits.h"
@@ -80,7 +80,7 @@ namespace ctl::sdl
 		 * @brief Set the draw color
 		 * @param col new Color
 		 */
-		auto color(const SDL_Color &col) -> void { SDL_SetRenderDrawColor(get(), col.r, col.g, col.b, col.a); }
+		auto color(const SDL_Color &col) const noexcept { SDL_SetRenderDrawColor(get(), col.r, col.g, col.b, col.a); }
 
 		/**
 		 * @brief Set the logical size of the rendering
@@ -88,14 +88,13 @@ namespace ctl::sdl
 		 * automaticaly scales based on Windows dimensions.
 		 * @param dim Dimension to render on
 		 */
-		void logical_size(const mth::Dim<int> &dim) { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
+		void logical_size(const mth::Dim<int> &dim) const noexcept { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
 
 		/**
 		 * @brief Sets the blending used for drawing
 		 * Blending indicates how the colors are displayed on the screen.
-		 * @return Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
 		 */
-		auto blend_mode(const SDL_BlendMode &b)
+		auto blend_mode(const SDL_BlendMode &b) const noexcept
 		{
 			const auto r = SDL_SetRenderDrawBlendMode(get(), b);
 			ASSERT(r == 0, SDL_GetError());
@@ -106,13 +105,37 @@ namespace ctl::sdl
 		 * Blending indicates how the colors are displayed on the screen.
 		 * @return Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
 		 */
-		auto blend_mode()
+		[[nodiscard]] auto blend_mode() const noexcept
 		{
 			SDL_BlendMode b;
 			const auto	  r = SDL_GetRenderDrawBlendMode(get(), &b);
 			ASSERT(r == 0, SDL_GetError());
 
 			return b;
+		}
+
+		/**
+		 * @brief Set the viewport for the renderer
+		 * The viewport dictates what part of the world screen gets rendered onto the screen
+		 * @param rect Size and location of the viewport
+		 */
+		auto viewport(const mth::Rect<int, int> &rect) const noexcept
+		{
+			const auto r = SDL_RenderSetViewport(get(), reinterpret_cast<const SDL_Rect *>(&rect));
+			ASSERT(r == 0, SDL_GetError());
+		}
+
+		/**
+		 * @brief Get the viewport for the renderer
+		 * The viewport dictates what part of the world screen gets rendered onto the screen
+		 * @return Rectange of the viewport
+		 */
+		[[nodiscard]] auto viewport() const noexcept
+		{
+			mth::Rect<int, int> rect;
+			SDL_RenderGetViewport(get(), reinterpret_cast<SDL_Rect *>(&rect));
+
+			return rect;
 		}
 
 	private:
