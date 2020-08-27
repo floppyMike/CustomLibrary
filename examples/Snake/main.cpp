@@ -4,7 +4,7 @@
 #include <CustomLibrary/SDL/Window.h>
 #include <CustomLibrary/SDL/Renderer.h>
 #include <CustomLibrary/SDL/Drawable.h>
-#include <Customlibrary/SDL/Event.h>
+#include <CustomLibrary/SDL/Event.h>
 
 #include <CustomLibrary/Collider.h>
 #include <CustomLibrary/RandomGenerator.h>
