@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/Window.h>
 #include <CustomLibrary/SDL/Renderer.h>
