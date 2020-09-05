@@ -27,7 +27,7 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 
 # Add install target
 
-set(CMAKE_INSTALL_PREFIX /opt)
+set(CMAKE_INSTALL_PREFIX /usr)
 
 install(TARGETS ${PROJECT_NAME} 
 		EXPORT ${PROJECT_NAME}_Targets
@@ -71,4 +71,6 @@ if (TESTS)
 	add_subdirectory("tests")
 endif()
 
-add_subdirectory("examples")
+if (EXAMPLES)
+    add_subdirectory("examples")
+endif()
