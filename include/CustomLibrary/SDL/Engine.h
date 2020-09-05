@@ -153,6 +153,66 @@ namespace ctl::sdl
 	// -----------------------------------------------------------------------------
 
 	/**
+	 * @brief Simplified SDL2 runtime frame used by the application. Supports only 1 window and has support for window
+	 * update, event, render and pre_pass
+	 *
+	 * @tparam IWindow Window Implementation
+	 */
+	template<typename ImplWin = IWindow>
+	class SimpleRunLoop
+	{
+	public:
+		SimpleRunLoop() = default;
+
+        /**
+         * @brief Initialize the run loop with the window.
+         * @param win Window ptr to use
+         */
+		explicit SimpleRunLoop(ImplWin *win)
+			: m_win(win)
+		{
+		}
+
+        /**
+         * @brief Select a window to use.
+         * @param win Window ptr
+         */
+		void window(ImplWin *win) { m_win = win; }
+
+		/**
+		 * @brief Starts the runloop of the application
+		 * @param fps Hz of the amound of frames per second
+		 */
+		void run(size_t fps)
+		{
+			const std::chrono::milliseconds frameTime(1000 / fps);
+
+			for (bool quit = false; !quit;)
+			{
+				const auto endTime = std::chrono::steady_clock::now() + frameTime;
+
+				_invoke_(&ImplWin::pre_pass);
+
+				SDL_Event e;
+				while (SDL_PollEvent(&e) != 0)
+				{
+					_invoke_(&ImplWin::event, e);
+					if (e.type == SDL_QUIT)
+						quit = true;
+				}
+
+				_invoke_(&ImplWin::update);
+				_invoke_(&ImplWin::render);
+
+				std::this_thread::sleep_until(endTime);
+			}
+		}
+
+	private:
+		ImplWin *m_win;
+	};
+
+	/**
 	 * @brief Basic SDL2 runtime frame used by the application
 	 * @tparam ImplWin Window type -> Default: IWindow
 	 */
@@ -173,7 +233,7 @@ namespace ctl::sdl
 
 		/**
 		 * @brief Add a Window to be used
-		 * 
+		 *
 		 * @param win Window ptr
 		 * @return Windows reference
 		 */
@@ -181,7 +241,7 @@ namespace ctl::sdl
 
 		/**
 		 * @brief Get the frames per second in Hz
-		 * @return double 
+		 * @return double
 		 */
 		constexpr auto fps() const noexcept { return m_fps; }
 		/**
