@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CustomLibrary A handfull of classes and functions which are commonly needed.</title>
+  <title>ctl::sdl::detail::_Drawable_&lt;std::span&lt;Type, Size&gt;, Full, Impl&gt; class | CustomLibrary A handfull of classes and functions which are commonly needed.</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -44,8 +44,60 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          CustomLibrary
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Drawable_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/SDL/Drawable.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;matches&lt;SDL_Rect, mth::Rect&lt;int, int&gt;&gt; Type, size_t Size, typename Full, uses_sdl_renderer Impl&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl.html">sdl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl_1_1detail.html">detail</a>::<wbr/></span>_Drawable_&lt;std::span&lt;Type, Size&gt;, Full, Impl&gt; <span class="m-thin">class</span>
         </h1>
+        <p>Handles mass drawing of Rectangles This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_Rect or Rect&lt;int, int&gt;.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+<p>Handles mass drawing of Points for floats This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or Point&lt;float&gt;.</p><p>Handles mass drawing of Points This method of drawing is faster then drawing singular Points. Array is a std::span of SDL_Point or Point&lt;int&gt;.</p><p>Handles mass drawing of Rectangles of type float This method of drawing is fast then drawing singular Rects. Array is a std::span of SDL_FRect or Rect&lt;float, float&gt;.</p>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="a60c45b1c01c0c9bcee969a4ba0c87136">
+              <span class="m-doc-wrap-bumper">auto <a href="#a60c45b1c01c0c9bcee969a4ba0c87136" class="m-doc-self">rects</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws rects.</dd>
+            <dt id="aebe4cef5b604705a1f52c905abd23633">
+              <span class="m-doc-wrap-bumper">auto <a href="#aebe4cef5b604705a1f52c905abd23633" class="m-doc-self">filled_rects</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws filled rects.</dd>
+            <dt id="a60c45b1c01c0c9bcee969a4ba0c87136">
+              <span class="m-doc-wrap-bumper">auto <a href="#a60c45b1c01c0c9bcee969a4ba0c87136" class="m-doc-self">rects</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws rects.</dd>
+            <dt id="aebe4cef5b604705a1f52c905abd23633">
+              <span class="m-doc-wrap-bumper">auto <a href="#aebe4cef5b604705a1f52c905abd23633" class="m-doc-self">filled_rects</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws filled rects.</dd>
+            <dt id="a2c1475fcaebb4b24644f81fbeb7d3f44">
+              <span class="m-doc-wrap-bumper">auto <a href="#a2c1475fcaebb4b24644f81fbeb7d3f44" class="m-doc-self">points</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws Points.</dd>
+            <dt id="acfd86b91df9aad2389bb99246553a375">
+              <span class="m-doc-wrap-bumper">auto <a href="#acfd86b91df9aad2389bb99246553a375" class="m-doc-self">lines</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws connected Lines.</dd>
+            <dt id="a2c1475fcaebb4b24644f81fbeb7d3f44">
+              <span class="m-doc-wrap-bumper">auto <a href="#a2c1475fcaebb4b24644f81fbeb7d3f44" class="m-doc-self">points</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws Points.</dd>
+            <dt id="acfd86b91df9aad2389bb99246553a375">
+              <span class="m-doc-wrap-bumper">auto <a href="#acfd86b91df9aad2389bb99246553a375" class="m-doc-self">lines</a>(</span><span class="m-doc-wrap">) const -&gt; void -&gt; auto</span>
+            </dt>
+            <dd>Draws connected Lines.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>
@@ -90,7 +142,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

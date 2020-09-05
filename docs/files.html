@@ -29,7 +29,7 @@
           </ol>
           <ol class="m-col-t-6 m-col-m-none" start="3">
             <li><a href="annotated.html">Classes</a></li>
-            <li><a href="files.html">Files</a></li>
+            <li><a href="files.html" id="m-navbar-current">Files</a></li>
             <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
               <use href="#m-doc-search-icon-path" />
             </svg></a></li>
@@ -43,9 +43,59 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>
-          CustomLibrary
-        </h1>
+        <h1>Files</h2>
+        <ul class="m-doc">
+          <li class="m-doc-collapsible">
+            <a href="#" onclick="return toggle(this)">dir</a> <a href="dir_d44c64559bbebec7f509842c48db8b23.html" class="m-doc">/home/michaellu/Repositories/CustomLibrary/include</a> <span class="m-doc"><span></span></span>
+            <ul class="m-doc">
+              <li class="m-doc-collapsible collapsed">
+                <a href="#" onclick="return toggle(this)">dir</a> <a href="dir_391b4523e9d306b2ad7d96c6eda73272.html" class="m-doc">CustomLibrary</a> <span class="m-doc"><span></span></span>
+                <ul class="m-doc">
+                  <li class="m-doc-collapsible collapsed">
+                    <a href="#" onclick="return toggle(this)">dir</a> <a href="dir_1e5a9a4a26b85b5854f7025d7c81a596.html" class="m-doc">SDL</a> <span class="m-doc"><span></span></span>
+                    <ul class="m-doc">
+                      <li>file <a href="Animation_8h.html" class="m-doc">Animation.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Button_8h.html" class="m-doc">Button.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Camera2D_8h.html" class="m-doc">Camera2D.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Drawable_8h.html" class="m-doc">Drawable.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Engine_8h.html" class="m-doc">Engine.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Event_8h.html" class="m-doc">Event.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Geometry_8h.html" class="m-doc">Geometry.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Loader_8h.html" class="m-doc">Loader.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Music_8h.html" class="m-doc">Music.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Player_8h.html" class="m-doc">Player.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Render_8h.html" class="m-doc">Render.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Renderer_8h.html" class="m-doc">Renderer.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="SDLWindow_8h.html" class="m-doc">SDLWindow.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="State_8h.html" class="m-doc">State.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Surface_8h.html" class="m-doc">Surface.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Text_8h.html" class="m-doc">Text.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Texture_8h.html" class="m-doc">Texture.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="TypeTraits_8h.html" class="m-doc">TypeTraits.h</a> <span class="m-doc"><span></span></span></li>
+                      <li>file <a href="Window_8h.html" class="m-doc">Window.h</a> <span class="m-doc"><span></span></span></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <script>
+        function toggle(e) {
+            e.parentElement.className = e.parentElement.className == 'm-doc-collapsible' ?
+                'm-doc-expansible' : 'm-doc-collapsible';
+            return false;
+        }
+        /* Collapse all nodes marked as such. Doing it via JS instead of
+           directly in markup so disabling it doesn't harm usability. The list
+           is somehow regenerated on every iteration and shrinks as I change
+           the classes. It's not documented anywhere and I'm not sure if this
+           is the same across browsers, so I am going backwards in that list to
+           be sure. */
+        var collapsed = document.getElementsByClassName("collapsed");
+        for(var i = collapsed.length - 1; i >= 0; --i)
+            collapsed[i].className = 'm-doc-expansible';
+        </script>
       </div>
     </div>
   </div>
@@ -90,7 +140,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

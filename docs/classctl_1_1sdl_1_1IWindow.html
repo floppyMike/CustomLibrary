@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CustomLibrary A handfull of classes and functions which are commonly needed.</title>
+  <title>ctl::sdl::IWindow class | CustomLibrary A handfull of classes and functions which are commonly needed.</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -44,8 +44,76 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          CustomLibrary
+          <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl.html">sdl</a>::<wbr/></span>IWindow <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="Engine_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/SDL/Engine.h&gt;</a></div>
         </h1>
+        <p><a href="classctl_1_1sdl_1_1Window.html" class="m-doc">Window</a> Interface for <a href="classctl_1_1sdl_1_1RunLoop.html" class="m-doc">RunLoop</a>.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#derived-classes">Derived classes</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="derived-classes">
+          <h2><a href="#derived-classes">Derived classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              class <a href="classctl_1_1sdl_1_1SDLWindow.html" class="m-doc">SDLWindow</a>
+            </dt>
+            <dd>Stock general SDL2 <a href="classctl_1_1sdl_1_1Window.html" class="m-doc">Window</a>.</dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="af09cbbf5a8aa3e80bad9d463781a2988">
+              <span class="m-doc-wrap-bumper">void <a href="#af09cbbf5a8aa3e80bad9d463781a2988" class="m-doc-self">pre_pass</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Takes place when a new iteration begins.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a193e7916636748722464ce98de3e3fd4" class="m-doc">event</a>(</span><span class="m-doc-wrap">const SDL_Event&amp; e) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Takes place when a new event is caught.</dd>
+            <dt id="a047fec585e2da03be814b5048eb3f135">
+              <span class="m-doc-wrap-bumper">void <a href="#a047fec585e2da03be814b5048eb3f135" class="m-doc-self">update</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for updating your stuff per iteration.</dd>
+            <dt id="a73aee4eb45a34402fc13417a5dae0a5a">
+              <span class="m-doc-wrap-bumper">void <a href="#a73aee4eb45a34402fc13417a5dae0a5a" class="m-doc-self">fixed_update</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Updates stuff like &#x27;update&#x27; but it catches up when lag occures.</dd>
+            <dt id="a7a7da1cd2c3cf0aad3ed7eec905593c8">
+              <span class="m-doc-wrap-bumper">void <a href="#a7a7da1cd2c3cf0aad3ed7eec905593c8" class="m-doc-self">render</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used to render the objects drawn to the buffer.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a193e7916636748722464ce98de3e3fd4"><div>
+            <h3>
+              <span class="m-doc-wrap-bumper">void ctl::<wbr />sdl::<wbr />IWindow::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a193e7916636748722464ce98de3e3fd4" class="m-doc-self">event</a>(</span><span class="m-doc-wrap">const SDL_Event&amp; e) <span class="m-label m-warning">virtual</span></span></span>
+            </h3>
+            <p>Takes place when a new event is caught.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">e</td>
+                  <td>New event</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+        </section>
       </div>
     </div>
   </div>
@@ -90,7 +158,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

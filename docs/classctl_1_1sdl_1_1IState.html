@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CustomLibrary A handfull of classes and functions which are commonly needed.</title>
+  <title>ctl::sdl::IState class | CustomLibrary A handfull of classes and functions which are commonly needed.</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -44,8 +44,56 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          CustomLibrary
+          <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl.html">sdl</a>::<wbr/></span>IState <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="State_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/SDL/State.h&gt;</a></div>
         </h1>
+        <p>State Interface.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt id="a042db7360b01a42c796b5ea2054b6b01">
+              <span class="m-doc-wrap-bumper"><a href="#a042db7360b01a42c796b5ea2054b6b01" class="m-doc-self">~IState</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="a86fba1fca0d1159b8f9834510eccd64f">
+              <span class="m-doc-wrap-bumper">void <a href="#a86fba1fca0d1159b8f9834510eccd64f" class="m-doc-self">event</a>(</span><span class="m-doc-wrap">const SDL_Event&amp;) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for handling general events.</dd>
+            <dt id="a3f21f723681dda6cb8f75fb970d97d57">
+              <span class="m-doc-wrap-bumper">void <a href="#a3f21f723681dda6cb8f75fb970d97d57" class="m-doc-self">input</a>(</span><span class="m-doc-wrap">const SDL_Event&amp;) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for handling input events.</dd>
+            <dt id="aeeae09bf628ce9410a412aca8de55a42">
+              <span class="m-doc-wrap-bumper">void <a href="#aeeae09bf628ce9410a412aca8de55a42" class="m-doc-self">update</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for updating objects per iteration.</dd>
+            <dt id="a67a7195d3f4c6b56d9011ad2c3825c2f">
+              <span class="m-doc-wrap-bumper">void <a href="#a67a7195d3f4c6b56d9011ad2c3825c2f" class="m-doc-self">fixed_update</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for updating objects in a constant fashion without influence of lag.</dd>
+            <dt id="a615330fb0e94f6468526e4a5d14f40e6">
+              <span class="m-doc-wrap-bumper">void <a href="#a615330fb0e94f6468526e4a5d14f40e6" class="m-doc-self">draw</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-warning">virtual</span></span>
+            </dt>
+            <dd>Used for drawing the object onto the renderers buffer.</dd>
+          </dl>
+        </section>
       </div>
     </div>
   </div>
@@ -90,7 +138,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>CustomLibrary A handfull of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>
