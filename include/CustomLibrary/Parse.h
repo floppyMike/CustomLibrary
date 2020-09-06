@@ -10,53 +10,6 @@
 namespace ctl::par
 {
 	// -----------------------------------------------------------------------------
-	// Additional getline options
-	// -----------------------------------------------------------------------------
-
-	// std::getline, but with multiple delimiters
-	template<class CharT, class Traits, class Allocator>
-	auto getline(std::basic_istream<CharT, Traits> &input, std::basic_string<CharT, Traits, Allocator> &str,
-				 const std::initializer_list<CharT> delim) -> auto &
-	{
-		str.erase();
-		for (CharT ch; input.get(ch);)
-			if (std::any_of(delim.begin(), delim.end(), ch))
-				return input;
-			else if (str.size() == str.max_size())
-			{
-				input.setstate(std::ios_base::failbit);
-				return input;
-			}
-			else
-				str.push_back(ch);
-
-		return input;
-	}
-
-	// ctl::getline, but string includes ending
-	template<class CharT, class Traits, class Allocator>
-	auto getline_End(std::basic_istream<CharT, Traits> &input, std::basic_string<CharT, Traits, Allocator> &str,
-					 const std::initializer_list<CharT> &delim) -> auto &
-	{
-		str.erase();
-		for (CharT ch; input.get(ch);)
-		{
-			str.push_back(ch);
-
-			if (std::any_of(delim.begin(), delim.end(), ch))
-				return input;
-
-			if (str.size() == str.max_size())
-			{
-				input.setstate(std::ios_base::failbit);
-				return input;
-			}
-		}
-
-		return input;
-	};
-
-	// -----------------------------------------------------------------------------
 	// Parsers
 	// -----------------------------------------------------------------------------
 
