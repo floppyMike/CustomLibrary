@@ -1,5 +1,6 @@
 #pragma once
 
+/*
 #include <Windows.h>
 
 #include "Vector.h"
@@ -154,3 +155,4 @@ namespace ctl
 		HANDLE m_hConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
 	};
 }
+*/
