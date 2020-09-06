@@ -5,10 +5,12 @@
 #include <optional>
 #include <cassert>
 
-namespace ctl
+#include "Traits.h"
+
+namespace ctl::par
 {
 	// -----------------------------------------------------------------------------
-	// additional getline options
+	// Additional getline options
 	// -----------------------------------------------------------------------------
 
 	// std::getline, but with multiple delimiters
@@ -53,6 +55,10 @@ namespace ctl
 
 		return input;
 	};
+
+	// -----------------------------------------------------------------------------
+	// Parsers
+	// -----------------------------------------------------------------------------
 
 	/**
 	 * @brief Basic parser used to analize strings.
@@ -129,7 +135,7 @@ namespace ctl
 
 		/**
 		 * @brief Skip a specific part of the parsed string
-		 * 
+		 *
 		 * @param delim delimiter to skip to
 		 * @return true delimiter not found
 		 * @return false delimiter found
@@ -146,7 +152,7 @@ namespace ctl
 		}
 		/**
 		 * @brief Skip a specific part of the parsed string
-		 * 
+		 *
 		 * @param num amount ot skip
 		 * @return true not amount possible
 		 * @return false amount possible
@@ -162,7 +168,7 @@ namespace ctl
 
 		/**
 		 * @brief Checks if string is the same as the specified string. Moves ptr
-		 * 
+		 *
 		 * @param str String to compare to
 		 * @return true String is equal. Moves ptr to after the end
 		 * @return false String isn't equal.
@@ -189,7 +195,7 @@ namespace ctl
 
 		/**
 		 * @brief Get the next character without going ahead
-		 * @return std::optional<char> 
+		 * @return std::optional<char>
 		 */
 		auto peek() noexcept -> std::optional<char>
 		{
@@ -201,7 +207,7 @@ namespace ctl
 
 		/**
 		 * @brief Check if parser is at the end
-		 * 
+		 *
 		 * @return true Is at the end
 		 * @return false Isn't at the end
 		 */
@@ -211,11 +217,79 @@ namespace ctl
 		 * @brief Move the ptr to a different location
 		 * @param dis difference of location
 		 */
-		void mov(int dis) noexcept { m_loc += dis; assert((m_loc < 0 || m_loc > m_data.size()) && "String ptr out of bounds"); }
+		void mov(int dis) noexcept
+		{
+			m_loc += dis;
+			assert((m_loc < 0 || m_loc > m_data.size()) && "String ptr out of bounds");
+		}
 
 	private:
 		std::string_view m_data;
 		size_t			 m_loc = 0U;
 	};
 
-} // namespace ctl
+	// -----------------------------------------------------------------------------
+	// Input filters
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Get the input represented as a number
+	 * @param prompt
+	 * @return Number inputed
+	 */
+	template<arithmetic T>
+	constexpr auto input_number(std::string_view str)
+	{
+		T input;
+
+		while (true)
+		{
+			std::cout << str;
+			std::cin >> input;
+
+			if (std::cin.fail())
+			{
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cerr << "Invalid." << std::endl;
+			}
+			else
+			{
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				return input;
+			}
+		}
+	}
+
+	/**
+	 * @brief Get the input of 1 of the list of given strings
+	 *
+	 * @param begin List begin
+	 * @param end List end
+	 * @param head Prompt
+	 * @return Chosen string
+	 */
+	template<typename _Iter>
+	auto input_string(_Iter begin, const _Iter end, const std::string_view head)
+	{
+		std::string str;
+
+		while (true)
+		{
+			std::cout << head;
+			std::getline(std::cin, str);
+
+			if (str == "help")
+				for (auto b = begin; b != end; ++b) std::cout << "\"" << *b << "\"\n";
+
+			else if (std::find(begin, end, str) != end)
+				return str;
+
+			else
+				std::cerr << "Invalid.\n";
+		}
+
+		return str;
+	}
+
+} // namespace ctl::par
