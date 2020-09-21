@@ -1,9 +1,11 @@
 #pragma once
 
+#include <array>
 #include <iostream>
 #include <vector>
 #include <optional>
 #include <cassert>
+#include <span>
 
 #include "Traits.h"
 
@@ -14,7 +16,7 @@ namespace ctl::par
 	// -----------------------------------------------------------------------------
 
 	/**
-	 * @brief Basic parser used to analize strings.
+	 * @brief Basic parser used to analyze strings.
 	 */
 	class SequentialParser
 	{
@@ -43,11 +45,24 @@ namespace ctl::par
 		void reset() noexcept { m_loc = 0U; }
 
 		/**
+		 * @brief Find the location of one of multiple delimiters
+		 * @param delims Array of char delimiters
+		 * @return location or when out of range a null object
+		 */
+		[[nodiscard]] constexpr auto find(std::span<const char> delims) const noexcept -> std::optional<size_t>
+		{
+			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end());
+				v != m_data.end())
+				return std::distance(m_data.begin(), v);
+
+			return std::nullopt;
+		}
+		/**
 		 * @brief Find a character inside the string
 		 * @param delim Character to find
-		 * @return size_t, npos on not found
+		 * @return location, null object on not found
 		 */
-		[[nodiscard]] auto find(char delim) const noexcept -> std::optional<size_t>
+		[[nodiscard]] constexpr auto find(char delim) const noexcept -> std::optional<size_t>
 		{
 			const auto res = m_data.find(delim, m_loc);
 			return res == std::string_view::npos ? std::nullopt : std::optional(res);
@@ -56,36 +71,34 @@ namespace ctl::par
 		/**
 		 * @brief Get the string until the delimiter is found. Moves the start ptr to after the delimiter
 		 * @param delim Character to get till
-		 * @return A optional type of string_view
+		 * @return string or null object when delim not found
 		 */
 		constexpr auto get_until(char delim) noexcept -> std::optional<std::string_view>
 		{
 			if (const auto loc = m_data.find(delim, current_loc()); loc != std::string_view::npos)
-				return get_until(loc - m_loc);
+				return get_until((ptrdiff_t)(loc - m_loc));
 
 			return std::nullopt;
 		}
 		/**
 		 * @brief Get the string until one of the delimiters is found. Moves the start ptr to after the delimiter
-		 * @param begin Delimiter array begin
-		 * @param end Delimiter array end
-		 * @return A optional type of string_view
+		 * @param delims Char array of delimiters
+		 * @return string or null object when delim not found
 		 */
-		template<iter_type_matches<char> _Iter>
-		constexpr auto get_until(_Iter begin, const _Iter end) noexcept -> std::optional<std::string_view>
+		constexpr auto get_until(std::span<const char> delims) noexcept -> std::optional<std::string_view>
 		{
-			for (; begin != end; ++begin)
-				if (const auto res = get_until(*begin); res.has_value())
-					return res;
+			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end());
+				v != m_data.end())
+				return get_until(std::distance(m_data.begin() + m_loc, v));
 
 			return std::nullopt;
 		}
 		/**
 		 * @brief Get the string until the count is reached. Moves the start ptr to after the count
 		 * @param count Number of character to get
-		 * @return A optional type of string_view
+		 * @return string
 		 */
-		constexpr auto get_until(size_t count) noexcept -> std::string_view
+		constexpr auto get_until(ptrdiff_t count) noexcept -> std::string_view
 		{
 			const auto npos		= _displace_(count);
 			auto &&	   sub_data = m_data.substr(m_loc, count);
@@ -95,10 +108,21 @@ namespace ctl::par
 		}
 
 		/**
-		 * @brief Skip a specific part of the parsed string. Doesn't move when delimiter not found.
+		 * @brief Skip until one of the delimiters is found. Doesn't move no delimiter is found.
+		 * @param delims Delimiter array
+		 */
+		template<typename Pred = std::equal_to<const char>>
+		constexpr void skip(std::span<const char> delims, Pred p = Pred()) noexcept
+		{
+			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end(), p);
+				v != m_data.end())
+				seek(std::distance(m_data.begin(), v));
+		}
+		/**
+		 * @brief Skip until the delimiter is found. Doesn't move when delimiter not found.
 		 * @param delim delimiter to skip to
 		 */
-		constexpr auto skip(char delim) noexcept
+		constexpr void skip(char delim) noexcept
 		{
 			if (const auto loc = m_data.find(delim, m_loc); loc != std::string_view::npos)
 				seek(loc + 1);
@@ -164,7 +188,7 @@ namespace ctl::par
 		 * @brief Get the remaining string to be parsed
 		 * @return The remainder
 		 */
-		[[nodiscard]] constexpr auto remaining() const noexcept -> size_t
+		[[nodiscard]] constexpr auto remaining() const noexcept -> ptrdiff_t
 		{
 			assert(current_loc() > total_size() && "String ptr out of bounds");
 			return total_size() - current_loc();
@@ -178,6 +202,29 @@ namespace ctl::par
 		{
 			assert(pos < total_size());
 			m_loc = pos;
+		}
+
+		/**
+		 * @brief Extracts string until whitespace or end is reached
+		 * @return std::string_view till whitespace or end 
+		 */
+		constexpr auto extract() noexcept -> std::string_view
+		{
+			constexpr std::array delims = { ' ', '\n', '\t' };
+			return extract(delims);
+		}
+		/**
+		 * @brief Extracts string until delimiters of end is reached
+		 * @param delims Delimiters
+		 * @return string till delimiter or end
+		 */
+		constexpr auto extract(std::span<const char> delims) noexcept -> std::string_view
+		{
+			skip(delims);
+			const auto str = get_until(delims);
+			skip<std::not_equal_to<char>>(delims);
+
+			return str.has_value() ? str.value() : get_until(remaining());
 		}
 
 	private:
