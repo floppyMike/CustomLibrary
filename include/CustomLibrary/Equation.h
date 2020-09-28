@@ -354,6 +354,9 @@ namespace ctl::mth
 
 		constexpr auto X(par::SequentialParser &p) -> std::optional<double>
 		{
+			if (p.at_end())
+				return std::nullopt;
+
 			bool div = false;
 			if (const auto c = p.get(); c == '/')
 				div = true;
@@ -368,6 +371,9 @@ namespace ctl::mth
 
 		constexpr auto R(par::SequentialParser &p) -> std::optional<double>
 		{
+			if (p.at_end())
+				return std::nullopt;
+
 			double num = 1.;
 
 			if (const auto c = p.get(); c == '-')
@@ -378,12 +384,8 @@ namespace ctl::mth
 			if (auto n = O(p); n)
 			{
 				num *= *n;
-				if (!p.at_end())
-					for (auto v = X(p); v; v = X(p))
-						if (!p.at_end())
-							num *= *v;
-						else
-							break;
+				for (auto v = X(p); v; v = X(p))
+					num *= *v;
 
 				return num;
 			}
@@ -391,19 +393,13 @@ namespace ctl::mth
 			return std::nullopt;
 		}
 
-		constexpr auto lp(par::SequentialParser &p) { return p.peek() == '(' ? p.skip_for(1), true : false; }
-		constexpr auto rp(par::SequentialParser &p) { return p.peek() == ')' ? p.skip_for(1), true : false; }
-
 		constexpr auto T(par::SequentialParser &p) -> std::optional<double>
 		{
 			if (auto n = R(p); n)
 			{
-				if (!p.at_end())
-					for (auto v = R(p); v; v = R(p))
-						if (!p.at_end())
-							*n += *v;
-						else
-							break;
+				for (auto v = R(p); v; v = R(p))
+					*n += *v;
+
 				return *n;
 			}
 
@@ -412,7 +408,7 @@ namespace ctl::mth
 
 		constexpr auto B(par::SequentialParser &p) -> std::optional<double>
 		{
-			if (p.peek() != '(')
+			if (p.current() != '(')
 				return std::nullopt;
 			p.mov(1);
 
@@ -442,6 +438,9 @@ namespace ctl::mth
 		// Constant	C
 
 		par::SequentialParser p(equ_str);
-		return detail::T(p).value();
+		if (const auto v = detail::T(p); v)
+			return *v;
+
+		return INFINITY;
 	}
 } // namespace ctl::mth
