@@ -21,13 +21,13 @@ namespace ctl::par
 	class SequentialParser
 	{
 	public:
-		SequentialParser() = default;
+		constexpr SequentialParser() = default;
 
 		/**
 		 * @brief Initialize the Parser with a string
 		 * @param String to parse
 		 */
-		explicit SequentialParser(std::string_view dat) { data(dat); }
+		constexpr explicit SequentialParser(std::string_view dat) { data(dat); }
 
 		/**
 		 * @brief Change parsed string and reset
@@ -44,19 +44,6 @@ namespace ctl::par
 		 */
 		void reset() noexcept { m_loc = 0U; }
 
-		/**
-		 * @brief Find the location of one of multiple delimiters
-		 * @param delims Array of char delimiters
-		 * @return location or when out of range a null object
-		 */
-		[[nodiscard]] constexpr auto find(std::span<const char> delims) const noexcept -> std::optional<size_t>
-		{
-			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end());
-				v != m_data.end())
-				return std::distance(m_data.begin(), v);
-
-			return std::nullopt;
-		}
 		/**
 		 * @brief Find a character inside the string
 		 * @param delim Character to find
@@ -80,19 +67,7 @@ namespace ctl::par
 
 			return std::nullopt;
 		}
-		/**
-		 * @brief Get the string until one of the delimiters is found. Moves the start ptr to after the delimiter
-		 * @param delims Char array of delimiters
-		 * @return string or null object when delim not found
-		 */
-		constexpr auto get_until(std::span<const char> delims) noexcept -> std::optional<std::string_view>
-		{
-			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end());
-				v != m_data.end())
-				return get_until(std::distance(m_data.begin() + m_loc, v));
 
-			return std::nullopt;
-		}
 		/**
 		 * @brief Get the string until the count is reached. Moves the start ptr to after the count
 		 * @param count Number of character to get
@@ -108,21 +83,10 @@ namespace ctl::par
 		}
 
 		/**
-		 * @brief Skip until one of the delimiters is found. Doesn't move no delimiter is found.
-		 * @param delims Delimiter array
-		 */
-		template<typename Pred = std::equal_to<const char>>
-		constexpr void skip(std::span<const char> delims, Pred p = Pred()) noexcept
-		{
-			if (const auto v = std::find_first_of(m_data.begin() + m_loc, m_data.end(), delims.begin(), delims.end(), p);
-				v != m_data.end())
-				seek(std::distance(m_data.begin(), v));
-		}
-		/**
 		 * @brief Skip until the delimiter is found. Doesn't move when delimiter not found.
 		 * @param delim delimiter to skip to
 		 */
-		constexpr void skip(char delim) noexcept
+		constexpr void skip_till(char delim) noexcept
 		{
 			if (const auto loc = m_data.find(delim, m_loc); loc != std::string_view::npos)
 				seek(loc + 1);
@@ -131,7 +95,7 @@ namespace ctl::par
 		 * @brief Skip a specific part of the parsed string
 		 * @param num amount ot skip
 		 */
-		constexpr void skip(size_t num) noexcept { mov(num); }
+		constexpr void skip_for(size_t num) noexcept { mov(num); }
 
 		/**
 		 * @brief Checks if string is the same as the specified string. Moves ptr
@@ -148,7 +112,7 @@ namespace ctl::par
 			const auto res = std::equal(&m_data[current_loc()], &m_data[_displace_(str.size() - 1)], str.data());
 
 			if (res)
-				skip(str.size());
+				skip_for(str.size());
 
 			return res;
 		}
@@ -164,6 +128,34 @@ namespace ctl::par
 		 * @return character
 		 */
 		[[nodiscard]] constexpr auto peek() const noexcept -> char { return m_data[_displace_(1)]; }
+
+		/**
+		 * @brief Get the next character
+		 * @return next character
+		 */
+		constexpr auto next() noexcept -> char
+		{
+			const auto n = _displace_(1);
+			m_loc		 = n;
+			return m_data[n];
+		}
+
+		/**
+		 * @brief Get the current character
+		 * @return current character
+		 */
+		[[nodiscard]] constexpr auto current() const noexcept -> char { return m_data[current_loc()]; }
+
+		/**
+		 * @brief Get the current character and move 1 up
+		 * @return current character
+		 */
+		constexpr auto get() noexcept -> char
+		{
+			const auto c = current();
+			m_loc		 = _displace_(1);
+			return c;
+		}
 
 		/**
 		 * @brief Check if parser is at the end
@@ -200,37 +192,41 @@ namespace ctl::par
 		 */
 		constexpr void seek(size_t pos) noexcept
 		{
-			assert(pos < total_size());
+			assert(pos <= total_size());
 			m_loc = pos;
 		}
 
 		/**
-		 * @brief Extracts string until whitespace or end is reached
-		 * @return std::string_view till whitespace or end 
+		 * @brief Extract a string until whitespace character
+		 * @return string until whitespace or end (whitespace at end skipped to next word)
 		 */
-		constexpr auto extract() noexcept -> std::string_view
+		[[nodiscard]] constexpr auto extract() noexcept -> std::string_view
 		{
-			constexpr std::array delims = { ' ', '\n', '\t' };
-			return extract(delims);
-		}
-		/**
-		 * @brief Extracts string until delimiters of end is reached
-		 * @param delims Delimiters
-		 * @return string till delimiter or end
-		 */
-		constexpr auto extract(std::span<const char> delims) noexcept -> std::string_view
-		{
-			skip(delims);
-			const auto str = get_until(delims);
-			skip<std::not_equal_to<char>>(delims);
+			constexpr const char cs[] = " \n\t";
+			auto				 res  = m_data.find_first_of(cs, current_loc());
 
-			return str.has_value() ? str.value() : get_until(remaining());
+			std::string_view ret;
+
+			if (res != std::string_view::npos)
+			{
+				ret = m_data.substr(current_loc(), res - current_loc());
+				seek(res);
+
+				seek(m_data.find_first_not_of(cs, current_loc()));
+			}
+			else
+			{
+				ret = m_data.substr(current_loc());
+				seek(m_data.size());
+			}
+
+			return ret;
 		}
 
 	private:
 		[[nodiscard]] constexpr auto _displace_(ptrdiff_t diff) const noexcept -> size_t
 		{
-			assert((diff < 0 && -diff < m_loc) || diff >= 0);
+			assert((diff < 0 && -diff <= m_loc) || diff >= 0);
 			const auto res = m_loc + diff;
 			assert(res <= total_size());
 
@@ -248,7 +244,7 @@ namespace ctl::par
 	/**
 	 * @brief Get the input represented as a number
 	 * @param prompt
-	 * @return Number inputed
+	 * @return Number inputted
 	 */
 	template<arithmetic T>
 	constexpr auto input_number(std::string_view str)
