@@ -21,6 +21,8 @@ namespace ctl::par
 	class SequentialParser
 	{
 	public:
+		static constexpr auto WHITESPACES = " \n\t";
+
 		constexpr SequentialParser() = default;
 
 		/**
@@ -96,6 +98,16 @@ namespace ctl::par
 		 * @param num amount ot skip
 		 */
 		constexpr void skip_for(size_t num) noexcept { mov(num); }
+		/**
+		 * @brief Skip whitespace characters. Including '\n', '\t', ' '.
+		 */
+		constexpr void skip_space() noexcept
+		{
+			if (const auto i = m_data.find_first_not_of(WHITESPACES, current_loc()); i != std::string_view::npos)
+				seek(i);
+			else
+				seek(total_size());
+		}
 
 		/**
 		 * @brief Checks if string is the same as the specified string. Moves ptr
@@ -130,14 +142,13 @@ namespace ctl::par
 		[[nodiscard]] constexpr auto peek() const noexcept -> char { return m_data[_displace_(1)]; }
 
 		/**
-		 * @brief Get the next character
+		 * @brief Get the next available non whitespace character and move 1 up
 		 * @return next character
 		 */
 		constexpr auto next() noexcept -> char
 		{
-			const auto n = _displace_(1);
-			m_loc		 = n;
-			return m_data[n];
+			skip_space();
+			return get();
 		}
 
 		/**
@@ -197,22 +208,29 @@ namespace ctl::par
 		}
 
 		/**
-		 * @brief Extract a string until whitespace character
-		 * @return string until whitespace or end (whitespace at end skipped to next word)
+		 * @brief Extract a string until whitespace character. Whitespace at end skipped to next word
+		 * @return string until whitespace or end
 		 */
 		[[nodiscard]] constexpr auto extract() noexcept -> std::string_view
 		{
-			constexpr const char cs[] = " \n\t";
-			auto				 res  = m_data.find_first_of(cs, current_loc());
+			const auto v = take();
+			skip_space();
+			return v;
+		}
 
+		/**
+		 * @brief Extract a string until whitespace character.
+		 * @return string until whitespace or end
+		 */
+		constexpr auto take() noexcept -> std::string_view
+		{
+			const auto		 res = m_data.find_first_of(WHITESPACES, current_loc());
 			std::string_view ret;
 
 			if (res != std::string_view::npos)
 			{
 				ret = m_data.substr(current_loc(), res - current_loc());
 				seek(res);
-
-				seek(m_data.find_first_not_of(cs, current_loc()));
 			}
 			else
 			{

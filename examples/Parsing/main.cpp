@@ -22,5 +22,14 @@ auto main() -> int
 	// See if a dot is available
 	std::cout << (seq_par.find('.').has_value() ? "Dot is available" : "Dot isn't available") << '\n';
 
+	// Formatted parsing
+	std::string_view ex2 = "    Hello   \t  There abc\n";
+	seq_par.data(ex2);
+	std::cout << seq_par.next() << seq_par.get() << seq_par.extract() << seq_par.extract() << seq_par.extract() << seq_par.extract() << '\n';
+
+	std::string_view ex3 = ") *";
+	seq_par.data(ex3);
+	seq_par.skip_space();
+
 	return 0;
 }
