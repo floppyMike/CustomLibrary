@@ -19,6 +19,7 @@ namespace ctl::mth
 	namespace detail
 	{
 		constexpr auto B(par::SequentialParser &p) -> std::optional<double>;
+		constexpr auto O(par::SequentialParser &p) -> std::optional<double>;
 
 		constexpr auto C(par::SequentialParser &p) -> std::optional<double>
 		{
@@ -73,7 +74,7 @@ namespace ctl::mth
 		{
 			if (const auto f = U(p); f)
 			{
-				if (const auto n = B(p); n)
+				if (const auto n = O(p); n)
 					return f.value()(*n);
 
 				throw std::runtime_error("Couldn't evaluate function parameter.");
@@ -82,6 +83,8 @@ namespace ctl::mth
 			return std::nullopt;
 		}
 
+		static constexpr std::array unary = { N, B, C, F };
+
 		constexpr auto O(par::SequentialParser &p) -> std::optional<double>
 		{
 			p.skip_space();
@@ -89,17 +92,20 @@ namespace ctl::mth
 			if (p.at_end())
 				return std::nullopt;
 
-			if (auto v = N(p); v)
-				return *v;
+			for (auto f : unary)
+				if (const auto v = f(p); v)
+				{
+					if (!p.at_end())
+						if (const auto c = p.next(); c == '^')
+							if (const auto z = O(p); z)
+								return std::pow(*v, *z);
+							else
+								throw std::runtime_error("Fuck");
+						else
+							p.mov(-1);
 
-			if (auto v = B(p); v)
-				return *v;
-
-			if (auto v = C(p); v)
-				return *v;
-
-			if (auto v = F(p); v)
-				return *v;
+					return *v;
+				}
 
 			return std::nullopt;
 		}
@@ -182,7 +188,7 @@ namespace ctl::mth
 		// Bracket	B = '(' T ')'
 		// Term     R = ('+' | '-') O | L X
 		// Term Obj X = '*' O | '/' O | O
-		// Object   O = N | F | C | B
+		// Object   O = (N | F | C | B) | ((N | F | C | B) '^' (O | B))
 		// Function F = U (O | B)
 		// Name		U
 		// Number 	N
@@ -192,6 +198,6 @@ namespace ctl::mth
 		if (const auto v = detail::T(p); v)
 			return *v;
 
-		return INFINITY;
+		throw std::runtime_error("Invalid Synthax at " + std::string(p.dump()));
 	}
 } // namespace ctl::mth

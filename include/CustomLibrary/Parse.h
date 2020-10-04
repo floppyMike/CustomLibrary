@@ -219,6 +219,12 @@ namespace ctl::par
 		}
 
 		/**
+		 * @brief Get the remaining string
+		 * @return Remaining characters
+		 */
+		constexpr auto dump() noexcept -> std::string_view { return get_until(remaining()); }
+
+		/**
 		 * @brief Extract a string until whitespace character.
 		 * @return string until whitespace or end
 		 */
