@@ -19,7 +19,7 @@ auto main() -> int
 
 	std::cout << p.extract() << '\n' << p.extract() << '\n' << p.extract() << '\n';
 
-	std::string_view equ = "2^4";
+	std::string_view equ = "sqrt(4)";
 	std::cout << mth::solve(equ) << '\n';
 
 	return 0;
