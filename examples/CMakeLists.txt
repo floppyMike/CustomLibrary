@@ -11,6 +11,15 @@ target_link_libraries(Starfield PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${
 add_executable(Snake Snake/main.cpp)
 target_link_libraries(Snake PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
 
+add_executable(Logger Logger/main.cpp)
+target_link_libraries(Logger PRIVATE CustomLibrary)
+
+add_executable(Equation EquationSolver/main.cpp)
+target_link_libraries(Equation PRIVATE CustomLibrary)
+
+add_executable(Parsing Parsing/main.cpp)
+target_link_libraries(Parsing PRIVATE CustomLibrary)
+
 # add_executable(VulkanDemo VulkanDemo/main.cpp)
 # target_include_directories(VulkanDemo PRIVATE ${VULKAN_INCLUDE_DIRS})
 # target_link_libraries(VulkanDemo PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} ${VULKAN_LIB_LIST} CustomLibrary)

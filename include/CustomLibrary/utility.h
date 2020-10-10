@@ -66,7 +66,7 @@ namespace ctl
 	 * @param ch Character to look at
 	 * @return bool
 	 */
-	auto is_number(char ch) -> bool { return (ch >= '0' && ch <= '9') || ch == '.'; }
+	constexpr auto is_number(char ch) -> bool { return (ch >= '0' && ch <= '9') || ch == '.'; }
 
 	/**
 	 * @brief Checks if string is a number
@@ -76,7 +76,7 @@ namespace ctl
 	 * @return bool
 	 */
 	template<string _Str>
-	auto is_number(const _Str &s) -> bool
+	constexpr auto is_number(const _Str &s) -> bool
 	{
 		for (auto i = std::begin(s), end = std::end(s); i != end; ++i)
 			if (!is_number(*i))
