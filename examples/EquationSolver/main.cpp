@@ -6,21 +6,16 @@
 
 using namespace ctl;
 
-class MetaCompiler
-{
-};
-
-//
-
 auto main() -> int
 {
-	std::string_view	  t = "Hello There Me";
-	par::SequentialParser p(t);
-
-	std::cout << p.extract() << '\n' << p.extract() << '\n' << p.extract() << '\n';
-
-	std::string_view equ = "sqrt(4)";
-	std::cout << mth::solve(equ) << '\n';
+	std::cout << mth::solve("2+2") << '\n'
+			  << mth::solve("2*2") << '\n'
+			  << mth::solve("2/2") << '\n'
+			  << mth::solve("2 + 2") << '\n'
+			  << mth::solve("2 * 2") << '\n'
+			  << mth::solve("sqrt( 4 ) ") << '\n'
+			  << mth::solve("2 + 90") << '\n'
+			  << mth::solve("2 * 4.5") << '\n';
 
 	return 0;
 }

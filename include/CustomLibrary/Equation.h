@@ -17,113 +17,153 @@ namespace ctl::mth
 	static constexpr std::array functions = { Function{ "sin", std::sin }, Function{ "cos", std::cos },
 											  Function{ "tan", std::tan }, Function{ "sqrt", std::sqrt } };
 
+	class EquationParser : par::SequentialParser
+	{
+		constexpr auto _skip_() noexcept -> bool
+		{
+			this->skip_space();
+			return this->at_end();
+		}
+
+	public:
+		using par::SequentialParser::SequentialParser;
+
+		constexpr auto extract() noexcept -> std::optional<std::string_view>
+		{
+			const auto s = _skip_();
+			m_back		 = this->current_loc();
+
+			return s ? std::nullopt : std::optional(par::SequentialParser::take());
+		}
+
+		constexpr auto next() noexcept -> std::optional<char>
+		{
+			const auto s = _skip_();
+			m_back		 = this->current_loc();
+
+			return s ? std::nullopt : std::optional(par::SequentialParser::get());
+		}
+
+		constexpr void abort() noexcept { this->seek(m_back); }
+
+		using par::SequentialParser::at_end;
+		using par::SequentialParser::current;
+		using par::SequentialParser::dump;
+		using par::SequentialParser::mov;
+		using par::SequentialParser::skip_space;
+
+	private:
+		size_t m_back = 0;
+	};
+
 	namespace detail
 	{
-		template<typename F>
-		constexpr auto symbol(par::SequentialParser &p, F &&f)
+		/**
+		 * @brief Returns if check or skip is matched or nothing
+		 *
+		 * @param p parser
+		 * @param check character to check
+		 * @param skip character to skip
+		 * @return the operator performed: 0 ^= Error or no match; 1 ^= skip character found; 2 ^= check character found
+		 */
+		enum class Ex
 		{
-			const auto s = p.current_loc();
-
-			if (const auto v = f(p); v)
-				return v;
-
-			p.seek(s);
-			return std::nullopt;
-		}
-
-		template<typename F>
-		constexpr auto symbol(par::SequentialParser &p, F &&f) requires requires(F f, par::SequentialParser p)
+			CHECK,
+			SKIP,
+			NOTHING
+		};
+		constexpr auto extract_skip(EquationParser &p, char check, char skip) -> Ex
 		{
+			const auto c = p.next();
+
+			if (!c)
+				return Ex::NOTHING;
+
+			if (*c == check)
+				return Ex::CHECK;
+			if (*c != skip)
 			{
-				f(p)
+				p.abort();
+				return Ex::NOTHING;
 			}
-			->std::same_as<bool>;
-		}
-		{
-			const auto s = p.current_loc();
 
-			if (const auto v = f(p); v)
-				return true;
-
-			p.seek(s);
-			return false;
+			return Ex::SKIP;
 		}
+
+		constexpr auto brackets(EquationParser &p) -> std::optional<double>;
+		constexpr auto object(EquationParser &p) -> std::optional<double>;
 
 		template<size_t n, typename T>
-		constexpr auto symbol_string(par::SequentialParser &p, const std::array<std::pair<std::string_view, T>, n> &arr)
+		constexpr auto begins_with(EquationParser &p, const std::array<std::pair<std::string_view, T>, n> &l)
 			-> std::optional<T>
 		{
 			const auto c = p.extract();
 
-			for (const auto &con : arr)
-				if (c.starts_with(con.first))
-				{
-					p.mov(con.first.size() - c.size());
-					return con.second;
-				}
+			if (!c)
+				return std::nullopt;
 
-			return std::nullopt;
+			const auto res =
+				std::find_if(std::begin(l), std::end(l), [c](const auto &e) { return c->starts_with(e.first); });
+
+			if (res == std::end(l))
+			{
+				p.abort();
+				return std::nullopt;
+			}
+
+			p.mov(res->first.size() - c->size());
+			return res->second;
 		}
 
-		constexpr auto bracket(par::SequentialParser &p) -> std::optional<double>;
-		constexpr auto symbol(par::SequentialParser &p) -> std::optional<double>;
+		constexpr auto constant(EquationParser &p) -> std::optional<double> { return begins_with(p, constants); }
 
-		constexpr auto constant(par::SequentialParser &p) -> std::optional<double>
-		{
-			return symbol_string(p, constants);
-		}
-
-		constexpr auto number(par::SequentialParser &p) -> std::optional<double>
+		constexpr auto number(EquationParser &p) -> std::optional<double>
 		{
 			const auto n = p.extract();
 
-			if (ctl::is_number(n.front()))
-			{
-				char *	   end;
-				const auto num = strtod(n.data(), &end);
-				p.mov(end - n.data() - n.size());
-				return num;
-			}
-
-			return std::nullopt;
-		}
-
-		constexpr auto function(par::SequentialParser &p) -> std::optional<double (*)(double)>
-		{
-			return symbol_string(p, functions);
-		}
-
-		constexpr auto function_pair(par::SequentialParser &p) -> std::optional<double>
-		{
-			if (const auto f = function(p); f)
-			{
-				if (const auto n = symbol(p); n)
-					return f.value()(*n);
-
-				throw std::runtime_error("Couldn't evaluate function parameter.");
-			}
-
-			return std::nullopt;
-		}
-
-		static constexpr std::array unary = { number, bracket, constant, function_pair };
-
-		constexpr auto symbol(par::SequentialParser &p) -> std::optional<double>
-		{
-			p.skip_space();
-
-			if (p.at_end())
+			if (!n)
 				return std::nullopt;
 
+			if (!ctl::is_number(n->front()))
+			{
+				p.abort();
+				return std::nullopt;
+			}
+
+			char *	   end;
+			const auto num = strtod(n->data(), &end);
+			p.mov(end - n->data() - n->size());
+
+			return num;
+		}
+
+		constexpr auto function(EquationParser &p) -> std::optional<double>
+		{
+			const auto f = begins_with(p, functions);
+
+			if (!f)
+				return std::nullopt;
+
+			const auto n = object(p);
+
+			if (!n)
+				throw std::runtime_error("Couldn't evaluate function parameter.");
+
+			return f.value()(*n);
+		}
+
+		constexpr auto object(EquationParser &p) -> std::optional<double>
+		{
+			constexpr std::array unary = { number, brackets, constant, function };
+
 			for (auto f : unary)
-				if (const auto v = symbol(p, f); v)
+				if (const auto v = f(p); v)
 				{
-					if (!p.at_end())
-						if (symbol(p, [](par::SequentialParser &p) { return p.next() == '^'; }))
-							if (const auto z = symbol(p); z)
-								return std::pow(*v, *z);
-							else
-								throw std::runtime_error("Exponent is faulty.");
+					if (const auto c = extract_skip(p, '^', '^'); c == Ex::CHECK)
+						if (const auto z = object(p); z)
+							return std::pow(*v, *z);
+						else
+							throw std::runtime_error("Power equation synthax incorrect.");
 
 					return *v;
 				}
@@ -131,84 +171,77 @@ namespace ctl::mth
 			return std::nullopt;
 		}
 
-		constexpr auto X(par::SequentialParser &p) -> std::optional<double>
+		constexpr auto bind(EquationParser &p) -> std::optional<double>
 		{
-			p.skip_space();
+			const auto div = extract_skip(p, '/', '*');
 
-			if (p.at_end())
-				return std::nullopt;
+			const auto n = object(p);
 
-			if (const auto [v, n] = std::pair(symbol(p,
-													 [](par::SequentialParser &p) -> std::optional<char> {
-														 const auto c = p.get();
-														 return c == '*' || c == '/' ? std::optional<char>(c)
-																					 : std::nullopt;
-													 }),
-											  symbol(p));
-				n)
-				return !v || *v == '*' ? *n : 1. / *n;
+			if (!n)
+				if (div == Ex::NOTHING)
+					return std::nullopt;
+				else
+					throw std::runtime_error("Missing number after * or /.");
 
-			return std::nullopt;
+			return div == Ex::CHECK ? 1. / *n : *n;
 		}
 
-		constexpr auto R(par::SequentialParser &p) -> std::optional<double>
+		constexpr auto term(EquationParser &p) -> std::optional<double>
 		{
-			if (p.at_end())
-				return std::nullopt;
+			const auto sign = extract_skip(p, '-', '+');
 
-			double num = 1.;
+			auto n = object(p);
 
-			if (const auto c = p.next(); c == '-')
-				num = -1.;
-			else if (c != '+')
-				p.mov(-1);
+			if (!n)
+				if (sign == Ex::NOTHING)
+					return std::nullopt;
+				else
+					throw std::runtime_error("Missing number after + or -.");
 
-			if (auto n = O(p); n)
-			{
-				num *= *n;
-				for (auto v = X(p); v; v = X(p)) num *= *v;
+			while (const auto v = bind(p)) *n *= *v;
 
-				return num;
-			}
-
-			return std::nullopt;
+			return sign == Ex::CHECK ? -*n : *n;
 		}
 
-		constexpr auto T(par::SequentialParser &p) -> std::optional<double>
+		constexpr auto equation(EquationParser &p) -> std::optional<double>
 		{
-			if (auto n = R(p); n)
-			{
-				for (auto v = R(p); v; v = R(p)) *n += *v;
-				return *n;
-			}
+			auto n = term(p);
 
-			return std::nullopt;
-		}
-
-		constexpr auto bracket(par::SequentialParser &p) -> std::optional<double>
-		{
-			if (!symbol(p, [](par::SequentialParser &p) { return p.next() == '('; }))
+			if (!n)
 				return std::nullopt;
 
-			if (auto v = T(p); v)
-			{
-				if (p.next() != ')')
-					throw std::runtime_error("Missing bracket.");
+			while (const auto v = term(p)) *n += *v;
+			return *n;
+		}
 
-				return *v;
+		constexpr auto brackets(EquationParser &p) -> std::optional<double>
+		{
+			if (p.next() != '(')
+			{
+				p.abort();
+				return std::nullopt;
 			}
 
-			throw std::runtime_error("Expression inside bracket doesn't make sense.");
+			const auto v = equation(p);
+
+			if (!v)
+				throw std::runtime_error("Expression inside bracket doesn't make sense.");
+
+			if (p.next() != ')')
+				throw std::runtime_error("Missing bracket.");
+
+			return *v;
 		}
 
 	} // namespace detail
 
-	constexpr auto solve(std::string_view equ_str) -> double
+	auto solve(std::string_view equ_str) -> double // Todo: Wait until from_chars becomes available for floating point
+												   // 		numbers ~> constexpr becomes viable
 	{
 		// Parser Rules (Whitespaces are skipped on character demand)
 		// Equation T = R | L R
 		// Bracket	B = '(' T ')'
-		// Term     R = ('+' | '-') O | L X
+		// Term     R = ('+' O | '-' O | O) | L X
 		// Term Obj X = '*' O | '/' O | O
 		// Object   O = (N | F | C | B) | ((N | F | C | B) '^' (O | B))
 		// Function F = U (O | B)
@@ -216,8 +249,8 @@ namespace ctl::mth
 		// Number 	N
 		// Constant	C
 
-		par::SequentialParser p(equ_str);
-		if (const auto v = detail::T(p); v)
+		EquationParser p(equ_str);
+		if (const auto v = detail::equation(p); v)
 			return *v;
 
 		throw std::runtime_error("Invalid Synthax at " + std::string(p.dump()));
