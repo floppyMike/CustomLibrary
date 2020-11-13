@@ -84,7 +84,7 @@ namespace ctl
 	using strip_t = std::remove_cv_t<std::remove_pointer_t<std::decay_t<T>>>;
 
 	template<typename T, typename... U>
-	concept iter_type_matches = std::disjunction_v<std::is_same<typename std::iterator_traits<T>::value_type, U>...>;
+	concept iter_matches = std::disjunction_v<std::is_same<typename std::iterator_traits<T>::value_type, U>...>;
 
 	// -----------------------------------------------------------------------------
 	// CRTP

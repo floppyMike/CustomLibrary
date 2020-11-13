@@ -43,6 +43,12 @@ namespace ctl::mth
 		{
 		}
 
+		/**
+		 * @brief Get the area of the dimensions
+		 * @return Area
+		 */
+		constexpr auto area() const noexcept -> T { return w * h; }
+
 		T w, h;
 	};
 } // namespace ctl::mth
