@@ -9,8 +9,8 @@
 #include "../Timer.h"
 
 #include <string>
-#include <thread>
 #include <type_traits>
+#include <thread>
 #include <vector>
 
 namespace ctl::sdl
@@ -107,9 +107,9 @@ namespace ctl::sdl
 		 */
 		auto set_hint(const char *name, const char *value) noexcept -> SDL &
 		{
-			if (SDL_SetHint(name, value) == 0U)
-				err::g_log.write(err::Logger::Catagory::WARN)
-					<< "SDL: set_hint: " << name << " failed with value " << value;
+			if (SDL_SetHint(name, value) == 0U);
+				//err::g_log.write(err::Logger::Catagory::WARN)
+					//<< "SDL: set_hint: " << name << " failed with value " << value;
 
 			return *this;
 		}

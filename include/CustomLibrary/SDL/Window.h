@@ -44,7 +44,7 @@ namespace ctl::sdl
 		{
 			m_window.reset(SDL_CreateWindow(name.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dim.w, dim.h,
 											window_flags));
-			if (m_window)
+			if (!m_window)
 				throw std::runtime_error(SDL_GetError());
 		}
 
