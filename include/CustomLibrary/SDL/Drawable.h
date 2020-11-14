@@ -212,6 +212,17 @@ namespace ctl::sdl
 				return *this;
 			}
 
+			/**
+			 * @brief Moves the cached circle
+			 *
+			 * @param dx Delta x coord
+			 * @param dy Delta y coord
+			 */
+			constexpr void mov(int dx, int dy) noexcept
+			{
+				for (auto &p : m_cache) p.x += dx, p.y += dy;
+			}
+
 		private:
 			std::vector<SDL_Point> m_cache;
 

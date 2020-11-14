@@ -7,10 +7,14 @@
 
 namespace ctl::mth
 {
+	// -----------------------------------------------------------------------------
+	// Collision Detectors
+	// -----------------------------------------------------------------------------
+
 	/**
 	 * @brief Checks for collision between 2 points
-	 * 
-	 * @tparam _T1 Point type 
+	 *
+	 * @tparam _T1 Point type
 	 * @tparam _T2 Point type
 	 * @param d1 point 1
 	 * @param d2 point 2
@@ -24,7 +28,7 @@ namespace ctl::mth
 
 	/**
 	 * @brief Check for collision between a point and a rectange
-	 * 
+	 *
 	 * @tparam _T1 Point type
 	 * @tparam _T2 Rectangle type
 	 * @param d Point
@@ -39,7 +43,7 @@ namespace ctl::mth
 
 	/**
 	 * @brief Check for collision between a point and a circle
-	 * 
+	 *
 	 * @tparam _T1 Point type
 	 * @tparam _T2 Circle type
 	 * @param d Point
@@ -52,14 +56,15 @@ namespace ctl::mth
 		const auto dx = std::abs(d.x - c.x);
 		const auto dy = std::abs(d.y - c.y);
 
-		if (dx > c.r || dy > c.r) return false;
+		if (dx > c.r || dy > c.r)
+			return false;
 
 		return dx + dy <= c.r || std::pow(dx, 2) + std::pow(dy, 2) <= std::pow(c.r, 2);
 	}
 
 	/**
 	 * @brief Check for collision between a rechange and a point
-	 * 
+	 *
 	 * @tparam _T1 Rectange type
 	 * @tparam _T2 Point type
 	 * @param r Rectange
@@ -74,7 +79,7 @@ namespace ctl::mth
 
 	/**
 	 * @brief Check for collision between 2 rectangles
-	 * 
+	 *
 	 * @tparam _T1 Rectangle type 1
 	 * @tparam _T2 Rectangle type 2
 	 * @param r1 Rectange 1
@@ -89,7 +94,7 @@ namespace ctl::mth
 
 	/**
 	 * @brief Check for collision between a rectangle and a circle
-	 * 
+	 *
 	 * @tparam _T1 Rectange type
 	 * @tparam _T2 Circle type
 	 * @param r Rectangle
@@ -104,18 +109,22 @@ namespace ctl::mth
 		const auto distanceX = std::abs(r.x + halfWidth - c.x);
 		const auto distanceY = std::abs(r.y + halfHight - c.y);
 
-		if (distanceX > (halfWidth + c.r)) return false;
-		if (distanceY > (halfHight + c.r)) return false;
+		if (distanceX > (halfWidth + c.r))
+			return false;
+		if (distanceY > (halfHight + c.r))
+			return false;
 
-		if (distanceX <= halfWidth) return true;
-		if (distanceY <= halfHight) return true;
+		if (distanceX <= halfWidth)
+			return true;
+		if (distanceY <= halfHight)
+			return true;
 
-		return power2(distanceX - halfWidth) + power2(distanceY - halfHight) <= power2(c.r);
+		return std::pow(distanceX - halfWidth, 2) + std::pow(distanceY - halfHight, 2) <= std::pow(c.r, 2);
 	}
 
 	/**
 	 * @brief Check for collision between a circle and a point
-	 * 
+	 *
 	 * @tparam _T1 Circle type
 	 * @tparam _T2 Point type
 	 * @param c Circle
@@ -130,7 +139,7 @@ namespace ctl::mth
 
 	/**
 	 * @brief Check for collision between a circle and a rectangle
-	 * 
+	 *
 	 * @tparam _T1 Circle type
 	 * @tparam _T2 Rectangle type
 	 * @param c Circle

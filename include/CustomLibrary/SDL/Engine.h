@@ -19,13 +19,18 @@ namespace ctl::sdl
 	// SDL predefined Colors
 	// -----------------------------------------------------------------------------
 
-	static constexpr SDL_Color BLACK  = { 0, 0, 0, 0xFF };
-	static constexpr SDL_Color WHITE  = { 0xFF, 0xFF, 0xFF, 0xFF };
-	static constexpr SDL_Color RED	  = { 0xFF, 0, 0, 0xFF };
-	static constexpr SDL_Color GREEN  = { 0, 0xFF, 0, 0xFF };
-	static constexpr SDL_Color BLUE	  = { 0, 0, 0xFF, 0xFF };
-	static constexpr SDL_Color YELLOW = { 0xFF, 0xFF, 0, 0xFF };
-	static constexpr SDL_Color ORANGE = { 0xFF, 0xFF >> 1, 0xFF >> 2, 0xFF };
+	// clang-format off
+	static constexpr SDL_Color	BLACK = { 0, 0, 0, 0xFF }, 
+								WHITE = { 0xFF, 0xFF, 0xFF, 0xFF },
+								RED = { 0xFF, 0, 0, 0xFF }, 
+								GREEN = { 0, 0xFF, 0, 0xFF }, 
+								BLUE = { 0, 0, 0xFF, 0xFF },
+								YELLOW = { 0xFF, 0xFF, 0, 0xFF }, 
+								ORANGE = { 0xFF, 0xFF >> 1, 0xFF >> 2, 0xFF },
+								DARK_GRAY = { 30, 30, 30, 0xFF },
+								GRAY = { 50, 50, 50, 0xFF },
+								LIGHT_GRAY = { 70, 70, 70, 0xFF };
+	// clang-format on
 
 	// -----------------------------------------------------------------------------
 	// Core
@@ -107,9 +112,10 @@ namespace ctl::sdl
 		 */
 		auto set_hint(const char *name, const char *value) noexcept -> SDL &
 		{
-			if (SDL_SetHint(name, value) == 0U);
-				//err::g_log.write(err::Logger::Catagory::WARN)
-					//<< "SDL: set_hint: " << name << " failed with value " << value;
+			if (SDL_SetHint(name, value) == 0U)
+				;
+			// err::g_log.write(err::Logger::Catagory::WARN)
+			//<< "SDL: set_hint: " << name << " failed with value " << value;
 
 			return *this;
 		}
@@ -164,19 +170,19 @@ namespace ctl::sdl
 	public:
 		SimpleRunLoop() = default;
 
-        /**
-         * @brief Initialize the run loop with the window.
-         * @param win Window ptr to use
-         */
+		/**
+		 * @brief Initialize the run loop with the window.
+		 * @param win Window ptr to use
+		 */
 		explicit SimpleRunLoop(ImplWin *win)
 			: m_win(win)
 		{
 		}
 
-        /**
-         * @brief Select a window to use.
-         * @param win Window ptr
-         */
+		/**
+		 * @brief Select a window to use.
+		 * @param win Window ptr
+		 */
 		void window(ImplWin *win) { m_win = win; }
 
 		/**
@@ -191,18 +197,18 @@ namespace ctl::sdl
 			{
 				const auto endTime = std::chrono::steady_clock::now() + frameTime;
 
-				_invoke_(&ImplWin::pre_pass);
+				m_win->pre_pass();
 
 				SDL_Event e;
 				while (SDL_PollEvent(&e) != 0)
 				{
-					_invoke_(&ImplWin::event, e);
+					m_win->event(e);
 					if (e.type == SDL_QUIT)
 						quit = true;
 				}
 
-				_invoke_(&ImplWin::update);
-				_invoke_(&ImplWin::render);
+				m_win->update();
+				m_win->render();
 
 				std::this_thread::sleep_until(endTime);
 			}
@@ -220,7 +226,7 @@ namespace ctl::sdl
 	class RunLoop
 	{
 		template<typename... T>
-		void _invoke_(void (ImplWin::*f)(const T &...), const T &... arg);
+		void _invoke_(void (ImplWin::*f)(const T &...), const T &...arg);
 
 	public:
 		RunLoop() = default;
@@ -315,7 +321,7 @@ namespace ctl::sdl
 
 	template<typename ImplWin>
 	template<typename... T>
-	inline void RunLoop<ImplWin>::_invoke_(void (ImplWin::*f)(const T &...), const T &... arg)
+	inline void RunLoop<ImplWin>::_invoke_(void (ImplWin::*f)(const T &...), const T &...arg)
 	{
 		for (auto &i : m_windows) (i->*f)(arg...);
 	}
