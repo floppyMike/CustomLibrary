@@ -292,19 +292,19 @@ private:
 
 auto main(int argc, char **argv) -> int
 {
-    try
-    {
-	sdl::SDL		  s;
-	App				  a;
-	sdl::RunLoop<App> r;
+	try
+	{
+		sdl::SDL		  s;
+		App				  a;
+		sdl::RunLoop<App> r;
 
-	r.add_window(&a);
-	r.run(60);
-    }
-    catch(const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+		r.add_window(&a);
+		r.run(60);
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << e.what() << '\n';
+	}
 
 	::getchar();
 	return 0;

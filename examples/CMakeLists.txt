@@ -14,8 +14,8 @@ target_link_libraries(Snake PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2
 add_executable(Logger Logger/main.cpp)
 target_link_libraries(Logger PRIVATE CustomLibrary)
 
-add_executable(Equation EquationSolver/main.cpp)
-target_link_libraries(Equation PRIVATE CustomLibrary)
+add_executable(Pong Pong/main.cpp)
+target_link_libraries(Pong PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
 
 add_executable(Parsing Parsing/main.cpp)
 target_link_libraries(Parsing PRIVATE CustomLibrary)
