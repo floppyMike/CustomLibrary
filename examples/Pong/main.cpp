@@ -122,6 +122,8 @@ public:
 		return shape;
 	}
 
+	[[nodiscard]] auto empty() const noexcept -> bool { return m_blocks.empty(); }
+
 	friend auto operator<<(sdl::Renderer &r, const Field &f) -> sdl::Renderer &
 	{
 		r.color(sdl::BLUE);
@@ -212,6 +214,9 @@ public:
 				return;
 
 			std::cout << "Score increased to " << ++m_score << std::endl;
+
+			if (m_field.empty())
+				_handle_exit_();
 
 			_handle_block_bounce_(*b, ball_before);
 		}
