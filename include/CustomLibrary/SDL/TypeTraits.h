@@ -40,6 +40,14 @@ namespace ctl::sdl
 			, m_r(r)
 		{
 		}
+		constexpr explicit FunctorR(T *o)
+			: Functor<T>(o)
+		{
+		}
+		constexpr explicit FunctorR(Renderer *r)
+			: m_r(r)
+		{
+		}
 
 		constexpr auto renderer(Renderer *const r) noexcept { m_r = r; }
 		constexpr auto renderer() const noexcept

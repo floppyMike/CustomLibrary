@@ -53,8 +53,7 @@ namespace ctl::mth
 	template<mth::simple_point _T1, mth::simple_circle _T2>
 	constexpr auto collision(const _T1 &d, const _T2 &c) noexcept
 	{
-		const auto dx = std::abs(d.x - c.x);
-		const auto dy = std::abs(d.y - c.y);
+		const auto dx = std::abs(d.x - c.x), dy = std::abs(d.y - c.y);
 
 		if (dx > c.r || dy > c.r)
 			return false;

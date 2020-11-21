@@ -96,4 +96,21 @@ namespace ctl::sdl
 		std::unique_ptr<SDL_Window, Unique_Destructor> m_window = nullptr;
 	};
 
+	// -----------------------------------------------------------------------------
+	// Utilities
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Get information about a display
+	 *
+	 * @param display Index of the display
+	 * @return SDL_DisplayMode https://wiki.libsdl.org/SDL_DisplayMode
+	 */
+	auto display_mode(int display) noexcept -> SDL_DisplayMode
+	{
+		SDL_DisplayMode m;
+		SDL_GetCurrentDisplayMode(display, &m);
+		return m;
+	}
+
 } // namespace ctl::sdl
