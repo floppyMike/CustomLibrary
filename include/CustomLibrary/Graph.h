@@ -227,7 +227,7 @@ namespace ctl::gph
 	 * @param start_node Node index to start mapping from
 	 * @param early_exit Predicate
 	 * @param heuristic heuristic for goal
-	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 * @return Row of indexes towards the start_node
 	 */
 	template<SimpleGraph Graph, std::predicate<size_t, std::tuple_element_t<1, typename Graph::Edge_t>> F1,
 			 std::predicate<size_t> F2>
@@ -239,12 +239,11 @@ namespace ctl::gph
 		std::priority_queue<PQElement> front; // Always take shortest route
 		front.emplace((Weight)0, start_node);
 
-		auto route = std::make_pair(
-			std::vector<size_t>(g.node_amount(), -1),
-			std::vector<Weight>(g.node_amount(),
-								std::numeric_limits<Weight>::max())); // Visited node route and total weight
-		route.first[start_node]	 = start_node;
-		route.second[start_node] = (Weight)0;
+		std::vector<size_t> route(g.node_amount(), -1);
+		std::vector<Weight> distance(g.node_amount(),
+									 std::numeric_limits<Weight>::max()); // Visited node route and total weight
+		route[start_node]	 = start_node;
+		distance[start_node] = (Weight)0;
 
 		while (!front.empty())
 		{
@@ -257,13 +256,13 @@ namespace ctl::gph
 			for (const auto &i : g.neighbors(c)) // Go through all neighbors of the current node
 			{
 				const auto [next, weight] = i;
-				const auto cost			  = route.second[c] + weight;
+				const auto cost			  = distance[c] + weight;
 
-				if (route.second[next] == std::numeric_limits<Weight>::max()
-					|| cost < route.second[next]) // If not visited or previous route to node weighs more
+				if (distance[next] == std::numeric_limits<Weight>::max()
+					|| cost < distance[next]) // If not visited or previous route to node weighs more
 				{
-					route.second[next] = cost;
-					route.first[next]  = c;
+					distance[next] = cost;
+					route[next]	   = c;
 					front.emplace(cost + heuristic(next), next);
 				}
 			}
@@ -282,7 +281,7 @@ namespace ctl::gph
 	 * @param start_node Node index to start mapping from
 	 * @param early_exit Predicate
 	 * @param heuristic heuristic for goal
-	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 * @return Row of indexes towards the start_node
 	 */
 	template<SimpleGraph Graph, std::predicate<size_t> F>
 	[[nodiscard]] auto a_star(const Graph &g, size_t start, size_t goal, F heuristic)
