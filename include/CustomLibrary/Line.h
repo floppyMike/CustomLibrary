@@ -94,6 +94,12 @@ namespace ctl::mth
 			y2 = y;
 		}
 
+		/**
+		 * @brief Move the whole line by a difference in length
+		 * 
+		 * @param delta1 Difference of point 1
+		 * @param delta2 Difference of point 2
+		 */
 		constexpr void translate(const mth::Point<T> &delta1, const mth::Point<T> &delta2) noexcept
 		{
 			x1 += delta1.x;
@@ -109,6 +115,9 @@ namespace ctl::mth
 			x2 = p2.x;
 			y2 = p2.y;
 		}
+
+		constexpr auto delta_x() const noexcept -> T { return x2 - x1; }
+		constexpr auto delta_y() const noexcept -> T { return y2 - y1; }
 
 		T x1, y1, x2, y2;
 	};

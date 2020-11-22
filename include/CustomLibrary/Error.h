@@ -7,6 +7,7 @@
 #include <string_view>
 #include <concepts>
 #include <ctime>
+#include <tuple>
 #include <iostream>
 
 #ifndef NDEBUG
