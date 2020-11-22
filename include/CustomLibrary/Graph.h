@@ -9,9 +9,15 @@
 
 namespace ctl::gph
 {
+	// -----------------------------------------------------------------------------
+	// Traits
+	// -----------------------------------------------------------------------------
+
 	template<typename T>
 	concept SimpleGraph = requires(const T a)
 	{
+		typename T::Edge_t;
+
 		{
 			std::get<0>(a.neighbors((size_t)0)[0])
 		}
@@ -21,6 +27,10 @@ namespace ctl::gph
 		}
 		->std::same_as<size_t>;
 	};
+
+	// -----------------------------------------------------------------------------
+	// Edge Types
+	// -----------------------------------------------------------------------------
 
 	template<typename... T>
 	using EdgeWith = std::tuple<size_t, T...>;
@@ -33,10 +43,16 @@ namespace ctl::gph
 	template<arithmetic Weight>
 	using WeightedEdge = WeightedEdgeWith<Weight>;
 
+	// -----------------------------------------------------------------------------
+	// Graph
+	// -----------------------------------------------------------------------------
+
 	template<typename Edge>
 	class Graph
 	{
 	public:
+		using Edge_t = Edge;
+
 		constexpr Graph()				   = default;
 		constexpr Graph(const Graph &)	   = default;
 		constexpr Graph(Graph &&) noexcept = default;
@@ -50,6 +66,17 @@ namespace ctl::gph
 			for (auto i = init.begin(); i != init.end(); ++i) m_edges.emplace_back(std::move(*i));
 		}
 
+		// constexpr void bidirectionilize() noexcept
+		// {
+		// 	for (size_t i = 0; i < m_edges.size(); ++i)
+		// 		for (Edge e : m_edges[i])
+		// 			if (const auto idx = std::exchange(std::get<0>(e), i);
+		// 				std::find_if(m_edges[idx].begin(), m_edges[idx].end(),
+		// 							 [idx](const Edge &e) { return std::get<0>(e) == idx; })
+		// 				== m_edges[idx].end())
+		// 				m_edges[idx].emplace_back(e);
+		// }
+
 		[[nodiscard]] constexpr auto neighbors(size_t id) const noexcept -> const auto & { return m_edges[id]; }
 		[[nodiscard]] constexpr auto node_amount() const noexcept -> size_t { return m_edges.size(); }
 
@@ -59,12 +86,16 @@ namespace ctl::gph
 		std::vector<std::vector<Edge>> m_edges;
 	};
 
+	// -----------------------------------------------------------------------------
+	// Algorithms
+	// -----------------------------------------------------------------------------
+
 	/**
 	 * @brief Uses the breadth first search algorithm to map out a graph and return a vector for the shortest path for
 	 * each node.
 	 *
 	 * @tparam Graph Type satisfying SimpleGraph
-	 * @tparam F Unary predicate for early exiting
+	 * @tparam F Unary predicate for early exiting (size_t index)
 	 * @param g Graph to seach on
 	 * @param start_node Node index to start mapping from
 	 * @param early_exit Predicate
@@ -116,7 +147,148 @@ namespace ctl::gph
 	[[nodiscard]] auto breadth_first_search(const Graph &g, size_t start_node) noexcept -> std::vector<size_t>
 	{
 		return breadth_first_search(
-			g, start_node, [](auto) constexpr { return false; });
+			g, start_node, [](size_t) constexpr { return false; });
+	}
+
+	/**
+	 * @brief Uses the dijkstra search algorithm to map out a graph and return a vector for the shortest path
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @tparam F Binary predicate for early exiting (size_t index, Weight weight)
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @param early_exit Predicate
+	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 */
+	template<SimpleGraph Graph, std::predicate<size_t, std::tuple_element_t<1, typename Graph::Edge_t>> F>
+	[[nodiscard]] auto dijkstra_search(const Graph &g, size_t start_node, F early_exit)
+	{
+		using Weight	= std::tuple_element_t<1, typename Graph::Edge_t>;
+		using PQElement = std::pair<Weight, size_t>;
+
+		std::priority_queue<PQElement> front; // Always take shortest route
+		front.emplace((Weight)0, start_node);
+
+		auto route = std::make_pair(
+			std::vector<size_t>(g.node_amount(), -1),
+			std::vector<Weight>(g.node_amount(),
+								std::numeric_limits<Weight>::max())); // Visited node route and total weight
+		route.first[start_node]	 = start_node;
+		route.second[start_node] = (Weight)0;
+
+		while (!front.empty())
+		{
+			const auto [w, c] = front.top();
+			front.pop();
+
+			if (early_exit(c, w))
+				break;
+
+			for (const auto &i : g.neighbors(c)) // Go through all neighbors of the current node
+			{
+				const auto [next, weight] = i;
+				const auto cost			  = route.second[c] + weight;
+
+				if (route.second[next] == std::numeric_limits<Weight>::max()
+					|| cost < route.second[next]) // If not visited or previous route to node weighs more
+				{
+					route.second[next] = cost;
+					route.first[next]  = c;
+					front.emplace(cost, next);
+				}
+			}
+		}
+
+		return route;
+	}
+
+	/**
+	 * @brief Uses the dijkstra search algorithm to map out a graph and return a vector for the shortest path
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 */
+	template<SimpleGraph Graph>
+	[[nodiscard]] auto dijkstra_search(const Graph &g, size_t start)
+	{
+		return dijkstra_search(g, start, [](size_t, auto) { return false; });
+	}
+
+	/**
+	 * @brief Uses the A* search algorithm to map out a graph and return a vector for the shortest path. Similar to
+	 * Dijkstra's algorithm.
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @tparam F1 Binary predicate for early exiting (size_t index, Weight weight)
+	 * @tparam F2 Unary heuristic for calculating score to goal (size_t index)
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @param early_exit Predicate
+	 * @param heuristic heuristic for goal
+	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 */
+	template<SimpleGraph Graph, std::predicate<size_t, std::tuple_element_t<1, typename Graph::Edge_t>> F1,
+			 std::predicate<size_t> F2>
+	[[nodiscard]] auto a_star(const Graph &g, size_t start_node, F1 early_exit, F2 heuristic)
+	{
+		using Weight	= std::tuple_element_t<1, typename Graph::Edge_t>;
+		using PQElement = std::pair<Weight, size_t>;
+
+		std::priority_queue<PQElement> front; // Always take shortest route
+		front.emplace((Weight)0, start_node);
+
+		auto route = std::make_pair(
+			std::vector<size_t>(g.node_amount(), -1),
+			std::vector<Weight>(g.node_amount(),
+								std::numeric_limits<Weight>::max())); // Visited node route and total weight
+		route.first[start_node]	 = start_node;
+		route.second[start_node] = (Weight)0;
+
+		while (!front.empty())
+		{
+			const auto [w, c] = front.top();
+			front.pop();
+
+			if (early_exit(c, w))
+				break;
+
+			for (const auto &i : g.neighbors(c)) // Go through all neighbors of the current node
+			{
+				const auto [next, weight] = i;
+				const auto cost			  = route.second[c] + weight;
+
+				if (route.second[next] == std::numeric_limits<Weight>::max()
+					|| cost < route.second[next]) // If not visited or previous route to node weighs more
+				{
+					route.second[next] = cost;
+					route.first[next]  = c;
+					front.emplace(cost + heuristic(next), next);
+				}
+			}
+		}
+
+		return route;
+	}
+
+	/**
+	 * @brief Uses the A* search algorithm to map out a graph and return a vector for the shortest path. Similar to
+	 * Dijkstra's algorithm.
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @tparam F Unary heuristic for calculating score to goal (size_t index)
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @param early_exit Predicate
+	 * @param heuristic heuristic for goal
+	 * @return Pair of vectors: Row of indexes towards the start_node; Total weigh for each destination
+	 */
+	template<SimpleGraph Graph, std::predicate<size_t> F>
+	[[nodiscard]] auto a_star(const Graph &g, size_t start, size_t goal, F heuristic)
+	{
+		return a_star(
+			g, start, [&goal](size_t c, auto) { return c == goal; }, heuristic);
 	}
 
 	/*
