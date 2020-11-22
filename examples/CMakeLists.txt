@@ -23,6 +23,9 @@ target_link_libraries(Parsing PRIVATE CustomLibrary)
 add_executable(Math Math/main.cpp)
 target_link_libraries(Math PRIVATE CustomLibrary)
 
+add_executable(Graphs Graphs/main.cpp)
+target_link_libraries(Graphs PRIVATE CustomLibrary)
+
 # add_executable(VulkanDemo VulkanDemo/main.cpp)
 # target_include_directories(VulkanDemo PRIVATE ${VULKAN_INCLUDE_DIRS})
 # target_link_libraries(VulkanDemo PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} ${VULKAN_LIB_LIST} CustomLibrary)

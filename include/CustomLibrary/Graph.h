@@ -3,12 +3,123 @@
 #include <vector>
 #include <queue>
 #include <tuple>
+#include <iostream>
 
 #include "Traits.h"
 
-
 namespace ctl::gph
 {
+	template<typename T>
+	concept SimpleGraph = requires(const T a)
+	{
+		{
+			std::get<0>(a.neighbors((size_t)0)[0])
+		}
+		->std::same_as<const size_t &>;
+		{
+			a.node_amount()
+		}
+		->std::same_as<size_t>;
+	};
+
+	template<typename... T>
+	using EdgeWith = std::tuple<size_t, T...>;
+
+	using Edge = EdgeWith<>;
+
+	template<arithmetic Weight, typename... T>
+	using WeightedEdgeWith = EdgeWith<Weight, T...>;
+
+	template<arithmetic Weight>
+	using WeightedEdge = WeightedEdgeWith<Weight>;
+
+	template<typename Edge>
+	class Graph
+	{
+	public:
+		constexpr Graph()				   = default;
+		constexpr Graph(const Graph &)	   = default;
+		constexpr Graph(Graph &&) noexcept = default;
+
+		constexpr auto operator=(const Graph &) -> Graph & = default;
+		constexpr auto operator=(Graph &&) noexcept -> Graph & = default;
+
+		constexpr Graph(std::initializer_list<std::initializer_list<Edge>> &&init)
+		{
+			m_edges.reserve(init.size());
+			for (auto i = init.begin(); i != init.end(); ++i) m_edges.emplace_back(std::move(*i));
+		}
+
+		[[nodiscard]] constexpr auto neighbors(size_t id) const noexcept -> const auto & { return m_edges[id]; }
+		[[nodiscard]] constexpr auto node_amount() const noexcept -> size_t { return m_edges.size(); }
+
+		constexpr void push(size_t id, Edge &&e) { m_edges.emplace_back(std::move(e)); }
+
+	private:
+		std::vector<std::vector<Edge>> m_edges;
+	};
+
+	/**
+	 * @brief Uses the breadth first search algorithm to map out a graph and return a vector for the shortest path for
+	 * each node.
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @tparam F Unary predicate for early exiting
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @param early_exit Predicate
+	 * @return Row of indexes each pointing to another index in direction of the start node
+	 */
+	template<SimpleGraph Graph, std::predicate<size_t> F>
+	[[nodiscard]] auto breadth_first_search(const Graph &g, size_t start_node, F early_exit) noexcept
+		-> std::vector<size_t>
+	{
+		std::queue<size_t> front; // Store nodes to query
+		front.push(start_node);
+
+		std::vector<size_t> came_from(g.node_amount(), -1); // Map routes
+		came_from[start_node] = start_node;
+
+		while (!front.empty())
+		{
+			const auto c = front.front();
+			front.pop();
+
+			if (early_exit(c))
+				break;
+
+			for (const auto &i : g.neighbors(c)) // Visit all neighbors
+			{
+				const auto next = std::get<0>(i);
+
+				if (came_from[next] == -1) // Mark visited and store route
+				{
+					front.push(next);
+					came_from[next] = c;
+				}
+			}
+		}
+
+		return came_from;
+	}
+
+	/**
+	 * @brief Uses the breadth first search algorithm to map out a graph and return a vector for the shortest path for
+	 * each node.
+	 *
+	 * @tparam Graph Type satisfying SimpleGraph
+	 * @param g Graph to seach on
+	 * @param start_node Node index to start mapping from
+	 * @return Row of indexes each pointing to another index in direction of the start node
+	 */
+	template<SimpleGraph Graph>
+	[[nodiscard]] auto breadth_first_search(const Graph &g, size_t start_node) noexcept -> std::vector<size_t>
+	{
+		return breadth_first_search(
+			g, start_node, [](auto) constexpr { return false; });
+	}
+
+	/*
 	struct isDirected {};
 	struct isUndirected {};
 	struct isBoth {};
@@ -184,7 +295,8 @@ namespace ctl::gph
 			return true;
 		}
 
-		bool connected(Vertex start, Vertex with, std::vector<bool>&& checkList = std::vector<bool>(this->_().size(), false))
+		bool connected(Vertex start, Vertex with, std::vector<bool>&& checkList = std::vector<bool>(this->_().size(),
+	false))
 		{
 			return _goThrough_(checkList, start)[with];
 		}
@@ -266,7 +378,8 @@ namespace ctl::gph
 	class Transpose : public crtp<ImplGraph, Transpose>
 	{
 	public:
-		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isUndirected>, "Graph must be directed to use this.");
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isUndirected>, "Graph must be directed to use
+	this.");
 
 		//Reserse directions of edges
 		ImplGraph transpose() const
@@ -288,7 +401,8 @@ namespace ctl::gph
 	class Eulerian : public crtp<ImplGraph, Eulerian>
 	{
 	public:
-		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use this.");
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use
+	this.");
 
 		enum { NONE, PATH, CIRCLE };
 
@@ -320,7 +434,8 @@ namespace ctl::gph
 	class MST : public crtp<ImplGraph, MST>
 	{
 	public:
-		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use this.");
+		static_assert(!std::is_same_v<typename ImplGraph::direction_t, isDirected>, "Graph must be undirected to use
+	this.");
 
 		auto minimumSpanningTree() const
 		{
@@ -363,5 +478,5 @@ namespace ctl::gph
 			return mst;
 		}
 	};
-
-}
+*/
+} // namespace ctl::gph
