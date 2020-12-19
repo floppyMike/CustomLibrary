@@ -49,6 +49,8 @@ namespace ctl::mth
 		 */
 		constexpr auto area() const noexcept -> T { return w * h; }
 
+		constexpr auto operator==(const Dim &d) const noexcept -> bool { return w == d.w && h == d.h; }
+
 		T w, h;
 	};
 } // namespace ctl::mth

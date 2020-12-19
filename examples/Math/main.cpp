@@ -20,19 +20,19 @@ auto operator<<(std::ostream &out, const mth::Matrix<T, Alloc> &m) noexcept -> a
 
 auto main() -> int
 {
-	const mth::Matrix<int> m1(3, 3, 1);
-	const mth::Matrix<int> m2(3, 3, 4);
+	const mth::Matrix<int> m1(3, 3, { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+	const mth::Matrix<int> m2(3, 3, { 9, 8, 7, 6, 5, 4, 3, 2, 1 });
 
-	const auto test = m1 + m2;
+	const auto test = m1 - m2;
 
 	std::cout << test << "\n\n";
-	
+
 	const mth::Matrix<double> m3(2, 2, { 4, 2, 0, 3 });
 	const mth::Matrix<double> m4(2, 2, { 4, 0, 1, 4 });
 
 	const auto test1 = m3.transpose();
 
-    std::cout << m3 << "\n\n" << test1 << "\n\n" << m3.dot_product(m4) << "\n\n";
+	std::cout << m3 << "\n\n" << test1 << "\n\n" << m3.dot_product(m4) << "\n\n";
 
 	std::cout << mth::solve("2+2") << '\n'
 			  << mth::solve("2*2") << '\n'
