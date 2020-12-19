@@ -2,49 +2,93 @@
 
 #include "utility.h"
 #include "Matrix.h"
-#include "RandomGenerator.h"
 
 #include <cmath>
 
 namespace ctl::mcl
 {
+	/**
+	 * @brief Simple Layer descriptor
+	 */
 	struct Layer
 	{
 		mth::Matrix<double> weights, biases;
 	};
 
+	// -----------------------------------------------------------------------------
+	// Neural Networks
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Basic Neural Network implementation using the feedforward as the query method and backpropogation as the
+	 * training method
+	 */
 	class BasicNeuralNetwork
 	{
 	public:
-		BasicNeuralNetwork(std::initializer_list<size_t> &&structure, rnd::Random<rnd::Mersenne> &r)
+		/**
+		 * @brief Construct a new Basic Neural Network object with a certain structure
+		 *
+		 * @tparam Init Initializer Functor
+		 * @param structure Defines the structure of the neural network. For example { 2, 2, 1 } means 2 inputs, 1
+		 * hidden layer with 2 neurons, 1 output
+		 * @param init Functor used to initialize the network. Sig.: double func();
+		 */
+		template<typename Init>
+		BasicNeuralNetwork(std::initializer_list<size_t> &&structure, Init &&init) requires std::invocable<Init>
 			: m_neurons_n(structure)
 		{
 			m_layers.reserve(m_neurons_n.size() - 1);
 
 			for (auto i = m_neurons_n.begin(), end = m_neurons_n.end() - 1; i != end; ++i)
-				m_layers.push_back({ mth::Matrix<double>(*(i + 1), *i, [&r] { return r.rand_number(-1., 1.); }),
-									 mth::Matrix<double>(*(i + 1), 1, [&r] { return r.rand_number(-1., 1.); }) });
+				m_layers.push_back(
+					{ mth::Matrix<double>(*(i + 1), *i, init()), mth::Matrix<double>(*(i + 1), 1, init()) });
 		}
 
+		/**
+		 * @brief Returns a weight matrix of a layer
+		 * @param idx layer index
+		 * @return weight matrix reference
+		 */
 		auto weights(size_t idx) noexcept -> auto &
 		{
 			assert(idx < m_layers.size() && "Weights of specified layer don't exist.");
 			return m_layers[idx].weights;
 		}
+
+		/**
+		 * @brief Returns a bias matrix of a layer
+		 * @param idx layer index
+		 * @return bias matrix reference
+		 */
 		auto biases(size_t idx) noexcept -> auto &
 		{
 			assert(idx < m_layers.size() && "Biases of specified layer don't exist.");
 			return m_layers[idx].biases;
 		}
 
+		/**
+		 * @brief Returns the number of layers within the network
+		 * @return layer number 
+		 */
 		[[nodiscard]] auto layers_n() const noexcept -> size_t { return m_neurons_n.size(); }
 
+		/**
+		 * @brief Returns the number of neurons in a layer
+		 * @param idx Layer index
+		 * @return Neuron amount 
+		 */
 		[[nodiscard]] auto nodes(size_t idx) const noexcept -> size_t
 		{
 			assert(idx < m_layers.size() && "Layer doesn't exist.");
 			return m_neurons_n[idx];
 		}
 
+		/**
+		 * @brief Performs a feedforward query with given input
+		 * @param input Matrix input to use
+		 * @return result matrix 
+		 */
 		[[nodiscard]] auto query(mth::Matrix<double> input) const
 		{
 			for (const auto &i : m_layers) // Feed forward through each layer
@@ -69,6 +113,18 @@ namespace ctl::mcl
 		std::vector<Layer>	m_layers;
 	};
 
+	// -----------------------------------------------------------------------------
+	// Actions
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Performs the training method of the given neural network using a input and output matrix
+	 * 
+	 * @param nn Neural Network to train on
+	 * @param input Input matrix to fit with
+	 * @param output Output matrix to fit with
+	 * @param learning_rate The learning speed
+	 */
 	void fit(BasicNeuralNetwork &nn, const mth::Matrix<double> &input, const mth::Matrix<double> &output,
 			 double learning_rate = 0.1)
 	{
@@ -91,16 +147,6 @@ namespace ctl::mcl
 		for (auto ri = nn.rbegin(); ri != nn.rend(); ++ri) // Create losses using backward weight iteration
 			loss.emplace_back(ri->weights.transpose().dot_product(loss.back()));
 
-		// // Calculate delta
-		// for (size_t i = 1, len = nn.layers_n(); i < len; ++i)
-		// {
-		// 	const auto d_bias	= learning_rate * loss[loss.size() - i] * feedforward[i] * (1. - feedforward[i]);
-		// 	const auto d_weight = d_bias.dot_product(feedforward[i - 1].transpose());
-
-		// 	nn.weights(i - 1) += d_weight;
-		// 	nn.biases(i - 1) += d_bias;
-		// }
-
 		// Calculate delta
 		for (auto [i_error, i_output, i_layer] = std::tuple{ loss.begin(), feedforward.rbegin(), nn.rbegin() };
 			 i_layer != nn.rend(); ++i_error, ++i_output, ++i_layer)
@@ -113,10 +159,20 @@ namespace ctl::mcl
 		}
 	}
 
+	/**
+	 * @brief Calculates the total cost/loss of the network to the given output array using the input array. Input and output array length must be the same!
+	 * 
+	 * @param nn Neural Networt to calculate the cost with
+	 * @param input_begin The input array begin address
+	 * @param input_end The input array end address
+	 * @param output_begin The output array begin address
+	 * @return total cost as a double 
+	 */
 	template<typename Iter1, typename Iter2>
-	auto cost(const BasicNeuralNetwork &nn, Iter1 input_begin, Iter1 input_end, Iter2 output_begin)
-		requires std::same_as<mth::Matrix<double>, typename std::iterator_traits<Iter1>::value_type>
-			&&std::same_as<mth::Matrix<double>, typename std::iterator_traits<Iter2>::value_type>
+	auto cost(
+		const BasicNeuralNetwork &nn, Iter1 input_begin, Iter1 input_end,
+		Iter2 output_begin) requires std::same_as<mth::Matrix<double>, typename std::iterator_traits<Iter1>::value_type>
+		&&std::same_as<mth::Matrix<double>, typename std::iterator_traits<Iter2>::value_type>
 	{
 		auto cost = 0.;
 		for (; input_begin != input_end; ++input_begin, ++output_begin)
