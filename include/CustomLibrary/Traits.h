@@ -20,7 +20,7 @@
 #define FORWARDING_MEMBER_FUNCTION(Inner, inner, function, qualifiers)                                               \
 	template<typename... Args,                                                                                       \
 			 typename return_type = decltype(std::declval<Inner qualifiers>().function(std::declval<Args &&>()...))> \
-	constexpr decltype(auto) function(Args &&... args) qualifiers noexcept(                                          \
+	constexpr decltype(auto) function(Args &&...args) qualifiers noexcept(                                           \
 		noexcept(std::declval<Inner qualifiers>().function(std::forward<Args>(args)...))                             \
 		and (std::is_reference<return_type>::value or std::is_nothrow_move_constructible<return_type>::value))       \
 	{                                                                                                                \
@@ -172,17 +172,17 @@ namespace ctl
 	{
 		typename _T<_U, _Z...>::base;
 	}
-	auto seperate(_T<_U, _Z...>) -> std::pair<_T<Nonesuch, _Z...>, typename _T<_U, _Z...>::base>;
+	auto seperate(const _T<_U, _Z...> &) -> std::pair<_T<Nonesuch, _Z...>, typename _T<_U, _Z...>::base>;
 
 	template<typename _T>
 	requires requires()
 	{
 		typename _T::base;
 	}
-	auto seperate(_T) -> std::pair<_T, typename _T::base>;
+	auto seperate(const _T &) -> std::pair<_T, typename _T::base>;
 
 	template<typename _T>
-	auto seperate(_T) -> std::pair<_T, Nonesuch>;
+	auto seperate(const _T &) -> std::pair<_T, Nonesuch>;
 
 	/**
 	 * @brief Combines Mixins from Functor using given Mixins
