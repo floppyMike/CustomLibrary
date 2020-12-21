@@ -5,6 +5,8 @@ project(CustomLibraryExamples VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
 add_executable(Starfield Starfield/main.cpp)
 target_link_libraries(Starfield PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
 
@@ -28,6 +30,11 @@ target_link_libraries(Graphs PRIVATE CustomLibrary)
 
 add_executable(NeuralNetwork NeuralNetwork/main.cpp)
 target_link_libraries(NeuralNetwork PRIVATE CustomLibrary)
+
+find_package(Threads REQUIRED)
+
+add_executable(wget wget/main.cpp)
+target_link_libraries(wget PRIVATE CustomLibrary Threads::Threads)
 
 # add_executable(VulkanDemo VulkanDemo/main.cpp)
 # target_include_directories(VulkanDemo PRIVATE ${VULKAN_INCLUDE_DIRS})
