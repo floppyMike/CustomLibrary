@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_NEURAL_NET_
+#define _CTL_NEURAL_NET_
 
 #include "utility.h"
 #include "Matrix.h"
@@ -27,6 +28,11 @@ namespace ctl::mcl
 	{
 	public:
 		/**
+		 * @brief Construct a empty neural network
+		 */
+		BasicNeuralNetwork() = default;
+
+		/**
 		 * @brief Construct a new Basic Neural Network object with a certain structure
 		 *
 		 * @tparam Init Initializer Functor
@@ -41,8 +47,25 @@ namespace ctl::mcl
 			m_layers.reserve(m_neurons_n.size() - 1);
 
 			for (auto i = m_neurons_n.begin(), end = m_neurons_n.end() - 1; i != end; ++i)
-				m_layers.push_back(
-					{ mth::Matrix<double>(*(i + 1), *i, init()), mth::Matrix<double>(*(i + 1), 1, init()) });
+				m_layers.push_back({ mth::Matrix<double>(*(i + 1), *i, init), mth::Matrix<double>(*(i + 1), 1, init) });
+		}
+
+		/**
+		 * @brief Add a additional layer to the neural network
+		 *
+		 * @param weights Weights to include
+		 * @param biases Biases to include
+		 */
+		void add_layer(const mth::Matrix<double> &weights, const mth::Matrix<double> &biases)
+		{
+			if (m_neurons_n.empty())
+				m_neurons_n.emplace_back(weights.dim().w);
+
+			assert(weights.dim().w == m_neurons_n.back()
+				   && "Matrix column size must match the neurons of the previous last layer.");
+
+			m_neurons_n.emplace_back(weights.dim().h);
+			m_layers.push_back({ weights, biases });
 		}
 
 		/**
@@ -69,14 +92,14 @@ namespace ctl::mcl
 
 		/**
 		 * @brief Returns the number of layers within the network
-		 * @return layer number 
+		 * @return layer number
 		 */
 		[[nodiscard]] auto layers_n() const noexcept -> size_t { return m_neurons_n.size(); }
 
 		/**
 		 * @brief Returns the number of neurons in a layer
 		 * @param idx Layer index
-		 * @return Neuron amount 
+		 * @return Neuron amount
 		 */
 		[[nodiscard]] auto nodes(size_t idx) const noexcept -> size_t
 		{
@@ -87,7 +110,7 @@ namespace ctl::mcl
 		/**
 		 * @brief Performs a feedforward query with given input
 		 * @param input Matrix input to use
-		 * @return result matrix 
+		 * @return result matrix
 		 */
 		[[nodiscard]] auto query(mth::Matrix<double> input) const
 		{
@@ -119,7 +142,7 @@ namespace ctl::mcl
 
 	/**
 	 * @brief Performs the training method of the given neural network using a input and output matrix
-	 * 
+	 *
 	 * @param nn Neural Network to train on
 	 * @param input Input matrix to fit with
 	 * @param output Output matrix to fit with
@@ -160,13 +183,14 @@ namespace ctl::mcl
 	}
 
 	/**
-	 * @brief Calculates the total cost/loss of the network to the given output array using the input array. Input and output array length must be the same!
-	 * 
+	 * @brief Calculates the total cost/loss of the network to the given output array using the input array. Input and
+	 * output array length must be the same!
+	 *
 	 * @param nn Neural Networt to calculate the cost with
 	 * @param input_begin The input array begin address
 	 * @param input_end The input array end address
 	 * @param output_begin The output array begin address
-	 * @return total cost as a double 
+	 * @return total cost as a double
 	 */
 	template<typename Iter1, typename Iter2>
 	auto cost(
@@ -378,3 +402,5 @@ namespace ctl::mcl
 		};
 		*/
 } // namespace ctl::mcl
+
+#endif

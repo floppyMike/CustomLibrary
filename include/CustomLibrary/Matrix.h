@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_MATRIX_
+#define _CTL_MATRIX_
 
 #include <vector>
 #include <functional>
@@ -75,7 +76,7 @@ namespace ctl::mth
 
 		/**
 		 * @brief Construct a matrix using a generator function
-		 * 
+		 *
 		 * @param r Rows
 		 * @param c Columns
 		 * @param generator function to use for filling out the matrix
@@ -85,8 +86,7 @@ namespace ctl::mth
 			: m_dim{ c, r }
 		{
 			m_data.reserve(m_dim.area());
-			while (m_data.size() < m_data.capacity())
-				m_data.emplace_back(generator());
+			while (m_data.size() < m_data.capacity()) m_data.emplace_back(generator());
 		}
 
 		//~Matrix()
@@ -140,6 +140,16 @@ namespace ctl::mth
 		 */
 		constexpr auto data() const noexcept -> const Type * { return m_data.data(); }
 
+		/**
+		 * @brief Get the direct matrix location without column or row. Used primarily for iteration.
+		 * @param loc Direct location
+		 * @return Value
+		 */
+		constexpr auto operator[](size_t loc) noexcept -> Type &
+		{
+			assert(loc < m_data.size() && "Direct location of matrix is too large.");
+			return m_data[loc];
+		}
 		/**
 		 * @brief Get the direct matrix location without column or row. Used primarily for iteration.
 		 * @param loc Direct location
@@ -464,8 +474,6 @@ namespace ctl::mth
 		return m.apply([x](Type y) constexpr { return x / y; });
 	}
 
-
-
 	// -----------------------------------------------------------------------------
 	// Boolean Overloads
 	// -----------------------------------------------------------------------------
@@ -481,3 +489,5 @@ namespace ctl::mth
 	}
 
 } // namespace ctl::mth
+
+#endif
