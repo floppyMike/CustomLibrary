@@ -32,9 +32,10 @@ add_executable(NeuralNetwork NeuralNetwork/main.cpp)
 target_link_libraries(NeuralNetwork PRIVATE CustomLibrary)
 
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_executable(wget wget/main.cpp)
-target_link_libraries(wget PRIVATE CustomLibrary Threads::Threads)
+target_link_libraries(wget PRIVATE CustomLibrary Threads::Threads OpenSSL::SSL)
 
 # add_executable(VulkanDemo VulkanDemo/main.cpp)
 # target_include_directories(VulkanDemo PRIVATE ${VULKAN_INCLUDE_DIRS})

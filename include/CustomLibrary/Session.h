@@ -16,6 +16,8 @@ namespace ctl::net
 	class TCP_Session
 	{
 	public:
+		static constexpr std::string_view VERSION = "1.0";
+
 		/**
 		 * @brief Create a unconnected session
 		 * @param io asio io_context
@@ -84,12 +86,12 @@ namespace ctl::net
 	 * @param port Port on host to connect to
 	 * @return Session object
 	 */
-	template<typename Session>
-	auto connect(asio::io_context &io, std::string_view host, std::string_view port)
+	template<typename Session, typename... _T>
+	auto connect(std::string_view host, std::string_view port, asio::io_context &io, _T &&...session_args)
 	{
 		tcp::resolver r(io);
 		const auto	  endpoints = r.resolve(host, port);
-		return std::make_unique<Session>(io, endpoints);
+		return std::make_unique<Session>(io, std::forward<_T>(session_args)..., endpoints);
 	}
 
 } // namespace ctl::net

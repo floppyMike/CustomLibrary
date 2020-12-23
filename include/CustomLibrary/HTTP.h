@@ -25,17 +25,23 @@ namespace ctl::net
 		class _HTTP_Method_;
 
 		/**
-		 * @brief Handles a TCP session HTTP commands
+		 * @brief Handles a sessions HTTP commands
 		 */
-		template<typename Full, typename Impl>
-		class _HTTP_Method_<TCP_Session, Full, Impl> : public Impl
+		template<typename Session, typename Full, typename Impl>
+		requires requires(Session t)
+		{
+			Session::VERSION;
+			t.socket();
+			t.host();
+		}
+		class _HTTP_Method_<Session, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
 
 			/**
 			 * @brief Add a request header with name and value
-			 * 
+			 *
 			 * @param name Header name
 			 * @param val Header value
 			 * @return this reference
@@ -53,7 +59,7 @@ namespace ctl::net
 
 			/**
 			 * @brief Sends a HTTP GET request with the headers
-			 * 
+			 *
 			 * @param path GET request path
 			 * @return pair with { response header , response content }
 			 */
@@ -106,8 +112,9 @@ namespace ctl::net
 			{
 				std::ostream r(&buf);
 				r << "GET " << path
-				  << " HTTP/1.0\r\n"
-					 "Host: "
+				  << " HTTP/" + std::string(Session::VERSION)
+						+ "\r\n"
+						  "Host: "
 				  << this->obj()->host()
 				  << "\r\n"
 					 "Accept: */*\r\n"
@@ -150,7 +157,7 @@ namespace ctl::net
 
 	/**
 	 * @brief Gives options for a HTTP request
-	 * 
+	 *
 	 * @param ptr ptr to object
 	 * @return options object
 	 */
