@@ -11,6 +11,7 @@ auto main(int argc, char **argv) -> int
 	{
 		std::cerr << "Usage: " << argv[0]
 				  << " <host> <port> <path>\n"
+					 "Not a serious example. Can only use HTTP with TCP.\n"
 					 "host: Server hostname\n"
 					 "port: Server port to get download from\n"
 					 "path: Path to the file of the host\n\n";
