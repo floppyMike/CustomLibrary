@@ -24,12 +24,22 @@ namespace ctl::net
 		template<typename, typename, typename>
 		class _HTTP_Method_;
 
+		/**
+		 * @brief Handles a TCP session HTTP commands
+		 */
 		template<typename Full, typename Impl>
 		class _HTTP_Method_<TCP_Session, Full, Impl> : public Impl
 		{
 		public:
 			using Impl::Impl;
 
+			/**
+			 * @brief Add a request header with name and value
+			 * 
+			 * @param name Header name
+			 * @param val Header value
+			 * @return this reference
+			 */
 			auto add_header(std::string_view name, std::string_view val) -> auto &
 			{
 				assert(std::find_if(m_headers.begin(), m_headers.end(),
@@ -41,6 +51,12 @@ namespace ctl::net
 				return *this;
 			}
 
+			/**
+			 * @brief Sends a HTTP GET request with the headers
+			 * 
+			 * @param path GET request path
+			 * @return pair with { response header , response content }
+			 */
 			auto GET(std::string_view path) -> std::pair<std::string, std::string>
 			{
 				auto &			p = *this->obj();
@@ -125,9 +141,19 @@ namespace ctl::net
 	// HTTP Extension
 	// -----------------------------------------------------------------------------
 
+	/**
+	 * @brief Type for sending HTTP requests
+	 * @tparam T Object to send HTTP with
+	 */
 	template<typename T>
 	using HTTP_Method = typename Filter<detail::_HTTP_Method_, Functor<T>, T>::type;
 
+	/**
+	 * @brief Gives options for a HTTP request
+	 * 
+	 * @param ptr ptr to object
+	 * @return options object
+	 */
 	template<typename T>
 	auto http_method(T *const ptr)
 	{
