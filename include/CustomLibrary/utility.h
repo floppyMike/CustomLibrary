@@ -93,7 +93,7 @@ namespace ctl
 	 * @return result
 	 */
 	template<arithmetic _T>
-	auto sigmoid(_T x) noexcept
+	auto sigmoid(_T x) noexcept -> _T
 	{
 		return 1 / (1 + std::exp(-x));
 	}

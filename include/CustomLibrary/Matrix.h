@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CTL_MATRIX_
+#define _CTL_MATRIX_
 
 #include <vector>
 #include <functional>
@@ -73,6 +74,21 @@ namespace ctl::mth
 		{
 		}
 
+		/**
+		 * @brief Construct a matrix using a generator function
+		 *
+		 * @param r Rows
+		 * @param c Columns
+		 * @param generator function to use for filling out the matrix
+		 */
+		template<std::invocable _Gen>
+		constexpr Matrix(size_t r, size_t c, _Gen generator)
+			: m_dim{ c, r }
+		{
+			m_data.reserve(m_dim.area());
+			while (m_data.size() < m_data.capacity()) m_data.emplace_back(generator());
+		}
+
 		//~Matrix()
 		//{
 		//	std::clog << "Destructor\n";
@@ -129,6 +145,16 @@ namespace ctl::mth
 		 * @param loc Direct location
 		 * @return Value
 		 */
+		constexpr auto operator[](size_t loc) noexcept -> Type &
+		{
+			assert(loc < m_data.size() && "Direct location of matrix is too large.");
+			return m_data[loc];
+		}
+		/**
+		 * @brief Get the direct matrix location without column or row. Used primarily for iteration.
+		 * @param loc Direct location
+		 * @return Value
+		 */
 		constexpr auto operator[](size_t loc) const noexcept -> Type
 		{
 			assert(loc < m_data.size() && "Direct location of matrix is too large.");
@@ -151,7 +177,7 @@ namespace ctl::mth
 		{
 			assert(m_dim.w == mat2.dim().h && "Width must be same a height for dot product.");
 
-			Matrix<std::common_type_t<T, Type>, Allocator> mat(mat2.dim().w, m_dim.h, 0);
+			Matrix<std::common_type_t<T, Type>, Allocator> mat(m_dim.h, mat2.dim().w, 0);
 
 			for (size_t y1 = 0; y1 < m_dim.h; ++y1)
 				for (size_t x2 = 0; x2 < mat2.dim().w; ++x2)
@@ -189,8 +215,8 @@ namespace ctl::mth
 		 * @brief Apply a function onto the matrix
 		 * @param func Unary function
 		 */
-		template<typename _F>
-		constexpr auto apply(_F &&func) noexcept -> auto &
+		template<typename F>
+		constexpr auto apply(F func) noexcept -> auto &
 		{
 			std::transform(m_data.begin(), m_data.end(), m_data.begin(), std::move(func));
 			return *this;
@@ -206,6 +232,12 @@ namespace ctl::mth
 			m_data.emplace_back(ele);
 			return *this;
 		}
+
+		/**
+		 * @brief Gets the total size of the matrix
+		 * @return size
+		 */
+		[[nodiscard]] constexpr auto size() const noexcept -> size_t { return m_dim.area(); }
 
 		/**
 		 * @brief Iterator const begin
@@ -238,15 +270,8 @@ namespace ctl::mth
 	// Arithmitic Overloads
 	// -----------------------------------------------------------------------------
 
-	template<typename T1, typename T2>
-	void _elementwise_dim_check_(const Dim<T1> &d1, const Dim<T2> &d2)
-	{
-		assert(d1.w == d2.w && d1.h == d2.h
-			   && "Elementwise applications need both matricies to be the same in dimension.");
-	}
-
 	template<arithmetic T, typename Alloc>
-	constexpr auto operator-(Matrix<T, Alloc> &m) noexcept -> auto &
+	constexpr auto operator-(Matrix<T, Alloc> m) noexcept
 	{
 		return m.apply([](T t) constexpr { return -t; });
 	}
@@ -274,100 +299,32 @@ namespace ctl::mth
 		return mat.apply([x](T y) constexpr { return y / x; });
 	}
 
+#define _ELEMENT_WISE_CHECK_(dim1, dim2) \
+	assert(dim1 == dim2 && "Elementwise applications need both matricies to be the same in dimension.");
+
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
 	constexpr auto operator+=(Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
 	{
-		_elementwise_dim_check_(mat1.dim(), mat2.dim());
+		_ELEMENT_WISE_CHECK_(mat1.dim(), mat2.dim());
 		return mat1.apply(std::plus{}, mat2.begin());
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
 	constexpr auto operator-=(Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
 	{
-		_elementwise_dim_check_(mat1.dim(), mat2.dim());
+		_ELEMENT_WISE_CHECK_(mat1.dim(), mat2.dim());
 		return mat1.apply(std::minus{}, mat2.begin());
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
 	constexpr auto operator*=(Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
 	{
-		_elementwise_dim_check_(mat1.dim(), mat2.dim());
+		_ELEMENT_WISE_CHECK_(mat1.dim(), mat2.dim());
 		return mat1.apply(std::multiplies{}, mat2.begin());
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
 	constexpr auto operator/=(Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
 	{
-		_elementwise_dim_check_(mat1.dim(), mat2.dim());
+		_ELEMENT_WISE_CHECK_(mat1.dim(), mat2.dim());
 		return mat1.apply(std::divides{}, mat2.begin());
-	}
-
-	// --------------------------------- rv (const) -----------------------------------------
-
-	template<arithmetic T, typename Alloc>
-	constexpr auto operator+(const Matrix<T, Alloc> &mat, T x) noexcept
-	{
-		return Matrix<T, Alloc>(mat) += x;
-	}
-	template<arithmetic T, typename Alloc>
-	constexpr auto operator-(const Matrix<T, Alloc> &mat, T x) noexcept
-	{
-		return Matrix<T, Alloc>(mat) -= x;
-	}
-	template<arithmetic T, typename Alloc>
-	constexpr auto operator*(const Matrix<T, Alloc> &mat, T x) noexcept
-	{
-		return Matrix<T, Alloc>(mat) *= x;
-	}
-	template<arithmetic T, typename Alloc>
-	constexpr auto operator/(const Matrix<T, Alloc> &mat, T x) noexcept
-	{
-		return Matrix<T, Alloc>(mat) /= x;
-	}
-
-	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator+(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
-	{
-		auto t = mat1;
-		return t += mat2;
-	}
-	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator-(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
-	{
-		auto t = mat1;
-		return t -= mat2;
-	}
-	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator*(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
-	{
-		auto t = mat1;
-		return t *= mat2;
-	}
-	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator/(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
-	{
-		auto t = mat1;
-		return t /= mat2;
-	}
-
-	// forwarding
-
-	template<typename Type, typename Allocator>
-	constexpr auto operator+(Type x, const Matrix<Type, Allocator> &m) noexcept
-	{
-		return m + x;
-	}
-	template<typename Type, typename Allocator>
-	constexpr auto operator-(Type x, const Matrix<Type, Allocator> &m) noexcept
-	{
-		return -m + x;
-	}
-	template<typename Type, typename Allocator>
-	constexpr auto operator*(Type x, const Matrix<Type, Allocator> &m) noexcept
-	{
-		return m * x;
-	}
-	template<typename Type, typename Allocator>
-	constexpr auto operator/(Type x, const Matrix<Type, Allocator> &m) noexcept
-	{
-		return Matrix<Type, Allocator>(m).apply([x](Type y) constexpr { return x / y; });
 	}
 
 	// --------------------------------- rv (&&) -----------------------------------------
@@ -394,47 +351,127 @@ namespace ctl::mth
 	}
 
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator+(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
+	constexpr auto operator+(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &&
 	{
 		return mat1 += mat2;
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator-(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
+	constexpr auto operator-(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &&
 	{
 		return mat1 -= mat2;
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator*(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
+	constexpr auto operator*(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &&
 	{
 		return mat1 *= mat2;
 	}
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
-	constexpr auto operator/(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &
+	constexpr auto operator/(Matrix<T1, Alloc1> &&mat1, const Matrix<T2, Alloc2> &mat2) noexcept -> auto &&
 	{
 		return mat1 /= mat2;
+	}
+
+	// forwarding right
+
+	template<typename Type, typename Allocator>
+	constexpr auto operator+(const Matrix<Type, Allocator> &m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return m2 += m1;
+	}
+	template<typename Type, typename Allocator>
+	constexpr auto operator-(const Matrix<Type, Allocator> &m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return -m2 + m1;
+	}
+	template<typename Type, typename Allocator>
+	constexpr auto operator*(const Matrix<Type, Allocator> &m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return m2 *= m1;
+	}
+
+	// forwarding both
+
+	template<typename Type, typename Allocator>
+	constexpr auto operator+(Matrix<Type, Allocator> &&m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return m1 += m2;
+	}
+	template<typename Type, typename Allocator>
+	constexpr auto operator-(Matrix<Type, Allocator> &&m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return m1 -= m2;
+	}
+	template<typename Type, typename Allocator>
+	constexpr auto operator*(Matrix<Type, Allocator> &&m1, Matrix<Type, Allocator> &&m2) -> auto &&
+	{
+		return m1 *= m2;
+	}
+
+	// --------------------------------- rv (const) -----------------------------------------
+
+	template<arithmetic T, typename Alloc>
+	constexpr auto operator+(const Matrix<T, Alloc> &mat, T x) noexcept
+	{
+		return Matrix<T, Alloc>(mat) + x;
+	}
+	template<arithmetic T, typename Alloc>
+	constexpr auto operator-(const Matrix<T, Alloc> &mat, T x) noexcept
+	{
+		return Matrix<T, Alloc>(mat) - x;
+	}
+	template<arithmetic T, typename Alloc>
+	constexpr auto operator*(const Matrix<T, Alloc> &mat, T x) noexcept
+	{
+		return Matrix<T, Alloc>(mat) * x;
+	}
+	template<arithmetic T, typename Alloc>
+	constexpr auto operator/(const Matrix<T, Alloc> &mat, T x) noexcept
+	{
+		return Matrix<T, Alloc>(mat) / x;
+	}
+
+	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
+	constexpr auto operator+(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
+	{
+		return Matrix<T1, Alloc1>(mat1) + mat2;
+	}
+	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
+	constexpr auto operator-(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
+	{
+		return Matrix<T1, Alloc1>(mat1) - mat2;
+	}
+	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
+	constexpr auto operator*(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
+	{
+		return Matrix<T1, Alloc1>(mat1) * mat2;
+	}
+	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
+	constexpr auto operator/(const Matrix<T1, Alloc1> &mat1, const Matrix<T2, Alloc2> &mat2) noexcept
+	{
+		return Matrix<T1, Alloc1>(mat1) / mat2;
 	}
 
 	// forwarding
 
 	template<typename Type, typename Allocator>
-	constexpr auto operator+(const Matrix<Type, Allocator> &m2, Matrix<Type, Allocator> &&m1) -> auto &&
+	constexpr auto operator+(Type x, const Matrix<Type, Allocator> &m) noexcept
 	{
-		return std::move(m1) + m2;
+		return m + x;
 	}
 	template<typename Type, typename Allocator>
-	constexpr auto operator-(const Matrix<Type, Allocator> &m2, Matrix<Type, Allocator> &&m1) -> auto &&
+	constexpr auto operator-(Type x, const Matrix<Type, Allocator> &m) noexcept
 	{
-		return std::move(-m1) + m2;
+		return -m + x;
 	}
 	template<typename Type, typename Allocator>
-	constexpr auto operator*(const Matrix<Type, Allocator> &m2, Matrix<Type, Allocator> &&m1) -> auto &&
+	constexpr auto operator*(Type x, const Matrix<Type, Allocator> &m) noexcept
 	{
-		return std::move(m1) * m2;
+		return m * x;
 	}
 	template<typename Type, typename Allocator>
-	constexpr auto operator/(const Matrix<Type, Allocator> &m2, Matrix<Type, Allocator> &&m1) -> auto &&
+	constexpr auto operator/(Type x, Matrix<Type, Allocator> m) noexcept
 	{
-		return 1 / std::move(m1) * m2;
+		return m.apply([x](Type y) constexpr { return x / y; });
 	}
 
 	// -----------------------------------------------------------------------------
@@ -444,7 +481,7 @@ namespace ctl::mth
 	template<typename T1, typename Alloc1, typename T2, typename Alloc2>
 	constexpr auto operator==(const Matrix<T1, Alloc1> &m1, const Matrix<T2, Alloc2> &m2) -> bool
 	{
-		_elementwise_dim_check_(m1.dim(), m2.dim());
+		_ELEMENT_WISE_CHECK_(m1.dim(), m2.dim());
 		for (auto [i1, i2] = { m1.begin(), m2.begin() }; i1 != m1.end(); ++i1, ++i2)
 			if (*i1 != *i2)
 				return false;
@@ -452,3 +489,5 @@ namespace ctl::mth
 	}
 
 } // namespace ctl::mth
+
+#endif

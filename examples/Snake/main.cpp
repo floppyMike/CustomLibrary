@@ -23,18 +23,18 @@ public:
 																	{ START_DIM.w - DIV, 0, DIV, START_DIM.h },
 																	{ DIV, START_DIM.h - DIV, START_DIM.w - 2 * DIV,
 																	  DIV } };
-	static constexpr mth::Dim<int>						GRID	= { BORDERS[1].w / DIV - 1, BORDERS[0].h / DIV - 3 };
+	static constexpr mth::Dim<int>						GRID	= { START_DIM.w / DIV - 2, START_DIM.h / DIV - 2 };
 	static constexpr auto								LINES	= []() constexpr
 	{
-		std::array<mth::Line<int>, GRID.w + GRID.h> arr{};
+		std::array<mth::Line<int>, GRID.w + GRID.h - 2> arr{};
 
 		auto iter = arr.begin();
 
-		for (int i = 0; i < GRID.w; ++i)
+		for (int i = 0; i < GRID.w - 1; ++i)
 			*iter++ = { BORDERS[0].w + DIV * (i + 1), BORDERS[1].h, BORDERS[0].w + DIV * (i + 1),
 						BORDERS[0].h - BORDERS[1].h };
 
-		for (int i = 0; i < GRID.h; ++i)
+		for (int i = 0; i < GRID.h - 1; ++i)
 			*iter++ = { BORDERS[0].w, BORDERS[1].h + DIV * (i + 1), BORDERS[0].w + BORDERS[1].w,
 						BORDERS[1].h + DIV * (i + 1) };
 
@@ -171,7 +171,7 @@ public:
 
 	auto respawn(const Snake &s) -> void
 	{
-		std::vector<bool> used_spaces_v(Field::GRID.w * Field::GRID.h);
+		std::vector<bool> used_spaces_v((Field::GRID.w) * (Field::GRID.h), false);
 
 		for (auto body_iter = s.body().begin(); body_iter != s.body().end(); ++body_iter)
 		{
@@ -181,9 +181,9 @@ public:
 
 		auto num = g_rand.rand_number<int>(0, used_spaces_v.size() - s.body().size());
 
-		num = std::distance(
-			used_spaces_v.begin(),
-			std::find_if(used_spaces_v.begin(), used_spaces_v.end(), [&num](bool b) { return !b && --num == 0; }));
+		num = std::distance(used_spaces_v.begin(),
+							std::find_if(used_spaces_v.begin(), used_spaces_v.end(),
+										 [num](bool b) mutable { return !b && --num <= 0; }));
 
 		m_loc	= { num % Field::GRID.w, num / Field::GRID.h };
 		m_shape = { Field::grid_to_coord(m_loc), { Field::DIV, Field::DIV } };
@@ -227,13 +227,13 @@ public:
 		{
 		case SDL_WINDOWEVENT: m_r.do_render(true); break;
 		case SDL_KEYDOWN:
-			m_r.do_render(true);
 			switch (e.key.keysym.sym)
 			{
-			case SDLK_UP: m_s.direction(Snake::Direction::UP); break;
-			case SDLK_DOWN: m_s.direction(Snake::Direction::DOWN); break;
-			case SDLK_LEFT: m_s.direction(Snake::Direction::LEFT); break;
-			case SDLK_RIGHT: m_s.direction(Snake::Direction::RIGHT); break;
+			case SDLK_UP: m_next_dir = Snake::Direction::UP; break;
+			case SDLK_DOWN: m_next_dir = Snake::Direction::DOWN; break;
+			case SDLK_LEFT: m_next_dir = Snake::Direction::LEFT; break;
+			case SDLK_RIGHT: m_next_dir = Snake::Direction::RIGHT; break;
+			case SDLK_ESCAPE: m_pause = !m_pause; break;
 			}
 			break;
 		}
@@ -241,9 +241,11 @@ public:
 
 	void update()
 	{
-		if (m_tick.ticks<std::chrono::milliseconds>() >= TICK_DUR)
+		if (m_tick.ticks<std::chrono::milliseconds>() >= TICK_DUR && !m_pause)
 		{
 			m_r.do_render(true);
+
+			m_s.direction(m_next_dir);
 			if (!m_s.mov())
 			{
 				auto e = sdl::create_exit_event(m_win.ID());
@@ -251,6 +253,7 @@ public:
 				std::cerr << "Crash!\n"
 						  << "Finished with score: " << m_score << std::endl;
 			}
+
 			m_tick.start();
 
 			if (mth::collision(m_a.loc(), m_s.head_loc()))
@@ -285,9 +288,11 @@ private:
 
 	ctl::Timer m_tick;
 	Snake	   m_s;
+	Snake::Direction m_next_dir = Snake::Direction::RIGHT;
 	Apple	   m_a;
 
 	uint32_t m_score = 0;
+	bool	 m_pause = false;
 };
 
 auto main(int argc, char **argv) -> int

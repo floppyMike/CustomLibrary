@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Tags.h"
 #include "Point.h"
 #include "Dim.h"
 #include "Rect.h"

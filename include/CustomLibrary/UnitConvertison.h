@@ -1,14 +1,9 @@
 #ifndef UNITCONVERSION
 #define UNITCONVERSION
 
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <array>
+#include "Traits.h"
 
-#include "Error.h"
-
-namespace ctl
+namespace ctl::mth
 {
 	enum PrefixIndex
 	{
@@ -37,15 +32,23 @@ namespace ctl
 		YOTTA
 	};
 
-	constexpr std::array<double, 21> prefixes =
+	static constexpr double prefixes[] =
 	{
 		1e-24, 1e-21, 1e-18, 1e-15, 1e-12, 1e-9, 1e-6, 
 		1e-3,  1e-2,  1e-1,  1.,	1e1,   1e2,  1e3,   
 		1e6,   1e9,   1e12,  1e15,  1e18,  1e21, 1e24,
 	};
 
-	template<typename Type>
-	Type convert(const Type &num, const PrefixIndex &from, const PrefixIndex &to)
+	/**
+	 * @brief Convert a arithmetic number to a different prefix
+	 * 
+	 * @param num Number to convert
+	 * @param from Original prefix
+	 * @param to New prefix
+	 * @return Number with new prefix 
+	 */
+	template<arithmetic Type>
+	auto convert(Type num, PrefixIndex from, PrefixIndex to) -> Type
 	{
 		return num * prefixes[from] / prefixes[to];
 	}

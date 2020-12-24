@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ctl::mth::Matrix class | CustomLibrary A handful of classes and functions which are commonly needed.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">CustomLibrary <span class="m-thin">A handful of classes and functions which are commonly needed.</span></a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Pages</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Matrix_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/Matrix.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;arithmetic Type, typename Allocator = std::allocator&lt;Type&gt;&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1mth.html">mth</a>::<wbr/></span>Matrix <span class="m-thin">class</span>
+        </h1>
+        <p><span></span></p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+          <dl class="m-doc">
+            <dt id="a958b8c0cf0d488f2d90ccc6777c663fb">
+              <span class="m-doc-wrap-bumper"><a href="#a958b8c0cf0d488f2d90ccc6777c663fb" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">) <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Construct a empty <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>.</dd>
+            <dt id="a768b4c7a13f0de15fd497dd4a2a20cb7">
+              <span class="m-doc-wrap-bumper"><a href="#a768b4c7a13f0de15fd497dd4a2a20cb7" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&amp;) <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Copy a matrix.</dd>
+            <dt id="a44ff414c361ca40c85fd89b348d3b315">
+              <span class="m-doc-wrap-bumper"><a href="#a44ff414c361ca40c85fd89b348d3b315" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap"><a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&amp;&amp;) <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Move a matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#ac4be23cce65afc143daeaf4b4f327922" class="m-doc">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c) <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Create <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a> from dimensions (reserved).</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#a495074f43764a1864e0229069bc12597" class="m-doc">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              Type val) <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Create and initialize matrix from dimension.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper"><a href="#a7ffd9397448f18361264cd09e895ef23" class="m-doc">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              std::initializer_list&lt;Type&gt;&amp;&amp; init) <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Create a single matrix with only rows and 1 column.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _Iter&gt;</div>
+              <span class="m-doc-wrap-bumper"><a href="#af1911f762323273d9014513501d6c2cb" class="m-doc">Matrix</a>(</span><span class="m-doc-wrap">_Iter begin,
+              _Iter end) requires iter_matches&lt; Type &gt; <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Construct a matrix from iterators.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::invocable _Gen&gt;</div>
+              <span class="m-doc-wrap-bumper"><a href="#acbe3dfeb853d2ddd3ba076a70cd2f786" class="m-doc">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              _Gen generator) <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Construct a matrix using a generator function.</dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt id="aad01c657d8f3c75bc31014ece1e3fcb8">
+              <span class="m-doc-wrap-bumper">auto <a href="#aad01c657d8f3c75bc31014ece1e3fcb8" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&amp; m) -&gt; Matrix &amp; -&gt; auto <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a> copy operator.</dd>
+            <dt id="a26b535eee384f84b899b49e033d61f83">
+              <span class="m-doc-wrap-bumper">auto <a href="#a26b535eee384f84b899b49e033d61f83" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap"><a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&amp;&amp;) noexcept -&gt; Matrix &amp; -&gt; auto <span class="m-label m-flat m-info">defaulted</span> <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a> move operator.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aecd6e6cec8826ef63919a0bcfd46690e" class="m-doc">operator=</a>(</span><span class="m-doc-wrap">Type t) noexcept -&gt; auto &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Set matrix to a value.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a6d94d0d56822df6bf5f833d222efe17c" class="m-doc">operator()</a>(</span><span class="m-doc-wrap">size_t c,
+              size_t r) const noexcept -&gt; Type -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get a constant value from the matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9754f6eb58727f897d7428bf47edd2c8" class="m-doc">operator()</a>(</span><span class="m-doc-wrap">size_t c,
+              size_t r) noexcept -&gt; Type &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get a value the matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#abcf9c27dc10f755108f8774e4028a5be" class="m-doc">data</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const Type * -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get the matrix data as a const vals*.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a65b9373d46fa0703d3eed15257d80197" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t loc) noexcept -&gt; Type &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get the direct matrix location without column or row. Used primarily for iteration.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a2bfc7e5ee99f1e35a291e735bd46911d" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">size_t loc) const noexcept -&gt; Type -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get the direct matrix location without column or row. Used primarily for iteration.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a81935d01258f8e37319b4a815d332dd5" class="m-doc">dim</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const Dim&lt; size_t &gt; &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Get the dimensions of the matrix.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename Alloc&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a113f30fb316231502c33bf328474db63" class="m-doc">dot_product</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&lt;T, Alloc&gt;&amp; mat2) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Perform a dot product with a other matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac0c7c46926d6e8ee6e6761f77adca4d1" class="m-doc">transpose</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Transpose the matrix to a new matrix.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _F, typename _Iter&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a59121cd218774b15ab123c3bab1e7768" class="m-doc">apply</a>(</span><span class="m-doc-wrap">_F func,
+              _Iter i2) noexcept -&gt; auto &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Apply a function with a seperate iterator onto the matrix.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename F&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#ae739e8473c5f3ade723b91fbd1d49edf" class="m-doc">apply</a>(</span><span class="m-doc-wrap">F func) noexcept -&gt; auto &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Apply a function onto the matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#abbe4cec0faa55453f3e5d4db5e038363" class="m-doc">emplace_back</a>(</span><span class="m-doc-wrap">Type ele) -&gt; auto &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Emplace_back a reserved container (must have capacity left)</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9b238608a1865a99513039c26af3ea41" class="m-doc">size</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; size_t -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Gets the total size of the matrix.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#afd48050e26e98b087b4eb65db94d3da3" class="m-doc">begin</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Iterator const begin.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a7b8ddecc08b3f093622deec2cce5b778" class="m-doc">begin</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Iterator begin.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a1d28ca0f82854d3e4f280d89fc5bf0cb" class="m-doc">end</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Iterator const end.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac07b33f8c9e127821446f43a09bfac6f" class="m-doc">end</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Iterator end.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="ac4be23cce65afc143daeaf4b4f327922"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac4be23cce65afc143daeaf4b4f327922" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Create <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a> from dimensions (reserved).</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">r</td>
+                  <td>Rows</td>
+                </tr>
+                <tr>
+                  <td>c</td>
+                  <td>Columns</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a495074f43764a1864e0229069bc12597"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a495074f43764a1864e0229069bc12597" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              Type val) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Create and initialize matrix from dimension.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">r</td>
+                  <td>Rows</td>
+                </tr>
+                <tr>
+                  <td>c</td>
+                  <td>Columns</td>
+                </tr>
+                <tr>
+                  <td>val</td>
+                  <td>Value to init</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7ffd9397448f18361264cd09e895ef23"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7ffd9397448f18361264cd09e895ef23" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              std::initializer_list&lt;Type&gt;&amp;&amp; init) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Create a single matrix with only rows and 1 column.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">r</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>c</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>init</td>
+                  <td>Data to fill it with</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="af1911f762323273d9014513501d6c2cb"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+                template&lt;typename _Iter&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af1911f762323273d9014513501d6c2cb" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">_Iter begin,
+              _Iter end) requires iter_matches&lt; Type &gt; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Construct a matrix from iterators.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">begin</td>
+                  <td>from iterator</td>
+                </tr>
+                <tr>
+                  <td>end</td>
+                  <td>till iterator</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="acbe3dfeb853d2ddd3ba076a70cd2f786"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+                template&lt;std::invocable _Gen&gt;
+              </div>
+              <span class="m-doc-wrap-bumper"> ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acbe3dfeb853d2ddd3ba076a70cd2f786" class="m-doc-self">Matrix</a>(</span><span class="m-doc-wrap">size_t r,
+              size_t c,
+              _Gen generator) <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Construct a matrix using a generator function.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">r</td>
+                  <td>Rows</td>
+                </tr>
+                <tr>
+                  <td>c</td>
+                  <td>Columns</td>
+                </tr>
+                <tr>
+                  <td>generator</td>
+                  <td>function to use for filling out the matrix</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="aecd6e6cec8826ef63919a0bcfd46690e"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aecd6e6cec8826ef63919a0bcfd46690e" class="m-doc-self">operator=</a>(</span><span class="m-doc-wrap">Type t) noexcept -&gt; auto &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Set matrix to a value.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">t</td>
+                  <td></td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>auto&amp;</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a6d94d0d56822df6bf5f833d222efe17c"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6d94d0d56822df6bf5f833d222efe17c" class="m-doc-self">operator()</a>(</span><span class="m-doc-wrap">size_t c,
+              size_t r) const noexcept -&gt; Type <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get a constant value from the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">c</td>
+                  <td>column</td>
+                </tr>
+                <tr>
+                  <td>r</td>
+                  <td>row</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9754f6eb58727f897d7428bf47edd2c8"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9754f6eb58727f897d7428bf47edd2c8" class="m-doc-self">operator()</a>(</span><span class="m-doc-wrap">size_t c,
+              size_t r) noexcept -&gt; Type &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get a value the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">c</td>
+                  <td>column</td>
+                </tr>
+                <tr>
+                  <td>r</td>
+                  <td>row</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="abcf9c27dc10f755108f8774e4028a5be"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abcf9c27dc10f755108f8774e4028a5be" class="m-doc-self">data</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const Type * <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get the matrix data as a const vals*.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>data in form of ptr to const data</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a65b9373d46fa0703d3eed15257d80197"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a65b9373d46fa0703d3eed15257d80197" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t loc) noexcept -&gt; Type &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get the direct matrix location without column or row. Used primarily for iteration.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">loc</td>
+                  <td>Direct location</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Value</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a2bfc7e5ee99f1e35a291e735bd46911d"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2bfc7e5ee99f1e35a291e735bd46911d" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">size_t loc) const noexcept -&gt; Type <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get the direct matrix location without column or row. Used primarily for iteration.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">loc</td>
+                  <td>Direct location</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Value</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a81935d01258f8e37319b4a815d332dd5"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a81935d01258f8e37319b4a815d332dd5" class="m-doc-self">dim</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const Dim&lt; size_t &gt; &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Get the dimensions of the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td><a href="classctl_1_1mth_1_1Dim.html" class="m-doc">Dim</a></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a113f30fb316231502c33bf328474db63"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+                template&lt;typename T, typename Alloc&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a113f30fb316231502c33bf328474db63" class="m-doc-self">dot_product</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1mth_1_1Matrix.html" class="m-doc">Matrix</a>&lt;T, Alloc&gt;&amp; mat2) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Perform a dot product with a other matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">mat2</td>
+                  <td>Other matrix</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Result</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ac0c7c46926d6e8ee6e6761f77adca4d1"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac0c7c46926d6e8ee6e6761f77adca4d1" class="m-doc-self">transpose</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Transpose the matrix to a new matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>Transposed matrix</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a59121cd218774b15ab123c3bab1e7768"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+                template&lt;typename _F, typename _Iter&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a59121cd218774b15ab123c3bab1e7768" class="m-doc-self">apply</a>(</span><span class="m-doc-wrap">_F func,
+              _Iter i2) noexcept -&gt; auto &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Apply a function with a seperate iterator onto the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">func</td>
+                  <td>Binary function</td>
+                </tr>
+                <tr>
+                  <td>i2</td>
+                  <td>Other container iterator</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ae739e8473c5f3ade723b91fbd1d49edf"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+                template&lt;typename F&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae739e8473c5f3ade723b91fbd1d49edf" class="m-doc-self">apply</a>(</span><span class="m-doc-wrap">F func) noexcept -&gt; auto &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Apply a function onto the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">func</td>
+                  <td>Unary function</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="abbe4cec0faa55453f3e5d4db5e038363"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abbe4cec0faa55453f3e5d4db5e038363" class="m-doc-self">emplace_back</a>(</span><span class="m-doc-wrap">Type ele) -&gt; auto &amp; <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Emplace_back a reserved container (must have capacity left)</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">ele</td>
+                  <td>Value to push</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a9b238608a1865a99513039c26af3ea41"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9b238608a1865a99513039c26af3ea41" class="m-doc-self">size</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; size_t <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <p>Gets the total size of the matrix.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>size</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="afd48050e26e98b087b4eb65db94d3da3"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afd48050e26e98b087b4eb65db94d3da3" class="m-doc-self">begin</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Iterator const begin.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>begin</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7b8ddecc08b3f093622deec2cce5b778"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7b8ddecc08b3f093622deec2cce5b778" class="m-doc-self">begin</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Iterator begin.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>begin</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a1d28ca0f82854d3e4f280d89fc5bf0cb"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1d28ca0f82854d3e4f280d89fc5bf0cb" class="m-doc-self">end</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Iterator const end.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>end</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="ac07b33f8c9e127821446f43a09bfac6f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;arithmetic Type, typename Allocator&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />mth::<wbr />Matrix&lt;Type, Allocator&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac07b33f8c9e127821446f43a09bfac6f" class="m-doc-self">end</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Iterator end.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>end</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>CustomLibrary A handful of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ctl::basic_cstring class | CustomLibrary A handful of classes and functions which are commonly needed.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">CustomLibrary <span class="m-thin">A handful of classes and functions which are commonly needed.</span></a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Pages</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="CString_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/CString.h&gt;</a></div>
+          <div class="m-doc-template">template&lt;size_t t_size, typename CharT, typename Traits = std::char_traits&lt;CharT&gt;&gt;</div>
+          <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span>basic_cstring <span class="m-thin">class</span>
+        </h1>
+        <p><span></span></p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-types">Public types</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
+                <li><a href="#pub-attribs">Public variables</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="pub-types">
+          <h2><a href="#pub-types">Public types</a></h2>
+          <dl class="m-doc">
+            <dt id="ac7732f2d6f5b41db2bbad7eb145eec7d">
+              using <a href="#ac7732f2d6f5b41db2bbad7eb145eec7d" class="m-doc-self">value_type</a> = CharT
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ae763ba3a30c6b88c926137fe32330b62">
+              using <a href="#ae763ba3a30c6b88c926137fe32330b62" class="m-doc-self">traits_type</a> = Traits
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a1a4de0b7f26666756c2468dd6e132cce">
+              using <a href="#a1a4de0b7f26666756c2468dd6e132cce" class="m-doc-self">size_type</a> = size_t
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a12087307f78354ffa3728da3be9a705c">
+              using <a href="#a12087307f78354ffa3728da3be9a705c" class="m-doc-self">difference_type</a> = std::ptrdiff_t
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a88b3d4722a9bddba44116c99abc6d7d1">
+              using <a href="#a88b3d4722a9bddba44116c99abc6d7d1" class="m-doc-self">reference</a> = value_type&amp;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ad594a96fc18659e2beaff02b4d5a97a0">
+              using <a href="#ad594a96fc18659e2beaff02b4d5a97a0" class="m-doc-self">const_reference</a> = const value_type&amp;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="aa5fdacb897d3349a390a8d2d073101d5">
+              using <a href="#aa5fdacb897d3349a390a8d2d073101d5" class="m-doc-self">pointer</a> = value_type*
+            </dt>
+            <dd><span></span></dd>
+            <dt id="aa9e2d866b44d87aad34eceddc755e5e0">
+              using <a href="#aa9e2d866b44d87aad34eceddc755e5e0" class="m-doc-self">const_pointer</a> = const value_type*
+            </dt>
+            <dd><span></span></dd>
+            <dt id="af89d2d99e9f65f3d5e3efe6d93220f47">
+              using <a href="#af89d2d99e9f65f3d5e3efe6d93220f47" class="m-doc-self">iterator</a> = basic_iterator&lt;CharT*&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a0050321d4809f054b5d76d47c1cd5711">
+              using <a href="#a0050321d4809f054b5d76d47c1cd5711" class="m-doc-self">const_iterator</a> = basic_iterator&lt;const CharT*&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ac271993399e5f91d3ede9ed4e29bb3f8">
+              using <a href="#ac271993399e5f91d3ede9ed4e29bb3f8" class="m-doc-self">reverse_iterator</a> = std::reverse_iterator&lt;iterator&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a252d911cb20e6888af0c05a7d2cf6186">
+              using <a href="#a252d911cb20e6888af0c05a7d2cf6186" class="m-doc-self">const_reverse_iterator</a> = std::reverse_iterator&lt;const_iterator&gt;
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac6b2c0de2cb23ddf5705cd671ee8264e" class="m-doc">operator[]</a>(</span><span class="m-doc-wrap">const size_type&amp; i) const noexcept -&gt; const_reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="acf7c0b47e459cf7d0f0c6404a76ce5ab">
+              <span class="m-doc-wrap-bumper">auto <a href="#acf7c0b47e459cf7d0f0c6404a76ce5ab" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">const size_type&amp; i) noexcept -&gt; reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a786593a443394e7466e1d122d7d64438" class="m-doc">at</a>(</span><span class="m-doc-wrap">const size_type&amp; i) const -&gt; const_reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="af77ea0aecfa9df2bca62b08db3e2abfc">
+              <span class="m-doc-wrap-bumper">auto <a href="#af77ea0aecfa9df2bca62b08db3e2abfc" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">const size_type&amp; i) -&gt; reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#acdc8381d2f2ac9df6d9e2ca02ec3c75d" class="m-doc">front</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const_reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="a9947be22f906b0fcef21cd7a4ce19eaa">
+              <span class="m-doc-wrap-bumper">auto <a href="#a9947be22f906b0fcef21cd7a4ce19eaa" class="m-doc-self">front</a>(</span><span class="m-doc-wrap">) noexcept -&gt; reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a022f768e6df25a33c3d4ceee48433edf">
+              <span class="m-doc-wrap-bumper">auto <a href="#a022f768e6df25a33c3d4ceee48433edf" class="m-doc-self">back</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const_reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a116bafaa32cee89d8f39283600c25765">
+              <span class="m-doc-wrap-bumper">auto <a href="#a116bafaa32cee89d8f39283600c25765" class="m-doc-self">back</a>(</span><span class="m-doc-wrap">) noexcept -&gt; reference -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac5aa2db26bc74a936c86f657d09fb7b8" class="m-doc">c_str</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const_pointer -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="a6c12da4c9552120a9a9d0d7b42be2178">
+              <span class="m-doc-wrap-bumper">auto <a href="#a6c12da4c9552120a9a9d0d7b42be2178" class="m-doc-self">data</a>(</span><span class="m-doc-wrap">) noexcept -&gt; pointer -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a7ba849535142f0ac9558be7ebea830dc" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const_pointer const ptr,
+              const size_type&amp; count) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4da62cbfcf6b04d75e632fa74ea59f58" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const size_type&amp; count,
+              const_reference ch) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#aff3c348a8f2b98e7e2c4a06249400979" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1basic__cstring.html" class="m-doc">basic_<wbr />cstring</a>&amp; str) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#af01322079a8bbc34bf444867c69e84f3" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const_pointer const ptr) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Iter, typename = typename std::enable_if_t&lt;				std::is_convertible_v&lt;					typename std::iterator_traits&lt;Iter&gt;::iterator_category,					std::						input_iterator_tag&gt;&amp;&amp; std::is_same_v&lt;typename std::iterator_traits&lt;Iter&gt;::value_type, value_type&gt;&gt;&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a013ce8a6ac668b005d775380765ebe57" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const Iter&amp; begin,
+              const Iter&amp; end) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9a17947717f76d05eb56d6f986c0594b" class="m-doc">assign</a>(</span><span class="m-doc-wrap">const std::initializer_list&lt;value_type&gt;&amp; list) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#abdcbd47d3249b6127e17c9894752fecd" class="m-doc">fill</a>(</span><span class="m-doc-wrap">const value_type&amp; ch) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a3e4688984f7fe864d73a9f91f42fe44d" class="m-doc">swap</a>(</span><span class="m-doc-wrap"><a href="classctl_1_1basic__cstring.html" class="m-doc">basic_<wbr />cstring</a>&amp; other) noexcept -&gt; basic_cstring &amp; -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5230bd452aa43e48978b0b8a41ed1ef6" class="m-doc">begin</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="ab096463db97d68b8dc501a71ba821c89">
+              <span class="m-doc-wrap-bumper">auto <a href="#ab096463db97d68b8dc501a71ba821c89" class="m-doc-self">begin</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ad3015f6ca2ab0df6ebf6d31446da4662">
+              <span class="m-doc-wrap-bumper">auto <a href="#ad3015f6ca2ab0df6ebf6d31446da4662" class="m-doc-self">cbegin</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a0d36046a5d16f9377196302c237eaa0f" class="m-doc">end</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="a80154ae5405afe64971bf6ce74c7a940">
+              <span class="m-doc-wrap-bumper">auto <a href="#a80154ae5405afe64971bf6ce74c7a940" class="m-doc-self">end</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a914d2bdc60dbb60f603253922d32d822">
+              <span class="m-doc-wrap-bumper">auto <a href="#a914d2bdc60dbb60f603253922d32d822" class="m-doc-self">cend</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a9a6e967c2b1c7d5ca9e5558df8164f85" class="m-doc">rbegin</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="afb5b332e49c925bd67f14ab09784d52e">
+              <span class="m-doc-wrap-bumper">auto <a href="#afb5b332e49c925bd67f14ab09784d52e" class="m-doc-self">rbegin</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a10ad3552f2e1f393fb8a44dedc6f3eaa">
+              <span class="m-doc-wrap-bumper">auto <a href="#a10ad3552f2e1f393fb8a44dedc6f3eaa" class="m-doc-self">crbegin</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a6df9455e6cfc18856bf12d43dc496bdb" class="m-doc">rend</a>(</span><span class="m-doc-wrap">) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt id="a4a13b5529c44a0c8d19110724bc78116">
+              <span class="m-doc-wrap-bumper">auto <a href="#a4a13b5529c44a0c8d19110724bc78116" class="m-doc-self">rend</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a07c01b0ae2369fd2b5f22384af0caf0b">
+              <span class="m-doc-wrap-bumper">auto <a href="#a07c01b0ae2369fd2b5f22384af0caf0b" class="m-doc-self">crend</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a4ed5b518cc108f387c509165971b468f" class="m-doc">size</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a81740df3d3f86a41911e9b7dfc0fba78" class="m-doc">empty</a>(</span><span class="m-doc-wrap">) const -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section id="pub-attribs">
+          <h2><a href="#pub-attribs">Public variables</a></h2>
+          <dl class="m-doc">
+            <dt>
+              value_type <a href="#ab7a450dc8e4a1a43865765b97bb903fa" class="m-doc">m_vals</a>
+            </dt>
+            <dd></dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="ac6b2c0de2cb23ddf5705cd671ee8264e"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac6b2c0de2cb23ddf5705cd671ee8264e" class="m-doc-self">operator[]</a>(</span><span class="m-doc-wrap">const size_type&amp; i) const noexcept -&gt; const_reference <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>char from string</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>@summary access functions</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;i&quot; must be in range of array</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a786593a443394e7466e1d122d7d64438"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a786593a443394e7466e1d122d7d64438" class="m-doc-self">at</a>(</span><span class="m-doc-wrap">const size_type&amp; i) const -&gt; const_reference <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>char from string</td>
+                </tr>
+              </thead>
+              <thead>
+                <tr><th colspan="2">Exceptions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>std::out_of_range</td>
+                  <td>if i isn&#x27;t inside range</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary at access functions</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;i&quot; must be in range of array</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="acdc8381d2f2ac9df6d9e2ca02ec3c75d"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acdc8381d2f2ac9df6d9e2ca02ec3c75d" class="m-doc-self">front</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const_reference <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>value in question</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>@summary front and back accessors</p>
+          </div></section>
+          <section class="m-doc-details" id="ac5aa2db26bc74a936c86f657d09fb7b8"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac5aa2db26bc74a936c86f657d09fb7b8" class="m-doc-self">c_str</a>(</span><span class="m-doc-wrap">) const noexcept -&gt; const_pointer <span class="m-label m-primary">constexpr</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>the c-string stored</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>@summary c-string accessor (better then directly)</p>
+          </div></section>
+          <section class="m-doc-details" id="a7ba849535142f0ac9558be7ebea830dc"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7ba849535142f0ac9558be7ebea830dc" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const_pointer const ptr,
+              const size_type&amp; count) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">ptr</td>
+                  <td>from pointer</td>
+                </tr>
+                <tr>
+                  <td>count</td>
+                  <td>up to</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary assign a c-string to the cstring</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;count&quot; must not be higher then the size of this</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a4da62cbfcf6b04d75e632fa74ea59f58"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4da62cbfcf6b04d75e632fa74ea59f58" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const size_type&amp; count,
+              const_reference ch) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">count</td>
+                  <td>how much to fill out</td>
+                </tr>
+                <tr>
+                  <td>ch</td>
+                  <td>character type to fill out with</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary fill out string with &quot;ch&quot;</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;count&quot; must not be higher then size of this</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="aff3c348a8f2b98e7e2c4a06249400979"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aff3c348a8f2b98e7e2c4a06249400979" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const <a href="classctl_1_1basic__cstring.html" class="m-doc">basic_<wbr />cstring</a>&amp; str) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">str</td>
+                  <td>string to fill this out</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary replace this with &quot;str&quot;</p>
+          </div></section>
+          <section class="m-doc-details" id="af01322079a8bbc34bf444867c69e84f3"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af01322079a8bbc34bf444867c69e84f3" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const_pointer const ptr) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+<p>@summary replace this with &quot;ptr&quot;</p><aside class="m-note m-default"><h4>Remark</h4><p>doesn&#x27;t use Traits::len</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a013ce8a6ac668b005d775380765ebe57"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+                template&lt;typename Iter, typename = typename std::enable_if_t&lt;				std::is_convertible_v&lt;					typename std::iterator_traits&lt;Iter&gt;::iterator_category,					std::						input_iterator_tag&gt;&amp;&amp; std::is_same_v&lt;typename std::iterator_traits&lt;Iter&gt;::value_type, value_type&gt;&gt;&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a013ce8a6ac668b005d775380765ebe57" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const Iter&amp; begin,
+              const Iter&amp; end) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">begin</td>
+                  <td>begin iterator</td>
+                </tr>
+                <tr>
+                  <td>end</td>
+                  <td>end iterator</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary fill string with range</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;Iter&quot; must be of catagory input_iterator and value type of char</p><p>doesn&#x27;t utilize Traits::copy</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a9a17947717f76d05eb56d6f986c0594b"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9a17947717f76d05eb56d6f986c0594b" class="m-doc-self">assign</a>(</span><span class="m-doc-wrap">const std::initializer_list&lt;value_type&gt;&amp; list) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">list</td>
+                  <td>initializer_list to copy from</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary Copies from initializer_list</p><aside class="m-note m-default"><h4>Remark</h4><p>&quot;list.size()&quot; must be equal or under cstring size</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="abdcbd47d3249b6127e17c9894752fecd"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abdcbd47d3249b6127e17c9894752fecd" class="m-doc-self">fill</a>(</span><span class="m-doc-wrap">const value_type&amp; ch) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">ch</td>
+                  <td>character to fill up with</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary fill container with a character</p>
+          </div></section>
+          <section class="m-doc-details" id="a3e4688984f7fe864d73a9f91f42fe44d"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3e4688984f7fe864d73a9f91f42fe44d" class="m-doc-self">swap</a>(</span><span class="m-doc-wrap"><a href="classctl_1_1basic__cstring.html" class="m-doc">basic_<wbr />cstring</a>&amp; other) noexcept -&gt; basic_cstring &amp;</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>description</td>
+                </tr>
+              </thead>
+              <thead>
+                <tr><th colspan="2">Exceptions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>type</td>
+                  <td>description</td>
+                </tr>
+              </tbody>
+            </table>
+<p>@summary description</p><aside class="m-note m-default"><h4>Remark</h4><p>description</p></aside>
+          </div></section>
+          <section class="m-doc-details" id="a5230bd452aa43e48978b0b8a41ed1ef6"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5230bd452aa43e48978b0b8a41ed1ef6" class="m-doc-self">begin</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+<p>@summary iterator begin</p>
+          </div></section>
+          <section class="m-doc-details" id="a0d36046a5d16f9377196302c237eaa0f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a0d36046a5d16f9377196302c237eaa0f" class="m-doc-self">end</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+<p>@summary iterator end</p>
+          </div></section>
+          <section class="m-doc-details" id="a9a6e967c2b1c7d5ca9e5558df8164f85"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9a6e967c2b1c7d5ca9e5558df8164f85" class="m-doc-self">rbegin</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+<p>@summary reverse iterator begin</p>
+          </div></section>
+          <section class="m-doc-details" id="a6df9455e6cfc18856bf12d43dc496bdb"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6df9455e6cfc18856bf12d43dc496bdb" class="m-doc-self">rend</a>(</span><span class="m-doc-wrap">) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+<p>@summary reverse iterator end</p>
+          </div></section>
+          <section class="m-doc-details" id="a4ed5b518cc108f387c509165971b468f"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4ed5b518cc108f387c509165971b468f" class="m-doc-self">size</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>size</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>@summary Get the size of string</p>
+          </div></section>
+          <section class="m-doc-details" id="a81740df3d3f86a41911e9b7dfc0fba78"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a81740df3d3f86a41911e9b7dfc0fba78" class="m-doc-self">empty</a>(</span><span class="m-doc-wrap">) const <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>if empty</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>@summary check if cstring is empty</p>
+          </div></section>
+        </section>
+        <section>
+          <h2>Variable documentation</h2>
+          <section class="m-doc-details" id="ab7a450dc8e4a1a43865765b97bb903fa"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;size_t t_size, typename CharT, typename Traits&gt;
+              </div>
+              value_type ctl::<wbr />basic_cstring&lt;t_size, CharT, Traits&gt;::<wbr /><a href="#ab7a450dc8e4a1a43865765b97bb903fa" class="m-doc-self">m_vals</a>
+            </h3>
+<p>@summary ostream &lt;&lt; overload</p>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v1.js"></script>
+<script src="searchdata-v1.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>CustomLibrary A handful of classes and functions which are commonly needed.. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
