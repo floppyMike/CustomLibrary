@@ -45,7 +45,7 @@
       <div class="m-col-l-10 m-push-l-1">
         <h1>
           <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="Drawable_8h.html">&lt;/home/michaellu/Repositories/CustomLibrary/include/CustomLibrary/SDL/Drawable.h&gt;</a></div>
-          <div class="m-doc-template">template&lt;matches&lt;SDL_Rect, mth::Rect&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;mth::Rect&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;</div>
+          <div class="m-doc-template">template&lt;matches&lt;SDL_Rect, <a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;<a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;</div>
           <span class="m-breadcrumb"><a href="namespacectl.html">ctl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl.html">sdl</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacectl_1_1sdl_1_1detail.html">detail</a>::<wbr/></span>_Drawable_&lt;Type, Full, Impl&gt; <span class="m-thin">class</span>
         </h1>
         <p>Handles drawing of Rect Objects.</p>
@@ -92,6 +92,11 @@
               <span class="m-doc-wrap-bumper">auto <a href="#a5d3558b3f705e8179f31d7131011bb87" class="m-doc">generate_p</a>(</span><span class="m-doc-wrap">int pres) -&gt; auto &amp; -&gt; auto</span>
             </dt>
             <dd>Generate circle using a certain precision.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="#a7be1d4ea299185ff610f0efe69b42126" class="m-doc">mov</a>(</span><span class="m-doc-wrap">int dx,
+              int dy) <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Moves the cached circle.</dd>
             <dt id="a2b0a459c3acc33929519ded840e5a897">
               <span class="m-doc-wrap-bumper">void <a href="#a2b0a459c3acc33929519ded840e5a897" class="m-doc-self">line</a>(</span><span class="m-doc-wrap">) const</span>
             </dt>
@@ -107,7 +112,7 @@
           <section class="m-doc-details" id="a63c73d0526e84de2f5b41eb47db68b67"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;matches&lt;SDL_Rect, mth::Rect&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;mth::Rect&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;
+                template&lt;matches&lt;SDL_Rect, <a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;<a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;
               </div>
               <span class="m-doc-wrap-bumper">auto ctl::<wbr />sdl::<wbr />detail::<wbr />_Drawable_&lt;Type, Full, Impl&gt;&lt;Type, Full, Impl&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a63c73d0526e84de2f5b41eb47db68b67" class="m-doc-self">generate</a>(</span><span class="m-doc-wrap">) -&gt; auto &amp;</span></span>
             </h3>
@@ -124,7 +129,7 @@
           <section class="m-doc-details" id="a5d3558b3f705e8179f31d7131011bb87"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;matches&lt;SDL_Rect, mth::Rect&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;mth::Rect&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;
+                template&lt;matches&lt;SDL_Rect, <a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;<a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;
               </div>
               <span class="m-doc-wrap-bumper">auto ctl::<wbr />sdl::<wbr />detail::<wbr />_Drawable_&lt;Type, Full, Impl&gt;&lt;Type, Full, Impl&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5d3558b3f705e8179f31d7131011bb87" class="m-doc-self">generate_p</a>(</span><span class="m-doc-wrap">int pres) -&gt; auto &amp;</span></span>
             </h3>
@@ -145,6 +150,31 @@
                   <td>this</td>
                 </tr>
               </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a7be1d4ea299185ff610f0efe69b42126"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;matches&lt;SDL_Rect, <a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;, <a href="classctl_1_1sdl_1_1Frame.html" class="m-doc">Frame</a>&lt;<a href="classctl_1_1mth_1_1Rect.html" class="m-doc">mth::<wbr />Rect</a>&lt;int, int&gt;&gt;&gt; Type, typename Full, uses_sdl_renderer Impl&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">void ctl::<wbr />sdl::<wbr />detail::<wbr />_Drawable_&lt;Type, Full, Impl&gt;&lt;Type, Full, Impl&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a7be1d4ea299185ff610f0efe69b42126" class="m-doc-self">mov</a>(</span><span class="m-doc-wrap">int dx,
+              int dy) <span class="m-label m-primary">constexpr</span> <span class="m-label m-success">noexcept</span></span></span>
+            </h3>
+            <p>Moves the cached circle.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">dx</td>
+                  <td>Delta x coord</td>
+                </tr>
+                <tr>
+                  <td>dy</td>
+                  <td>Delta y coord</td>
+                </tr>
+              </tbody>
             </table>
           </div></section>
         </section>

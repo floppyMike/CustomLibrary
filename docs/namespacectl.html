@@ -54,6 +54,10 @@
               Reference
               <ul>
                 <li><a href="#namespaces">Namespaces</a></li>
+                <li><a href="#nested-classes">Classes</a></li>
+                <li><a href="#typedef-members">Typedefs</a></li>
+                <li><a href="#func-members">Functions</a></li>
+                <li><a href="#var-members">Variables</a></li>
               </ul>
             </li>
           </ul>
@@ -61,7 +65,309 @@
         <section id="namespaces">
           <h2><a href="#namespaces">Namespaces</a></h2>
           <dl class="m-doc">
+            <dt>namespace <a href="namespacectl_1_1detail.html" class="m-doc">detail</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1err.html" class="m-doc">err</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1gph.html" class="m-doc">gph</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1mcl.html" class="m-doc">mcl</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1mth.html" class="m-doc">mth</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1net.html" class="m-doc">net</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1par.html" class="m-doc">par</a></dt>
+            <dd><span></span></dd>
+            <dt>namespace <a href="namespacectl_1_1rnd.html" class="m-doc">rnd</a></dt>
+            <dd><span></span></dd>
             <dt>namespace <a href="namespacectl_1_1sdl.html" class="m-doc">sdl</a></dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;size_t t_size, typename CharT, typename Traits = std::char_traits&lt;CharT&gt;&gt;</div>
+              class <a href="classctl_1_1basic__cstring.html" class="m-doc">basic_cstring</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Container&gt;</div>
+              class <a href="classctl_1_1LoopIterator.html" class="m-doc">LoopIterator</a>
+            </dt>
+            <dd>Defines a Iterator that loops back to the beginning at end.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename... T&gt;</div>
+              struct <a href="structctl_1_1ObSu.html" class="m-doc">ObSu</a>
+            </dt>
+            <dd>Typical object &amp; subject coding pattern.</dd>
+            <dt>
+              class <a href="classctl_1_1Timer.html" class="m-doc">Timer</a>
+            </dt>
+            <dd>Stopwatch like timer.</dd>
+            <dt>
+              struct <a href="structctl_1_1Nonesuch.html" class="m-doc">Nonesuch</a>
+            </dt>
+            <dd>Class used as a Tag in Template Metaprogramming.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, template&lt;typename&gt; class crtpType&gt;</div>
+              struct <a href="structctl_1_1crtp.html" class="m-doc">crtp</a>
+            </dt>
+            <dd>Provides cast to derived in CRTP.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, template&lt;typename&gt; class Ex1, template&lt;typename&gt; class... Ex&gt;</div>
+              struct <a href="structctl_1_1MixBuilder.html" class="m-doc">MixBuilder</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, template&lt;typename&gt; class Ex&gt;</div>
+              struct <a href="structctl_1_1MixBuilder_3_01T_00_01Ex_01_4.html" class="m-doc">MixBuilder&lt;T, Ex&gt;</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename, typename, typename&gt; class F, typename Base, typename CurrSec&gt;</div>
+              struct <a href="structctl_1_1Filter.html" class="m-doc">Filter</a>
+            </dt>
+            <dd>Combines Mixins from <a href="classctl_1_1Functor.html" class="m-doc">Functor</a> using given Mixins Extensions (Class&lt;typename, typename, typename&gt;) must inherit the last template parameter. CurrSec is the whole type to be unpacked. If a CurrSec type contains a &#x27;using base = base_type&#x27; it will follow it. If a CurrSec type doesn&#x27;t contain a &#x27;using base = base_type&#x27; it will stop following it.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename, typename, typename&gt; class F, typename Base&gt;</div>
+              struct <a href="structctl_1_1Filter_3_01F_00_01Base_00_01Nonesuch_01_4.html" class="m-doc">Filter&lt;F, Base, Nonesuch&gt;</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              class <a href="classctl_1_1Functor.html" class="m-doc">Functor</a>
+            </dt>
+            <dd>Default <a href="classctl_1_1Functor.html" class="m-doc">Functor</a> for Mixins construction.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Adaptor&gt;</div>
+              class <a href="classctl_1_1IteratableAdaptor.html" class="m-doc">IteratableAdaptor</a>
+            </dt>
+            <dd>Provides iterator methods for.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t... Is&gt;</div>
+              struct <a href="structctl_1_1__indices__.html" class="m-doc">_indices_</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t N, std::size_t... Is&gt;</div>
+              struct <a href="structctl_1_1__build__indices__.html" class="m-doc">_build_indices_</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::size_t... Is&gt;</div>
+              struct <a href="structctl_1_1__build__indices___3_010_00_01Is_8_8_8_01_4.html" class="m-doc">_build_indices_&lt;0, Is...&gt;</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;class TypeNum, size_t sizeArray&gt;</div>
+              class <a href="classctl_1_1NumVec.html" class="m-doc">NumVec</a>
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="typedef-members">
+          <h2><a href="#typedef-members">Typedefs</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;size_t size&gt;</div>
+              using <a href="CString_8h.html#affc00c799d9b6a4e0d1ca47422660af8" class="m-doc">cstring</a> = <a href="classctl_1_1basic__cstring.html" class="m-doc">basic_<wbr />cstring</a>&lt;size, char&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              using <a href="Traits_8h.html#a17e8698ea94437abbc0edb6df41317b2" class="m-doc">strip_t</a> = std::remove_cv_t&lt;std::remove_pointer_t&lt;std::decay_t&lt;T&gt;&gt;&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename...&gt; class Op, typename... Args&gt;</div>
+              using <a href="Traits_8h.html#a864879ec6d42ad8b3b6a55f7cf832138" class="m-doc">is_detected</a> = typename <a href="structctl_1_1detail_1_1Detector.html" class="m-doc">detail::<wbr />Detector</a>&lt;<a href="structctl_1_1Nonesuch.html" class="m-doc">Nonesuch</a>, void, Op, Args...&gt;::value_t
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename...&gt; class Op, typename... Args&gt;</div>
+              using <a href="Traits_8h.html#a023e2d066c6e00313ef2be0ce081c065" class="m-doc">detected_t</a> = typename <a href="structctl_1_1detail_1_1Detector.html" class="m-doc">detail::<wbr />Detector</a>&lt;<a href="structctl_1_1Nonesuch.html" class="m-doc">Nonesuch</a>, void, Op, Args...&gt;::type
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Default, template&lt;typename...&gt; class Op, typename... Args&gt;</div>
+              using <a href="Traits_8h.html#a19e437fb0003494c3cdd9a6495bb7774" class="m-doc">detected_or</a> = <a href="structctl_1_1detail_1_1Detector.html" class="m-doc">detail::<wbr />Detector</a>&lt;Default, void, Op, Args...&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              using <a href="Traits_8h.html#a7189e377b63f9425744cf75a9fb338d9" class="m-doc">array_value_t</a> = decltype(detail::_iterator_cat_(std::declval&lt;T&gt;()))
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              using <a href="Traits_8h.html#ac5af46315029fbec4ecdcfceb7e0df5d" class="m-doc">array_iter_cat_t</a> = decltype(detail::_iterator_cat_(std::declval&lt;T&gt;()))
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename...&gt; class _T, typename _U, typename... _Z&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="Traits_8h.html#a46c49155b48f1abf7dc7218f3184121c" class="m-doc">requires</a>(</span><span class="m-doc-wrap">) -&gt; requires</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="Traits_8h.html#a5482ab3327aebef43cbad9b4108efe9e" class="m-doc">seperate</a>(</span><span class="m-doc-wrap">const _T&lt;_U, _Z...&gt;&amp;) -&gt; std::pair&lt; _T&lt; Nonesuch, _Z... &gt;, typename _T&lt; _U, _Z... &gt;::base &gt; -&gt; auto</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="Traits_8h.html#a67ccba00634f49e86e154d295f5de60d" class="m-doc">requires</a>(</span><span class="m-doc-wrap">) -&gt; requires</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="Traits_8h.html#a9f9598cb8f0405b10ed05e16eb13c27d" class="m-doc">seperate</a>(</span><span class="m-doc-wrap">const _T&amp;) -&gt; std::pair&lt; _T, typename _T::base &gt; -&gt; auto</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;arithmetic _T, arithmetic _U, arithmetic _Z, arithmetic _I, arithmetic _O&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aec802f124833a701ff39a775718efcda" class="m-doc">map_val</a>(</span><span class="m-doc-wrap">const _T&amp; val,
+              const _U&amp; old_min,
+              const _Z&amp; old_max,
+              const _I&amp; new_min,
+              const _O&amp; new_max) -&gt; std::common_type_t&lt; _T, _U, _Z, _I, _O &gt; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Maps values from its previous range to new range.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;arithmetic _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a10ab5a5fcc3805e5b76593204784d6bb" class="m-doc">rad_to_deg</a>(</span><span class="m-doc-wrap">const _T&amp; val) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Turn radians to degrees.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;arithmetic _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aff5a02440846788fc29525369efb0cbf" class="m-doc">deg_to_rad</a>(</span><span class="m-doc-wrap">const _T&amp; val) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span> <span class="m-label m-flat m-success">noexcept</span></span>
+            </dt>
+            <dd>Turn degrees to radians.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aa4b232b71a759b09284dbfcc5a313213" class="m-doc">is_number</a>(</span><span class="m-doc-wrap">char ch) -&gt; bool -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Check if char represents a number.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;string _Str&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aeb3dd51ab1f2bb280837b91b4687fe91" class="m-doc">is_number</a>(</span><span class="m-doc-wrap">const _Str&amp; s) -&gt; bool -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Checks if string is a number.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;arithmetic _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a8c6be28e75f88e3665b1983bb0faa061" class="m-doc">sigmoid</a>(</span><span class="m-doc-wrap">_T x) noexcept -&gt; _T -&gt; auto</span>
+            </dt>
+            <dd>Sigmoid function.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;std::integral _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a3994b73f4e70fea7ec9085fdc1714e50" class="m-doc">to_binary</a>(</span><span class="m-doc-wrap">const _T&amp; num) -&gt; auto</span>
+            </dt>
+            <dd>Converts integer to binary.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T, typename _U&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#ab023eb6ce5918f2761f88d5438fb1049" class="m-doc">round_up</a>(</span><span class="m-doc-wrap">_T num,
+              _U multiple) -&gt; auto</span>
+            </dt>
+            <dd>Rounds number to multiple.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename _U, size_t _i, size_t... Is&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#ab1b78e060503862ebbdfd476e213e995" class="m-doc">_array_cast_helper_</a>(</span><span class="m-doc-wrap">const std::array&lt;_U, _i&gt;&amp; a,
+              <a href="structctl_1_1__indices__.html" class="m-doc">_<wbr />indices_<wbr /></a>&lt;Is...&gt;) -&gt; std::array&lt; T, _i &gt; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename _U, size_t _i&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a9f36c69460fc76551c0bc0ae067387e5" class="m-doc">array_cast</a>(</span><span class="m-doc-wrap">const std::array&lt;_U, _i&gt;&amp; a) -&gt; std::array&lt; T, _i &gt; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Cast whole std::array.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#af29bfa43c4ff1c4166aaa7e220c8f6f4" class="m-doc">deref</a>(</span><span class="m-doc-wrap">_T* ptr) -&gt; _T &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Dereference ptr.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aa36360bd0ae2d96d34c22e0f91d61925" class="m-doc">deref</a>(</span><span class="m-doc-wrap">_T&amp; ptr) -&gt; _T &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Return reference back.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a643096ca9c6f9d0ccfd6c45ac7a8d3c3" class="m-doc">unmove</a>(</span><span class="m-doc-wrap">_T&amp;&amp; t) noexcept -&gt; auto &amp; -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd>Turn r-value reference to l-value reference.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Container&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a0fb7dcf2f35415e1e5437dcc1db24744" class="m-doc">requires</a>(</span><span class="m-doc-wrap">Container c) -&gt; requires</span>
+            </dt>
+            <dd>Optimizes removal from continous container.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">void <a href="utility_8h.html#afa9b677c0d5270a315d12fff0256843f" class="m-doc">fast_remove</a>(</span><span class="m-doc-wrap">Container&amp; c,
+              decltype(std::begin(std::declval&lt;Container&gt;())) i)</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _T, typename _U, std::predicate Pred&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#a52187014a4a2e1bee73e1e80b5ec0e60" class="m-doc">if_true</a>(</span><span class="m-doc-wrap">_T&amp; val1,
+              const _U&amp; val2,
+              Pred p) -&gt; auto <span class="m-label m-flat m-primary">constexpr</span></span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename _Ele, typename _Traits&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#aad4ee35182792d2e4798d6524875e234" class="m-doc">fast_stream_extract</a>(</span><span class="m-doc-wrap">std::basic_istream&lt;_Ele, _Traits&gt;&amp; in) -&gt; auto</span>
+            </dt>
+            <dd>Quickly turn istream to string.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="utility_8h.html#ad30c33801e11c5ae6016f351cecb9a77" class="m-doc">to_hex</a>(</span><span class="m-doc-wrap">int val) -&gt; std::string -&gt; auto</span>
+            </dt>
+            <dd>Turn value into hex string.</dd>
+          </dl>
+        </section>
+        <section id="var-members">
+          <h2><a href="#var-members">Variables</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              concept <a href="Traits_8h.html#a80e92b3994485ae3bc3a4638e3447e10" class="m-doc">complete_type</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              concept <a href="Traits_8h.html#a86ff994738bfcb4e4a84362fb074a74b" class="m-doc">arithmetic</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              concept <a href="Traits_8h.html#abdd7ecb411abd510830866f5bae6e263" class="m-doc">string</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename U&gt;</div>
+              concept <a href="Traits_8h.html#a3d1e3417e15e1b6928e5bfa9d2dcce1a" class="m-doc">aligned_with</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename... EqualTypes&gt;</div>
+              concept <a href="Traits_8h.html#a42066ad2e2d0932463d921999fd2cd28" class="m-doc">matches</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename T, typename... U&gt;</div>
+              concept <a href="Traits_8h.html#a68f495770546dc46bd11997f65bc7213" class="m-doc">iter_matches</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              <div class="m-doc-template">template&lt;template&lt;typename...&gt; class Op, typename... Args&gt;</div>
+              auto <a href="Traits_8h.html#a967e54f3feb6210f6c7edeb05e979a34" class="m-doc">is_detected_v</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              static double <a href="utility_8h.html#a9bc95ea61ec1451b9ef2119db348fc71" class="m-doc">PI</a> <span class="m-label m-flat m-primary">constexpr</span>
+            </dt>
             <dd><span></span></dd>
           </dl>
         </section>
