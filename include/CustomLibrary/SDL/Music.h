@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-#include "../Tags.h"
 #include "../Traits.h"
 
 #include <cassert>
@@ -85,9 +84,6 @@ namespace ctl::sdl
 	private:
 		std::unique_ptr<Mix_Music, Unique_Destructor> m_music;
 	};
-
-	template<template<typename> class... Ex>
-	using EMusic = typename MixBuilder<Music, Ex...>::type;
 
 } // namespace ctl::sdl
 
