@@ -74,6 +74,6 @@ if (TESTS)
 	add_subdirectory("tests")
 endif()
 
-if (NOT EXAMPLES)
+if (EXAMPLES)
     add_subdirectory("examples")
 endif()
