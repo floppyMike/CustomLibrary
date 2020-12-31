@@ -7,17 +7,26 @@ project(CustomLibrary VERSION 3.0 LANGUAGES CXX
 # Add option to include and link with SDL2
 
 include(GNUInstallDirs)
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 set(ASIO_VERSION "1.18.0")
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(Vulkan REQUIRED)
-find_package(Asio REQUIRED)
+if (Display)
+    find_package(SDL2 REQUIRED)
+endif()
+if (Graphics)
+    find_package(SDL2_image REQUIRED)
+    find_package(SDL2_ttf REQUIRED)
+endif()
+if (Music)
+    find_package(SDL2_mixer REQUIRED)
+endif()
+if (Advanced_Graphics)
+    find_package(Vulkan REQUIRED)
+endif()
+if (Networking)
+    find_package(Asio REQUIRED)
+endif()
 
 # Add include only Library
 
