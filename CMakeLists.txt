@@ -7,25 +7,30 @@ project(CustomLibrary VERSION 3.0 LANGUAGES CXX
 # Add option to include and link with SDL2
 
 include(GNUInstallDirs)
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 set(ASIO_VERSION "1.18.0")
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(Vulkan REQUIRED)
-find_package(Asio REQUIRED)
+macro(get_lib lib_name dir)
+	find_package(${lib_name})
+	if (NOT lib_name%_FOUND)
+		set(${dir} "")
+	endif()
+endmacro()
+
+get_lib(SDL2 SDL2_INCLUDE_DIR)
+get_lib(SDL2_image SDL2_IMAGE_INCLUDE_DIRS)
+get_lib(SDL2_ttf SDL2_TTF_INCLUDE_DIRS)
+get_lib(SDL2_mixer SDL2_MIXER_INCLUDE_DIRS)
+# get_lib(Vulkan SDL2_INCLUDE_DIR)
+get_lib(Asio ASIO_INCLUDE_DIR)
 
 # Add include only Library
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(${PROJECT_NAME} INTERFACE)
-target_include_directories(${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:include ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${ASIO_INCLUDE_DIR}>
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+target_include_directories(${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> ${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} ${ASIO_INCLUDE_DIR} $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 
 # Add install target
@@ -74,6 +79,6 @@ if (TESTS)
 	add_subdirectory("tests")
 endif()
 
-if (NOT EXAMPLES)
-    add_subdirectory("examples")
+if (EXAMPLES)
+	add_subdirectory("examples")
 endif()
