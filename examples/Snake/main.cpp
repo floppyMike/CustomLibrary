@@ -99,7 +99,7 @@ public:
 		case Direction::RIGHT: ++m_loc.x; break;
 		}
 
-		if (!mth::collision(m_loc, mth::Rect{ 0, 0, Field::GRID.w, Field::GRID.h }))
+		if (!mth::collision(m_loc, mth::Rect{ 0, 0, Field::GRID.w - 1, Field::GRID.h - 1 }))
 			return false;
 
 		m_tail->pos(Field::grid_to_coord(m_loc));
