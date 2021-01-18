@@ -9,11 +9,6 @@ project(CustomLibrary VERSION 3.0 LANGUAGES CXX
 include(GNUInstallDirs)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
-configure_file(cmake/${PROJECT_NAME}-config.cmake 
-    "${CMAKE_BINARY_DIR}/${project}-config.cmake"
-    @ONLY
-)
-
 macro(get_lib lib_name dir)
 	find_package(${lib_name})
 	if (NOT lib_name%_FOUND)
@@ -21,7 +16,7 @@ macro(get_lib lib_name dir)
 	endif()
 endmacro()
 
-#get_lib(SDL2 SDL2_INCLUDE_DIR)
+get_lib(SDL2 SDL2_INCLUDE_DIR)
 get_lib(SDL2_image SDL2_IMAGE_INCLUDE_DIRS)
 get_lib(SDL2_ttf SDL2_TTF_INCLUDE_DIRS)
 get_lib(SDL2_mixer SDL2_MIXER_INCLUDE_DIRS)
