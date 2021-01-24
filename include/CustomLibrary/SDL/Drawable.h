@@ -1,27 +1,21 @@
-#pragma once
+#if not defined _CTL_SDL2_DRAW_
+#	define _CTL_SDL2_DRAW_
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#	include "../BasicTypes.h"
+#	include "../Error.h"
+#	include "../Traits.h"
+#	include "../utility.h"
 
-#include "../BasicTypes.h"
-#include "../Error.h"
-#include "../Traits.h"
-#include "../utility.h"
+#	include "Renderer.h"
+#	include "TypeTraits.h"
 
-#include "Renderer.h"
-#include "TypeTraits.h"
-
-#include <span>
+#	include <span>
 
 namespace ctl::sdl
 {
 	// -----------------------------------------------------------------------------
 	// Predefinitions
 	// -----------------------------------------------------------------------------
-
-	class Texture;
-	class Animation;
 
 	template<typename T>
 	class Frame;
@@ -37,6 +31,7 @@ namespace ctl::sdl
 
 		// --------------------------------- Object Drawing -----------------------------------------
 
+#	if defined _CTL_SDL2_TEXTURE_
 		/**
 		 * @brief Handles drawing of textures
 		 */
@@ -77,6 +72,36 @@ namespace ctl::sdl
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
+#	endif
+
+#	if defined _CTL_SDL2_ANIMATION_
+		/**
+		 * @brief Handles drawing of animations
+		 */
+		template<typename Full, uses_sdl_renderer Impl>
+		class _Drawable_<Animation, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Draws current animation frame
+			 */
+			void animated() const { this->texture(&this->obj()->blit_ani()); }
+
+			/**
+			 * @brief Draws current animation frame advanced
+			 *
+			 * @param angle Rotation angle
+			 * @param center Center of rotation
+			 * @param flip Texture flip https://wiki.libsdl.org/SDL_RendererFlip#Values
+			 */
+			void animated(double angle, const mth::Point<int> &center, SDL_RendererFlip flip) const
+			{
+				this->texture(angle, center, flip, &this->obj()->blit_ani());
+			}
+		};
+#	endif
 
 		// --------------------------------- Geometric Drawing -----------------------------------------
 
@@ -463,33 +488,6 @@ namespace ctl::sdl
 			}
 		};
 
-		/**
-		 * @brief Handles drawing of animations
-		 */
-		template<typename Full, uses_sdl_renderer Impl>
-		class _Drawable_<Animation, Full, Impl> : public Impl
-		{
-		public:
-			using Impl::Impl;
-
-			/**
-			 * @brief Draws current animation frame
-			 */
-			void animated() const { this->texture(&this->obj()->blit_ani()); }
-
-			/**
-			 * @brief Draws current animation frame advanced
-			 *
-			 * @param angle Rotation angle
-			 * @param center Center of rotation
-			 * @param flip Texture flip https://wiki.libsdl.org/SDL_RendererFlip#Values
-			 */
-			void animated(double angle, const mth::Point<int> &center, SDL_RendererFlip flip) const
-			{
-				this->texture(angle, center, flip, &this->obj()->blit_ani());
-			}
-		};
-
 	}; // namespace detail
 
 	// -----------------------------------------------------------------------------
@@ -517,3 +515,5 @@ namespace ctl::sdl
 	}
 
 } // namespace ctl::sdl
+
+#endif

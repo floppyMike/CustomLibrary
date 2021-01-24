@@ -1,9 +1,8 @@
-#pragma once
+#if not defined _CTL_SDL2_EVENT_
+#	define _CTL_SDL2_EVENT_
 
-#include <SDL2/SDL.h>
-
-#include "../Error.h"
-#include "../BasicTypes.h"
+#	include "SDL_init.h"
+#	include "../BasicTypes.h"
 
 namespace ctl::sdl
 {
@@ -83,22 +82,22 @@ namespace ctl::sdl
 		SDL_Event m_event;
 	};
 
-    /**
-     * @brief Create a exit event object
-     * 
-     * @param win_id window id to use
-     * @return window event 
-     */
-    auto create_exit_event(Uint32 win_id) noexcept
-    {
-        SDL_Event e;
-        SDL_zero(e);
+	/**
+	 * @brief Create a exit event object
+	 *
+	 * @param win_id window id to use
+	 * @return window event
+	 */
+	auto create_exit_event(Uint32 win_id) noexcept
+	{
+		SDL_Event e;
+		SDL_zero(e);
 
-        e.type = SDL_QUIT;
-        e.window.windowID = win_id;
+		e.type			  = SDL_QUIT;
+		e.window.windowID = win_id;
 
-        return e;
-    }
+		return e;
+	}
 
 	/**
 	 * @brief Request to mouse position
@@ -112,3 +111,5 @@ namespace ctl::sdl
 	}
 
 } // namespace ctl::sdl
+
+#endif

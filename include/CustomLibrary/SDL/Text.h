@@ -1,14 +1,12 @@
-#ifndef _CTL_SDL2_Text_
+#if not defined _CTL_SDL2_Text_ and defined _SDL2TTF_ and defined _SDL2IMG_
 #define _CTL_SDL2_Text_
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+#include "SDL_init.h"
 
 #include "../BasicTypes.h"
 #include "../Error.h"
 
 #include "Texture.h"
-#include "Loader.h"
 
 #include <cassert>
 

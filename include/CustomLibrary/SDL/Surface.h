@@ -1,6 +1,7 @@
-#pragma once
+#if not defined _CTL_SDL2_SURFACE_
+#define _CTL_SDL2_SURFACE_
 
-#include <SDL2/SDL.h>
+#include "SDL_init.h"
 
 #include "../Error.h"
 
@@ -88,3 +89,5 @@ namespace ctl::sdl
 	};
 
 } // namespace ctl::sdl
+
+#endif

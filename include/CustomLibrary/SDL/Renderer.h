@@ -1,16 +1,12 @@
-#pragma once
+#if not defined _CTL_SDL2_RENDERER_
+#define _CTL_SDL2_RENDERER_
 
-#include <SDL2/SDL.h>
+#include "SDL_init.h"
 
 #include "../Error.h"
-#include "../Traits.h"
 #include "../BasicTypes.h"
 
-#include "Engine.h"
 #include "TypeTraits.h"
-#include "Render.h"
-
-#include <cassert>
 
 namespace ctl::sdl
 {
@@ -177,3 +173,5 @@ namespace ctl::sdl
 	using ERenderer = typename MixBuilder<Renderer, Ex...>::type;
 
 } // namespace ctl::sdl
+
+#endif

@@ -1,9 +1,5 @@
-#pragma once
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#if not defined _CTL_SDL2_LOAD_
+#define _CTL_SDL2_LOAD_
 
 #include "../Traits.h"
 
@@ -30,6 +26,7 @@ namespace ctl::sdl
 		template<typename, typename, typename>
 		class _Loader_;
 
+#if defined _CTL_SDL2_TEXTURE_
 		/**
 		 * @brief Handles Texture Loading
 		 */
@@ -67,7 +64,9 @@ namespace ctl::sdl
 				this->obj()->texture(IMG_LoadTexture_RW(this->renderer()->get(), SDL_RWFromMem(src, size), 1));
 			}
 		};
+#endif
 
+#if defined _CTL_SDL2_Text_
 		/**
 		 * @brief Handles Text Loading
 		 */
@@ -137,28 +136,6 @@ namespace ctl::sdl
 		};
 
 		/**
-		 * @brief Handles Music Loading
-		 */
-		template<typename Full, typename Impl>
-		class _Loader_<Music, Full, Impl> : public Impl
-		{
-		public:
-			using Impl::Impl;
-
-			/**
-			 * @brief Loads music file
-			 * @param path Path to File
-			 */
-			auto file(std::string_view path) -> void
-			{
-				Mix_Music *temp = Mix_LoadMUS(path.data());
-				ASSERT(temp, Mix_GetError());
-
-				this->obj()->music(temp);
-			}
-		};
-
-		/**
 		 * @brief Handles Font Loading
 		 */
 		template<typename Full, typename Impl>
@@ -180,6 +157,31 @@ namespace ctl::sdl
 				this->obj()->font(temp);
 			}
 		};
+#endif
+
+#if defined _CTL_SDL2_MUSIC_
+		/**
+		 * @brief Handles Music Loading
+		 */
+		template<typename Full, typename Impl>
+		class _Loader_<Music, Full, Impl> : public Impl
+		{
+		public:
+			using Impl::Impl;
+
+			/**
+			 * @brief Loads music file
+			 * @param path Path to File
+			 */
+			auto file(std::string_view path) -> void
+			{
+				Mix_Music *temp = Mix_LoadMUS(path.data());
+				ASSERT(temp, Mix_GetError());
+
+				this->obj()->music(temp);
+			}
+		};
+#endif
 
 	} // namespace detail
 
@@ -227,3 +229,5 @@ namespace ctl::sdl
 	}
 
 } // namespace ctl::sdl
+
+#endif
