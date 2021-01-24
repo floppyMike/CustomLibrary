@@ -7,14 +7,11 @@ find_path(ASIO_INCLUDE_DIR
     	asio.hpp
         HINTS
         ENV ASIOSTANDALONE
+        PATH_SUFFIXES
+        asio/include include
 		PATHS
 		/usr/include
-		/usr/include/${ASIO_ROOT}
-		/usr/include/${ASIO_VERSION_ROOT}
-		
 		/usr/local/include
-    	/usr/local/include/${ASIO_ROOT}
-		/usr/local/include/${ASIO_VERSION_ROOT}
 )
 
 include(FindPackageHandleStandardArgs)
