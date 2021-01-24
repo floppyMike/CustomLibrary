@@ -4,11 +4,6 @@ project(CustomLibrary VERSION 3.0 LANGUAGES CXX
 		DESCRIPTION "A header only library providing a handful of classes and functions useful for c++ projects" 
 		HOMEPAGE_URL "https://github.com/floppyMike/CustomLibrary")
 
-# Add option to include and link with libraries
-
-include(GNUInstallDirs)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-
 # Add include only Library
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -23,6 +18,4 @@ if (TESTS)
 	add_subdirectory("tests")
 endif()
 
-if (EXAMPLES)
-	add_subdirectory("examples")
-endif()
+add_subdirectory("examples")
