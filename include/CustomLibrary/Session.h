@@ -4,6 +4,7 @@
 
 #include <istream>
 #include <memory>
+#include <string_view>
 #include <utility>
 
 namespace ctl::net
