@@ -1,8 +1,8 @@
 #if not defined _CTL_SDL2_EVENT_
-#	define _CTL_SDL2_EVENT_
+#define _CTL_SDL2_EVENT_
 
-#	include "SDL_init.h"
-#	include "../BasicTypes.h"
+#include "SDL_init.h"
+#include "../BasicTypes.h"
 
 namespace ctl::sdl
 {

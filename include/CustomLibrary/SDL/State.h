@@ -1,12 +1,11 @@
 #pragma once
 
+#include "SDL_init.h"
 #include <memory>
 #include <functional>
 
 namespace ctl::sdl
 {
-    class SDL_Event;
-
 	// -----------------------------------------------------------------------------
 	// State Interface
 	// -----------------------------------------------------------------------------
