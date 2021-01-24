@@ -22,7 +22,6 @@ include_directories(${CMAKE_SOURCE_DIR}/external/asio)
 link_libraries(Threads::Threads OpenSSL::SSL ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
 
 add_executable(Starfield Starfield/main.cpp)
-add_executable(Snake Snake/main.cpp)
 add_executable(Logger Logger/main.cpp)
 add_executable(Pong Pong/main.cpp)
 add_executable(Parsing Parsing/main.cpp)
