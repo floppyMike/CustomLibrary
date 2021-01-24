@@ -1,21 +1,11 @@
-#pragma once
-
-#include <SDL2/SDL.h>
+#if not defined _CTL_SDL2_RENDER_
+#define _CTL_SDL2_RENDER_
 
 #include "TypeTraits.h"
 #include "../Traits.h"
 
 namespace ctl::sdl
 {
-	// -----------------------------------------------------------------------------
-	// Predefinitions
-	// -----------------------------------------------------------------------------
-
-	class Renderer;
-
-	template<typename>
-	class Delayed;
-
 	// -----------------------------------------------------------------------------
 	// Render Implementation
 	// -----------------------------------------------------------------------------
@@ -25,6 +15,7 @@ namespace ctl::sdl
 		template<typename, typename, typename>
 		class _Render_;
 
+#if defined _CTL_SDL2_RENDERER_
 		/**
 		 * @brief Handles rendering of delayed renderer
 		 */
@@ -68,6 +59,8 @@ namespace ctl::sdl
 			 */
 			void render() { SDL_RenderPresent(this->obj()->get()); }
 		};
+#endif
+
 	} // namespace detail
 
 	// -----------------------------------------------------------------------------
@@ -94,3 +87,5 @@ namespace ctl::sdl
 	}
 
 } // namespace ctl::sdl
+
+#endif

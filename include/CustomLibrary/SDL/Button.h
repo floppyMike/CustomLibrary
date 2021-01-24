@@ -1,12 +1,10 @@
-#pragma once
+#if defined _CTL_SDL2_BUTTON_
 
-#include <SDL2/SDL.h>
+#	include <utility>
+#	include <functional>
 
-#include <utility>
-#include <functional>
-
-#include "../Collider.h"
-#include "Geometry.h"
+#	include "../Collider.h"
+#	include "Geometry.h"
 
 namespace ctl::sdl
 {
@@ -68,3 +66,5 @@ namespace ctl::sdl
 	};
 
 } // namespace ctl::sdl
+
+#endif

@@ -1,15 +1,12 @@
-#ifndef _CTL_SDL2_TEXTURE_
-#	define _CTL_SDL2_TEXTURE_
+#if not defined _CTL_SDL2_TEXTURE_ and defined _SDL2IMG_
+#define _CTL_SDL2_TEXTURE_
 
-#	include <SDL2/SDL.h>
-#	include <SDL2/SDL_image.h>
+#include "../Dim.h"
 
-#	include "../Dim.h"
-
-#	include "Surface.h"
-#	include "Renderer.h"
-#	include "TypeTraits.h"
-#	include "Geometry.h"
+#include "Surface.h"
+#include "Renderer.h"
+#include "TypeTraits.h"
+#include "Geometry.h"
 
 namespace ctl::sdl
 {

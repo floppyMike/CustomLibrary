@@ -1,9 +1,8 @@
-#pragma once
+#if not defined _CTL_SDL2_GEO_
+#	define _CTL_SDL2_GEO_
 
-#include <SDL2/SDL.h>
-#include "../BasicTypes.h"
-#include "../utility.h"
-#include "TypeTraits.h"
+#	include "../BasicTypes.h"
+#	include "TypeTraits.h"
 
 namespace ctl::sdl
 {
@@ -95,3 +94,5 @@ namespace ctl::sdl
 	using EPointFrame = typename MixBuilder<PointFrame, Ex...>::type;
 
 } // namespace ctl::sdl
+
+#endif

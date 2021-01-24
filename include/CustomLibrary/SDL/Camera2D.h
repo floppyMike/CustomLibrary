@@ -1,4 +1,5 @@
-#pragma once
+#if not defined _CTL_SDL2_CAM2D_
+#define _CTL_SDL2_CAM2D_
 
 #include "../BasicTypes.h"
 
@@ -36,3 +37,5 @@ namespace ctl::sdl
 	};
 
 } // namespace ctl::sdl
+
+#endif
