@@ -4,12 +4,10 @@ project(CustomLibrary VERSION 3.0 LANGUAGES CXX
 		DESCRIPTION "A header only library providing a handful of classes and functions useful for c++ projects" 
 		HOMEPAGE_URL "https://github.com/floppyMike/CustomLibrary")
 
-# Add option to include and link with SDL2
+# Add option to include and link with libraries
 
 include(GNUInstallDirs)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
-
-set(ASIO_VERSION "1.18.0")
 
 macro(get_lib lib_name dir)
 	find_package(${lib_name})

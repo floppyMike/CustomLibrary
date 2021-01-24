@@ -200,7 +200,7 @@ namespace ctl::sdl
 			 */
 			auto generate() -> auto &
 			{
-				const auto *o = frame_shape_diff<mth::Circle<int, int>>(this->obj()());
+				const auto *o = frame_shape_diff<mth::Circle<int, int>>(this->obj());
 
 				const auto d = o->r * 2;
 
