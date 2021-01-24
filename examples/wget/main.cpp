@@ -1,4 +1,5 @@
 #include <asio.hpp>
+#include <iostream>
 
 #include "CustomLibrary/Session.h"
 #include "CustomLibrary/SSLSession.h"

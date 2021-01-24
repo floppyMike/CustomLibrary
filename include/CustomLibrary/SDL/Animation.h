@@ -1,18 +1,13 @@
-#ifndef _CTL_SDL2_ANIMATION_
-#define _CTL_SDL2_ANIMATION_
+#if not defined _CTL_SDL2_ANIMATION_ and defined _SDL2IMG_
+#	define _CTL_SDL2_ANIMATION_
 
-#include <SDL2/SDL.h>
+#	include "../BasicTypes.h"
+#	include "../Timer.h"
 
-#include "../BasicTypes.h"
-#include "../Timer.h"
+#	include "Texture.h"
+#	include "TypeTraits.h"
 
-#include "Drawable.h"
-#include "Texture.h"
-#include "TypeTraits.h"
-
-#include <vector>
-
-// DEPRECATED
+#	include <vector>
 
 namespace ctl::sdl
 {
@@ -54,7 +49,7 @@ namespace ctl::sdl
 		 * @param param Parameters of construction
 		 */
 		template<typename... P>
-		void emplace_back_frame(P &&... param)
+		void emplace_back_frame(P &&...param)
 		{
 			m_frames.emplace_back(std::forward<P>(param)...);
 			m_curr_frame = m_frames.begin();
@@ -69,7 +64,7 @@ namespace ctl::sdl
 			m_curr_frame = m_frames.begin();
 		}
 		/**
-		 * @brief Assignes frames
+		 * @brief Assigns frames
 		 *
 		 * @tparam Iter A iterator pointing to AniFrame
 		 * @param begin_frame Begin iterator
@@ -102,7 +97,7 @@ namespace ctl::sdl
 
 		/**
 		 * @brief Return current blit of the texture to draw
-		 * The function automatically goes to the next animation frame when the animation timer exceedes the given
+		 * The function automatically goes to the next animation frame when the animation timer exceeds the given
 		 * interval time.
 		 * @return const Rect&
 		 */

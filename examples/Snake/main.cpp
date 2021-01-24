@@ -1,8 +1,11 @@
 #include <iostream>
 
+#include <SDL2/SDL.h>
+
 #include <CustomLibrary/SDL/Engine.h>
 #include <CustomLibrary/SDL/Window.h>
 #include <CustomLibrary/SDL/Renderer.h>
+#include <CustomLibrary/SDL/Render.h>
 #include <CustomLibrary/SDL/Drawable.h>
 #include <CustomLibrary/SDL/Event.h>
 

@@ -1,17 +1,8 @@
-#ifndef _CTL_SDL2_MUSIC_
+#if not defined _CTL_SDL2_MUSIC_ and defined _SDL2MIX_
 #define _CTL_SDL2_MUSIC_
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-
-#include "../Traits.h"
 
 #include <cassert>
 #include <memory>
-
-#include "TypeTraits.h"
-#include "Loader.h"
-#include "Player.h"
 
 namespace ctl::sdl
 {

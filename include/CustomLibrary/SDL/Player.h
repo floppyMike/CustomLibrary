@@ -1,19 +1,10 @@
-#ifndef _CTL_SDL2_PLAYER_
+#if not defined _CTL_SDL2_PLAYER_
 #define _CTL_SDL2_PLAYER_
-
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 
 #include "TypeTraits.h"
 
 namespace ctl::sdl
 {
-	// -----------------------------------------------------------------------------
-	// Predefinitions
-	// -----------------------------------------------------------------------------
-
-	class Music;
-
 	// -----------------------------------------------------------------------------
 	// Player Implementation
 	// -----------------------------------------------------------------------------
@@ -23,6 +14,7 @@ namespace ctl::sdl
 		template<typename, typename, typename>
 		class _Player_;
 
+#if defined _CTL_SDL2_MUSIC_
 		/**
 		 * @brief Handles music playing
 		 */
@@ -60,6 +52,7 @@ namespace ctl::sdl
 					Mix_ResumeMusic();
 			}
 		};
+#endif
 
 	} // namespace detail
 
@@ -81,7 +74,7 @@ namespace ctl::sdl
 	 * @return Play type for further options
 	 */
 	template<typename _T>
-	auto play(_T* const ptr)
+	auto play(_T *const ptr)
 	{
 		return Player<_T>(ptr);
 	}

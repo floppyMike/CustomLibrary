@@ -1,15 +1,9 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#include "SDL_init.h"
 
-#include "../Error.h"
 #include "../Timer.h"
 
-#include <string>
-#include <type_traits>
 #include <thread>
 #include <vector>
 
@@ -55,14 +49,24 @@ namespace ctl::sdl
 		/**
 		 * @brief frees the subsystems
 		 */
-		virtual ~SDL()
+		~SDL()
 		{
-			Mix_Quit();
-			TTF_Quit();
-			IMG_Quit();
 			SDL_Quit();
+
+#if defined _SDL2MIX_
+			Mix_Quit();
+#endif
+
+#if defined _SDL2TTF_
+			TTF_Quit();
+#endif
+
+#if defined _SDL2IMG_
+			IMG_Quit();
+#endif
 		}
 
+#if defined _SDL2IMG_
 		/**
 		 * @brief init SDL_image
 		 * @param "flags" flags for initializer
@@ -75,7 +79,9 @@ namespace ctl::sdl
 
 			return *this;
 		}
+#endif
 
+#if defined _SDL2MIX_
 		/**
 		 * @brief init SDL_mixer
 		 * @param feq frequency
@@ -92,7 +98,9 @@ namespace ctl::sdl
 
 			return *this;
 		}
+#endif
 
+#if defined _SDL2TTF_
 		/**
 		 * @brief init SDL_ttf
 		 * @exception "Log" if initialization fails
@@ -104,6 +112,7 @@ namespace ctl::sdl
 
 			return *this;
 		}
+#endif
 
 		/**
 		 * @brief sets a hint

@@ -2,43 +2,35 @@ cmake_minimum_required(VERSION 3.16)
 
 project(CustomLibraryExamples VERSION 1.0 LANGUAGES CXX)
 
+include(GNUInstallDirs)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
+find_package(SDL2 REQUIRED)
+find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+
+find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+include_directories(${CMAKE_SOURCE_DIR}/external/asio)
+link_libraries(Threads::Threads OpenSSL::SSL ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
+
 add_executable(Starfield Starfield/main.cpp)
-target_link_libraries(Starfield PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
-
 add_executable(Snake Snake/main.cpp)
-target_link_libraries(Snake PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
-
 add_executable(Logger Logger/main.cpp)
-target_link_libraries(Logger PRIVATE CustomLibrary)
-
 add_executable(Pong Pong/main.cpp)
-target_link_libraries(Pong PRIVATE ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary)
-
 add_executable(Parsing Parsing/main.cpp)
-target_link_libraries(Parsing PRIVATE CustomLibrary)
-
 add_executable(Math Math/main.cpp)
-target_link_libraries(Math PRIVATE CustomLibrary)
-
 add_executable(Graphs Graphs/main.cpp)
-target_link_libraries(Graphs PRIVATE CustomLibrary)
-
 add_executable(NeuralNetwork NeuralNetwork/main.cpp)
-target_link_libraries(NeuralNetwork PRIVATE CustomLibrary)
-
-find_package(Threads REQUIRED)
-find_package(OpenSSL REQUIRED)
-
 add_executable(wget wget/main.cpp)
-target_link_libraries(wget PRIVATE CustomLibrary Threads::Threads OpenSSL::SSL)
-
 add_executable(genetic GeneticAlgorithm/main.cpp)
-target_link_libraries(genetic PRIVATE CustomLibrary)
 
 # add_executable(VulkanDemo VulkanDemo/main.cpp)
 # target_include_directories(VulkanDemo PRIVATE ${VULKAN_INCLUDE_DIRS})
