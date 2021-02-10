@@ -6,6 +6,7 @@
 
 #include <thread>
 #include <vector>
+#include <stdexcept>
 
 namespace ctl::sdl
 {

@@ -145,7 +145,7 @@ namespace ctl::sdl
 			 */
 			auto rect() const -> void
 			{
-				const auto r = SDL_RenderDrawRect(this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()()));
+				const auto r = SDL_RenderDrawRect(this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 
