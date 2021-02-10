@@ -4,3 +4,4 @@ build/
 .clang-tidy
 _build/
 _templates/
+.cache/
