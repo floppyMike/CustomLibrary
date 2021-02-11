@@ -1,15 +1,15 @@
 #if not defined _CTL_SDL2_DRAW_
-#	define _CTL_SDL2_DRAW_
+#define _CTL_SDL2_DRAW_
 
-#	include "../BasicTypes.h"
-#	include "../Error.h"
-#	include "../Traits.h"
-#	include "../utility.h"
+#include "../BasicTypes.h"
+#include "../Error.h"
+#include "../Traits.h"
+#include "../utility.h"
 
-#	include "Renderer.h"
-#	include "TypeTraits.h"
+#include "Renderer.h"
+#include "TypeTraits.h"
 
-#	include <span>
+#include <span>
 
 namespace ctl::sdl
 {
@@ -31,7 +31,7 @@ namespace ctl::sdl
 
 		// --------------------------------- Object Drawing -----------------------------------------
 
-#	if defined _CTL_SDL2_TEXTURE_
+#if defined _CTL_SDL2_TEXTURE_
 		/**
 		 * @brief Handles drawing of textures
 		 */
@@ -72,9 +72,9 @@ namespace ctl::sdl
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
-#	endif
+#endif
 
-#	if defined _CTL_SDL2_ANIMATION_
+#if defined _CTL_SDL2_ANIMATION_
 		/**
 		 * @brief Handles drawing of animations
 		 */
@@ -101,21 +101,49 @@ namespace ctl::sdl
 				this->texture(angle, center, flip, &this->obj()->blit_ani());
 			}
 		};
-#	endif
+#endif
 
 		// --------------------------------- Geometric Drawing -----------------------------------------
 
 		/**
 		 * @brief Gives reinterpreted ptr to SDL shape
 		 *
-		 * @tparam T SDL_Shape to become
 		 * @param o Shape
 		 * @return Ptr to shape
 		 */
-		template<typename T, typename O>
-		constexpr auto frame_shape_diff(const O *o) noexcept -> const auto *
+		auto frame_shape_diff(const mth::Rect<int, int> *o) noexcept -> const SDL_Rect *
 		{
-			return reinterpret_cast<const T *>(o);
+			return reinterpret_cast<const SDL_Rect *>(o);
+		}
+		/**
+		 * @brief Gives reinterpreted ptr to SDL shape
+		 *
+		 * @param o Shape
+		 * @return Ptr to shape
+		 */
+		auto frame_shape_diff(const mth::Rect<float, float> *o) noexcept -> const SDL_FRect *
+		{
+			return reinterpret_cast<const SDL_FRect *>(o);
+		}
+		/**
+		 * @brief Gives reinterpreted ptr to SDL shape
+		 *
+		 * @param o Shape
+		 * @return Ptr to shape
+		 */
+		auto frame_shape_diff(const mth::Point<int> *o) noexcept -> const SDL_Point *
+		{
+			return reinterpret_cast<const SDL_Point *>(o);
+		}
+		/**
+		 * @brief Gives reinterpreted ptr to SDL shape
+		 *
+		 * @param o Shape
+		 * @return Ptr to shape
+		 */
+		auto frame_shape_diff(const mth::Point<float> *o) noexcept -> const SDL_FPoint *
+		{
+			return reinterpret_cast<const SDL_FPoint *>(o);
 		}
 
 		/**
@@ -124,10 +152,10 @@ namespace ctl::sdl
 		 * @param o Frame
 		 * @return Ptr to shape
 		 */
-		template<typename T, typename O>
-		constexpr auto frame_shape_diff(const Frame<O> *o) noexcept -> const auto *
+		template<typename O>
+		auto frame_shape_diff(const Frame<O> *o) noexcept -> const auto *
 		{
-			return frame_shape_diff<T>(&o->shape());
+			return frame_shape_diff(&o->shape());
 		}
 
 		/**
@@ -145,7 +173,7 @@ namespace ctl::sdl
 			 */
 			auto rect() const -> void
 			{
-				const auto r = SDL_RenderDrawRect(this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()));
+				const auto r = SDL_RenderDrawRect(this->renderer()->get(), frame_shape_diff(this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -154,7 +182,7 @@ namespace ctl::sdl
 			 */
 			auto filled_rect() const -> void
 			{
-				const auto r = SDL_RenderFillRect(this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()));
+				const auto r = SDL_RenderFillRect(this->renderer()->get(), frame_shape_diff(this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
@@ -174,7 +202,7 @@ namespace ctl::sdl
 			 */
 			auto rect() const -> void
 			{
-				const auto r = SDL_RenderDrawRectF(this->renderer()->get(), frame_shape_diff<SDL_FRect>(this->obj()()));
+				const auto r = SDL_RenderDrawRectF(this->renderer()->get(), frame_shape_diff(this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -183,7 +211,7 @@ namespace ctl::sdl
 			 */
 			auto filled_rect() const -> void
 			{
-				const auto r = SDL_RenderFillRectF(this->renderer()->get(), frame_shape_diff<SDL_FRect>(this->obj()()));
+				const auto r = SDL_RenderFillRectF(this->renderer()->get(), frame_shape_diff(this->obj()));
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
@@ -333,7 +361,7 @@ namespace ctl::sdl
 			 */
 			void point() const
 			{
-				const auto *o = frame_shape_diff<SDL_Point>(this->obj()());
+				const auto *o = frame_shape_diff(this->obj()());
 				const auto	r = SDL_RenderDrawPoint(this->renderer()->get(), o->x, o->y);
 				ASSERT(r == 0, SDL_GetError());
 			}
@@ -354,7 +382,7 @@ namespace ctl::sdl
 			 */
 			void point() const
 			{
-				const auto *s = frame_shape_diff<SDL_FPoint>(this->obj());
+				const auto *s = frame_shape_diff(this->obj());
 				const auto	r = SDL_RenderDrawPointF(this->renderer()->get(), s->x, s->y);
 				ASSERT(r == 0, SDL_GetError());
 			}
@@ -377,7 +405,7 @@ namespace ctl::sdl
 			auto rects() const -> void
 			{
 				const auto r = SDL_RenderDrawRects(
-					this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -387,7 +415,7 @@ namespace ctl::sdl
 			auto filled_rects() const -> void
 			{
 				const auto r = SDL_RenderFillRects(
-					this->renderer()->get(), frame_shape_diff<SDL_Rect>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
@@ -409,7 +437,7 @@ namespace ctl::sdl
 			auto rects() const -> void
 			{
 				const auto r = SDL_RenderDrawRectsF(
-					this->renderer()->get(), frame_shape_diff<SDL_FRect>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -419,7 +447,7 @@ namespace ctl::sdl
 			auto filled_rects() const -> void
 			{
 				const auto r = SDL_RenderFillRectsF(
-					this->renderer()->get(), frame_shape_diff<SDL_FRect>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
@@ -441,7 +469,7 @@ namespace ctl::sdl
 			auto points() const -> void
 			{
 				const auto r = SDL_RenderDrawPoints(
-					this->renderer()->get(), frame_shape_diff<SDL_Point>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -451,7 +479,7 @@ namespace ctl::sdl
 			auto lines() const -> void
 			{
 				const auto r = SDL_RenderDrawLines(
-					this->renderer()->get(), frame_shape_diff<SDL_Point>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
@@ -473,7 +501,7 @@ namespace ctl::sdl
 			auto points() const -> void
 			{
 				const auto r = SDL_RenderDrawPointsF(
-					this->renderer()->get(), frame_shape_diff<SDL_FPoint>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 
@@ -483,7 +511,7 @@ namespace ctl::sdl
 			auto lines() const -> void
 			{
 				const auto r = SDL_RenderDrawLinesF(
-					this->renderer()->get(), frame_shape_diff<SDL_FPoint>(this->obj()->data()), this->obj()->size());
+					this->renderer()->get(), frame_shape_diff(this->obj()->data()), this->obj()->size());
 				ASSERT(r == 0, SDL_GetError());
 			}
 		};
