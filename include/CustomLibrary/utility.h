@@ -30,11 +30,24 @@ namespace ctl
 	 * @param new_max new range maximum
 	 * @return Value type
 	 */
-	template<arithmetic _T, arithmetic _U, arithmetic _Z, arithmetic _I, arithmetic _O>
-	constexpr auto map_val(const _T &val, const _U &old_min, const _Z &old_max, const _I &new_min, const _O &new_max)
-		-> std::common_type_t<_T, _U, _Z, _I, _O>
+	template<arithmetic T, arithmetic U, arithmetic Z, arithmetic I, arithmetic O>
+	constexpr auto map_val(T val, U old_min, Z old_max, I new_min, O new_max) noexcept -> T
 	{
-		return new_min + (new_max - new_min) * val / (old_max - old_min);
+		return static_cast<T>(new_min + (new_max - new_min) * val / (old_max - old_min));
+	}
+
+	/**
+	 * @brief Maps values from its previous range to a new range
+	 *
+	 * @param v value to map
+	 * @param old_max previous max of range
+	 * @param new_max new max of range
+	 * @return Value type
+	 */
+	template<arithmetic T, arithmetic U, arithmetic Z>
+	constexpr auto map_val(T v, U old_max, Z new_max) noexcept -> T
+	{
+		return static_cast<T>(new_max * v / old_max);
 	}
 
 	/**
@@ -282,9 +295,9 @@ namespace ctl
 
 	/**
 	 * @brief Turn value into hex string
-	 * 
+	 *
 	 * @param val value to turn
-	 * @return std::string 
+	 * @return std::string
 	 */
 	auto to_hex(int val) -> std::string
 	{

@@ -8,6 +8,8 @@
 
 #include "TypeTraits.h"
 
+#include <memory>
+
 namespace ctl::sdl
 {
 	// -----------------------------------------------------------------------------
