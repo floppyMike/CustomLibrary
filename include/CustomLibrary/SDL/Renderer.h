@@ -34,8 +34,8 @@ namespace ctl::sdl
 		 * @param win Window ptr
 		 * @param rendererFlags SDL_Renderer Flags https://wiki.libsdl.org/SDL_RendererFlags#Values
 		 */
-		template<typename ImplWin>
-		explicit Renderer(ImplWin *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
+		template<typename Win>
+		explicit Renderer(Win *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
 			create(win, rendererFlags);
 		}
@@ -50,8 +50,8 @@ namespace ctl::sdl
 		 * @param win Window ptr
 		 * @param rendererFlags SDL_Renderer Flags https://wiki.libsdl.org/SDL_RendererFlags#Values
 		 */
-		template<typename ImplWin>
-		void create(ImplWin *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
+		template<typename Win>
+		void create(Win *win, Uint32 rendererFlags = SDL_RENDERER_ACCELERATED)
 		{
 			if (auto *const r = SDL_CreateRenderer(win->get(), -1, rendererFlags); r)
 				m_renderer.reset(r);
@@ -139,40 +139,6 @@ namespace ctl::sdl
 	private:
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};
-
-	// -----------------------------------------------------------------------------
-	// Delayed Renderer Extension
-	// -----------------------------------------------------------------------------
-
-	/**
-	 * @brief Enables the renderer to skip draw cycles when nothing changed.
-	 * @tparam T base
-	 */
-	template<typename T>
-	class Delayed : public T
-	{
-	public:
-		using base = T;
-
-		using T::T;
-
-		/**
-		 * @brief Enables/Disables the rendering
-		 * @param r should render
-		 */
-		void do_render(bool r) { m_do_render = r; }
-		/**
-		 * @brief Checks if renderer wants to render
-		 * @return bool
-		 */
-		auto will_render() const noexcept { return m_do_render; }
-
-	private:
-		bool m_do_render = true;
-	};
-
-	template<template<typename> class... Ex>
-	using ERenderer = typename MixBuilder<Renderer, Ex...>::type;
 
 } // namespace ctl::sdl
 
