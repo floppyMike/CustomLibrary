@@ -73,12 +73,10 @@ namespace ctl::sdl
 		 * @param "flags" flags for initializer
 		 * @exception std::runtime_error if initialization fails
 		 */
-		auto init_IMG(int flags = IMG_INIT_PNG) -> auto &
+		void init_IMG(int flags)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
-
-			return *this;
 		}
 #endif
 
@@ -91,13 +89,10 @@ namespace ctl::sdl
 		 * @param chunksize chunksize
 		 * @exception "Log" if initialization fails
 		 */
-		auto init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
-			-> auto &
+		void init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
 				throw std::runtime_error(SDL_GetError());
-
-			return *this;
 		}
 #endif
 
@@ -106,12 +101,10 @@ namespace ctl::sdl
 		 * @brief init SDL_ttf
 		 * @exception "Log" if initialization fails
 		 */
-		auto init_TTF() -> auto &
+		void init_TTF()
 		{
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
-
-			return *this;
 		}
 #endif
 
@@ -120,48 +113,23 @@ namespace ctl::sdl
 		 * @param "name" name of hint https://wiki.libsdl.org/CategoryHints#Hints
 		 * @param "value" value to set the hint at
 		 */
-		auto set_hint(const char *name, const char *value) noexcept -> SDL &
+		static auto set_hint(const char *name, const char *value) noexcept -> bool
 		{
-			if (SDL_SetHint(name, value) == 0U)
-				;
-			// err::g_log.write(err::Logger::Catagory::WARN)
-			//<< "SDL: set_hint: " << name << " failed with value " << value;
-
-			return *this;
+			return SDL_SetHint(name, value) == 0U;
 		}
 	};
 
 	// -----------------------------------------------------------------------------
-	// Window Interface
+	// Application concept
 	// -----------------------------------------------------------------------------
 
-	/**
-	 * @brief Window Interface for RunLoop
-	 */
-	class IWindow
+	template<typename T>
+	concept is_application = requires(T a)
 	{
-	public:
-		/**
-		 * @brief Takes place when a new iteration begins
-		 */
-		virtual void pre_pass(){};
-		/**
-		 * @brief Takes place when a new event is caught
-		 * @param e New event
-		 */
-		virtual void event(const SDL_Event &e){};
-		/**
-		 * @brief Used for updating your stuff per iteration
-		 */
-		virtual void update(){};
-		/**
-		 * @brief Updates stuff like 'update' but it catches up when lag occures
-		 */
-		virtual void fixed_update(){};
-		/**
-		 * @brief Used to render the objects drawn to the buffer
-		 */
-		virtual void render(){};
+		a.pre_pass();
+		a.event(SDL_Event());
+		a.update();
+		a.render();
 	};
 
 	// -----------------------------------------------------------------------------
@@ -169,31 +137,30 @@ namespace ctl::sdl
 	// -----------------------------------------------------------------------------
 
 	/**
-	 * @brief Simplified SDL2 runtime frame used by the application. Supports only 1 window and has support for window
-	 * update, event, render and pre_pass
+	 * @brief SDL2 runtime frame used by the application.
 	 *
-	 * @tparam IWindow Window Implementation
+	 * @tparam App application class
 	 */
-	template<typename ImplWin = IWindow>
-	class SimpleRunLoop
+	template<is_application App>
+	class RunLoop
 	{
 	public:
-		SimpleRunLoop() = default;
+		RunLoop() = default;
 
 		/**
-		 * @brief Initialize the run loop with the window.
-		 * @param win Window ptr to use
+		 * @brief Initialize the run loop with the app.
+		 * @param win App ptr to use
 		 */
-		explicit SimpleRunLoop(ImplWin *win)
-			: m_win(win)
+		explicit RunLoop(App *win)
+			: m_app(win)
 		{
 		}
 
 		/**
-		 * @brief Select a window to use.
+		 * @brief Select a app to use.
 		 * @param win Window ptr
 		 */
-		void window(ImplWin *win) { m_win = win; }
+		void app(App *win) { m_app = win; }
 
 		/**
 		 * @brief Starts the runloop of the application
@@ -201,139 +168,31 @@ namespace ctl::sdl
 		 */
 		void run(size_t fps)
 		{
-			const std::chrono::milliseconds frameTime(1000 / fps);
+			const std::chrono::milliseconds frame_time(1000 / fps);
 
 			for (bool quit = false; !quit;)
 			{
-				const auto endTime = std::chrono::steady_clock::now() + frameTime;
+				const auto end_time = std::chrono::steady_clock::now() + frame_time;
 
-				m_win->pre_pass();
+				m_app->pre_pass();
 
 				SDL_Event e;
 				while (SDL_PollEvent(&e) != 0)
 				{
-					m_win->event(e);
+					m_app->event(e);
 					if (e.type == SDL_QUIT)
 						quit = true;
 				}
 
-				m_win->update();
-				m_win->render();
+				m_app->update();
+				m_app->render();
 
-				std::this_thread::sleep_until(endTime);
+				std::this_thread::sleep_until(end_time);
 			}
 		}
 
 	private:
-		ImplWin *m_win;
+		App *m_app;
 	};
-
-	/**
-	 * @brief Basic SDL2 runtime frame used by the application
-	 * @tparam ImplWin Window type -> Default: IWindow
-	 */
-	template<typename ImplWin = IWindow>
-	class RunLoop
-	{
-		template<typename... T>
-		void _invoke_(void (ImplWin::*f)(const T &...), const T &...arg);
-
-	public:
-		RunLoop() = default;
-
-		/**
-		 * @brief Starts the runloop of the application
-		 * @param fps Hz of the amound of frames per second
-		 */
-		void run(size_t fps);
-
-		/**
-		 * @brief Add a Window to be used
-		 *
-		 * @param win Window ptr
-		 * @return Windows reference
-		 */
-		auto add_window(ImplWin *win) -> ImplWin &;
-
-		/**
-		 * @brief Get the frames per second in Hz
-		 * @return double
-		 */
-		constexpr auto fps() const noexcept { return m_fps; }
-		/**
-		 * @brief Get the movment delta
-		 * This value is used to make object movment in update to be independant of the fps
-		 * @return double
-		 */
-		constexpr auto delta() const noexcept { return m_delta; }
-
-	private:
-		std::vector<ImplWin *> m_windows;
-
-		double m_fps   = 0.;
-		double m_delta = 0.;
-	};
-
-	template<typename ImplWin>
-	inline void RunLoop<ImplWin>::run(size_t fps)
-	{
-		const std::chrono::milliseconds frameTime(1000 / fps);
-
-		Timer timer;
-		timer.start();
-		std::chrono::duration<double> lastTime(0);
-		std::chrono::duration<double> lag(0);
-
-		unsigned long long frames = 0;
-
-		for (bool quit = false; !quit; ++frames)
-		{
-			const auto endTime = std::chrono::steady_clock::now() + frameTime;
-
-			const auto time	   = timer.ticks<std::chrono::duration<double>>();
-			const auto elapsed = time - lastTime;
-			lastTime		   = time;
-			lag += elapsed;
-
-			if (time >= std::chrono::seconds(1))
-				m_fps = frames / time.count();
-
-			_invoke_(&ImplWin::pre_pass);
-
-			SDL_Event e;
-			while (SDL_PollEvent(&e) != 0)
-			{
-				_invoke_(&ImplWin::event, e);
-				if (e.type == SDL_QUIT)
-					quit = true;
-			}
-
-			m_delta = elapsed.count();
-			_invoke_(&ImplWin::update);
-
-			while (lag >= frameTime)
-			{
-				lag -= frameTime;
-				_invoke_(&ImplWin::fixed_update);
-			}
-
-			_invoke_(&ImplWin::render);
-
-			std::this_thread::sleep_until(endTime);
-		}
-	}
-
-	template<typename ImplWin>
-	inline auto RunLoop<ImplWin>::add_window(ImplWin *win) -> ImplWin &
-	{
-		return *m_windows.emplace_back(win);
-	}
-
-	template<typename ImplWin>
-	template<typename... T>
-	inline void RunLoop<ImplWin>::_invoke_(void (ImplWin::*f)(const T &...), const T &...arg)
-	{
-		for (auto &i : m_windows) (i->*f)(arg...);
-	}
 
 } // namespace ctl::sdl
