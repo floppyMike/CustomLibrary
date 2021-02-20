@@ -86,13 +86,13 @@ namespace ctl::sdl
 		 * automaticaly scales based on Windows dimensions.
 		 * @param dim Dimension to render on
 		 */
-		void logical_size(const mth::Dim<int> &dim) const noexcept { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
+		void logical_size(mth::Dim<int> dim) const noexcept { SDL_RenderSetLogicalSize(get(), dim.w, dim.h); }
 
 		/**
 		 * @brief Sets the blending used for drawing
 		 * Blending indicates how the colors are displayed on the screen.
 		 */
-		auto blend_mode(const SDL_BlendMode &b) const noexcept
+		auto blend_mode(SDL_BlendMode b) const noexcept
 		{
 			const auto r = SDL_SetRenderDrawBlendMode(get(), b);
 			ASSERT(r == 0, SDL_GetError());
@@ -117,7 +117,7 @@ namespace ctl::sdl
 		 * The viewport dictates what part of the world screen gets rendered onto the screen
 		 * @param rect Size and location of the viewport
 		 */
-		auto viewport(const mth::Rect<int, int> &rect) const noexcept
+		auto viewport(mth::Rect<int, int> rect) const noexcept
 		{
 			const auto r = SDL_RenderSetViewport(get(), reinterpret_cast<const SDL_Rect *>(&rect));
 			ASSERT(r == 0, SDL_GetError());
@@ -139,6 +139,25 @@ namespace ctl::sdl
 	private:
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};
+
+	// -----------------------------------------------------------------------------
+	// Procedures
+	// -----------------------------------------------------------------------------
+
+	/**
+	 * @brief Renders the buffer
+	 */
+	void render(const sdl::Renderer &r) { SDL_RenderPresent(r.get()); }
+
+	/**
+	 * @brief Fill the buffer with a color
+	 * @param col color to use
+	 */
+	void fill(const sdl::Renderer &r, const SDL_Color &col)
+	{
+		SDL_SetRenderDrawColor(r.get(), col.r, col.g, col.b, col.a);
+		SDL_RenderClear(r.get());
+	}
 
 } // namespace ctl::sdl
 
