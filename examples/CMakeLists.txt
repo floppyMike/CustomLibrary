@@ -23,7 +23,6 @@ link_libraries(Threads::Threads OpenSSL::SSL ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRAR
 
 add_executable(Starfield Starfield/main.cpp)
 add_executable(Logger Logger/main.cpp)
-add_executable(Pong Pong/main.cpp)
 add_executable(Parsing Parsing/main.cpp)
 add_executable(Math Math/main.cpp)
 add_executable(Graphs Graphs/main.cpp)
