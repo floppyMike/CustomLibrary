@@ -4,7 +4,6 @@
 #include "Engine.h"
 #include "Window.h"
 #include "Renderer.h"
-#include "Render.h"
 #include "Geometry.h"
 #include "Texture.h"
 #include "Text.h"
@@ -17,3 +16,4 @@
 #include "Drawable.h"
 #include "Loader.h"
 #include "Player.h"
+#include "FpsCounter.h"

@@ -1,8 +1,8 @@
 #if not defined _CTL_SDL2_GEO_
-#	define _CTL_SDL2_GEO_
+#define _CTL_SDL2_GEO_
 
-#	include "../BasicTypes.h"
-#	include "TypeTraits.h"
+#include "../BasicTypes.h"
+#include "TypeTraits.h"
 
 namespace ctl::sdl
 {

@@ -2,8 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../BasicTypes.h"
-#include "../Error.h"
+#include "../Dim.h"
 
 #include <cassert>
 #include <memory>
@@ -40,7 +39,7 @@ namespace ctl::sdl
 		 * @param win Window ptr
 		 * @param rendererFlags SDL_Renderer Flags https://wiki.libsdl.org/SDL_RendererFlags#Values
 		 */
-		auto create(std::string_view name, const mth::Dim<int> &dim, Uint32 window_flags = SDL_WINDOW_SHOWN) -> void
+		auto create(std::string_view name, mth::Dim<int> dim, Uint32 window_flags = SDL_WINDOW_SHOWN) -> void
 		{
 			m_window.reset(SDL_CreateWindow(name.data(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dim.w, dim.h,
 											window_flags));
@@ -84,7 +83,7 @@ namespace ctl::sdl
 		 * @brief Change the title of the window
 		 * @param name New title
 		 */
-		auto window_title(std::string_view name) const noexcept { SDL_SetWindowTitle(get(), name.data()); }
+		auto window_title(const char *name) const noexcept { SDL_SetWindowTitle(get(), name); }
 
 		/**
 		 * @brief Get the title of the window

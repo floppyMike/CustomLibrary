@@ -168,7 +168,7 @@ namespace ctl::sdl
 		 */
 		void run(size_t fps)
 		{
-			const std::chrono::milliseconds frame_time(1000 / fps);
+			const std::chrono::microseconds frame_time(1000000 / fps);
 
 			for (bool quit = false; !quit;)
 			{

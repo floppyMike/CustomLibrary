@@ -24,3 +24,4 @@ include_directories(${GTEST_INCLUDE_DIRS})
 link_libraries(Threads::Threads ${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARY} ${SDL2_TTF_LIBRARY} ${SDL2_MIXER_LIBRARY} CustomLibrary ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
 
 add_executable(Tests Tests.cpp)
+add_executable(Features FeatureTests.cpp)
