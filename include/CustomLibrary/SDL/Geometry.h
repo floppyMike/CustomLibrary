@@ -73,181 +73,322 @@ namespace ctl::sdl
 	using PointFrame = Frame<mth::Point<int>>;
 
 	/**
-	 * @brief CRTP like extensions pattern
-	 * @tparam Ex Extension types
+	 * @brief Area in shape of a rectangle
 	 */
-	template<template<typename> class... Ex>
-	using ERectFrame = typename MixBuilder<RectFrame, Ex...>::type;
+	using RectFrameF = Frame<mth::Rect<float, float>>;
 	/**
-	 * @brief CRTP like extensions pattern
-	 * @tparam Ex Extension types
+	 * @brief Area in shape of a circle
 	 */
-	template<template<typename> class... Ex>
-	using ECircleFrame = typename MixBuilder<CircleFrame, Ex...>::type;
+	using CircleFrameF = Frame<mth::Circle<float, float>>;
 	/**
-	 * @brief CRTP like extensions pattern
-	 * @tparam Ex Extension types
+	 * @brief Area in shape of a line
 	 */
-	template<template<typename> class... Ex>
-	using ELineFrame = typename MixBuilder<LineFrame, Ex...>::type;
+	using LineFrameF = Frame<mth::Line<float>>;
 	/**
-	 * @brief CRTP like extensions pattern
-	 * @tparam Ex Extension types
+	 * @brief Area in shape of a point
 	 */
-	template<template<typename> class... Ex>
-	using EPointFrame = typename MixBuilder<PointFrame, Ex...>::type;
+	using PointFrameF = Frame<mth::Point<float>>;
 
 	// -----------------------------------------------------------------------------
-	// Geometric Helpers
+	// Concepts
 	// -----------------------------------------------------------------------------
 
-	class GenCircle
-	{
-	public:
-		GenCircle(mth::Circle<int, int> c)
-		{
-			const auto d = c.r * 2;
+	template<typename T>
+	concept is_rect_shape = matches<T, SDL_Rect, mth::Rect<int, int>, RectFrame>;
 
-			mth::Point<int> p(c.r - 1, 0);
-			mth::Point<int> tp(1, 1);
+	template<typename T>
+	concept is_circle_shape = matches<T, mth::Circle<int, int>, CircleFrame>;
 
-			int err = tp.x - d;
+	template<typename T>
+	concept is_point_shape = matches<T, SDL_Point, mth::Point<int>, PointFrame>;
 
-			while (p.x >= p.y)
-			{
-				m_cache.insert(m_cache.end(),
-							   { mth::Point{ c.x + p.x, c.y + p.y },
-								 { c.x - p.x, c.y + p.y },
-								 { c.x + p.x, c.y - p.y },
-								 { c.x - p.x, c.y - p.y },
-								 { c.x + p.y, c.y + p.x },
-								 { c.x - p.y, c.y + p.x },
-								 { c.x + p.y, c.y - p.x },
-								 { c.x - p.y, c.y - p.x } });
+	template<typename T>
+	concept is_line_shape = matches<T, mth::Line<int>, LineFrame>;
 
-				if (err <= 0)
-				{
-					++p.y;
-					err += tp.y;
-					tp.y += 2;
-				}
-				if (err > 0)
-				{
-					--p.x;
-					tp.x += 2;
-					err += tp.x - d;
-				}
-			}
-		}
+	template<typename T>
+	concept is_rectf_shape = matches<T, SDL_FRect, mth::Rect<float, float>, RectFrameF>;
 
-		/**
-		 * @brief Moves the cached circle
-		 *
-		 * @param dx Delta x coord
-		 * @param dy Delta y coord
-		 */
-		constexpr void mov(int dx, int dy) noexcept
-		{
-			for (auto &p : m_cache) p.x += dx, p.y += dy;
-		}
+	template<typename T>
+	concept is_circlef_shape = matches<T, mth::Circle<float, float>, CircleFrameF>;
 
-		/**
-		 * @brief Span reference to cache
-		 * @return reference
-		 */
-		constexpr auto cache() const noexcept -> std::span<const mth::Point<int>> { return std::span(m_cache); }
+	template<typename T>
+	concept is_pointf_shape = matches<T, SDL_Point, mth::Point<float>, PointFrameF>;
 
-	private:
-		std::vector<mth::Point<int>> m_cache;
-	};
+	template<typename T>
+	concept is_linef_shape = matches<T, mth::Line<float>, LineFrameF>;
 
 	// -----------------------------------------------------------------------------
 	// Procedures
 	// -----------------------------------------------------------------------------
 
-	/**
-	 * @brief Gives reinterpreted ptr to SDL shape
-	 *
-	 * @param o Shape
-	 * @return Ptr to shape
-	 */
+	// clang-format off
 	auto frame_shape_diff(const mth::Rect<int, int> *o) noexcept -> const SDL_Rect *
 	{
 		return reinterpret_cast<const SDL_Rect *>(o);
 	}
-	/**
-	 * @brief Gives reinterpreted ptr to SDL shape
-	 *
-	 * @param o Shape
-	 * @return Ptr to shape
-	 */
 	auto frame_shape_diff(const mth::Rect<float, float> *o) noexcept -> const SDL_FRect *
 	{
 		return reinterpret_cast<const SDL_FRect *>(o);
 	}
-	/**
-	 * @brief Gives reinterpreted ptr to SDL shape
-	 *
-	 * @param o Shape
-	 * @return Ptr to shape
-	 */
 	auto frame_shape_diff(const mth::Point<int> *o) noexcept -> const SDL_Point *
 	{
 		return reinterpret_cast<const SDL_Point *>(o);
 	}
-	/**
-	 * @brief Gives reinterpreted ptr to SDL shape
-	 *
-	 * @param o Shape
-	 * @return Ptr to shape
-	 */
 	auto frame_shape_diff(const mth::Point<float> *o) noexcept -> const SDL_FPoint *
 	{
 		return reinterpret_cast<const SDL_FPoint *>(o);
 	}
+	auto frame_shape_diff(const mth::Circle<int, int> *o) noexcept -> const mth::Circle<int, int> * { return o; }
+	auto frame_shape_diff(const mth::Circle<float, float> *o) noexcept -> const mth::Circle<float, float> * { return o; }
+	auto frame_shape_diff(const mth::Line<int> *o) noexcept -> const mth::Line<int> * { return o; }
+	auto frame_shape_diff(const mth::Line<float> *o) noexcept -> const mth::Line<float> * { return o; }
+	// clang-format on
 
-	/**
-	 * @brief Gives ptr to shape from frame
-	 *
-	 * @param o Frame
-	 * @return Ptr to shape
-	 */
 	template<typename O>
 	auto frame_shape_diff(const Frame<O> *o) noexcept -> const auto *
 	{
 		return frame_shape_diff(&o->shape());
 	}
 
-	void draw(sdl::Renderer &r, mth::Rect<int, int> rect)
+	// --------------------------------- Actual Draws -----------------------------------------
+
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_rect_shape T>
+	void draw(sdl::Renderer &r, const T &rect)
 	{
 		const auto x = SDL_RenderDrawRect(r.get(), frame_shape_diff(&rect));
 		ASSERT(x == 0, SDL_GetError());
 	}
-
-	void draw_filled(sdl::Renderer &r, mth::Rect<int, int> rect)
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_rectf_shape T>
+	void draw(sdl::Renderer &r, const T &rect)
 	{
-		const auto x = SDL_RenderFillRect(r.get(), frame_shape_diff(&rect));
+		const auto x = SDL_RenderDrawRectF(r.get(), frame_shape_diff(&rect));
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_rect_shape T>
+	void draw(sdl::Renderer &r, std::span<T> rect)
+	{
+		const auto x = SDL_RenderDrawRects(r.get(), frame_shape_diff(rect.data()), rect.size());
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_rectf_shape T>
+	void draw(sdl::Renderer &r, std::span<T> rect)
+	{
+		const auto x = SDL_RenderDrawRectsF(r.get(), frame_shape_diff(rect.data()), rect.size());
 		ASSERT(x == 0, SDL_GetError());
 	}
 
 	/**
-	 * @brief Draws the generated circle
-	 * @param c the circle generated
+	 * @brief Draws filled shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
 	 */
-	auto draw(sdl::Renderer &r, const GenCircle &c) -> void
+	template<is_rect_shape T>
+	void draw_filled(sdl::Renderer &r, const T &rect)
 	{
-		const auto s = c.cache();
-		const auto x = SDL_RenderDrawPoints(r.get(), (const SDL_Point *)s.data(), s.size());
+		const auto x = SDL_RenderFillRect(r.get(), frame_shape_diff(&rect));
 		ASSERT(x == 0, SDL_GetError());
 	}
-	// /**
-	//  * @brief Draws the generated circle filled
-	//  */
-	// auto draw_filled() -> void
-	// {
-	// 	const auto r = SDL_RenderDrawLines(this->renderer()->get(), m_cache.data(), m_cache.size());
-	// 	ASSERT(r == 0, SDL_GetError());
-	// }
+	/**
+	 * @brief Draws filled shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_rectf_shape T>
+	void draw_filled(sdl::Renderer &r, const T &rect)
+	{
+		const auto x = SDL_RenderFillRectF(r.get(), frame_shape_diff(&rect));
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws filled shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_rect_shape T>
+	void draw_filled(sdl::Renderer &r, std::span<T> rect)
+	{
+		const auto x = SDL_RenderFillRects(r.get(), frame_shape_diff(&rect));
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws filled shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_rectf_shape T>
+	void draw_filled(sdl::Renderer &r, std::span<T> rect)
+	{
+		const auto x = SDL_RenderFillRectsF(r.get(), frame_shape_diff(&rect));
+		ASSERT(x == 0, SDL_GetError());
+	}
+
+	// ------------------------------------------------
+
+	/**
+	 * @brief Generate a circle
+	 * @return circle points
+	 */
+	template<is_circle_shape T>
+	auto generate_circle(const T &s) noexcept -> std::vector<mth::Point<int>>
+	{
+		std::vector<mth::Point<int>> cache;
+
+		const auto *o = frame_shape_diff(&s);
+
+		const auto d = o->r * 2;
+
+		mth::Point<int> p(o->r - 1, 0);
+		mth::Point<int> tp(1, 1);
+
+		int err = tp.x - d;
+
+		while (p.x >= p.y)
+		{
+			cache.insert(cache.end(),
+						 { mth::Point<int>{ o->x + p.x, o->y + p.y },
+						   { o->x - p.x, o->y + p.y },
+						   { o->x + p.x, o->y - p.y },
+						   { o->x - p.x, o->y - p.y },
+						   { o->x + p.y, o->y + p.x },
+						   { o->x - p.y, o->y + p.x },
+						   { o->x + p.y, o->y - p.x },
+						   { o->x - p.y, o->y - p.x } });
+
+			if (err <= 0)
+			{
+				++p.y;
+				err += tp.y;
+				tp.y += 2;
+			}
+			// if (err > 0)
+			else
+			{
+				--p.x;
+				tp.x += 2;
+				err += tp.x - d;
+			}
+		}
+
+		return cache;
+	}
+
+	// ------------------------------------------------
+
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_point_shape T>
+	void draw(sdl::Renderer &r, const T &p)
+	{
+		const auto *o = frame_shape_diff(&p);
+		const auto	x = SDL_RenderDrawPoint(r.get(), o->x, o->y);
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_pointf_shape T>
+	void draw(sdl::Renderer &r, const T &p)
+	{
+		const auto *o = frame_shape_diff(&p);
+		const auto	x = SDL_RenderDrawPointF(r.get(), o->x, o->y);
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_point_shape T>
+	void draw(sdl::Renderer &r, std::span<T> p)
+	{
+		const auto x = SDL_RenderDrawPoints(r.get(), frame_shape_diff(p.data()), p.size());
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_pointf_shape T>
+	void draw(sdl::Renderer &r, std::span<T> p)
+	{
+		const auto x = SDL_RenderDrawPointsF(r.get(), frame_shape_diff(p.data()), p.size());
+		ASSERT(x == 0, SDL_GetError());
+	}
+
+	// ------------------------------------------------
+
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_line_shape T>
+	void draw(sdl::Renderer &r, const T &l)
+	{
+		const auto *o = frame_shape_diff(&l);
+		const auto	x = SDL_RenderDrawLine(r.get(), o->x1, o->y1, o->x2, o->y2);
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shape onto render buffer
+	 * @param r renderer
+	 * @param rect shape
+	 */
+	template<is_linef_shape T>
+	void draw(sdl::Renderer &r, const T &l)
+	{
+		const auto *o = frame_shape_diff(&l);
+		const auto	x = SDL_RenderDrawLineF(r.get(), l->x1, l->y1, l->x2, l->y2);
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_point_shape T>
+	void draw_connected(sdl::Renderer &r, std::span<T> l)
+	{
+		const auto x = SDL_RenderDrawLines(r.get(), frame_shape_diff(l.data()), l.size());
+		ASSERT(x == 0, SDL_GetError());
+	}
+	/**
+	 * @brief Draws shapes onto render buffer
+	 * @param r renderer
+	 * @param rect shapes
+	 */
+	template<is_pointf_shape T>
+	void draw_connected(sdl::Renderer &r, std::span<T> p)
+	{
+		const auto x = SDL_RenderDrawLinesF(r.get(), frame_shape_diff(p.data()), p.size());
+		ASSERT(x == 0, SDL_GetError());
+	}
 
 } // namespace ctl::sdl
 
