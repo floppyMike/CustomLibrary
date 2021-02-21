@@ -15,7 +15,7 @@ class App
 {
 public:
 	App()
-		: m_win("", { 640, 480 })
+		: m_win("", { 640, 480 }, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)
 		, m_rend{ .rend = sdl::Renderer{ &m_win, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC } }
 	{
 	}
@@ -31,8 +31,11 @@ public:
 			m_rend.do_render = true;
 			break;
 		}
+
 		case SDL_MOUSEBUTTONDOWN: m_pressed = true; break;
+
 		case SDL_MOUSEBUTTONUP: m_pressed = false; break;
+
 		case SDL_MOUSEMOTION:
 			if (m_pressed)
 			{
@@ -40,6 +43,9 @@ public:
 				m_rend.do_render = true;
 			}
 			break;
+
+		case SDL_WINDOWEVENT: m_rend.do_render = true; break;
+
 		}
 	}
 	void update() { m_win.window_title(std::to_string(m_fps.fps()).c_str()); }
@@ -50,14 +56,17 @@ public:
 
 		m_rend.do_render = false;
 
-		sdl::fill(m_rend.rend, sdl::WHITE);
+		sdl::fill(m_rend.rend, sdl::BLACK);
 
-		const sdl::GenCircle c({ m_cam.world_screen(m_cir1.pos()), m_cir1.r * m_cam.scale() });
+		m_rend.rend.color(sdl::BLUE);
+		sdl::draw(m_rend.rend, m_cam.world_screen(m_rect1));
+		sdl::draw_filled(m_rend.rend, m_cam.world_screen(m_rect2));
+		sdl::draw(m_rend.rend, m_cam.world_screen(m_line1));
+		sdl::draw(m_rend.rend, m_cam.world_screen(m_line2));
 
-		m_rend.rend.color(sdl::BLACK);
-		sdl::draw(m_rend.rend, { m_cam.world_screen(m_rect1.pos()), m_cam.world_screen(m_rect1.dim()) });
-		sdl::draw_filled(m_rend.rend, { m_cam.world_screen(m_rect2.pos()), m_cam.world_screen(m_rect2.dim()) });
-		sdl::draw(m_rend.rend, c);
+		const auto v = sdl::generate_circle(m_cam.world_screen(m_cir1));
+		if (!v.empty())
+			sdl::draw(m_rend.rend, std::span(v));
 
 		sdl::render(m_rend.rend);
 	}
@@ -72,8 +81,10 @@ private:
 	bool		  m_pressed = false;
 
 	mth::Rect<int, int>	  m_rect1 = { 100, 100, 100, 100 };
-	mth::Rect<int, int>	  m_rect2 = { 400, 100, 100, 100 };
 	mth::Circle<int, int> m_cir1  = { 300, 150, 50 };
+	mth::Rect<int, int>	  m_rect2 = { 400, 100, 100, 100 };
+	mth::Line<int>		  m_line1 = { 550, 100, 650, 200 };
+	mth::Line<int>		  m_line2 = { 650, 100, 550, 200 };
 };
 
 auto main() -> int

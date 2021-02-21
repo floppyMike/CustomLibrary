@@ -18,7 +18,8 @@ namespace ctl::sdl
 		 * @param loc world coord
 		 * @return mth::Point
 		 */
-		constexpr auto world_screen(mth::Point<float> loc) const noexcept -> mth::Point<float>
+		template<typename T>
+		constexpr auto world_screen(mth::Point<T> loc) const noexcept -> mth::Point<int>
 		{
 			return (loc - *this) * m_scale;
 		}
@@ -29,9 +30,42 @@ namespace ctl::sdl
 		 * @return dim
 		 */
 		template<typename T>
-		constexpr auto world_screen(mth::Dim<T> dim) const noexcept -> mth::Dim<T>
+		constexpr auto world_screen(mth::Dim<T> dim) const noexcept -> mth::Dim<int>
 		{
 			return dim * m_scale;
+		}
+
+		/**
+		 * @brief translates world to screen
+		 * @param s shape
+		 * @return transformed shape
+		 */
+		template<typename T>
+		constexpr auto world_screen(mth::Rect<T, T> s) const noexcept -> mth::Rect<int, int>
+		{
+			return { world_screen(s.pos()), world_screen(s.dim()) };
+		}
+
+		/**
+		 * @brief translates world to screen
+		 * @param s shape
+		 * @return transformed shape
+		 */
+		template<typename T>
+		constexpr auto world_screen(mth::Circle<T, T> s) const noexcept -> mth::Circle<int, int>
+		{
+			return { world_screen(s.pos()), s.r * m_scale };
+		}
+
+		/**
+		 * @brief translates world to screen
+		 * @param s shape
+		 * @return transformed shape
+		 */
+		template<typename T>
+		constexpr auto world_screen(mth::Line<T> s) const noexcept -> mth::Line<int>
+		{
+			return { world_screen(s.pos1()), world_screen(s.pos2()) };
 		}
 
 		/**
@@ -49,11 +83,7 @@ namespace ctl::sdl
 		 * @param dim screen dim
 		 * @return dim
 		 */
-		template<typename T>
-		constexpr auto screen_world(mth::Dim<T> dim) const noexcept -> mth::Dim<T>
-		{
-			return dim / m_scale;
-		}
+		constexpr auto screen_world(mth::Dim<float> dim) const noexcept -> mth::Dim<float> { return dim / m_scale; }
 
 		/**
 		 * @brief Zooms the screen by a factor
