@@ -76,14 +76,16 @@ namespace ctl::mth
 		template<arithmetic U>
 		constexpr auto operator-=(Point<U>) noexcept -> Point &;
 
-		constexpr auto operator+(Point) const noexcept;
-		constexpr auto operator-(Point) const noexcept;
+		template<arithmetic U>
+		constexpr auto operator+(Point<U>) const noexcept;
+		template<arithmetic U>
+		constexpr auto operator-(Point<U>) const noexcept;
 
 		template<arithmetic U>
-		constexpr auto operator*(U) noexcept;
+		constexpr auto operator*(U) const noexcept;
 
 		template<arithmetic U>
-		constexpr auto operator/(U) noexcept;
+		constexpr auto operator/(U) const noexcept;
 
 		constexpr auto operator==(Point p) const noexcept;
 
@@ -115,27 +117,29 @@ namespace ctl::mth
 	}
 
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator+(Point p) const noexcept
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator+(Point<U> p) const noexcept
 	{
-		return Point(x + p.x, y + p.y);
-	}
-
-	template<arithmetic T>
-	inline constexpr auto Point<T>::operator-(Point p) const noexcept
-	{
-		return Point(x - p.x, y - p.y);
+		return Point<std::common_type_t<T, U>>(x + p.x, y + p.y);
 	}
 
 	template<arithmetic T>
 	template<arithmetic U>
-	inline constexpr auto Point<T>::operator*(U a) noexcept
+	inline constexpr auto Point<T>::operator-(Point<U> p) const noexcept
+	{
+		return Point<std::common_type_t<T, U>>(x - p.x, y - p.y);
+	}
+
+	template<arithmetic T>
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator*(U a) const noexcept
 	{
 		return Point(x * a, y * a);
 	}
 
 	template<arithmetic T>
 	template<arithmetic U>
-	inline constexpr auto Point<T>::operator/(U a) noexcept
+	inline constexpr auto Point<T>::operator/(U a) const noexcept
 	{
 		return Point(x / a, y / a);
 	}
