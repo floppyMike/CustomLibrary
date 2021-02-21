@@ -136,6 +136,27 @@ namespace ctl::sdl
 			return rect;
 		}
 
+		/**
+		 * @brief Get the current renderer scaling
+		 * @return float x, y scales
+		 */
+		auto scale() const noexcept -> mth::Dim<float>
+		{
+			mth::Dim<float> d;
+			SDL_RenderGetScale(get(), &d.w, &d.h);
+			return d;
+		}
+
+		/**
+		 * @brief Set the scaling of the renderer
+		 * @param s scale values between 0 and 1
+		 */
+		void scale(mth::Dim<float> s) const noexcept
+		{
+			const auto r = SDL_RenderSetScale(get(), s.w, s.h);
+			ASSERT(r == 0, SDL_GetError());
+		}
+
 	private:
 		std::unique_ptr<SDL_Renderer, Unique_Des> m_renderer;
 	};

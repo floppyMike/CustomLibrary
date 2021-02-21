@@ -13,7 +13,6 @@
 #include "Event.h"
 #include "Music.h"
 #include "Camera2D.h"
-#include "Drawable.h"
 #include "Loader.h"
 #include "Player.h"
 #include "FpsCounter.h"

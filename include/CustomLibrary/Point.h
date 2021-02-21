@@ -29,49 +29,63 @@ namespace ctl::mth
 	class Point
 	{
 	public:
-		constexpr Point()			   = default;
-		constexpr Point(const Point &) = default;
+		constexpr Point() = default;
 
-		constexpr auto operator=(const Point &) -> Point & = default;
-
-		constexpr Point(const T &x, const T &y)
+		constexpr Point(T x, T y) noexcept
 			: x(x)
 			, y(y)
 		{
 		}
 
-		template<typename U>
-		explicit operator Point<U>() const noexcept
+		template<arithmetic U>
+		constexpr Point(U x, U y) noexcept
+			: x(x)
+			, y(y)
 		{
-			return { static_cast<U>(x), static_cast<U>(y) };
 		}
 
-#ifdef SDL_h_
-		operator SDL_Point() const noexcept;
-		operator SDL_FPoint() const noexcept;
-
-		const SDL_Point *point_ptr() const noexcept requires std::same_as<T, int>
+		template<arithmetic U>
+		constexpr Point(const Point<U> &p) noexcept
+			: Point(p.x, p.y)
 		{
-			return reinterpret_cast<const SDL_Point *const>(this);
 		}
-		SDL_Point *point_ptr() noexcept requires std::same_as<T, int> { return reinterpret_cast<SDL_Point *>(this); }
-#endif // SDL_h_
 
-		constexpr void translate(const Point<T> &delta) noexcept { *this += delta; }
-
-		constexpr void pos(const Point<T> &p) noexcept
+		template<arithmetic U>
+		constexpr auto operator=(const Point<U> &p) -> Point &
 		{
 			x = p.x;
 			y = p.y;
 		}
 
-		constexpr auto operator+=(const Point &p) noexcept -> auto &;
-		constexpr auto operator-=(const Point &p) noexcept -> auto &;
+		template<typename U>
+		operator Point<U>() const noexcept
+		{
+			return { static_cast<U>(x), static_cast<U>(y) };
+		}
 
-		constexpr auto operator+(const Point &p) const noexcept;
-		constexpr auto operator-(const Point &p) const noexcept;
+		constexpr void translate(Point delta) noexcept { *this += delta; }
 
-		constexpr auto operator==(const Point &p) const noexcept;
+		constexpr void pos(Point p) noexcept
+		{
+			x = p.x;
+			y = p.y;
+		}
+
+		template<arithmetic U>
+		constexpr auto operator+=(Point<U>) noexcept -> Point &;
+		template<arithmetic U>
+		constexpr auto operator-=(Point<U>) noexcept -> Point &;
+
+		constexpr auto operator+(Point) const noexcept;
+		constexpr auto operator-(Point) const noexcept;
+
+		template<arithmetic U>
+		constexpr auto operator*(U) noexcept;
+
+		template<arithmetic U>
+		constexpr auto operator/(U) noexcept;
+
+		constexpr auto operator==(Point p) const noexcept;
 
 		T x, y;
 	};
@@ -80,24 +94,9 @@ namespace ctl::mth
 	// Implementation
 	//----------------------------------------------
 
-	// #ifdef SDL_h_
-	// 	template<typename T>
-	// 	inline Point<T>::operator SDL_Point() const noexcept
-	// 	{
-	// 		return { static_cast<int>(x), static_cast<int>(y) };
-	// 	}
-
-	// 	template<typename T>
-	// 	inline Point<T>::operator SDL_FPoint() const noexcept
-	// 	{
-	// 		return { static_cast<float>(x), static_cast<float>(y) };
-	// 	}
-	// #endif // SDL_h_
-
-	//--------------------------------------------------------
-
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator+=(const Point &p) noexcept -> auto &
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator+=(Point<U> p) noexcept -> Point &
 	{
 		x += p.x;
 		y += p.y;
@@ -106,7 +105,8 @@ namespace ctl::mth
 	}
 
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator-=(const Point &p) noexcept -> auto &
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator-=(Point<U> p) noexcept -> Point &
 	{
 		x -= p.x;
 		y -= p.y;
@@ -115,19 +115,33 @@ namespace ctl::mth
 	}
 
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator+(const Point &p) const noexcept
+	inline constexpr auto Point<T>::operator+(Point p) const noexcept
 	{
 		return Point(x + p.x, y + p.y);
 	}
 
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator-(const Point &p) const noexcept
+	inline constexpr auto Point<T>::operator-(Point p) const noexcept
 	{
 		return Point(x - p.x, y - p.y);
 	}
 
 	template<arithmetic T>
-	inline constexpr auto Point<T>::operator==(const Point &p) const noexcept
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator*(U a) noexcept
+	{
+		return Point(x * a, y * a);
+	}
+
+	template<arithmetic T>
+	template<arithmetic U>
+	inline constexpr auto Point<T>::operator/(U a) noexcept
+	{
+		return Point(x / a, y / a);
+	}
+
+	template<arithmetic T>
+	inline constexpr auto Point<T>::operator==(Point p) const noexcept
 	{
 		return x == p.x && y == p.y;
 	}
