@@ -2,10 +2,7 @@
 
 #include "SDL_init.h"
 
-#include "../Timer.h"
-
 #include <thread>
-#include <vector>
 #include <stdexcept>
 
 namespace ctl::sdl
@@ -136,63 +133,30 @@ namespace ctl::sdl
 	// Runtime Loops
 	// -----------------------------------------------------------------------------
 
-	/**
-	 * @brief SDL2 runtime frame used by the application.
-	 *
-	 * @tparam App application class
-	 */
 	template<is_application App>
-	class RunLoop
+	void run(App *app, size_t fps)
 	{
-	public:
-		RunLoop() = default;
+		const std::chrono::microseconds frame_time(1000000 / fps);
 
-		/**
-		 * @brief Initialize the run loop with the app.
-		 * @param win App ptr to use
-		 */
-		explicit RunLoop(App *win)
-			: m_app(win)
+		for (bool quit = false; !quit;)
 		{
-		}
+			const auto end_time = std::chrono::steady_clock::now() + frame_time;
 
-		/**
-		 * @brief Select a app to use.
-		 * @param win Window ptr
-		 */
-		void app(App *win) { m_app = win; }
+			app->pre_pass();
 
-		/**
-		 * @brief Starts the runloop of the application
-		 * @param fps Hz of the amound of frames per second
-		 */
-		void run(size_t fps)
-		{
-			const std::chrono::microseconds frame_time(1000000 / fps);
-
-			for (bool quit = false; !quit;)
+			SDL_Event e;
+			while (SDL_PollEvent(&e) != 0)
 			{
-				const auto end_time = std::chrono::steady_clock::now() + frame_time;
-
-				m_app->pre_pass();
-
-				SDL_Event e;
-				while (SDL_PollEvent(&e) != 0)
-				{
-					m_app->event(e);
-					if (e.type == SDL_QUIT)
-						quit = true;
-				}
-
-				m_app->update();
-				m_app->render();
-
-				std::this_thread::sleep_until(end_time);
+				app->event(e);
+				if (e.type == SDL_QUIT)
+					quit = true;
 			}
-		}
 
-	private:
-		App *m_app;
-	};
+			app->update();
+			app->render();
+
+			std::this_thread::sleep_until(end_time);
+		}
+	}
 
 } // namespace ctl::sdl
