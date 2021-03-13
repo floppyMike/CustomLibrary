@@ -2,6 +2,7 @@
 #define _CTL_SDL2_GEO_
 
 #include "../BasicTypes.h"
+#include "../Error.h"
 #include "TypeTraits.h"
 #include "Renderer.h"
 
@@ -280,7 +281,6 @@ namespace ctl::sdl
 				err += tp.y;
 				tp.y += 2;
 			}
-			// if (err > 0)
 			else
 			{
 				--p.x;
