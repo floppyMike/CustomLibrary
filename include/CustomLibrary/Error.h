@@ -1,27 +1,25 @@
-#ifndef MYERROR
-#define MYERROR
+#ifndef _CTL_ERROR_
+#define _CTL_ERROR_
 
 #include <chrono>
 #include <fstream>
-#include <sstream>
 #include <string_view>
-#include <concepts>
 #include <ctime>
 #include <tuple>
 #include <iostream>
 
 #ifndef NDEBUG
-#	define ASSERT(cond, msg)                                                                               \
-		{                                                                                                   \
-			if (!(cond))                                                                                    \
-			{                                                                                               \
-				std::cerr << "Assertion \"" << #cond << " failed in " << __FILE__ << " using the function " \
-						  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;           \
-				std::terminate();                                                                           \
-			}                                                                                               \
-		}
+#define ASSERT(cond, msg)                                                                               \
+	{                                                                                                   \
+		if (!(cond))                                                                                    \
+		{                                                                                               \
+			std::cerr << "Assertion \"" << #cond << " failed in " << __FILE__ << " using the function " \
+					  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;           \
+			std::terminate();                                                                           \
+		}                                                                                               \
+	}
 #else
-#	define ASSERT(cond, msg)
+#define ASSERT(cond, msg) cond
 #endif
 
 namespace ctl::err
@@ -38,7 +36,14 @@ namespace ctl::err
 		FATAL
 	};
 
-	template<typename... Policies>
+	template<typename T>
+	concept Policy = requires(T t)
+	{
+		t.open();
+		t.close();
+	};
+
+	template<Policy... Policies>
 	class Logger
 	{
 	public:
@@ -52,22 +57,19 @@ namespace ctl::err
 
 			~_Stream_()
 			{
-				m_log->_write_buffer_(m_s.str(), Catagory::INFO);
 				m_log->_write_buffer_("\n", Catagory::INFO);
-
 				m_log->_close_buffer_();
 			}
 
 			template<typename T>
-			auto operator<<(const T &v) -> auto &
+			auto operator<<(T &&v) -> auto &
 			{
-				m_s << v;
+				m_log->_write_buffer_(std::move(v), Catagory::INFO);
 				return *this;
 			}
 
 		private:
-			std::stringstream m_s;
-			Logger *		  m_log;
+			Logger *m_log;
 		};
 
 		Logger() = default;
@@ -76,7 +78,7 @@ namespace ctl::err
 		 * @brief Initialize the logger including it's policies.
 		 * @param pols Policy construction
 		 */
-		explicit Logger(Policies &&... pols)
+		explicit Logger(Policies &&...pols)
 			: m_p(std::forward<Policies>(pols)...)
 		{
 		}
@@ -159,19 +161,20 @@ namespace ctl::err
 			}
 		}
 
-		void _write_buffer_(std::string_view msg, Catagory c)
+		template<typename T>
+		void _write_buffer_(T &&b, Catagory c)
 		{
-			std::apply([msg, c](auto &&... arg) { (arg.write(msg, c), ...); }, m_p);
+			std::apply([&b, c](auto &&...arg) { (arg.write(b, c), ...); }, m_p);
 		}
 
 		void _open_buffer_()
 		{
-			std::apply([](auto &&... arg) { (arg.open_ostream(), ...); }, m_p);
+			std::apply([](auto &&...arg) { (arg.open(), ...); }, m_p);
 		}
 
 		void _close_buffer_()
 		{
-			std::apply([](auto &&... arg) { (arg.close_ostream(), ...); }, m_p);
+			std::apply([](auto &&...arg) { (arg.close(), ...); }, m_p);
 		}
 	};
 
@@ -191,7 +194,7 @@ namespace ctl::err
 		/**
 		 * @brief Open up the file
 		 */
-		void open_ostream()
+		void open()
 		{
 			m_out_file.open(m_file_name.data(), std::ios::in | std::ios::out);
 			m_out_file.seekp(m_true_pos);
@@ -199,7 +202,7 @@ namespace ctl::err
 		/**
 		 * @brief Flush and close the file
 		 */
-		void close_ostream()
+		void close()
 		{
 			m_out_file.flush();
 			m_true_pos = m_out_file.tellp();
@@ -211,9 +214,11 @@ namespace ctl::err
 		 * @param msg Log to write
 		 * @param c Catagory to use (ignored)
 		 */
-		void write(std::string_view msg, Catagory c)
+		template<typename T>
+		void write(const T &msg, Catagory c)
 		{
 			m_out_file << msg;
+
 			if (m_out_file.tellp() >= std::numeric_limits<unsigned int>::max())
 				m_out_file.seekp(0, std::ios::beg);
 		}
@@ -232,18 +237,19 @@ namespace ctl::err
 		/**
 		 * @brief Ignored
 		 */
-		void open_ostream() noexcept {}
+		void open() noexcept {}
 		/**
 		 * @brief Flush the log to the console
 		 */
-		void close_ostream() noexcept { std::clog.flush(); }
+		void close() noexcept { std::clog.flush(); }
 
 		/**
 		 * @brief Write the log into the console
 		 * @param msg Log to write
 		 * @param c Catagory to use
 		 */
-		void write(std::string_view msg, Catagory c)
+		template<typename T>
+		void write(const T &msg, Catagory c)
 		{
 			switch (c)
 			{
@@ -257,6 +263,6 @@ namespace ctl::err
 		}
 	};
 
-} // namespace ctl::err
+} // namespace utl
 
-#endif // !MYERROR
+#endif // !_CTL_ERROR_
