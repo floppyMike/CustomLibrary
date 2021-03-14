@@ -1,12 +1,7 @@
-#if not defined _CTL_SDL2_TEXTURE_ and defined _SDL2IMG_
+#if not defined _CTL_SDL2_TEXTURE_
 #define _CTL_SDL2_TEXTURE_
 
-#include "../Dim.h"
-
 #include "Surface.h"
-#include "Renderer.h"
-#include "TypeTraits.h"
-#include "Geometry.h"
 
 namespace ctl::sdl
 {
@@ -14,161 +9,179 @@ namespace ctl::sdl
 	// Data Class
 	// -----------------------------------------------------------------------------
 
-	/**
-	 * @brief Container class for managing Textures
-	 */
-	class Texture
+	namespace detail
 	{
 		/**
 		 * @brief Handles deallocation of the Texture
 		 */
-		struct Unique_Destructor
+		struct Texture_Destructor
 		{
 			void operator()(SDL_Texture *t) { SDL_DestroyTexture(t); }
 		};
+	}; // namespace detail
 
-	public:
-		using base = RectFrame;
+	using Texture = std::unique_ptr<SDL_Texture, detail::Texture_Destructor>;
 
-		Texture() = default;
+	/**
+	 * @brief Load a texture from a bmp file
+	 *
+	 * @param r SDL_Renderer
+	 * @param file Path to bmp file
+	 * @return Texture
+	 */
+	auto texture_from_bmp(SDL_Renderer *r, const char *file) -> Texture
+	{
+		Surface s(SDL_LoadBMP(file));
+		return Texture(SDL_CreateTextureFromSurface(r, s.get()));
+	}
 
-		/**
-		 * @brief Gives the Texture
-		 * @return Texture ptr
-		 */
-		[[nodiscard]] auto texture() const noexcept
-		{
-			assert(m_texture && "SDL_Texture is a nullptr.");
-			return m_texture.get();
-		}
-		/**
-		 * @brief Sets the Texture
-		 * @param tex New Texture
-		 */
-		auto texture(SDL_Texture *tex) noexcept -> void
-		{
-			assert(tex && "SDL_Texture is a nullptr.");
+	// /**
+	//  * @brief Container class for managing Textures
+	//  */
+	// class Texture
+	// {
+	// public:
+	// 	using base = RectFrame;
 
-			m_texture.reset(tex);
-			reset_shape();
-		}
+	// 	Texture() = default;
 
-		/**
-		 * @brief Resets the width and height to default
-		 */
-		auto reset_shape() -> void
-		{
-			if (SDL_QueryTexture(texture(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
-				throw std::runtime_error(SDL_GetError());
-		}
+	// 	/**
+	// 	 * @brief Gives the Texture
+	// 	 * @return Texture ptr
+	// 	 */
+	// 	[[nodiscard]] auto texture() const noexcept
+	// 	{
+	// 		assert(m_texture && "SDL_Texture is a nullptr.");
+	// 		return m_texture.get();
+	// 	}
+	// 	/**
+	// 	 * @brief Sets the Texture
+	// 	 * @param tex New Texture
+	// 	 */
+	// 	auto texture(SDL_Texture *tex) noexcept -> void
+	// 	{
+	// 		assert(tex && "SDL_Texture is a nullptr.");
 
-		/**
-		 * @brief Sets the color modulation affecting render operations
-		 * Color modulation affects the coloration of the outputted texture. Color / 255. * TextureColor = Output.
-		 * @param c Color to modulate with
-		 */
-		auto color_mod(const SDL_Color &c) const -> void
-		{
-			const auto re = SDL_SetTextureColorMod(texture(), c.r, c.g, c.b) + SDL_SetTextureAlphaMod(texture(), c.a);
-			ASSERT(re == 0, SDL_GetError());
-		}
-		/**
-		 * @brief Gets the color modulation used
-		 * @return SDL_Color
-		 */
-		[[nodiscard]] auto color_mod() const
-		{
-			SDL_Color c;
+	// 		m_texture.reset(tex);
+	// 		reset_shape();
+	// 	}
 
-			const auto r =
-				SDL_GetTextureColorMod(texture(), &c.r, &c.g, &c.b) + SDL_GetTextureAlphaMod(texture(), &c.a);
-			ASSERT(r == 0, SDL_GetError());
+	// 	/**
+	// 	 * @brief Resets the width and height to default
+	// 	 */
+	// 	auto reset_shape() -> void
+	// 	{
+	// 		if (SDL_QueryTexture(texture(), nullptr, nullptr, &this->shape().w, &this->shape().h) != 0)
+	// 			throw std::runtime_error(SDL_GetError());
+	// 	}
 
-			return c;
-		}
+	// 	/**
+	// 	 * @brief Sets the color modulation affecting render operations
+	// 	 * Color modulation affects the coloration of the outputted texture. Color / 255. * TextureColor = Output.
+	// 	 * @param c Color to modulate with
+	// 	 */
+	// 	auto color_mod(const SDL_Color &c) const -> void
+	// 	{
+	// 		const auto re = SDL_SetTextureColorMod(texture(), c.r, c.g, c.b) + SDL_SetTextureAlphaMod(texture(), c.a);
+	// 		ASSERT(re == 0, SDL_GetError());
+	// 	}
+	// 	/**
+	// 	 * @brief Gets the color modulation used
+	// 	 * @return SDL_Color
+	// 	 */
+	// 	[[nodiscard]] auto color_mod() const
+	// 	{
+	// 		SDL_Color c;
 
-		/**
-		 * @brief Sets the blending used while rendering
-		 * Blending indicates how the colors are displayed on the screen.
-		 * @param b Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
-		 */
-		auto blend_mode(const SDL_BlendMode &b) const -> void
-		{
-			const auto r = SDL_SetTextureBlendMode(texture(), b);
-			ASSERT(r == 0, SDL_GetError());
-		}
-		/**
-		 * @brief Gets the blending used
-		 * @return SDL_BlendMode
-		 */
-		[[nodiscard]] auto blend_mode() const
-		{
-			SDL_BlendMode b;
+	// 		const auto r =
+	// 			SDL_GetTextureColorMod(texture(), &c.r, &c.g, &c.b) + SDL_GetTextureAlphaMod(texture(), &c.a);
+	// 		ASSERT(r == 0, SDL_GetError());
 
-			const auto r = SDL_GetTextureBlendMode(texture(), &b);
-			ASSERT(r == 0, SDL_GetError());
+	// 		return c;
+	// 	}
 
-			return b;
-		}
+	// 	/**
+	// 	 * @brief Sets the blending used while rendering
+	// 	 * Blending indicates how the colors are displayed on the screen.
+	// 	 * @param b Blend mode used. https://wiki.libsdl.org/SDL_SetTextureBlendMode#blendMode
+	// 	 */
+	// 	auto blend_mode(const SDL_BlendMode &b) const -> void
+	// 	{
+	// 		const auto r = SDL_SetTextureBlendMode(texture(), b);
+	// 		ASSERT(r == 0, SDL_GetError());
+	// 	}
+	// 	/**
+	// 	 * @brief Gets the blending used
+	// 	 * @return SDL_BlendMode
+	// 	 */
+	// 	[[nodiscard]] auto blend_mode() const
+	// 	{
+	// 		SDL_BlendMode b;
 
-	private:
-		std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture = nullptr;
-	};
+	// 		const auto r = SDL_GetTextureBlendMode(texture(), &b);
+	// 		ASSERT(r == 0, SDL_GetError());
+
+	// 		return b;
+	// 	}
+
+	// private:
+	// 	std::unique_ptr<SDL_Texture, Unique_Destructor> m_texture = nullptr;
+	// };
 
 	// -----------------------------------------------------------------------------
 	// Frame Class
 	// -----------------------------------------------------------------------------
 
-	class TextureFrame
-		: public RectFrame
-		, public Texture
-	{
-	public:
-		using RectFrame::RectFrame;
-		using Texture::Texture;
-	};
+	// class TextureFrame
+	// 	: public RectFrame
+	// 	, public Texture
+	// {
+	// public:
+	// 	using RectFrame::RectFrame;
+	// 	using Texture::Texture;
+	// };
 
 	// -----------------------------------------------------------------------------
 	// Procedures
 	// -----------------------------------------------------------------------------
 
-	/**
-	 * @brief Loads texture from a file
-	 *
-	 * @param r renderer
-	 * @param t texture to load to
-	 * @param path path to the file
-	 */
-	void load_file(Renderer &r, Texture &t, const char *path) { t.texture(IMG_LoadTexture(r.get(), path)); }
+	// /**
+	//  * @brief Loads texture from a file
+	//  *
+	//  * @param r renderer
+	//  * @param t texture to load to
+	//  * @param path path to the file
+	//  */
+	// void load_file(Renderer &r, Texture &t, const char *path) { t.texture(IMG_LoadTexture(r.get(), path)); }
 
-	// void load_surface()
+	// // void load_surface()
 
-	/**
-	 * @brief Loads Texture from series of bytes
-	 *
-	 * @param r renderer
-	 * @param t texture to load to
-	 * @param src Byte start address
-	 * @param size Byte array size
-	 */
-	void load_bytes(Renderer &r, Texture &t, void *src, int size)
-	{
-		t.texture(IMG_Load_Texture_RW(r.get(), SDL_RWFromMem(src, size), 1));
-	}
+	// /**
+	//  * @brief Loads Texture from series of bytes
+	//  *
+	//  * @param r renderer
+	//  * @param t texture to load to
+	//  * @param src Byte start address
+	//  * @param size Byte array size
+	//  */
+	// void load_bytes(Renderer &r, Texture &t, void *src, int size)
+	// {
+	// 	t.texture(IMG_Load_Texture_RW(r.get(), SDL_RWFromMem(src, size), 1));
+	// }
 
-	/**
-	 * @brief Draws the texture onto the render buffer
-	 * @param r renderer
-	 * @param t texture to load to
-	 * @param blit Specifies a part of the texture to draw. Default is whole texture.
-	 */
-	void draw(Renderer &r, const TextureFrame &t, mth::Rect<int, int> s,
-			  const mth::Rect<int, int> *const blit = nullptr)
-	{
-		const auto r = SDL_RenderCopy(r.get(), t.texture(), reinterpret_cast<const SDL_Rect *>(blit),
-									  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
-		ASSERT(r == 0, SDL_GetError());
-	}
+	// /**
+	//  * @brief Draws the texture onto the render buffer
+	//  * @param r renderer
+	//  * @param t texture to load to
+	//  * @param blit Specifies a part of the texture to draw. Default is whole texture.
+	//  */
+	// void draw(Renderer &r, const TextureFrame &t, mth::Rect<int, int> s,
+	// 		  const mth::Rect<int, int> *const blit = nullptr)
+	// {
+	// 	const auto r = SDL_RenderCopy(r.get(), t.texture(), reinterpret_cast<const SDL_Rect *>(blit),
+	// 								  reinterpret_cast<const SDL_Rect *>(&this->obj()->shape()));
+	// 	ASSERT(r == 0, SDL_GetError());
+	// }
 
 } // namespace ctl::sdl
 
