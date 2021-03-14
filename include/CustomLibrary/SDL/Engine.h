@@ -70,7 +70,7 @@ namespace ctl::sdl
 		 * @param "flags" flags for initializer
 		 * @exception std::runtime_error if initialization fails
 		 */
-		void init_IMG(int flags)
+		static void init_IMG(int flags)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
@@ -86,7 +86,7 @@ namespace ctl::sdl
 		 * @param chunksize chunksize
 		 * @exception "Log" if initialization fails
 		 */
-		void init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
+		static void init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
 				throw std::runtime_error(SDL_GetError());
@@ -98,22 +98,12 @@ namespace ctl::sdl
 		 * @brief init SDL_ttf
 		 * @exception "Log" if initialization fails
 		 */
-		void init_TTF()
+		static void init_TTF()
 		{
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
 		}
 #endif
-
-		/**
-		 * @brief sets a hint
-		 * @param "name" name of hint https://wiki.libsdl.org/CategoryHints#Hints
-		 * @param "value" value to set the hint at
-		 */
-		static auto set_hint(const char *name, const char *value) noexcept -> bool
-		{
-			return SDL_SetHint(name, value) == 0U;
-		}
 	};
 
 	// -----------------------------------------------------------------------------
