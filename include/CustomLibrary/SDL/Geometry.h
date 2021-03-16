@@ -6,7 +6,6 @@
 #include "TypeTraits.h"
 #include "Renderer.h"
 
-#include <vector>
 #include <span>
 
 namespace ctl::sdl
@@ -245,52 +244,7 @@ namespace ctl::sdl
 
 	// ------------------------------------------------
 
-	/**
-	 * @brief Generate a circle
-	 * @return circle points
-	 */
-	template<is_circle_shape T>
-	auto generate_circle(const T &s) noexcept -> std::vector<mth::Point<int>>
-	{
-		std::vector<mth::Point<int>> cache;
 
-		const auto *o = frame_shape_diff(&s);
-
-		const auto d = o->r * 2;
-
-		mth::Point<int> p(o->r - 1, 0);
-		mth::Point<int> tp(1, 1);
-
-		int err = tp.x - d;
-
-		while (p.x >= p.y)
-		{
-			cache.insert(cache.end(),
-						 { mth::Point<int>{ o->x + p.x, o->y + p.y },
-						   { o->x - p.x, o->y + p.y },
-						   { o->x + p.x, o->y - p.y },
-						   { o->x - p.x, o->y - p.y },
-						   { o->x + p.y, o->y + p.x },
-						   { o->x - p.y, o->y + p.x },
-						   { o->x + p.y, o->y - p.x },
-						   { o->x - p.y, o->y - p.x } });
-
-			if (err <= 0)
-			{
-				++p.y;
-				err += tp.y;
-				tp.y += 2;
-			}
-			else
-			{
-				--p.x;
-				tp.x += 2;
-				err += tp.x - d;
-			}
-		}
-
-		return cache;
-	}
 
 	// ------------------------------------------------
 

@@ -3,6 +3,8 @@
 #include "Point.h"
 #include "Traits.h"
 
+#include <vector>
+
 namespace ctl::mth
 {
 	// -----------------------------------------------------------------------------
@@ -68,4 +70,50 @@ namespace ctl::mth
 		T1 x, y;
 		T2 r;
 	};
+
+	/**
+	 * @brief Generate a circle
+	 *
+	 * @param s circle shape
+	 * @return a array of point outlining the circle
+	 */
+	auto generate_circle(uint32_t r) noexcept -> std::vector<mth::Point<int>>
+	{
+		std::vector<mth::Point<int>> cache;
+
+		const auto d = r * 2;
+
+		mth::Point<int> p(r - 1, 0);
+		mth::Point<int> tp(1, 1);
+
+		int err = tp.x - d;
+
+		while (p.x >= p.y)
+		{
+			cache.insert(cache.end(),
+						 { mth::Point<int>{ +p.x, +p.y },
+						   { -p.x, +p.y },
+						   { +p.x, -p.y },
+						   { -p.x, -p.y },
+						   { +p.y, +p.x },
+						   { -p.y, +p.x },
+						   { +p.y, -p.x },
+						   { -p.y, -p.x } });
+
+			if (err <= 0)
+			{
+				++p.y;
+				err += tp.y;
+				tp.y += 2;
+			}
+			else
+			{
+				--p.x;
+				tp.x += 2;
+				err += tp.x - d;
+			}
+		}
+
+		return cache;
+	}
 } // namespace ctl::mth
