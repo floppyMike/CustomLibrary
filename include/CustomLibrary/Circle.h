@@ -4,6 +4,7 @@
 #include "Traits.h"
 
 #include <vector>
+#include <cmath>
 
 namespace ctl::mth
 {
@@ -72,12 +73,30 @@ namespace ctl::mth
 	};
 
 	/**
-	 * @brief Generate a circle
+	 * @brief Generate a filled circle. Optimal for small circles.
 	 *
-	 * @param s circle shape
-	 * @return a array of point outlining the circle
+	 * @param r circle radius
+	 * @return points of a filled circle
 	 */
-	auto generate_circle(uint32_t r) noexcept -> std::vector<mth::Point<int>>
+	auto gen_circle_filled(const int r) noexcept -> std::vector<mth::Point<int>>
+	{
+		std::vector<mth::Point<int>> circle;
+
+		for (auto x = -r; x <= +r; ++x)
+			for (auto y = -r; y <= +r; ++y)
+				if (std::pow(y, 2) + std::pow(x, 2) <= std::pow(r, 2) + 2)
+					circle.emplace_back(x, y);
+
+		return circle;
+	}
+
+	/**
+	 * @brief Generate a circle shape. Optimal for larger circles.
+	 *
+	 * @param r circle radius
+	 * @return a array of points outlining the circle
+	 */
+	auto midpoint_circle(const uint32_t r) noexcept -> std::vector<mth::Point<int>>
 	{
 		std::vector<mth::Point<int>> cache;
 
