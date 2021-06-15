@@ -35,6 +35,52 @@ namespace ctl::sdl
 		return Texture(SDL_CreateTextureFromSurface(r, s.get()));
 	}
 
+	/**
+	 * @brief Create a empty streamable texture
+	 *
+	 * @param r SDL_Renderer
+	 * @param w Texture width
+	 * @param h Texture height
+	 * @param b Blendmode
+	 * @return Texture
+	 */
+	auto create_empty(SDL_Renderer *r, int w, int h, SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept -> sdl::Texture
+	{
+		auto t = sdl::Texture(SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h));
+
+		SDL_SetTextureBlendMode(t.get(), b);
+
+		SDL_SetRenderTarget(r, t.get());
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
+		SDL_RenderClear(r);
+		SDL_SetRenderTarget(r, nullptr);
+
+		return t;
+	}
+
+	/**
+	 * @brief Crop a texture
+	 *
+	 * @param r SDL_Renderer
+	 * @param t Texture to crop
+	 * @param box Area to crop out
+	 * @return Texture
+	 */
+	auto crop(SDL_Renderer *r, const sdl::Texture &t, mth::Rect<int, int> box) noexcept -> sdl::Texture
+	{
+		auto tex = sdl::Texture(SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, box.w, box.h));
+
+		SDL_SetTextureBlendMode(tex.get(), SDL_BLENDMODE_BLEND);
+
+		SDL_SetRenderTarget(r, tex.get());
+		SDL_SetRenderDrawColor(r, 0, 0, 0, 0);
+		SDL_RenderClear(r);
+		SDL_RenderCopy(r, t.get(), &sdl::to_rect(box), nullptr);
+		SDL_SetRenderTarget(r, nullptr);
+
+		return tex;
+	}
+
 	// /**
 	//  * @brief Container class for managing Textures
 	//  */

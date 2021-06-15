@@ -159,9 +159,10 @@ namespace ctl::sdl
 		 * @param loc screen coord
 		 * @return mth::Point
 		 */
-		[[nodiscard]] constexpr auto screen_world(mth::Point<float> loc) const noexcept -> mth::Point<int>
+		template<typename T>
+		[[nodiscard]] constexpr auto screen_world(mth::Point<T> loc) const noexcept -> mth::Point<float>
 		{
-			return loc / m_scale + m_loc;
+			return static_cast<mth::Point<float>>(loc) / m_scale + m_loc;
 		}
 
 		/**
@@ -169,9 +170,21 @@ namespace ctl::sdl
 		 * @param dim screen dim
 		 * @return dim
 		 */
-		[[nodiscard]] constexpr auto screen_world(mth::Dim<float> dim) const noexcept -> mth::Dim<int>
+		template<typename T>
+		[[nodiscard]] constexpr auto screen_world(mth::Dim<T> dim) const noexcept -> mth::Dim<float>
 		{
-			return dim / m_scale;
+			return static_cast<mth::Dim<float>>(dim) / m_scale;
+		}
+
+		/**
+		 * @brief translates screen rect to world rect
+		 * @param rect screen rect
+		 * @return rect
+		 */
+		template<typename T>
+		[[nodiscard]] constexpr auto screen_world(mth::Rect<T, T> rect) const noexcept -> mth::Rect<float, float>
+		{
+			return { screen_world(rect.pos()), screen_world(rect.dim()) };
 		}
 
 		/**

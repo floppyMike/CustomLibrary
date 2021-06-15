@@ -76,27 +76,27 @@ namespace ctl::sdl
 	 * @param r shape
 	 * @return sdl shape
 	 */
-	constexpr auto to_rect(const mth::Rect<int, int> &r) -> const SDL_Rect & { return *(const SDL_Rect *)&r; }
+	auto to_rect(const mth::Rect<int, int> &r) -> const SDL_Rect & { return *(const SDL_Rect *)&r; }
 
 	/**
 	 * @brief Convert between math shape and sdl shape
 	 * @param r shape
 	 * @return sdl shape
 	 */
-	constexpr auto to_rect(const mth::Rect<float, float> &r) -> const SDL_FRect & { return *(const SDL_FRect *)&r; }
+	auto to_rect(const mth::Rect<float, float> &r) -> const SDL_FRect & { return *(const SDL_FRect *)&r; }
 
 	/**
 	 * @brief Convert between math shape and sdl shape
 	 * @param r shape
 	 * @return sdl shape
 	 */
-	constexpr auto to_point(const mth::Point<int> &r) -> const SDL_Point & { return *(const SDL_Point *)&r; }
+	auto to_point(const mth::Point<int> &r) -> const SDL_Point & { return *(const SDL_Point *)&r; }
 
 	/**
 	 * @brief Convert between math shape and sdl shape
 	 * @param r shape
 	 * @return sdl shape
 	 */
-	constexpr auto to_rect(const mth::Point<float> &r) -> const SDL_FPoint & { return *(const SDL_FPoint *)&r; }
+	auto to_rect(const mth::Point<float> &r) -> const SDL_FPoint & { return *(const SDL_FPoint *)&r; }
 
 } // namespace ctl::sdl
