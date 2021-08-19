@@ -2,9 +2,6 @@
 
 #include <SDL2/SDL.h>
 
-#include "../Dim.h"
-
-#include <cassert>
 #include <memory>
 
 namespace ctl::sdl

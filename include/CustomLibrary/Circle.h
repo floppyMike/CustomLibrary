@@ -84,10 +84,22 @@ namespace ctl::mth
 
 		for (auto x = -r; x <= +r; ++x)
 			for (auto y = -r; y <= +r; ++y)
-				if (std::pow(y, 2) + std::pow(x, 2) <= std::pow(r, 2) + 2)
+				if (y * y + x * x < r * r)
 					circle.emplace_back(x, y);
 
 		return circle;
+	}
+
+	auto gen_diamond(const int r) noexcept -> std::vector<mth::Point<int>>
+	{
+		std::vector<mth::Point<int>> d;
+
+		for (auto x = -r; x <= +r; ++x)
+			for (auto y = -r; y <= +r; ++y)
+				if (std::abs(y) + std::abs(x) == r)
+					d.emplace_back(x, y);
+
+		return d;
 	}
 
 	/**

@@ -40,7 +40,7 @@ namespace ctl::sdl
 		 */
 		explicit SDL(Uint32 SDLFlags = SDL_INIT_VIDEO)
 		{
-			if (SDL_Init(SDLFlags) < 0)
+			if (SDL_Init(SDLFlags) != 0)
 				throw std::runtime_error(SDL_GetError());
 		}
 

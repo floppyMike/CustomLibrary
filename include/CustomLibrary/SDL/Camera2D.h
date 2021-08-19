@@ -196,6 +196,7 @@ namespace ctl::sdl
 		/**
 		 * @brief Zooms the screen by a factor
 		 * @param factor factor to zoom at
+		 * @param p point to zoom into
 		 */
 		void zoom(float factor, mth::Point<float> p) noexcept
 		{
