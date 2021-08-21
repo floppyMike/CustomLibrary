@@ -6,93 +6,6 @@
 
 namespace ctl::sdl
 {
-	// struct Camera
-	// {
-	// 	SDL_Point loc;
-	// 	float	  scale = 1.F;
-	// };
-
-	// /**
-	//  * @brief translates world coord to screen coord
-	//  * @param loc world coord
-	//  * @return Point
-	//  */
-	// template<typename T>
-	// constexpr auto world_screen(const Camera &c, Point<T> loc) noexcept -> Point<float>
-	// {
-	// 	return { (loc.x - c.loc.x) * c.scale, (loc.y - c.loc.y) * c.scale };
-	// }
-
-	// /**
-	//  * @brief translates world dim to screen dim
-	//  * @param dim world dim
-	//  * @return dim
-	//  */
-	// template<typename T>
-	// constexpr auto world_screen(const Camera &c, Dim<T> dim) noexcept -> mth::Dim<float>
-	// {
-	// 	return { dim.w * c.scale, dim.h * c.scale };
-	// }
-
-	// /**
-	//  * @brief translates world to screen
-	//  * @param s shape
-	//  * @return transformed shape
-	//  */
-	// template<typename T>
-	// constexpr auto world_screen(const Camera &c, Rect<T> s) noexcept -> Rect<float>
-	// {
-	// 	const auto p = world_screen(c, Point{ s.x, s.y });
-	// 	const auto d = world_screen(c, Dim{ s.w, s.h });
-
-	// 	return { p.x, p.y, d.w, d.h };
-	// }
-
-	// /**
-	//  * @brief translates screen coord to world coord
-	//  * @param loc screen coord
-	//  * @return Point
-	//  */
-	// template<typename T>
-	// constexpr auto screen_world(const Camera &c, Point<T> loc) noexcept -> Point<float>
-	// {
-	// 	return { loc.x / c.scale + c.loc.x, loc.y / c.scale + c.loc.y };
-	// }
-
-	// /**
-	//  * @brief translates screen dim to world dim
-	//  * @param dim screen dim
-	//  * @return dim
-	//  */
-	// template<typename T>
-	// constexpr auto screen_world(const Camera &c, Dim<T> dim) noexcept -> Dim<float>
-	// {
-	// 	return { dim.w / c.scale, dim.h / c.scale };
-	// }
-
-	// /**
-	//  * @brief Move the camera with the scale
-	//  * @param dx delta x
-	//  * @param dy delta y
-	//  */
-	// constexpr void move_cam(Camera &c, int dx, int dy) noexcept
-	// {
-	// 	c.loc.x += dx / c.scale;
-	// 	c.loc.y += dy / c.scale;
-	// }
-
-	// /**
-	//  * @brief Zooms the screen by a factor
-	//  * @param factor factor to zoom at
-	//  */
-	// void zoom(Camera &c, float factor, Point<int> h) noexcept
-	// {
-	// 	const auto w = screen_world(c, h);
-	// 	c.scale *= factor;
-	// 	const auto s = screen_world(c, h);
-
-	// }
-
 	/**
 	 * @brief Represents the top left camera point
 	 */
@@ -107,7 +20,7 @@ namespace ctl::sdl
 		template<typename T>
 		constexpr auto world_screen(mth::Point<T> loc) const noexcept -> mth::Point<int>
 		{
-			return (loc - m_loc) * m_scale;
+			return (mth::Point<int>)((loc - m_loc) * m_scale);
 		}
 
 		/**
@@ -118,7 +31,7 @@ namespace ctl::sdl
 		template<typename T>
 		constexpr auto world_screen(mth::Dim<T> dim) const noexcept -> mth::Dim<int>
 		{
-			return dim * m_scale;
+			return (mth::Dim<int>)(dim * m_scale);
 		}
 
 		/**
@@ -225,7 +138,7 @@ namespace ctl::sdl
 
 	private:
 		mth::Point<float> m_loc	  = { 0, 0 };
-		float			  m_scale = 1.f;
+		float			  m_scale = 1.F;
 	};
 
 } // namespace ctl::sdl
