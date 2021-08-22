@@ -12,6 +12,20 @@ namespace ctl::sdl
 	class Camera2D
 	{
 	public:
+		Camera2D() = default;
+
+		/**
+		 * @brief Create a camera at a predefined state
+		 *
+		 * @param p Camera 0,0 position
+		 * @param scale Zoom scale
+		 */
+		Camera2D(mth::Point<float> p, float scale)
+			: m_loc(p)
+			, m_scale(scale)
+		{
+		}
+
 		/**
 		 * @brief translates world coord to screen coord
 		 * @param loc world coord
@@ -104,7 +118,10 @@ namespace ctl::sdl
 		 * @brief Zooms the screen by a factor
 		 * @param factor factor to zoom at
 		 */
-		constexpr void zoom(float factor) noexcept { m_scale *= factor; }
+		constexpr void zoom(float factor) noexcept
+		{
+			m_scale *= factor;
+		}
 
 		/**
 		 * @brief Zooms the screen by a factor
@@ -123,7 +140,10 @@ namespace ctl::sdl
 		 * @brief Get the scale
 		 * @return current scale
 		 */
-		[[nodiscard]] constexpr auto scale() const noexcept { return m_scale; }
+		[[nodiscard]] constexpr auto scale() const noexcept
+		{
+			return m_scale;
+		}
 
 		/**
 		 * @brief Move the camera with the scale
