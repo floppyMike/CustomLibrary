@@ -31,10 +31,10 @@ namespace ctl::rnd
 
 		/**
 		 * @brief Generate a random arithmetic number
-		 * 
+		 *
 		 * @param min Arithmetic minium value
 		 * @param max Arithmetic maximum value
-		 * @return Generated value 
+		 * @return Generated value
 		 */
 		template<arithmetic Type>
 		constexpr auto rand_number(Type min, Type max) -> Type
@@ -50,13 +50,20 @@ namespace ctl::rnd
 				return static_cast<Type>(std::uniform_int_distribution<>(min, max)(m_gen));
 		}
 
-		// IN PROGRESS
-		// template<typename Iter/*, typename = typename std::enable_if_t<!std::is_same_v<typename std::iterator_traits<Iter>::type_value, void>>*/>
-		// constexpr auto rand_iter(Iter first, const Iter &last) -> Iter
-		// {
-		// 	std::advance(first, rand_number<size_t>(0, std::distance(first, last) - 1));
-		// 	return first;
-		// }
+		/**
+		 * @brief Chooses a random element from a range
+		 *
+		 * @param first First iterator of an array
+		 * @param last Last iterator of an array
+		 *
+		 * @return
+		 */
+		template<typename Iter>
+		constexpr auto rand_iter(Iter first, const Iter &last) -> Iter
+		{
+			std::advance(first, rand_number<size_t>(0, std::distance(first, last) - 1));
+			return first;
+		}
 
 	private:
 		std::random_device rd;
