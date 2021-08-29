@@ -262,8 +262,8 @@ namespace ctl::mth
 		constexpr auto end() noexcept { return m_data.end(); }
 
 	private:
-		std::vector<Type, Allocator> m_data;
 		Dim<size_t>					 m_dim;
+		std::vector<Type, Allocator> m_data;
 	};
 
 	// -----------------------------------------------------------------------------
