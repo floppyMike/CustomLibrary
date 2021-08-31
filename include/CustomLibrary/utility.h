@@ -15,6 +15,20 @@
 namespace ctl
 {
 	// -----------------------------------------------------------------------------
+	// Macros
+	// -----------------------------------------------------------------------------
+
+#define CATCH_LOG(block)                    \
+	try                                     \
+	{                                       \
+		block                               \
+	}                                       \
+	catch (const std::exception &e)         \
+	{                                       \
+		std::clog << e.what() << std::endl; \
+	}
+
+	// -----------------------------------------------------------------------------
 	// Math
 	// -----------------------------------------------------------------------------
 
@@ -79,7 +93,10 @@ namespace ctl
 	 * @param ch Character to look at
 	 * @return bool
 	 */
-	constexpr auto is_number(char ch) -> bool { return (ch >= '0' && ch <= '9') || ch == '.'; }
+	constexpr auto is_number(char ch) -> bool
+	{
+		return (ch >= '0' && ch <= '9') || ch == '.';
+	}
 
 	/**
 	 * @brief Checks if string is a number
@@ -155,11 +172,23 @@ namespace ctl
 		using iterator		 = typename Adaptor::container_type::iterator;
 		using const_iterator = typename Adaptor::container_type::const_iterator;
 
-		auto begin() { return this->c.begin(); }
-		auto end() { return this->c.end(); }
+		auto begin()
+		{
+			return this->c.begin();
+		}
+		auto end()
+		{
+			return this->c.end();
+		}
 
-		auto begin() const { return this->c.begin(); }
-		auto end() const { return this->c.end(); }
+		auto begin() const
+		{
+			return this->c.begin();
+		}
+		auto end() const
+		{
+			return this->c.end();
+		}
 	}; // namespace ctl
 
 	// -----------------------------------------------------------------------------
@@ -251,8 +280,7 @@ namespace ctl
 	{
 		{
 			std::begin(c)
-		}
-		->std::contiguous_iterator;
+			} -> std::contiguous_iterator;
 	}
 	void fast_remove(Container &c, decltype(std::begin(std::declval<Container>())) i)
 	{
@@ -299,7 +327,7 @@ namespace ctl
 	 * @param val value to turn
 	 * @return std::string
 	 */
-	auto to_hex(int val) -> std::string
+	inline auto to_hex(int val) -> std::string
 	{
 		static constexpr std::string &(*hex)(int &, std::string &) =
 			[](int &val, std::string &str) constexpr->std::string &
