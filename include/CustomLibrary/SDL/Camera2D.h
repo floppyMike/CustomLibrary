@@ -11,8 +11,8 @@ namespace ctl::sdl
 	 */
 	struct Camera2D
 	{
-		mth::Point<float> m_loc	  = { 0.F, 0.F };
-		float			  m_scale = 1.F;
+		mth::Point<float> loc	  = { 0.F, 0.F };
+		float			  scale = 1.F;
 
 		/**
 		 * @brief translates world coord to screen coord
@@ -21,7 +21,7 @@ namespace ctl::sdl
 		 */
 		constexpr auto world_screen(mth::Point<float> p) const noexcept -> mth::Point<int>
 		{
-			return (mth::Point<int>)((p - m_loc) * m_scale);
+			return (mth::Point<int>)((p - loc) * scale);
 		}
 
 		/**
@@ -31,7 +31,7 @@ namespace ctl::sdl
 		 */
 		constexpr auto world_screen(mth::Dim<float> dim) const noexcept -> mth::Dim<int>
 		{
-			return (mth::Dim<int>)(dim * m_scale);
+			return (mth::Dim<int>)(dim * scale);
 		}
 
 		/**
@@ -55,7 +55,7 @@ namespace ctl::sdl
 		constexpr auto world_screen(mth::Circle<float> s) const noexcept -> mth::Circle<int>
 		{
 			const auto p = world_screen(s.pos());
-			const auto r = (int)(s.r * m_scale);
+			const auto r = (int)(s.r * scale);
 
 			return { p.x, p.y, r };
 		}
@@ -80,7 +80,7 @@ namespace ctl::sdl
 		 */
 		constexpr auto screen_world(mth::Point<int> p) const noexcept -> mth::Point<float>
 		{
-			return (mth::Point<float>)(p) / m_scale + m_loc;
+			return (mth::Point<float>)(p) / scale + loc;
 		}
 
 		/**
@@ -90,7 +90,7 @@ namespace ctl::sdl
 		 */
 		constexpr auto screen_world(mth::Dim<int> dim) const noexcept -> mth::Dim<float>
 		{
-			return (mth::Dim<float>)(dim) / m_scale;
+			return (mth::Dim<float>)(dim) / scale;
 		}
 
 		/**
@@ -112,7 +112,7 @@ namespace ctl::sdl
 		 */
 		constexpr void zoom(float factor) noexcept
 		{
-			m_scale *= factor;
+			scale *= factor;
 		}
 
 		/**
@@ -123,18 +123,9 @@ namespace ctl::sdl
 		void zoom(float factor, mth::Point<int> p) noexcept
 		{
 			const auto w = screen_world(p);
-			m_scale *= factor;
+			scale *= factor;
 			const auto s = screen_world(p);
-			m_loc += w - s;
-		}
-
-		/**
-		 * @brief Get the scale
-		 * @return current scale
-		 */
-		[[nodiscard]] constexpr auto scale() const noexcept
-		{
-			return m_scale;
+			loc += w - s;
 		}
 
 		/**
@@ -144,8 +135,8 @@ namespace ctl::sdl
 		 */
 		constexpr void translate(float dx, float dy) noexcept
 		{
-			m_loc.x += dx / m_scale;
-			m_loc.y += dy / m_scale;
+			loc.x += dx / scale;
+			loc.y += dy / scale;
 		}
 	};
 

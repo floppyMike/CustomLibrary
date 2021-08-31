@@ -207,7 +207,7 @@ namespace ctl::mth
 		for (auto x = -r; x <= +r; ++x)
 			for (auto y = -r; y <= +r; ++y)
 				if (y * y + x * x < r * r)
-					circle.emplace_back(x, y);
+					circle.push_back({ x, y });
 
 		return circle;
 	}
@@ -219,7 +219,7 @@ namespace ctl::mth
 		for (auto x = -r; x <= +r; ++x)
 			for (auto y = -r; y <= +r; ++y)
 				if (std::abs(y) + std::abs(x) == r)
-					d.emplace_back(x, y);
+					d.push_back({ x, y });
 
 		return d;
 	}
