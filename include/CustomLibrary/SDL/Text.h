@@ -2,11 +2,7 @@
 #define _CTL_SDL2_Text_
 
 #include <memory>
-#include <SDL_ttf.h>
-
 #include "SDL_init.h"
-
-#include <cassert>
 
 namespace ctl::sdl
 {
@@ -31,7 +27,7 @@ namespace ctl::sdl
 	 *
 	 * @return Font
 	 */
-	auto load_font(const char *path, int ptsize)
+	inline auto load_font(const char *path, int ptsize)
 	{
 		auto *t = TTF_OpenFont(path, ptsize);
 
@@ -40,6 +36,8 @@ namespace ctl::sdl
 
 		return Font(t);
 	}
+
+	
 
 } // namespace ctl::sdl
 

@@ -50,61 +50,75 @@ namespace ctl::sdl
 		~SDL()
 		{
 			SDL_Quit();
-
-#if defined _SDL2MIX_
-			Mix_Quit();
-#endif
-
-#if defined _SDL2TTF_
-			TTF_Quit();
-#endif
-
-#if defined _SDL2IMG_
-			IMG_Quit();
-#endif
 		}
+	};
 
 #if defined _SDL2IMG_
+	class SDL_IMG
+	{
+	public:
 		/**
 		 * @brief init SDL_image
 		 * @param "flags" flags for initializer
 		 * @exception std::runtime_error if initialization fails
 		 */
-		static void init_IMG(int flags)
+		SDL_IMG(int flags)
 		{
 			if ((IMG_Init(flags) & flags) != flags)
 				throw std::runtime_error(SDL_GetError());
 		}
+
+		~SDL_IMG()
+		{
+			IMG_Quit();
+		}
+	};
 #endif
 
 #if defined _SDL2MIX_
+	class SDL_Mix
+	{
+	public:
 		/**
 		 * @brief init SDL_mixer
 		 * @param feq frequency
 		 * @param format format
 		 * @param channels channels
 		 * @param chunksize chunksize
-		 * @exception "Log" if initialization fails
+		 * @exception if initialization fails
 		 */
-		static void init_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
+		SDL_Mix(int feq = 44100, Uint16 format = MIX_DEFAULT_FORMAT, int channels = 2, int chunksize = 2048)
 		{
 			if (Mix_OpenAudio(feq, format, channels, chunksize) < 0)
 				throw std::runtime_error(SDL_GetError());
 		}
+
+		~SDL_Mix()
+		{
+			Mix_Quit();
+		}
+	};
 #endif
 
 #if defined _SDL2TTF_
+	class SDL_TTF
+	{
+	public:
 		/**
 		 * @brief init SDL_ttf
 		 * @exception "Log" if initialization fails
 		 */
-		static void init_TTF()
+		SDL_TTF()
 		{
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
 		}
-#endif
+		~SDL_TTF()
+		{
+			TTF_Quit();
+		}
 	};
+#endif
 
 	// -----------------------------------------------------------------------------
 	// Application concept

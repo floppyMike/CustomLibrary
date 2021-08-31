@@ -1,7 +1,7 @@
 #if not defined _CTL_SDL2_CAM2D_
 #define _CTL_SDL2_CAM2D_
 
-#include "../BasicTypes.h"
+#include "../Geometry.h"
 #include "SDL_init.h"
 
 namespace ctl::sdl
@@ -9,32 +9,19 @@ namespace ctl::sdl
 	/**
 	 * @brief Represents the top left camera point
 	 */
-	class Camera2D
+	struct Camera2D
 	{
-	public:
-		Camera2D() = default;
-
-		/**
-		 * @brief Create a camera at a predefined state
-		 *
-		 * @param p Camera 0,0 position
-		 * @param scale Zoom scale
-		 */
-		Camera2D(mth::Point<float> p, float scale)
-			: m_loc(p)
-			, m_scale(scale)
-		{
-		}
+		mth::Point<float> m_loc	  = { 0.F, 0.F };
+		float			  m_scale = 1.F;
 
 		/**
 		 * @brief translates world coord to screen coord
 		 * @param loc world coord
 		 * @return mth::Point
 		 */
-		template<typename T>
-		constexpr auto world_screen(mth::Point<T> loc) const noexcept -> mth::Point<int>
+		constexpr auto world_screen(mth::Point<float> p) const noexcept -> mth::Point<int>
 		{
-			return (mth::Point<int>)((loc - m_loc) * m_scale);
+			return (mth::Point<int>)((p - m_loc) * m_scale);
 		}
 
 		/**
@@ -42,8 +29,7 @@ namespace ctl::sdl
 		 * @param dim world dim
 		 * @return dim
 		 */
-		template<typename T>
-		constexpr auto world_screen(mth::Dim<T> dim) const noexcept -> mth::Dim<int>
+		constexpr auto world_screen(mth::Dim<float> dim) const noexcept -> mth::Dim<int>
 		{
 			return (mth::Dim<int>)(dim * m_scale);
 		}
@@ -53,10 +39,12 @@ namespace ctl::sdl
 		 * @param s shape
 		 * @return transformed shape
 		 */
-		template<typename T>
-		constexpr auto world_screen(mth::Rect<T, T> s) const noexcept -> mth::Rect<int, int>
+		constexpr auto world_screen(mth::Rect<float> s) const noexcept -> mth::Rect<int>
 		{
-			return { world_screen(s.pos()), world_screen(s.dim()) };
+			const auto p = world_screen(s.pos());
+			const auto d = world_screen(s.dim());
+
+			return { p.x, p.y, d.w, d.h };
 		}
 
 		/**
@@ -64,10 +52,12 @@ namespace ctl::sdl
 		 * @param s shape
 		 * @return transformed shape
 		 */
-		template<typename T>
-		constexpr auto world_screen(mth::Circle<T, T> s) const noexcept -> mth::Circle<int, int>
+		constexpr auto world_screen(mth::Circle<float> s) const noexcept -> mth::Circle<int>
 		{
-			return { world_screen(s.pos()), s.r * m_scale };
+			const auto p = world_screen(s.pos());
+			const auto r = (int)(s.r * m_scale);
+
+			return { p.x, p.y, r };
 		}
 
 		/**
@@ -75,10 +65,12 @@ namespace ctl::sdl
 		 * @param s shape
 		 * @return transformed shape
 		 */
-		template<typename T>
-		constexpr auto world_screen(mth::Line<T> s) const noexcept -> mth::Line<int>
+		constexpr auto world_screen(mth::Line<float> s) const noexcept -> mth::Line<int>
 		{
-			return { world_screen(s.pos1()), world_screen(s.pos2()) };
+			const auto p1 = world_screen(s.pos1());
+			const auto p2 = world_screen(s.pos2());
+
+			return { p1.x, p1.y, p2.x, p2.y };
 		}
 
 		/**
@@ -86,10 +78,9 @@ namespace ctl::sdl
 		 * @param loc screen coord
 		 * @return mth::Point
 		 */
-		template<typename T>
-		[[nodiscard]] constexpr auto screen_world(mth::Point<T> loc) const noexcept -> mth::Point<float>
+		constexpr auto screen_world(mth::Point<int> p) const noexcept -> mth::Point<float>
 		{
-			return static_cast<mth::Point<float>>(loc) / m_scale + m_loc;
+			return (mth::Point<float>)(p) / m_scale + m_loc;
 		}
 
 		/**
@@ -97,10 +88,9 @@ namespace ctl::sdl
 		 * @param dim screen dim
 		 * @return dim
 		 */
-		template<typename T>
-		[[nodiscard]] constexpr auto screen_world(mth::Dim<T> dim) const noexcept -> mth::Dim<float>
+		constexpr auto screen_world(mth::Dim<int> dim) const noexcept -> mth::Dim<float>
 		{
-			return static_cast<mth::Dim<float>>(dim) / m_scale;
+			return (mth::Dim<float>)(dim) / m_scale;
 		}
 
 		/**
@@ -108,10 +98,12 @@ namespace ctl::sdl
 		 * @param rect screen rect
 		 * @return rect
 		 */
-		template<typename T>
-		[[nodiscard]] constexpr auto screen_world(mth::Rect<T, T> rect) const noexcept -> mth::Rect<float, float>
+		constexpr auto screen_world(mth::Rect<int> rect) const noexcept -> mth::Rect<float>
 		{
-			return { screen_world(rect.pos()), screen_world(rect.dim()) };
+			const auto p = screen_world(rect.pos());
+			const auto d = screen_world(rect.dim());
+
+			return { p.x, p.y, d.w, d.h };
 		}
 
 		/**
@@ -128,7 +120,7 @@ namespace ctl::sdl
 		 * @param factor factor to zoom at
 		 * @param p point to zoom into
 		 */
-		void zoom(float factor, mth::Point<float> p) noexcept
+		void zoom(float factor, mth::Point<int> p) noexcept
 		{
 			const auto w = screen_world(p);
 			m_scale *= factor;
@@ -155,10 +147,6 @@ namespace ctl::sdl
 			m_loc.x += dx / m_scale;
 			m_loc.y += dy / m_scale;
 		}
-
-	private:
-		mth::Point<float> m_loc	  = { 0, 0 };
-		float			  m_scale = 1.F;
 	};
 
 } // namespace ctl::sdl

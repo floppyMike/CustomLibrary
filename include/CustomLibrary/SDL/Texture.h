@@ -1,7 +1,9 @@
 #if not defined _CTL_SDL2_TEXTURE_
 #define _CTL_SDL2_TEXTURE_
 
+#include "../Geometry.h"
 #include "Surface.h"
+#include "TypesUtil.h"
 
 namespace ctl::sdl
 {
@@ -28,7 +30,7 @@ namespace ctl::sdl
 	 * @param file Path to bmp file
 	 * @return Texture
 	 */
-	auto texture_from_bmp(SDL_Renderer *r, const char *file) -> Texture
+	inline auto texture_from_bmp(SDL_Renderer *r, const char *file) -> Texture
 	{
 		Surface s(SDL_LoadBMP(file));
 		return Texture(SDL_CreateTextureFromSurface(r, s.get()));
@@ -43,7 +45,8 @@ namespace ctl::sdl
 	 * @param b Blendmode
 	 * @return Texture
 	 */
-	auto create_empty(SDL_Renderer *r, int w, int h, SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept -> sdl::Texture
+	inline auto create_empty(SDL_Renderer *r, int w, int h, SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept
+		-> sdl::Texture
 	{
 		auto t = sdl::Texture(SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h));
 
@@ -64,8 +67,8 @@ namespace ctl::sdl
 	 * @param box Area to crop out
 	 * @return Texture
 	 */
-	auto crop(SDL_Renderer *r, const sdl::Texture &t, mth::Rect<int, int> box,
-			  SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept -> sdl::Texture
+	inline auto crop(SDL_Renderer *r, const sdl::Texture &t, mth::Rect<int> box,
+					 SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept -> sdl::Texture
 	{
 		auto tex = sdl::Texture(SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, box.w, box.h));
 

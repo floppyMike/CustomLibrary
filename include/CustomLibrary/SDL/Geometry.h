@@ -1,7 +1,7 @@
 #if not defined _CTL_SDL2_GEO_
 #define _CTL_SDL2_GEO_
 
-#include "../BasicTypes.h"
+#include "../Geometry.h"
 #include "../Error.h"
 #include "TypeTraits.h"
 #include "Renderer.h"

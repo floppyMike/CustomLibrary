@@ -20,7 +20,7 @@ namespace ctl::sdl
 	 * @brief Fill the buffer with a color
 	 * @param col color to use
 	 */
-	void fill(SDL_Renderer *r, const SDL_Color &col)
+	inline void fill(SDL_Renderer *r, const SDL_Color &col)
 	{
 		SDL_SetRenderDrawColor(r, col.r, col.g, col.b, col.a);
 		SDL_RenderClear(r);
