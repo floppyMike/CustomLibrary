@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace ctl
 {
@@ -21,7 +21,12 @@ namespace ctl
 	template<typename... T>
 	void print(const char *fmt, const T &...param)
 	{
-		printf(fmt, format(param)...);
+		std::printf(fmt, format(param)...);
+	}
+
+	inline void print(const char *str)
+	{
+		std::puts(str);
 	}
 
 } // namespace ctl
