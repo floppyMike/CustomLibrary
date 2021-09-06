@@ -28,7 +28,3 @@
 #define _SDL2TTF_
 #endif
 
-namespace ctl::sdl
-{
-
-} // namespace ctl::sdl
