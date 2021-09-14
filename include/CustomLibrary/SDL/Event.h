@@ -16,8 +16,25 @@ namespace ctl::sdl
 		SDL_Event e;
 		SDL_zero(e);
 
-		e.type = SDL_RegisterEvents(1);
-		e.window.windowID = win_id;
+		e.user.type = SDL_RegisterEvents(1);
+		e.user.windowID = win_id;
+
+		return e;
+	}
+
+	/**
+	 * @brief Create a user event
+	 * @param win_id window id to use
+	 * @param type user event type
+	 * @return window event
+	 */
+	inline auto create_event(Uint32 win_id, int type) noexcept
+	{
+		SDL_Event e;
+		SDL_zero(e);
+
+		e.user.type = type;
+		e.user.windowID = win_id;
 
 		return e;
 	}
