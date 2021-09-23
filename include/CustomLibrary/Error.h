@@ -2,21 +2,21 @@
 #define _CTL_ERROR_
 
 #include <chrono>
-#include <fstream>
-#include <string_view>
+#include <string>
 #include <ctime>
 #include <tuple>
-#include <iostream>
+
+#include "IO.h"
 
 #ifndef NDEBUG
-#define ASSERT(cond, msg)                                                                               \
-	{                                                                                                   \
-		if (!(cond))                                                                                    \
-		{                                                                                               \
-			std::cerr << "Assertion \"" << #cond << " failed in " << __FILE__ << " using the function " \
-					  << __FUNCTION__ << " at line " << __LINE__ << ": " << msg << std::endl;           \
-			std::terminate();                                                                           \
-		}                                                                                               \
+#define ASSERT(cond, msg)                                                                                       \
+	{                                                                                                           \
+		if (!(cond))                                                                                            \
+		{                                                                                                       \
+			std::fprintf(stderr, "Assertion \"%s\" failed in %s using the function %s at line %i: %s\n", #cond, \
+						 __FILE__, __FUNCTION__, __LINE__, msg);                                                \
+			std::terminate();                                                                                   \
+		}                                                                                                       \
 	}
 #else
 #define ASSERT(cond, msg) cond
@@ -30,10 +30,19 @@ namespace ctl::err
 	enum Catagory
 	{
 		INFO,
-		SUCCESS,
+		SUCC,
 		WARN,
 		ERR,
-		FATAL
+		FAT,
+		ALL,
+	};
+
+	static constexpr std::string_view COLOR_TABLE[Catagory::ALL] = {
+		"", "\x1B[92m", "\x1B[93m", "\x1B[95m", "\x1B[91m",
+	};
+
+	static constexpr std::string_view CAT_STRING[Catagory::ALL] = {
+		"[I] ", "[S] ", "[W] ", "[E] ", "[F] ",
 	};
 
 	template<typename T>
@@ -41,37 +50,13 @@ namespace ctl::err
 	{
 		t.open();
 		t.close();
+		t.write(Catagory(), (const char *)nullptr);
 	};
 
 	template<Policy... Policies>
 	class Logger
 	{
 	public:
-		class _Stream_
-		{
-		public:
-			explicit _Stream_(Logger *log)
-				: m_log(log)
-			{
-			}
-
-			~_Stream_()
-			{
-				m_log->_write_buffer_("\n", Catagory::INFO);
-				m_log->_close_buffer_();
-			}
-
-			template<typename T>
-			auto operator<<(T &&v) -> auto &
-			{
-				m_log->_write_buffer_(std::move(v), Catagory::INFO);
-				return *this;
-			}
-
-		private:
-			Logger *m_log;
-		};
-
 		Logger() = default;
 
 		/**
@@ -87,44 +72,21 @@ namespace ctl::err
 		Logger(Logger &&)	   = delete;
 
 		/**
-		 * @brief Create a write instance
+		 * @brief Write a formatted (or not) log
 		 * @param c Catagory to use
-		 * @return ostream
+		 * @param fmt format to use or string to print
+		 * @param arg Arguments for formatted print
 		 */
-		auto write(Catagory c)
+		template<typename... Args>
+		void write(Catagory c, const char *fmt, const Args &...arg)
 		{
 			_open_buffer_();
 
 			_write_time_();
 			_write_catagory_(c);
 
-			return _Stream_(this);
-		}
-
-		/**
-		 * @brief Write a seperation line
-		 */
-		void seperate()
-		{
-			_open_buffer_();
-			_write_buffer_("\n----------------------------------------\n\n", Catagory::INFO);
-			_close_buffer_();
-		}
-
-		/**
-		 * @brief Write a string to the log
-		 * @param c Catagory to use
-		 * @param val String to write
-		 */
-		void write(Catagory c, std::string_view val)
-		{
-			_open_buffer_();
-
-			_write_time_();
-			_write_catagory_(c);
-
-			_write_buffer_(val, Catagory::INFO);
-			_write_buffer_("\n", Catagory::INFO);
+			_write_buffer_(c, fmt, arg...);
+			_write_buffer_(c, "\n");
 
 			_close_buffer_();
 		}
@@ -143,28 +105,20 @@ namespace ctl::err
 #elif _WIN32
 			gmtime_s(&time, &t);
 #endif // __linux__
-			std::strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S ", &time);
 
-			_write_buffer_(std::string_view(buf, sizeof buf), Catagory::INFO);
+			std::strftime(buf, sizeof buf, "%Y-%m-%d %H:%M:%S ", &time);
+			_write_buffer_(Catagory::INFO, buf);
 		}
 
 		void _write_catagory_(Catagory c)
 		{
-			switch (c)
-			{
-			case Catagory::INFO: _write_buffer_("[INFO] ", c); break;
-			case Catagory::WARN: _write_buffer_("[WARN] ", c); break;
-			case Catagory::ERR: _write_buffer_("[ERROR] ", c); break;
-			case Catagory::FATAL: _write_buffer_("[FATAL] ", c); break;
-			case Catagory::SUCCESS: _write_buffer_("[SUCCESS] ", c); break;
-			default: break;
-			}
+			_write_buffer_(c, CAT_STRING[c].data());
 		}
 
-		template<typename T>
-		void _write_buffer_(T &&b, Catagory c)
+		template<typename... T>
+		void _write_buffer_(Catagory c, const char *fmt, const T &...args)
 		{
-			std::apply([&b, c](auto &&...arg) { (arg.write(b, c), ...); }, m_p);
+			std::apply([&args..., c, fmt](auto &&...arg) { (arg.write(c, fmt, args...), ...); }, m_p);
 		}
 
 		void _open_buffer_()
@@ -178,17 +132,17 @@ namespace ctl::err
 		}
 	};
 
-	class FilePolicy
+	class FileP
 	{
 	public:
 		/**
 		 * @brief Create a file policy
 		 * @param name Name of the file to log to
 		 */
-		explicit FilePolicy(std::string_view name)
-			: m_file_name(name.data())
+		FileP(const char *name)
+			: file_name(name)
 		{
-			std::ofstream(name.data());
+			ctl::File(name, "w");
 		}
 
 		/**
@@ -196,17 +150,17 @@ namespace ctl::err
 		 */
 		void open()
 		{
-			m_out_file.open(m_file_name.data(), std::ios::in | std::ios::out);
-			m_out_file.seekp(m_true_pos);
+			file.open(file_name.c_str(), "a");
+			std::fseek(file.fp, pos, SEEK_SET);
 		}
+
 		/**
 		 * @brief Flush and close the file
 		 */
 		void close()
 		{
-			m_out_file.flush();
-			m_true_pos = m_out_file.tellp();
-			m_out_file.close();
+			pos = std::ftell(file.fp);
+			file.close();
 		}
 
 		/**
@@ -214,55 +168,47 @@ namespace ctl::err
 		 * @param msg Log to write
 		 * @param c Catagory to use (ignored)
 		 */
-		template<typename T>
-		void write(const T &msg, Catagory c)
+		template<typename... T>
+		void write(Catagory c, const char *fmt, const T &...args)
 		{
-			m_out_file << msg;
+			file.print(fmt, args...);
 
-			if (m_out_file.tellp() >= std::numeric_limits<unsigned int>::max())
-				m_out_file.seekp(0, std::ios::beg);
+			if (std::ftell(file.fp) >= std::numeric_limits<unsigned int>::max())
+				std::rewind(file.fp);
 		}
 
 	private:
-		std::string				m_file_name;
-		std::ofstream			m_out_file;
-		std::ofstream::pos_type m_true_pos = 0;
+		std::string file_name;
+		ctl::File	file;
+		long		pos;
 	};
 
-	class ConsolePolicy
+	class ConP
 	{
 	public:
-		explicit ConsolePolicy() = default;
+		explicit ConP() = default;
 
-		/**
-		 * @brief Ignored
-		 */
-		void open() noexcept {}
-		/**
-		 * @brief Flush the log to the console
-		 */
-		void close() noexcept { std::clog.flush(); }
+		void open()
+		{
+		}
+		void close()
+		{
+		}
 
 		/**
 		 * @brief Write the log into the console
 		 * @param msg Log to write
 		 * @param c Catagory to use
 		 */
-		template<typename T>
-		void write(const T &msg, Catagory c)
+		template<typename... T>
+		void write(Catagory c, const char *fmt, const T &...args)
 		{
-			switch (c)
-			{
-			case Catagory::INFO: std::clog << msg; break;
-			case Catagory::SUCCESS: std::clog << "\x1B[92m" << msg << "\033[m"; break;
-			case Catagory::WARN: std::clog << "\x1B[93m" << msg << "\033[m"; break;
-			case Catagory::ERR: std::clog << "\x1B[95m" << msg << "\033[m"; break;
-			case Catagory::FATAL: std::clog << "\x1B[91m" << msg << "\033[m"; break;
-			default: break;
-			}
+			ctl::print(COLOR_TABLE[c].data());
+			ctl::print(fmt, args...);
+			ctl::print("\033[0m");
 		}
 	};
 
-} // namespace utl
+} // namespace ctl::err
 
 #endif // !_CTL_ERROR_
