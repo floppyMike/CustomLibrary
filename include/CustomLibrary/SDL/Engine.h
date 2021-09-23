@@ -113,6 +113,7 @@ namespace ctl::sdl
 			if (TTF_Init() == -1)
 				throw std::runtime_error(SDL_GetError());
 		}
+
 		~SDL_TTF()
 		{
 			TTF_Quit();

@@ -1,7 +1,10 @@
 #if not defined _CTL_SDL2_TEXTURE_
 #define _CTL_SDL2_TEXTURE_
 
+#include <SDL.h>
+
 #include "../Geometry.h"
+
 #include "Surface.h"
 #include "TypesUtil.h"
 

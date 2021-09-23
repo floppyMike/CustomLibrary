@@ -5,8 +5,6 @@
 #include "../Traits.h"
 #include "../Geometry.h"
 
-#include <cassert>
-
 namespace ctl::sdl
 {
 	// clang-format off

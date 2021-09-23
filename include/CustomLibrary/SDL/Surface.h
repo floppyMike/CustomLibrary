@@ -2,12 +2,7 @@
 #define _CTL_SDL2_SURFACE_
 
 #include "SDL_init.h"
-
-#include "../Error.h"
-
 #include <memory>
-#include <cassert>
-#include <stdexcept>
 
 namespace ctl::sdl
 {

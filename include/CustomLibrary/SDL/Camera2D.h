@@ -1,8 +1,8 @@
 #if not defined _CTL_SDL2_CAM2D_
 #define _CTL_SDL2_CAM2D_
 
-#include "../Geometry.h"
 #include "SDL_init.h"
+#include "../Geometry.h"
 
 namespace ctl::sdl
 {

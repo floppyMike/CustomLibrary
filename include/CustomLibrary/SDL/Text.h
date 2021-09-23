@@ -1,8 +1,9 @@
 #if not defined _CTL_SDL2_Text_
 #define _CTL_SDL2_Text_
 
-#include <memory>
 #include "SDL_init.h"
+#include <memory>
+#include <optional>
 
 namespace ctl::sdl
 {
@@ -27,14 +28,10 @@ namespace ctl::sdl
 	 *
 	 * @return Font
 	 */
-	inline auto load_font(const char *path, int ptsize)
+	inline auto load_font(const char *path, int ptsize) -> std::optional<Font>
 	{
 		auto *t = TTF_OpenFont(path, ptsize);
-
-		if (t == nullptr)
-			throw std::runtime_error(TTF_GetError());
-
-		return Font(t);
+		return t != nullptr ? std::optional(Font(t)) : std::nullopt;
 	}
 
 	
