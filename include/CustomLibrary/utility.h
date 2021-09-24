@@ -4,7 +4,6 @@
 #include <string_view>
 #include <string>
 #include <bitset>
-#include <fstream>
 #include <tuple>
 
 #include "Traits.h"
@@ -297,28 +296,6 @@ namespace ctl
 		if (cond)
 			val1 = val2;
 		return cond;
-	}
-
-	/**
-	 * @brief Quickly turn istream to string
-	 *
-	 * @param in istream object
-	 * @return string
-	 */
-	template<typename _Ele, typename _Traits>
-	auto fast_stream_extract(std::basic_istream<_Ele, _Traits> &in)
-	{
-		std::string content;
-
-		assert(in && "Stream is empty.");
-
-		in.seekg(0, std::ios::end);
-		content.resize(static_cast<size_t>(in.tellg()));
-		in.seekg(0, std::ios::beg);
-
-		in.read(&content[0], content.size());
-
-		return content;
 	}
 
 	/**
