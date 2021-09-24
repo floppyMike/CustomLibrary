@@ -8,22 +8,39 @@
 
 #include "IO.h"
 
-#ifndef NDEBUG
-#define ASSERT(cond, msg)                                                                                       \
-	{                                                                                                           \
-		if (!(cond))                                                                                            \
-		{                                                                                                       \
-			std::fprintf(stderr, "Assertion \"%s\" failed in %s using the function %s at line %i: %s\n", #cond, \
-						 __FILE__, __FUNCTION__, __LINE__, msg);                                                \
-			std::terminate();                                                                                   \
-		}                                                                                                       \
+#ifdef __linux__
+
+#include <execinfo.h>
+#include <unistd.h>
+
+/**
+ * @brief Dump programm call stack to stdout
+ */
+namespace ctl::err
+{
+	inline void dump_trace()
+	{
+		constexpr auto MAX_SIZE = 1024;
+
+		void	 *array[MAX_SIZE];
+		size_t size = backtrace(array, MAX_SIZE);
+
+		backtrace_symbols_fd(array, size, STDOUT_FILENO);
 	}
-#else
-#define ASSERT(cond, msg) cond
-#endif
+} // namespace ctl::err
+
+#elif _WIN32
+namespace ctl::err
+{
+	inline void dump_trace()
+	{
+	}
+} // namespace ctl::err
+#endif // __linux__
 
 namespace ctl::err
 {
+
 	/**
 	 * @brief Catagory used by the logger for assigning logging severities
 	 */
@@ -210,5 +227,20 @@ namespace ctl::err
 	};
 
 } // namespace ctl::err
+
+#ifndef NDEBUG
+#define ASSERT(cond, msg)                                                                                       \
+	{                                                                                                           \
+		if (!(cond))                                                                                            \
+		{                                                                                                       \
+			ctl::err::dump_trace();                                                                             \
+			std::fprintf(stderr, "Assertion \"%s\" failed in %s using the function %s at line %i: %s\n", #cond, \
+						 __FILE__, __FUNCTION__, __LINE__, msg);                                                \
+			std::terminate();                                                                                   \
+		}                                                                                                       \
+	}
+#else
+#define ASSERT(cond, msg) cond
+#endif
 
 #endif // !_CTL_ERROR_
