@@ -18,11 +18,6 @@ namespace ctl
 	// Print function
 	// -----------------------------------------------------------------------------
 
-	namespace detail
-	{
-		void check_format(const char *, ...) __attribute__((format(printf, 1, 2)));
-	}
-
 	template<typename... T>
 	void print(const char *fmt, const T &...param)
 	{
