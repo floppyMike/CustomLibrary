@@ -243,14 +243,14 @@ namespace ctl::err
 #define ASSERT(cond, msg) cond
 #endif
 
-#define CATCH_LOG(block)            \
-	try                             \
-	{                               \
-		block;                      \
-	}                               \
-	catch (const std::exception &e) \
-	{                               \
-		std::perror(e.what());      \
+#define CATCH_LOG(block)                        \
+	try                                         \
+	{                                           \
+		block;                                  \
+	}                                           \
+	catch (const std::exception &e)             \
+	{                                           \
+		std::fprintf(stderr, "%s\n", e.what()); \
 	}
 
 #endif // !_CTL_ERROR_
