@@ -48,10 +48,10 @@ namespace ctl::sdl
 	 * @param b Blendmode
 	 * @return Texture
 	 */
-	inline auto create_empty(SDL_Renderer *r, int w, int h, SDL_BlendMode b = SDL_BLENDMODE_BLEND) noexcept
-		-> sdl::Texture
+	inline auto create_empty_texture(SDL_Renderer *r, int w, int h, SDL_BlendMode b = SDL_BLENDMODE_BLEND,
+									 Uint32 format = SDL_PIXELFORMAT_RGBA8888) noexcept -> sdl::Texture
 	{
-		auto t = sdl::Texture(SDL_CreateTexture(r, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, w, h));
+		auto t = sdl::Texture(SDL_CreateTexture(r, format, SDL_TEXTUREACCESS_TARGET, w, h));
 
 		SDL_SetTextureBlendMode(t.get(), b);
 
