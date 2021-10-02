@@ -13,5 +13,6 @@ target_include_directories(${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${CMAKE_C
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 
 # Add additional tasks
-# add_subdirectory("tests")
-# add_subdirectory("examples")
+if(TESTS)
+	add_subdirectory("tests")
+endif()
