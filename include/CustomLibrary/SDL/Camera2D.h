@@ -122,8 +122,18 @@ namespace ctl::sdl
 		 */
 		void zoom(float factor, mth::Point<int> p) noexcept
 		{
+			set_zoom(scale * factor, p);
+		}
+
+		/**
+		 * @brief Zooms the screen by a given scale
+		 * @param new_scale scale to set to
+		 * @param p point to zoom into
+		 */
+		void set_zoom(float new_scale, mth::Point<int> p) noexcept
+		{
 			const auto w = screen_world(p);
-			scale *= factor;
+			scale = new_scale;
 			const auto s = screen_world(p);
 			loc += w - s;
 		}
