@@ -27,6 +27,11 @@ namespace ctl::mth
 			y += dy;
 		}
 
+		constexpr auto dot_product(Point p)
+		{
+			return x * p.x + y * p.y;
+		}
+
 		constexpr auto operator==(Point p) const noexcept
 		{
 			return x == p.x && y == p.y;
@@ -277,6 +282,11 @@ namespace ctl::mth
 	template<arithmetic T>
 	struct Line
 	{
+		static auto from(mth::Point<T> p1, mth::Point<T> p2) -> Line
+		{
+			return { p1.x, p1.y, p2.x, p2.y };
+		}
+
 		template<typename U>
 		constexpr explicit operator Line<U>() noexcept
 		{
@@ -301,6 +311,17 @@ namespace ctl::mth
 		{
 			x2 = p.x;
 			y2 = p.y;
+		}
+
+		constexpr auto abs_rect() const -> mth::Rect<T>
+		{
+			const auto min_x = std::min(x1, x2);
+			const auto min_y = std::min(y1, y2);
+
+			const auto diff_x = std::abs(x1 - x2);
+			const auto diff_y = std::abs(y1 - y2);
+
+			return { min_x, min_y, diff_x, diff_y };
 		}
 
 		/**

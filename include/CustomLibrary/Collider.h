@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include "CustomLibrary/IO.h"
 #include "Geometry.h"
 
 namespace ctl::mth
@@ -85,18 +86,18 @@ namespace ctl::mth
 	template<typename T>
 	constexpr auto collision(mth::Rect<T> r, mth::Circle<T> c) noexcept
 	{
-		const auto halfWidth = r.w / 2;
-		const auto halfHight = r.h / 2;
-		const auto distanceX = std::abs(r.x + halfWidth - c.x);
-		const auto distanceY = std::abs(r.y + halfHight - c.y);
+		const auto hw = r.w / 2;
+		const auto hh = r.h / 2;
+		const auto dx = std::abs(r.x + hw - c.x);
+		const auto dy = std::abs(r.y + hh - c.y);
 
-		if (distanceX > (halfWidth + c.r) || distanceY > (halfHight + c.r))
+		if (dx > (hw + c.r) || dy > (hh + c.r))
 			return false;
 
-		if (distanceX <= halfWidth || distanceY <= halfHight)
+		if (dx <= hw || dy <= hh)
 			return true;
 
-		return std::pow(distanceX - halfWidth, 2) + std::pow(distanceY - halfHight, 2) <= std::pow(c.r, 2);
+		return std::pow(dx - hw, 2) + std::pow(dy - hh, 2) <= std::pow(c.r, 2);
 	}
 
 	/**
@@ -136,6 +137,54 @@ namespace ctl::mth
 	constexpr auto collision(mth::Circle<T> c1, mth::Circle<T> c2) noexcept
 	{
 		return std::pow(c1.x - c2.x, 2) + std::pow(c1.y - c2.y, 2) < std::pow(c1.r + c2.r, 2);
+	}
+
+	/**
+	 * @brief Check for line collision
+	 *
+	 * @param l1 Line 1
+	 * @param l2 Line 2
+	 *
+	 * @return if collision occured
+	 */
+	template<typename T>
+	constexpr auto collision(mth::Line<T> l1, mth::Line<T> l2)
+	{
+		const auto s1 = l1.pos2() - l1.pos1();
+		const auto s2 = l2.pos2() - l2.pos1();
+
+		const auto s3 = l1.pos1() - l2.pos1();
+
+		const auto r = s1.x * s2.y - s2.x * s1.y;
+
+		const auto s = (s1.x * s3.y - s1.y * s3.x) / r;
+		const auto d = (s2.x * s3.y - s2.y * s3.x) / r;
+
+		return s >= 0 && s <= 1 && d >= 0 && d <= 1;
+	}
+
+	/**
+	 * @brief Check for line and rectangle collision
+	 *
+	 * @param l Line
+	 * @param r Rectangle
+	 *
+	 * @return if collision occured
+	 */
+	template<typename T>
+	constexpr auto collision(mth::Line<T> l, mth::Rect<T> r)
+	{
+		if (collision(l.pos1(), r) || collision(l.pos2(), r))
+			return true;
+
+		return collision(l, mth::Line<T>{ r.x, r.y, r.x + r.w, r.y + r.h })
+			|| collision(l, mth::Line<T>{ r.x, r.y + r.h, r.x + r.w, r.y });
+	}
+
+	template<typename T>
+	constexpr auto collision(mth::Rect<T> r, mth::Line<T> l)
+	{
+		return collision(l, r);
 	}
 
 } // namespace ctl::mth
