@@ -317,4 +317,50 @@ namespace ctl
 		std::string buf;
 		return hex(val, buf);
 	}
+
+	/**
+	 * @brief Removes elements from a container based on their index
+	 *
+	 * @param first vector range start
+	 * @param last vector range end
+	 * @param p Unary predicate with index as parameter
+	 *
+	 * @return Last sorted element iterator
+	 */
+	template<typename Iter1, typename Pred>
+	auto remove_indices_if(Iter1 first, Iter1 last, Pred p) -> Iter1
+	{
+		Iter1 dest = first;
+
+		for (Iter1 i = first; i != last; ++i)
+			if (!p(std::distance(first, i)))
+				*dest++ = std::move(*i);
+
+		return dest;
+	}
+
+	/**
+	 * @brief Removes a collection of indices from a container
+	 *
+	 * @param first vector range start
+	 * @param last vector range end
+	 * @param i_first iterator to indices (must be sorted ascending)
+	 * @param i_last iterator to indices (must be sorted ascending)
+	 *
+	 * @return Last sorted element iterator
+	 */
+	template<typename Iter1, typename Iter2>
+	auto remove_indices(Iter1 first, const Iter1 last, Iter2 i_first, const Iter2 i_last) -> Iter1
+	{
+		Iter1 dest = first;
+
+		for (Iter1 i = first; i != last; ++i)
+			if (i_first == i_last || std::distance(first, i) != *i_first)
+				*dest++ = std::move(*i);
+			else
+				++i_first;
+
+		return dest;
+	}
+
 } // namespace ctl
